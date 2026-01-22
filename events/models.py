@@ -10,11 +10,11 @@ from core.models import (
 from django.contrib import messages
 from django.db import models, transaction
 from django.utils import timezone
-from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect
 from modelcluster.fields import ParentalKey
+from modelcluster.models import ClusterableModel
 from streams.blocks import AbstractSubmissionBlock
 from wagtail.admin.panels import (
     FieldPanel,
@@ -32,10 +32,10 @@ from wagtail.snippets.models import register_snippet
 from wagtail import blocks
 from wagtail.contrib.forms.models import AbstractFormField
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
-from wagtail.contrib.forms.utils import get_field_clean_name
 import pytz
 import re
 import urllib.parse
+import uuid
 
 
 def _split_slugs(s: str):
@@ -305,6 +305,14 @@ class EventPage(
     reminder_template = models.ForeignKey(
         'events.EmailTemplate', null=True, blank=True, on_delete=models.SET_NULL, related_name='+'
     )
+    registration_form_template = models.ForeignKey(
+        "events.RegistrationFormTemplate",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        help_text="Choose a reusable set of registration fields."
+    )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -421,129 +429,6 @@ class EventPage(
         if self.theme:
             return f'themes/{self.get_theme_dir()}/event_page.html'
         return standard_template
-
-    # def serve(self, request):
-    #     get_token(request)
-    #     form = EventSubmissionForm()
-    #     email_recipient = ''
-
-    #     if self.theme and self.theme.name == 'Digital Finance':
-    #         email_recipient = 'digitalfinanceinquiries@cigionline.org'
-    #     if self.email_recipient:
-    #         email_recipient = self.email_recipient
-
-    #     if self.theme:
-    #         template = f'themes/{self.get_theme_dir()}/event_page.html'
-    #     else:
-    #         template = 'events/event_page.html'
-
-    #     if email_recipient and request.method == "POST":
-    #         form = EventSubmissionForm(request.POST, request.FILES)
-    #         if form.is_valid():
-    #             uploaded_file = form.cleaned_data['file']
-    #             email = form.cleaned_data['email']
-    #             valid_extensions = ['.pdf', '.doc', '.docx']
-    #             file_extension = uploaded_file.name.lower().split('.')[-1]
-
-    #             if f'.{file_extension}' in valid_extensions:
-    #                 if self.theme.name == 'Digital Finance':
-    #                     collection = Collection.objects.get(name='Digital Finance Conference Abstracts')
-    #                 else:
-    #                     collection = Collection.objects.get(
-    #                         name='Event submissions',
-    #                     )
-
-    #                 try:
-    #                     document = Document.objects.create(
-    #                         title=uploaded_file.name,
-    #                         file=uploaded_file,
-    #                         collection=collection,
-    #                     )
-    #                     DocumentUpload.objects.create(
-    #                         document=document, email=email
-    #                     )
-    #                     if email_recipient:
-    #                         try:
-    #                             send_email_digital_finance(
-    #                                 recipient=email_recipient,
-    #                                 subject='Digital Finance Abstract Uploaded Successfully',
-    #                                 body=f'File "{uploaded_file.name}" was uploaded by {email}.\n\nYou can download it from: {request.build_absolute_uri(document.file.url)}\n\n'
-    #                             )
-    #                             send_email_digital_finance(
-    #                                 recipient=email,
-    #                                 subject='Abstract Submission Upload Successful',
-    #                                 body=f'Your file "{uploaded_file.name}" was uploaded successfully. Thank you for your submission.',
-    #                             )
-    #                         except Exception as e:
-    #                             print(str(e))
-    #                     return JsonResponse(
-    #                         {
-    #                             'status': 'success',
-    #                             'message': 'File uploaded successfully!',
-    #                         }
-    #                     )
-
-    #                 except Exception as e:
-    #                     logging.error("Exception during event form submission", exc_info=True)
-    #                     error_trace = traceback.format_exc()
-    #                     print(str(e))
-    #                     send_email_digifincon_debug(
-    #                         recipient='jxu@cigionline.org',
-    #                         subject='File Upload Failed',
-    #                         body=f"""
-    #                                 An error occurred during abstract submission:
-
-    #                                 Error: {str(e)}
-
-    #                                 Traceback:
-    #                                 {error_trace}
-    #                             """,
-    #                     )
-
-    #                     if email_recipient:
-    #                         send_email_digital_finance(
-    #                             recipient=email_recipient,
-    #                             subject='File Upload Failed',
-    #                             body=f'File upload failed for {email}. Error: {str(e)}',
-    #                         )
-    #                     return JsonResponse(
-    #                         {
-    #                             'status': 'error',
-    #                             'message': f'Failed to save file: {str(e)}',
-    #                         }
-    #                     )
-    #             else:
-    #                 if email_recipient:
-    #                     send_email_digital_finance(
-    #                         recipient=email_recipient,
-    #                         subject='File Upload Failed',
-    #                         body=f'File upload failed for {email}. Invalid file type.',
-    #                     )
-    #             return JsonResponse(
-    #                 {
-    #                     'status': 'error',
-    #                     'message': 'Invalid file type. Only .pdf, .doc, and .docx files are allowed.',
-    #                 }
-    #             )
-    #         else:
-    #             error_message = " ".join(extract_errors_as_string(form.errors))
-
-    #             if email_recipient:
-    #                 send_email_digital_finance(
-    #                     recipient=email_recipient,
-    #                     subject='Form Submission Failed',
-    #                     body=f'Form submission failed for {form.cleaned_data.get('email', 'Unknown email')}. Invalid data. {error_message}',
-    #                 )
-
-    #             return JsonResponse(
-    #                 {'status': 'error', 'message': f'Invalid form submission. {error_message}'}
-    #             )
-
-    #     return render(request, template, {
-    #         "page": self,
-    #         "self": self,
-    #         "form": form,
-    #     })
 
     @property
     def total_confirmed(self):
@@ -831,9 +716,9 @@ class EventPage(
             ),
             MultiFieldPanel(
                 [
-                    InlinePanel('form_fields', label='Registration Form Fields'),
+                    FieldPanel("registration_form_template"),
                 ],
-                heading='Registration Form Fields',
+                heading='Registration Form Template',
                 classname='collapsible collapsed',
             ),
             MultiFieldPanel(
@@ -885,14 +770,6 @@ class RegistrationType(Orderable):
 
 
 class RegistrationFormField(AbstractFormField):
-    """
-    No M2Ms in InlinePanel. We control visibility/requiredness by rules:
-      - visible_rule:  all / only / except
-      - visible_type_slugs: comma-separated slugs (e.g., "vip,speaker")
-      - required_rule: all / only / except
-      - required_type_slugs: comma-separated slugs
-    """
-
     FIELD_CHOICES = (
         ("singleline", _("Single line text")),
         ("multiline", _("Multi-line text")),
@@ -910,8 +787,11 @@ class RegistrationFormField(AbstractFormField):
         ("file", _("File upload")),
         ("conditional_text", _("Conditional text (checkbox + details)")),
     )
-    event = ParentalKey(
-        "events.EventPage", related_name="form_fields", on_delete=models.CASCADE
+    field_key = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
+    template = ParentalKey(
+        "events.RegistrationFormTemplate",
+        related_name="fields",
+        on_delete=models.CASCADE,
     )
 
     file_allowed_types = models.CharField(
@@ -991,7 +871,7 @@ class RegistrationFormField(AbstractFormField):
     def clean(self):
         super().clean()
 
-        if not self.event_id:
+        if not self.template_id:
             return
 
         ev_slugs = set(self.event.registration_types.values_list("slug", flat=True))
@@ -1154,3 +1034,18 @@ class EmailCampaign(models.Model):
         FieldPanel('include_type_ids'),
         FieldPanel('attachment'),
     ]
+
+
+@register_snippet
+class RegistrationFormTemplate(ClusterableModel):
+    title = models.CharField(max_length=120, unique=True)
+    description = models.TextField(blank=True)
+
+    panels = [
+        FieldPanel("title"),
+        FieldPanel("description"),
+        InlinePanel("fields", label="Fields"),
+    ]
+
+    def __str__(self):
+        return self.title

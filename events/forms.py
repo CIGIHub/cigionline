@@ -90,7 +90,9 @@ def build_dynamic_form(event, reg_type, invite=None):
 
     current_slug = reg_type.slug
 
-    for ff in event.form_fields.all().order_by("sort_order"):
+    fields_qs = event.registration_form_template.fields.all()
+
+    for ff in fields_qs.order_by("sort_order"):
         vis_slugs = _split_slugs(ff.visible_type_slugs)
         if not _match(ff.visible_rule, vis_slugs, current_slug):
             continue
@@ -99,6 +101,7 @@ def build_dynamic_form(event, reg_type, invite=None):
         is_required = bool(ff.required) or _match(ff.required_rule, req_slugs, current_slug)
 
         clean_name = get_field_clean_name(ff.label)
+        key = f"f_{ff.field_key}"
         FieldClass = WAGTAIL_FIELD_MAP.get(ff.field_type, forms.CharField)
         kwargs = {"label": ff.label, "help_text": ff.help_text, "required": is_required}
 
@@ -133,8 +136,9 @@ def build_dynamic_form(event, reg_type, invite=None):
             kwargs["widget"] = forms.Textarea()
 
         if ff.field_type == "conditional_text":
-            needs_key = f"{clean_name}__enabled"
-            details_key = f"{clean_name}__details"
+            base = f"f_{ff.field_key}"
+            needs_key = f"{base}__enabled"
+            details_key = f"{base}__details"
             details_label = ff.conditional_details_label.strip() if getattr(ff, "conditional_details_label", "") else "Please specify"
             details_help = getattr(ff, "conditional_details_help_text", "") or ""
 
@@ -194,7 +198,7 @@ def build_dynamic_form(event, reg_type, invite=None):
             # default text-ish
             w.attrs["class"] = f"{cls} {BASE_INPUT_CLASS}".strip()
 
-        fields.append((clean_name, field_obj))
+        fields.append((key, field_obj))
 
     # Honeypot (off-screen in template CSS, but keep it a real input)
     fields.append((

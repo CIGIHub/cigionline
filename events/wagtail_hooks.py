@@ -1,5 +1,9 @@
+from utils.admin_utils import title_with_actions, live_icon
+from wagtail.admin.ui.tables import Column
+from wagtail.admin.widgets import AdminPageChooser
+from wagtail.admin.viewsets.base import ViewSet, ViewSetGroup
 import csv
-from .models import Invite, Registrant, EventListPage, EventPage
+from .models import Invite, Registrant, EventListPage, EventPage, RegistrationFormTemplate
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.urls import path, reverse
@@ -14,12 +18,6 @@ from django.utils.decorators import method_decorator
 from wagtail import hooks
 from wagtail.documents.models import Document
 from wagtail.admin.viewsets.model import ModelViewSet
-from wagtail.admin.viewsets.base import ViewSet, ViewSetGroup
-from wagtail.admin.widgets import AdminPageChooser
-from wagtail.admin.ui.tables import Column
-from wagtail import hooks
-from wagtail.contrib.forms.utils import get_field_clean_name
-from utils.admin_utils import title_with_actions, live_icon
 
 
 class EventPageListingViewSet(ModelViewSet):
@@ -249,7 +247,7 @@ class RegistrationReportViewSet(ViewSet):
             .order_by("created_at")
         )
 
-        form_fields = list(event.form_fields.all().order_by("sort_order"))
+        form_fields = list(event.registration_form_template.fields.all().order_by("sort_order"))
         file_fields = [ff for ff in form_fields if ff.field_type == "file"]
 
         header = [
@@ -300,14 +298,16 @@ class RegistrationReportViewSet(ViewSet):
             for ff in form_fields:
                 if ff.field_type == "file":
                     continue
-                clean = get_field_clean_name(ff.label)
-                non_file_cells.append(_fmt(answers.get(clean)))
+                key = f"f_{ff.field_key}"
+                val = answers.get(key)
+                non_file_cells.append(_fmt(val))
 
             file_url_cells = []
             for ff in file_fields:
                 url = ""
-                clean = get_field_clean_name(ff.label)
-                meta = (answers or {}).get(clean) or {}
+                key = f"f_{ff.field_key}"
+                val = answers.get(key)
+                meta = (answers or {}).get(val) or {}
                 if isinstance(meta, dict):
                     doc_id = meta.get("document_id")
                     if doc_id:
@@ -357,23 +357,24 @@ class RegistrationReportViewSet(ViewSet):
         if status in {"confirmed", "waitlisted", "pending"}:
             registrants = registrants.filter(status=status)
 
-        form_fields = list(event.form_fields.all().order_by("sort_order"))
+        form_fields = list(event.registration_form_template.fields.all().order_by("sort_order"))
 
         columns = []
         for ff in form_fields:
-            base_clean = get_field_clean_name(ff.label)
+            base = f"f_{ff.field_key}"
+
             if ff.field_type == "conditional_text":
                 columns.append({
                     "label": ff.label,
                     "type": "conditional_text",
-                    "clean_enabled": f"{base_clean}__enabled",
-                    "clean_details": f"{base_clean}__details",
+                    "key_enabled": f"{base}__enabled",
+                    "key_details": f"{base}__details",
                 })
             else:
                 columns.append({
                     "label": ff.label,
                     "type": ff.field_type,
-                    "clean": base_clean,
+                    "key": base,
                 })
 
         paginator = Paginator(registrants, 50)
@@ -384,7 +385,7 @@ class RegistrationReportViewSet(ViewSet):
             ans = r.answers or {}
             for col in columns:
                 if col["type"] == "file":
-                    meta = ans.get(col["clean"]) or {}
+                    meta = ans.get(col["key"]) or {}
                     if isinstance(meta, dict) and meta.get("document_id"):
                         doc_ids.add(meta["document_id"])
 
@@ -400,8 +401,8 @@ class RegistrationReportViewSet(ViewSet):
             for col in columns:
                 # --- CONDITIONAL TEXT (checkbox + details) ---
                 if col["type"] == "conditional_text":
-                    enabled = bool(ans.get(col["clean_enabled"]))
-                    details = (ans.get(col["clean_details"]) or "").strip()
+                    enabled = bool(ans.get(col["key_enabled"]))
+                    details = (ans.get(col["key_details"]) or "").strip()
 
                     cells.append({
                         "text": (details or "Yes") if enabled else "",
@@ -410,7 +411,7 @@ class RegistrationReportViewSet(ViewSet):
                     continue
 
                 # --- NORMAL FIELDS ---
-                val = ans.get(col["clean"])
+                val = ans.get(col["key"])
 
                 # file field: answers store {"document_id":..., "name":...}
                 if col["type"] == "file" and isinstance(val, dict) and val.get("document_id"):
@@ -499,11 +500,31 @@ class RegistrationReportViewSet(ViewSet):
         ]
 
 
+class RegistrationFormTemplate(ModelViewSet):
+    model = RegistrationFormTemplate
+    menu_label = "Registration Form Templates"
+    menu_icon = "form"
+    menu_order = 105
+    name = "registrationformtemplate"
+    list_display = [
+        'title',
+    ]
+    search_fields = ('title',)
+    ordering = ['title']
+
+
 class EventViewSetGroup(ViewSetGroup):
     menu_label = 'Events'
     menu_icon = 'date'
     menu_order = 104
-    items = (EventListPageListingViewSet, EventPageListingViewSet, InviteViewSet, RegistrantViewSet, RegistrationReportViewSet)
+    items = (
+        EventListPageListingViewSet,
+        EventPageListingViewSet,
+        InviteViewSet,
+        RegistrantViewSet,
+        RegistrationReportViewSet,
+        RegistrationFormTemplate
+    )
 
 
 @hooks.register('register_admin_viewset')
