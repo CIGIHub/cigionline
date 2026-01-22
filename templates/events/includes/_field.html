@@ -10,6 +10,9 @@
         <span class="req">*</span>
       {% endif %}
     </div>
+    {% if field.help_text %}
+      <div class="cigi-help">{{ field.help_text|safe }}</div>
+    {% endif %}
 
     <label class="cigi-checkbox cigi-checkbox--conditional">
       {{ field }}
@@ -19,16 +22,26 @@
     </label>
   {# single checkbox: label after input #}
   {% elif field|is_single_checkbox %}
-    <label class="cigi-checkbox">
-      {{ field }}
+    <div class="cigi-label">
       <span>{{ field.label }}{% if field.field.required %} <span class="req">*</span>{% endif %}</span>
-    </label>
+    </div>
+    {% if field.help_text %}
+      <div class="cigi-help">{{ field.help_text|safe }}</div>
+    {% endif %}
+    <div class="cigi-options">
+      <label class="cigi-checkbox">
+        {{ field }}
+      </label>
+    </div>
 
   {# radio / checkbox groups #}
   {% elif field|is_choice_group %}
     <div class="cigi-label">
       <span>{{ field.label }}</span>{% if field.field.required %}<span class="req">*</span>{% endif %}
     </div>
+    {% if field.help_text %}
+      <div class="cigi-help">{{ field.help_text|safe }}</div>
+    {% endif %}
     <div class="cigi-options">
       {% for sub in field %}
         <label class="cigi-option">
@@ -43,6 +56,9 @@
     <label class="cigi-label" for="{{ field.id_for_label }}">
       <span>{{ field.label }}</span>{% if field.field.required %}<span class="req">*</span>{% endif %}
     </label>
+    {% if field.help_text %}
+      <div class="cigi-help">{{ field.help_text|safe }}</div>
+    {% endif %}
     <div class="cigi-file">
       {{ field }}
       <div class="file-meta" aria-live="polite"></div>
@@ -53,11 +69,10 @@
     <label class="cigi-label" for="{{ field.id_for_label }}">
       <span>{{ field.label }}</span>{% if field.field.required %}<span class="req">*</span>{% endif %}
     </label>
+    {% if field.help_text %}
+      <div class="cigi-help">{{ field.help_text|safe }}</div>
+    {% endif %}
     {{ field }}
-  {% endif %}
-
-  {% if field.help_text %}
-    <div class="cigi-help">{{ field.help_text|safe }}</div>
   {% endif %}
 
   {% if field.errors %}
