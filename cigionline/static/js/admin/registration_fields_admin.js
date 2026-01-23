@@ -182,7 +182,6 @@ document.addEventListener('click', (e) => {
   const addBtn = e.target.closest(
     '.chooser__choose-button',
   );
-  console.log(addBtn);
   if (!addBtn) return;
 
   setTimeout(() => {

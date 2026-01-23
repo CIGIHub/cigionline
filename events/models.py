@@ -302,6 +302,9 @@ class EventPage(
     confirmation_template = models.ForeignKey(
         'events.EmailTemplate', null=True, blank=True, on_delete=models.SET_NULL, related_name='+'
     )
+    waitlist_template = models.ForeignKey(
+        'events.EmailTemplate', null=True, blank=True, on_delete=models.SET_NULL, related_name='+'
+    )
     reminder_template = models.ForeignKey(
         'events.EmailTemplate', null=True, blank=True, on_delete=models.SET_NULL, related_name='+'
     )
@@ -702,7 +705,7 @@ class EventPage(
             MultiFieldPanel(
                 [
                     FieldPanel('confirmation_template'),
-                    FieldPanel('reminder_template'),
+                    FieldPanel('waitlist_template'),
                 ],
                 heading='Email Templates',
                 classname='collapsible collapsed',
@@ -1011,7 +1014,7 @@ class Registrant(models.Model):
 
 @register_snippet
 class EmailTemplate(models.Model):
-    name = models.CharField(max_length=120)
+    title = models.CharField(max_length=120)
     subject = models.CharField(max_length=200)
     # Body supports rich content + optional placeholder merge fields
     body = StreamField([
@@ -1021,10 +1024,15 @@ class EmailTemplate(models.Model):
         ], icon="paperclip", label="Attachment Hint (non‑rendered)")),
     ], use_json_field=True)
 
-    # Example: {{ event.title }}, {{ registrant.first_name }}, {{ registration_type.name }}
-    merge_vars_help = models.TextField(blank=True)
+    panels = [
+        FieldPanel('title'),
+        FieldPanel('subject'),
+        FieldPanel('body'),
+        HelpPanel(template="events/admin/emailtemplate_mergevars_help.html", heading="Available merge variables"),
+    ]
 
-    panels = [FieldPanel('name'), FieldPanel('subject'), FieldPanel('body'), FieldPanel('merge_vars_help')]
+    def __str__(self):
+        return self.title
 
 
 class EmailCampaign(models.Model):

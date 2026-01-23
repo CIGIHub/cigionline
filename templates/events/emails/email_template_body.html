@@ -1,0 +1,7 @@
+{% load wagtailcore_tags %}
+
+{% for block in body %}
+  {% if block.block_type == "paragraph" %}
+    {{ block.value|richtext }}
+  {% endif %}
+{% endfor %}
