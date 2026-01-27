@@ -319,8 +319,10 @@ http {
 		<% end %>
 
         <% if ENV['MAILCHIMP_SITE_PROXY'] %>
-			location /canadian-productivity/ {
-				proxy_pass http://<%= ENV['MAILCHIMP_SITE_PROXY'] %>/canadian-productivity;
+            location /canadian-productivity/ {
+				proxy_pass https://<%= ENV['MAILCHIMP_SITE_PROXY'] %>/canadian-productivity/;
+				proxy_set_header X-Real-IP $remote_addr;
+				proxy_set_header X-Forwarded-Proto $scheme;
 			}
 		<% end %>
 	}
