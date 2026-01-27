@@ -317,5 +317,11 @@ http {
 				proxy_pass http://<%= ENV['INTERACTIVE_SURVEYOFPROGRESS_PROXY'] %>/;
 			}
 		<% end %>
+
+        <% if ENV['MAILCHIMP_SITE_PROXY'] %>
+			location / {
+				proxy_pass http://<%= ENV['MAILCHIMP_SITE_PROXY'] %>/;
+			}
+		<% end %>
 	}
 }
