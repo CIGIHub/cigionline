@@ -1,7 +1,125 @@
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
 
-{% for block in body %}
-  {% if block.block_type == "paragraph" %}
-    {{ block.value|richtext }}
-  {% endif %}
-{% endfor %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title></title>
+  </head>
+  <body style="margin:0; padding:0; background-color:#f5f5f5;">
+    <div style="display:none; max-height:0; overflow:hidden; opacity:0; color:transparent;">
+      Registration update for {{ event.title }}
+    </div>
+
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#f5f5f5;">
+      <tr>
+        <td align="center" style="padding:24px 12px;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px; max-width:600px; background-color:#ffffff; border:1px solid #e6e6e6;">
+            <tr>
+              <td style="padding:28px 24px 8px 24px; font-family:Arial, Helvetica, sans-serif; color:#111111;">
+                <div style="font-size:12px; line-height:16px; color:#666666; text-transform:uppercase; letter-spacing:0.02em;">
+                  {% if confirmed %}Confirmed{% else %}Waitlisted{% endif %}
+                </div>
+                <div style="font-size:22px; line-height:28px; font-weight:bold; margin-top:6px;">
+                  {{ event.title }}
+                </div>
+                <div style="font-size:14px; line-height:20px; color:#444444; margin-top:6px;">
+                  {{ registrant.first_name|default:registrant.email }} &middot; {{ registration_type.name }}
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:8px 24px 24px 24px; font-family:Arial, Helvetica, sans-serif; color:#111111; font-size:16px; line-height:24px;">
+
+                {% for block in body %}
+                  {% if block.block_type == "heading" %}
+                    {% with v=block.value %}
+                      {% if v.level == "h1" %}
+                        <div style="font-size:24px; line-height:30px; font-weight:bold; margin:18px 0 10px 0;">{{ v.text }}</div>
+                      {% elif v.level == "h3" %}
+                        <div style="font-size:16px; line-height:22px; font-weight:bold; margin:16px 0 8px 0;">{{ v.text }}</div>
+                      {% else %}
+                        <div style="font-size:18px; line-height:24px; font-weight:bold; margin:16px 0 8px 0;">{{ v.text }}</div>
+                      {% endif %}
+                    {% endwith %}
+
+                  {% elif block.block_type == "paragraph" %}
+                    <div style="margin:10px 0;">
+                      {{ block.value|richtext }}
+                    </div>
+
+                  {% elif block.block_type == "button" %}
+                    {% with v=block.value %}
+                      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:16px 0 18px 0;">
+                        <tr>
+                          <td bgcolor="#0b5fff" style="border-radius:4px;">
+                            <a href="{{ v.url }}" target="_blank" rel="noopener" style="display:inline-block; padding:12px 16px; font-family:Arial, Helvetica, sans-serif; font-size:15px; line-height:18px; color:#ffffff; text-decoration:none; font-weight:bold;">
+                              {{ v.text }}
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+                    {% endwith %}
+
+                  {% elif block.block_type == "image" %}
+                    {% with v=block.value %}
+                      {% if v.image or v.image_url %}
+                        {% firstof v.max_width 560 as maxw %}
+                        {% firstof v.alignment "center" as align %}
+
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:16px 0;">
+                            <tr>
+                              <td align="{{ align }}">
+                                {% if v.link %}<a href="{{ v.link }}" target="_blank" rel="noopener" style="text-decoration:none;">{% endif %}
+
+                                {% if v.image %}
+                                  {# Use rendition to constrain size; email clients do well with fixed widths + height auto #}
+                                  {% image v.image width-560 as img %}
+                                  <img src="{{ img.url }}" width="{{ img.width }}" height="{{ img.height }}" alt="{{ v.alt|default:img.alt }}" style="display:block; border:0; outline:none; text-decoration:none; width:100%; max-width:{{ maxw }}px; height:auto;" />
+                                {% else %}
+                                  <img src="{{ v.image_url }}" alt="{{ v.alt }}" style="display:block; border:0; outline:none; text-decoration:none; width:100%; max-width:{{ maxw }}px; height:auto;" />
+                                {% endif %}
+
+                                {% if v.link %}</a>{% endif %}
+                              </td>
+                            </tr>
+                          </table>
+                      {% endif %}
+                    {% endwith %}
+
+                  {% elif block.block_type == "divider" %}
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0;">
+                      <tr>
+                        <td style="border-top:1px solid #e6e6e6; font-size:0; line-height:0;">&nbsp;</td>
+                      </tr>
+                    </table>
+
+                  {% elif block.block_type == "attachment_hint" %}
+                    {# Non-rendered in emails (admin-only hint). #}
+                  {% endif %}
+                {% endfor %}
+
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:24px;">
+                  <tr>
+                    <td style="border-top:1px solid #e6e6e6; font-size:0; line-height:0;">&nbsp;</td>
+                  </tr>
+                </table>
+                <div style="font-size:12px; line-height:18px; color:#666666; margin-top:14px;">
+                  If you have questions, please email us at events@cigionline.org.
+                </div>
+              </td>
+            </tr>
+          </table>
+
+          <div style="font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:18px; color:#999999; padding-top:10px;">
+            CIGI &middot; {{ event.get_site.root_url|default:"" }}
+          </div>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

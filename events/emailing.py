@@ -1,32 +1,23 @@
 from __future__ import annotations
 
 from django.conf import settings
-from django.template import Context, Template
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
 from .models import Registrant, EmailTemplate
+from .email_rendering import render_email_subject, render_streamfield_email_html
 
 
 def _render_subject(subject_template: str, ctx: dict) -> str:
-    return Template(subject_template or "").render(Context(ctx)).strip()
+    # Backwards-compatible wrapper (existing importers may rely on this name).
+    return render_email_subject(subject_template, ctx)
 
 
 def _render_email_body(template_obj: EmailTemplate, ctx: dict) -> tuple[str, str]:
-    """
-    Returns (html, text). Renders StreamField to HTML, then produces a text fallback.
-    """
-    html = render_to_string(
-        "events/emails/email_template_body.html",
-        {"body": template_obj.body, **ctx},
-    ).strip()
-
-    html = Template(html).render(Context(ctx))
-
-    text = strip_tags(html)
-    return html, text
+    # Backwards-compatible wrapper.
+    return render_streamfield_email_html(template_obj=template_obj, ctx=ctx)
 
 
 def send_confirmation_email(registrant: Registrant, confirmed: bool) -> None:
@@ -44,8 +35,8 @@ def send_confirmation_email(registrant: Registrant, confirmed: bool) -> None:
     }
 
     if template_obj:
-        subject = _render_subject(template_obj.subject, ctx)
-        html, text = _render_email_body(template_obj, ctx)
+        subject = render_email_subject(template_obj.subject, ctx)
+        html, text = render_streamfield_email_html(template_obj=template_obj, ctx=ctx)
     else:
         subject = f"Registration {'confirmed' if confirmed else 'received'} — {event.title}"
         lines = [

@@ -32,6 +32,7 @@ from wagtail.snippets.models import register_snippet
 from wagtail import blocks
 from wagtail.contrib.forms.models import AbstractFormField
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
+from wagtail.images.blocks import ImageChooserBlock
 import pytz
 import re
 import urllib.parse
@@ -1017,12 +1018,74 @@ class EmailTemplate(models.Model):
     title = models.CharField(max_length=120)
     subject = models.CharField(max_length=200)
     # Body supports rich content + optional placeholder merge fields
-    body = StreamField([
-        ('paragraph', blocks.RichTextBlock(features=["bold", "italic", "link", "ul", "ol"])),
-        ('attachment_hint', blocks.StructBlock([
-            ('note', blocks.TextBlock(required=False)),
-        ], icon="paperclip", label="Attachment Hint (non‑rendered)")),
-    ], use_json_field=True)
+    body = StreamField(
+        [
+            ("heading", blocks.StructBlock(
+                [
+                    ("text", blocks.CharBlock(required=True, max_length=200)),
+                    (
+                        "level",
+                        blocks.ChoiceBlock(
+                            choices=[("h1", "H1"), ("h2", "H2"), ("h3", "H3")],
+                            default="h2",
+                            required=True,
+                        ),
+                    ),
+                ],
+                icon="title",
+                label="Heading",
+            )),
+            (
+                "paragraph",
+                blocks.RichTextBlock(features=["bold", "italic", "link", "ul", "ol"]),
+            ),
+            (
+                "button",
+                blocks.StructBlock(
+                    [
+                        ("text", blocks.CharBlock(required=True, max_length=64)),
+                        ("url", blocks.URLBlock(required=True)),
+                    ],
+                    icon="link",
+                    label="Button",
+                ),
+            ),
+            (
+                "image",
+                blocks.StructBlock(
+                    [
+                        ("image", ImageChooserBlock(required=False)),
+                        ("image_url", blocks.URLBlock(required=False, help_text="Use if you can't choose an image.")),
+                        ("alt", blocks.CharBlock(required=False, max_length=200)),
+                        (
+                            "alignment",
+                            blocks.ChoiceBlock(
+                                choices=[("left", "Left"), ("center", "Center"), ("right", "Right")],
+                                default="center",
+                                required=True,
+                            ),
+                        ),
+                        ("max_width", blocks.IntegerBlock(required=False, help_text="In pixels (e.g., 560).")),
+                        ("link", blocks.URLBlock(required=False)),
+                    ],
+                    icon="image",
+                    label="Image",
+                ),
+            ),
+            ("divider", blocks.StaticBlock(icon="horizontalrule", label="Divider")),
+            (
+                "attachment_hint",
+                blocks.StructBlock(
+                    [
+                        ("note", blocks.TextBlock(required=False)),
+                    ],
+                    icon="paperclip",
+                    label="Attachment Hint (non‑rendered)",
+                ),
+            ),
+        ],
+        use_json_field=True,
+    )
 
     panels = [
         FieldPanel('title'),
