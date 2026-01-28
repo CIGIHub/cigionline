@@ -1,0 +1,18 @@
+{% load wagtailcore_tags %}
+
+{% with base=self.instance.event.get_full_url|default:self.instance.event.url %}
+  {% if self.instance.pk and self.instance.token and base %}
+    <p><strong>Invite link:</strong></p>
+    <input type="text"
+           readonly
+           value="{{ base }}register/?invite={{ self.instance.token }}"
+           style="width:100%">
+    <p class="help">
+      Rule: {{ self.instance.get_allowed_rule_display }}
+      {% if self.instance.allowed_type_slugs %} — {{ self.instance.allowed_type_slugs }}{% endif %}
+    </p>
+  {% else %}
+    <p>Save this invite to generate the link.</p>
+  {% endif %}
+{% endwith %}
+

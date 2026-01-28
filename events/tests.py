@@ -3,6 +3,7 @@ from home.models import HomePage, Think7HomePage
 from wagtail.test.utils import WagtailPageTestCase
 
 from .models import EventListPage, EventPage
+from .email_rendering import render_streamfield_email_html
 
 from unittest.mock import patch
 
@@ -78,6 +79,48 @@ class EventsAPITests(WagtailPageTestCase):
         response_2 = self.get_api_response(2, 2020)
         self.assertEqual(response_2['meta']['total_count'], 4)
         self.assertEqual(len(response_2['items']), 4)
+
+
+class EmailTemplateRenderingTests(WagtailPageTestCase):
+    def test_streamfield_email_rendering_outputs_email_safe_wrapper(self):
+        class DummyTemplate:
+            def __init__(self, body):
+                self.body = body
+
+        # Using StreamValue-like data: Wagtail StreamField will accept a list of dicts
+        # when assigning to the field on a real model. For this renderer, we just need
+        # something iterable with block_type/value attributes. We'll use the StreamField
+        # itself from the EmailTemplate model indirectly by building minimal objects.
+        class B:
+            def __init__(self, block_type, value):
+                self.block_type = block_type
+                self.value = value
+
+        dummy = DummyTemplate(
+            body=[
+                B("heading", {"text": "Hello", "level": "h2"}),
+                B("paragraph", "<p>Thanks for registering.</p>"),
+                B("button", {"text": "View details", "url": "https://example.com"}),
+                B("image", {"image": None, "image_url": "https://example.com/logo.png", "alt": "Logo", "alignment": "center", "max_width": 200, "link": ""}),
+                B("divider", None),
+            ]
+        )
+
+        html, text = render_streamfield_email_html(
+            template_obj=dummy,
+            ctx={
+                "event": type("E", (), {"title": "Test Event", "get_site": type("S", (), {"root_url": "https://example.com"})()})(),
+                "registrant": type("R", (), {"first_name": "Jane", "email": "jane@example.com"})(),
+                "registration_type": type("T", (), {"name": "General"})(),
+                "confirmed": True,
+            },
+        )
+
+        self.assertIn("<table", html)
+        self.assertIn("View details", html)
+        self.assertIn("https://example.com/logo.png", html)
+        self.assertIn("Test Event", html)
+        self.assertTrue(len(text) > 0)
 
         response_3 = self.get_api_response(12, 2010)
         self.assertEqual(response_3['meta']['total_count'], 0)
