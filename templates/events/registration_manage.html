@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags webpack_loader %}
+{% block extra_css %}
+  {% render_bundle 'eventPage' 'css' %}
+{% endblock %}
+
+{% block content %}
+  <section class="registration-manage-section" id="article-body">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+          <h2>Manage your registration</h2>
+
+          {% if request.GET.updated %}
+            <div class="alert alert-success">Your registration has been updated.</div>
+          {% endif %}
+          {% if request.GET.cancelled %}
+            <div class="alert alert-warning">Your registration has been cancelled.</div>
+          {% endif %}
+
+          <p>
+            <strong>Event:</strong> {{ event.title }}<br />
+            <strong>Name:</strong> {{ registrant.first_name }} {{ registrant.last_name }}<br />
+            <strong>Email:</strong> {{ registrant.email }}<br />
+            <strong>Status:</strong> {{ registrant.get_status_display }}
+          </p>
+
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags|default:'info' }} mb-4">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+
+          {% if registrant.status == "cancelled" %}
+            <p>This registration is already cancelled.</p>
+          {% else %}
+            <h3>Update your answers</h3>
+            <form method="post" action="{{ event.url }}register/manage/update/?rid={{ registrant.pk }}&t={{ token }}" enctype="multipart/form-data">
+              {% csrf_token %}
+              {# Email is required by the dynamic form; don't show it, but do submit it. #}
+              <input type="hidden" name="email" value="{{ registrant.email }}" />
+              {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                  {% for e in form.non_field_errors %}
+                    <div>{{ e }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+              {# Don't allow changing email, and don't show the honeypot field. #}
+              {% for field in form %}
+                {% if field.name == "email" or field.name == "website" %}
+                  {# skip #}
+                {% else %}
+                  <p>
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.help_text %}<br /><small>{{ field.help_text }}</small>{% endif %}
+                    {% for error in field.errors %}<br /><span class="error">{{ error }}</span>{% endfor %}
+                  </p>
+                {% endif %}
+              {% endfor %}
+
+              {# Keep honeypot in the form to preserve bot protection, but hide it from humans. #}
+              {% if form.website %}
+                <div style="position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;" aria-hidden="true">
+                  {{ form.website }}
+                </div>
+              {% endif %}
+              <button type="submit" class="button">Save changes</button>
+            </form>
+
+            <hr />
+
+            <h3>Cancel registration</h3>
+            <form method="post" action="{{ event.url }}register/manage/cancel/?rid={{ registrant.pk }}&t={{ token }}">
+              {% csrf_token %}
+              <button type="submit" class="button button--secondary" onclick="return confirm('Cancel your registration?');">Cancel registration</button>
+            </form>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

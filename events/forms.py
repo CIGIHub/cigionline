@@ -71,7 +71,7 @@ WAGTAIL_FIELD_MAP = {
 }
 
 
-def build_dynamic_form(event, reg_type, invite=None):
+def build_dynamic_form(event, reg_type, invite=None, *, require_email: bool = True):
     """
     Build a dynamic Form class from RegistrationFormField rules (no admin/panels tricks).
     """
@@ -83,7 +83,7 @@ def build_dynamic_form(event, reg_type, invite=None):
 
     fields.append(("first_name", forms.CharField(label="First Name", required=True)))
     fields.append(("last_name", forms.CharField(label="Last Name", required=True)))
-    email_field = forms.EmailField(label="Email", required=True, initial=email_initial)
+    email_field = forms.EmailField(label="Email", required=require_email, initial=email_initial)
     if email_initial:
         email_field.widget.attrs["readonly"] = "readonly"
     fields.append(("email", email_field))

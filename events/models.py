@@ -480,7 +480,7 @@ class EventPage(
 
         if len(types) == 1:
             base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
-            return redirect(f"{base}register/{types[0].slug}/")
+            return redirect(f"{base}register/type/{types[0].slug}/")
 
         return self.render(
             request,
@@ -505,7 +505,7 @@ class EventPage(
             context_overrides={"event": self, "status": status, "registrant": registrant},
         )
 
-    @route(r"^register/(?P<type_slug>[-\w]+)/$")
+    @route(r"^register/type/(?P<type_slug>[-\w]+)/$")
     def register_form(self, request, type_slug: str, *args, **kwargs):
         from .forms import build_dynamic_form
         from .utils import save_registrant_from_form
@@ -583,6 +583,133 @@ class EventPage(
             template="events/registration_form.html",
             context_overrides={"event": self, "reg_type": reg_type, "form": form, "invite": invite},
         )
+
+    @route(r"^register/manage/$")
+    def manage_registration(self, request, *args, **kwargs):
+        """Self-service page: review + update answers or cancel."""
+
+        from django.http import HttpResponse
+        from .registrant_management import get_registrant_for_manage_link
+        from .forms import build_dynamic_form
+
+        token = request.GET.get("t", "")
+        rid = request.GET.get("rid", "")
+        registrant = get_registrant_for_manage_link(registrant_id=int(rid or 0), token=token)
+        if registrant.event_id != self.id:
+            return HttpResponse("Not found", status=404)
+
+        reg_type = registrant.registration_type
+        form_class = build_dynamic_form(self, reg_type, registrant.invite, require_email=False)
+
+        # Pre-fill initial values from stored answers + core fields.
+        initial = {}
+        if isinstance(registrant.answers, dict):
+            initial.update(registrant.answers)
+        initial.update({
+            "first_name": registrant.first_name,
+            "last_name": registrant.last_name,
+        })
+
+        form = form_class(initial=initial)
+
+        return self.render(
+            request,
+            template="events/registration_manage.html",
+            context_overrides={
+                "event": self,
+                "registrant": registrant,
+                "reg_type": reg_type,
+                "form": form,
+                "token": token,
+            },
+        )
+
+    @route(r"^register/manage/update/$")
+    def manage_registration_update(self, request, *args, **kwargs):
+        from django.http import HttpResponse
+        from django.shortcuts import redirect
+        from .registrant_management import get_registrant_for_manage_link
+        from .forms import build_dynamic_form
+        from .utils import _jsonable
+
+        if request.method != "POST":
+            return HttpResponse("Method not allowed", status=405)
+
+        token = request.GET.get("t", "")
+        rid = request.GET.get("rid", "")
+        registrant = get_registrant_for_manage_link(registrant_id=int(rid or 0), token=token)
+        if registrant.event_id != self.id:
+            return HttpResponse("Not found", status=404)
+
+        reg_type = registrant.registration_type
+        form_class = build_dynamic_form(self, reg_type, registrant.invite, require_email=False)
+        form = form_class(request.POST, request.FILES or None)
+
+        if not form.is_valid():
+            # Bubble up exactly what's invalid (including __all__ errors like honeypot/conditional rules)
+            for field, errs in form.errors.items():
+                if field == "__all__":
+                    for e in errs:
+                        messages.error(request, str(e))
+                    continue
+                label = form.fields.get(field).label if field in form.fields else field
+                for e in errs:
+                    messages.error(request, f"{label}: {e}" if label else str(e))
+
+            return self.render(
+                request,
+                template="events/registration_manage.html",
+                context_overrides={
+                    "event": self,
+                    "registrant": registrant,
+                    "reg_type": reg_type,
+                    "form": form,
+                    "token": token,
+                },
+            )
+
+        # Extra safety: even if a bot bypasses form validation or a future change removes
+        # the honeypot clean(), we still want to hard-block here.
+        if request.POST.get("website"):
+            return HttpResponse("Invalid submission.", status=400)
+
+        cleaned = form.cleaned_data.copy()
+        cleaned.pop("website", None)
+
+        registrant.first_name = cleaned.pop("first_name", registrant.first_name)
+        registrant.last_name = cleaned.pop("last_name", registrant.last_name)
+        # We intentionally do NOT allow changing email via self-service.
+        # Ignore posted value and also prevent storing it into answers.
+        cleaned.pop("email", None)
+
+        # Persist answers (basic JSON-ability). File handling isn't supported in update yet.
+        registrant.answers = _jsonable(cleaned)
+        registrant.save(update_fields=["first_name", "last_name", "answers"])
+
+        base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+        return redirect(f"{base}register/manage/?rid={registrant.pk}&t={token}&updated=1")
+
+    @route(r"^register/manage/cancel/$")
+    def manage_registration_cancel(self, request, *args, **kwargs):
+        from django.http import HttpResponse
+        from django.shortcuts import redirect
+        from .registrant_management import get_registrant_for_manage_link
+
+        if request.method != "POST":
+            return HttpResponse("Method not allowed", status=405)
+
+        token = request.GET.get("t", "")
+        rid = request.GET.get("rid", "")
+        registrant = get_registrant_for_manage_link(registrant_id=int(rid or 0), token=token)
+        if registrant.event_id != self.id:
+            return HttpResponse("Not found", status=404)
+
+        if registrant.status != Registrant.Status.CANCELLED:
+            registrant.status = Registrant.Status.CANCELLED
+            registrant.save(update_fields=["status"])
+
+        base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+        return redirect(f"{base}register/manage/?rid={registrant.pk}&t={token}&cancelled=1")
 
     def _get_invite_from_request(self, request):
         token = request.GET.get("invite")
@@ -981,7 +1108,35 @@ class Registrant(models.Model):
     invite = models.ForeignKey(Invite, null=True, blank=True, on_delete=models.SET_NULL, related_name="registrants")
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
 
+    # Self-service management token for a "manage your registration" link.
+    # Stored hashed so leaked DB dumps don't expose usable tokens.
+    manage_token_hash = models.CharField(max_length=64, blank=True, editable=False, db_index=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def ensure_manage_token(self) -> str:
+        """Generate and persist a new token if missing; returns the *raw* token.
+
+        Raw token is only returned at generation time and is intended to be
+        embedded into the confirmation email.
+        """
+
+        if self.manage_token_hash:
+            return ""
+
+        import secrets
+        import hashlib
+
+        raw = secrets.token_urlsafe(32)
+        self.manage_token_hash = hashlib.sha256(raw.encode("utf-8")).hexdigest()
+        self.save(update_fields=["manage_token_hash"])
+        return raw
+
+    @staticmethod
+    def hash_manage_token(raw_token: str) -> str:
+        import hashlib
+
+        return hashlib.sha256((raw_token or "").encode("utf-8")).hexdigest()
 
     def __str__(self) -> str:
         return f"{self.email} @ {self.event.title} ({self.registration_type.name})"

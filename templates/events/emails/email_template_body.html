@@ -35,6 +35,18 @@
             <tr>
               <td style="padding:8px 24px 24px 24px; font-family:Arial, Helvetica, sans-serif; color:#111111; font-size:16px; line-height:24px;">
 
+                {% if manage_url %}
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:16px 0 18px 0;">
+                    <tr>
+                      <td bgcolor="#111111" style="border-radius:4px;">
+                        <a href="{{ manage_url }}" target="_blank" rel="noopener" style="display:inline-block; padding:10px 14px; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:18px; color:#ffffff; text-decoration:none; font-weight:bold;">
+                          Manage registration
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                {% endif %}
+
                 {% for block in body %}
                   {% if block.block_type == "heading" %}
                     {% with v=block.value %}

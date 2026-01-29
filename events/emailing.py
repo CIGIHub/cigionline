@@ -24,7 +24,18 @@ def send_confirmation_email(registrant: Registrant, confirmed: bool) -> None:
     api_key = settings.SENDGRID_API_KEY
 
     event = registrant.event
-    template_obj = event.confirmed_template if confirmed else event.waitlist_template
+    template_obj = event.confirmation_template if confirmed else event.waitlist_template
+
+    # Build a self-service link the registrant can use to update/cancel.
+    raw_token = registrant.ensure_manage_token()
+    if not raw_token:
+        # Token already existed; we can't recover the raw token (stored hashed).
+        # Regenerate a fresh token so we can email a valid link.
+        registrant.manage_token_hash = ""
+        raw_token = registrant.ensure_manage_token()
+
+    base = event.get_url(request=None) or ("/" + event.url_path.lstrip("/"))
+    manage_url = f"{base}register/manage/?rid={registrant.pk}&t={raw_token}"
 
     ctx = {
         "event": event,
@@ -32,6 +43,7 @@ def send_confirmation_email(registrant: Registrant, confirmed: bool) -> None:
         "registration_type": registrant.registration_type,
         "confirmed": confirmed,
         "status_label": "CONFIRMED ✅" if confirmed else "WAITLISTED ⏳",
+        "manage_url": manage_url,
     }
 
     if template_obj:
