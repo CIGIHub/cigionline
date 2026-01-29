@@ -550,7 +550,15 @@ class EmailTemplateViewSet(ModelViewSet):
     menu_order = 106
     name = "emailtemplate"
     list_display = [
-        'title',
+        Column(
+            "title",
+            label="Title",
+            accessor=lambda obj: format_html(
+                '<a href="{}">{}</a>',
+                f"/admin/snippets/events/emailtemplate/edit/{obj.pk}/",
+                obj.title,
+            ),
+        ),
     ]
     search_fields = ('title',)
     ordering = ['title']

@@ -25,7 +25,7 @@ from wagtail.admin.panels import (
 )
 from wagtail.admin.panels import TabbedInterface, ObjectList
 from wagtail.fields import RichTextField, StreamField
-from wagtail.models import Orderable, Page
+from wagtail.models import Orderable, Page, PreviewableMixin
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.search import index
 from wagtail.snippets.models import register_snippet
@@ -1169,7 +1169,7 @@ class Registrant(models.Model):
 
 
 @register_snippet
-class EmailTemplate(models.Model):
+class EmailTemplate(PreviewableMixin, models.Model):
     title = models.CharField(max_length=120)
     subject = models.CharField(max_length=200)
     # Body supports rich content + optional placeholder merge fields
@@ -1251,6 +1251,52 @@ class EmailTemplate(models.Model):
 
     def __str__(self):
         return self.title
+
+    # Wagtail preview support (shows a Preview button in the snippet editor)
+    preview_modes = [
+        ("email", "Email"),
+    ]
+
+    def serve_preview(self, request, mode_name):
+        """Render a realistic email preview in the admin.
+
+        We reuse the exact same HTML renderer used for actual sends, but with
+        sample context values (event/registrant/type) so merge vars resolve.
+        """
+
+        from django.http import HttpResponse
+        from .email_rendering import render_streamfield_email_html
+
+        class _DummySite:
+            root_url = request.build_absolute_uri("/").rstrip("/")
+
+        class _DummyEvent:
+            title = "Sample Event"
+
+            def get_site(self):
+                return _DummySite()
+
+        class _DummyRegistrant:
+            first_name = "Jane"
+            email = "jane@example.com"
+
+        class _DummyType:
+            name = "General"
+
+        base = request.build_absolute_uri("/").rstrip("/")
+        manage_url = f"{base}/events/sample-event/register/manage/?rid=123&t=sample"
+
+        ctx = {
+            "event": _DummyEvent(),
+            "registrant": _DummyRegistrant(),
+            "registration_type": _DummyType(),
+            "confirmed": True,
+            "status_label": "CONFIRMED ✅",
+            "manage_url": manage_url,
+        }
+
+        html, _text = render_streamfield_email_html(template_obj=self, ctx=ctx)
+        return HttpResponse(html)
 
 
 class EmailCampaign(models.Model):
