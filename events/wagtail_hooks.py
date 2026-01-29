@@ -3,7 +3,7 @@ from wagtail.admin.ui.tables import Column
 from wagtail.admin.widgets import AdminPageChooser
 from wagtail.admin.viewsets.base import ViewSet, ViewSetGroup
 import csv
-from .models import EmailTemplate, Invite, Registrant, EventListPage, EventPage, RegistrationFormTemplate
+from .models import EmailTemplate, EmailCampaign, Invite, Registrant, EventListPage, EventPage, RegistrationFormTemplate
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.urls import path, reverse
@@ -564,6 +564,35 @@ class EmailTemplateViewSet(ModelViewSet):
     ordering = ['title']
 
 
+class EmailCampaignViewSet(ModelViewSet):
+    model = EmailCampaign
+    menu_label = "Email Campaigns"
+    menu_icon = "mail"
+    menu_order = 107
+    name = "emailcampaign"
+
+    list_display = [
+        "event",
+        "template",
+        "scheduled_for",
+        "sent_at",
+        "completed_at",
+    ]
+    search_fields = ("event__title", "template__title")
+    ordering = ["-scheduled_for"]
+
+    form_fields = [
+        "event",
+        "template",
+        "scheduled_for",
+        "include_statuses",
+        "include_type_slugs",
+        "attachment",
+        "sent_at",
+        "completed_at",
+    ]
+
+
 class EventViewSetGroup(ViewSetGroup):
     menu_label = 'Events'
     menu_icon = 'date'
@@ -576,6 +605,7 @@ class EventViewSetGroup(ViewSetGroup):
         RegistrationReportViewSet,
         RegistrationFormTemplate,
         EmailTemplateViewSet,
+        EmailCampaignViewSet,
     )
 
 

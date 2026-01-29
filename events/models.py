@@ -43,6 +43,12 @@ def _split_slugs(s: str):
     return [x.strip() for x in (s or "").split(",") if x.strip()]
 
 
+def _split_tokens(s: str):
+    """Split a comma-separated string into normalized tokens."""
+
+    return [x.strip().lower() for x in (s or "").split(",") if x.strip()]
+
+
 def _match(rule: str, slugs: list[str], current_slug: str) -> bool:
     S = set(slugs)
     if rule == "all":
@@ -1303,20 +1309,63 @@ class EmailCampaign(models.Model):
     event = models.ForeignKey(EventPage, on_delete=models.CASCADE, related_name='email_campaigns')
     template = models.ForeignKey(EmailTemplate, on_delete=models.PROTECT)
     scheduled_for = models.DateTimeField()
+    sent_at = models.DateTimeField(null=True, blank=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
     # Audience filters
-    include_statuses = models.JSONField(default=list)  # e.g., ["confirmed", "waitlisted"]
-    include_type_ids = models.JSONField(default=list)  # list of RegistrationType IDs
+    include_statuses = models.TextField(
+        blank=True,
+        default="",
+        help_text='Comma-separated registrant statuses (e.g. "confirmed,waitlisted"). Leave blank for all.',
+    )
+    include_type_slugs = models.TextField(
+        blank=True,
+        default="",
+        help_text='Comma-separated registration type slugs (e.g. "general,student"). Leave blank for all.',
+    )
     # Optional single attachment via Wagtail Documents
     attachment = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
 
     panels = [
+        FieldPanel('event'),
         FieldPanel('template'),
         FieldPanel('scheduled_for'),
+        FieldPanel('sent_at'),
+        FieldPanel('completed_at'),
         FieldPanel('include_statuses'),
-        FieldPanel('include_type_ids'),
+        FieldPanel('include_type_slugs'),
         FieldPanel('attachment'),
     ]
+
+    def get_include_statuses(self) -> list[str]:
+        return _split_tokens(self.include_statuses)
+
+    def get_include_type_slugs(self) -> list[str]:
+        return _split_slugs(self.include_type_slugs)
+
+
+class EmailCampaignSend(models.Model):
+    """Tracks delivery of an EmailCampaign to a Registrant.
+
+    This makes campaign execution idempotent: recurring jobs can safely run
+    without re-sending to the same person.
+    """
+
+    campaign = models.ForeignKey(
+        EmailCampaign, on_delete=models.CASCADE, related_name="sends"
+    )
+    registrant = models.ForeignKey(
+        "events.Registrant", on_delete=models.CASCADE, related_name="campaign_sends"
+    )
+    sent_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["campaign", "registrant"],
+                name="uniq_events_emailcampaignsend_campaign_registrant",
+            )
+        ]
 
 
 @register_snippet

@@ -10,6 +10,66 @@ from .models import Registrant, EmailTemplate
 from .email_rendering import render_email_subject, render_streamfield_email_html
 
 
+def send_event_campaign_email(campaign, registrant: Registrant) -> None:
+    """Send one scheduled EmailCampaign email to a registrant.
+
+    Creates an EmailCampaignSend row to ensure idempotency.
+    """
+
+    from .models import EmailCampaignSend
+
+    api_key = settings.SENDGRID_API_KEY
+
+    event = campaign.event
+    template_obj: EmailTemplate = campaign.template
+
+    raw_token = registrant.ensure_manage_token()
+    if not raw_token:
+        registrant.manage_token_hash = ""
+        raw_token = registrant.ensure_manage_token()
+
+    base = event.get_url(request=None) or ("/" + event.url_path.lstrip("/"))
+    manage_url = f"{base}register/manage/?rid={registrant.pk}&t={raw_token}"
+
+    ctx = {
+        "event": event,
+        "registrant": registrant,
+        "registration_type": registrant.registration_type,
+        "confirmed": registrant.status == Registrant.Status.CONFIRMED,
+        "status_label": registrant.status.upper(),
+        "manage_url": manage_url,
+    }
+
+    # Reserve send (idempotency). If it already exists, do nothing.
+    send_obj, created = EmailCampaignSend.objects.get_or_create(
+        campaign=campaign,
+        registrant=registrant,
+    )
+    if not created:
+        return
+
+    subject = render_email_subject(template_obj.subject, ctx)
+    html, text = render_streamfield_email_html(template_obj=template_obj, ctx=ctx)
+
+    message = Mail(
+        from_email=settings.SENDGRID_FROM_EMAIL_EVENTS,
+        to_emails=registrant.email,
+        subject=subject,
+        plain_text_content=text,
+        html_content=html,
+    )
+
+    sg = SendGridAPIClient(api_key)
+    try:
+        response = sg.send(message)
+        if response.status_code != 202:
+            raise RuntimeError(f"Failed to send email, status code: {response.status_code}")
+    except Exception:
+        # Don't leave a send marker behind if delivery failed.
+        send_obj.delete()
+        raise
+
+
 def _render_subject(subject_template: str, ctx: dict) -> str:
     # Backwards-compatible wrapper (existing importers may rely on this name).
     return render_email_subject(subject_template, ctx)
