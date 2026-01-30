@@ -208,8 +208,8 @@ class CIGIOnlineSearchQueryCompiler:
             self.years = years
         if countries and len(countries) > 0:
             self.countries = countries
-        if exclusions and len(exclusions) > 0:
-            self.exclusions = exclusions
+        if exclusions is not None:
+            self.exclusions = exclusions.split(',')
         if additional_authored_pages and len(additional_authored_pages) > 0:
             self.additional_authored_pages = additional_authored_pages
 
@@ -218,6 +218,8 @@ class CIGIOnlineSearchQueryCompiler:
         pub_type_exclusions = ['DigiFin Policy Brief']
         if 'working-papers' in self.exclusions if self.exclusions else []:
             pub_type_exclusions.append('Working Paper')
+        if 'unofficial-publications' in self.exclusions if self.exclusions else []:
+            pub_type_exclusions.append('Unofficial Publications')
         exclusions = {'contentpage__publicationpage__publication_type__title__in': pub_type_exclusions}
         base = Page.objects.filter(path__startswith='00010001').not_type(NewsletterPage).exclude(**exclusions).live()
 
@@ -641,15 +643,18 @@ class CIGIOnlineElevatedSearchQueryCompiler:
             self.multimediaseriesid = multimediaseriesid
         if countries and len(countries) > 0:
             self.countries = countries
-        if exclusions and len(exclusions) > 0:
-            self.exclusions = exclusions
+        if exclusions is not None:
+            self.exclusions = exclusions.split(',')
 
     @property
     def queryset(self):
         pub_type_exclusions = ['DigiFin Policy Brief']
         if 'working-papers' in self.exclusions if self.exclusions else []:
             pub_type_exclusions.append('Working Paper')
+        if 'unofficial-publications' in self.exclusions if self.exclusions else []:
+            pub_type_exclusions.append('Unofficial Publications')
         exclusions = {'contentpage__publicationpage__publication_type__title__in': pub_type_exclusions}
+        print(exclusions)
 
         return Page.objects.filter(path__startswith='00010001').not_type(NewsletterPage).exclude(**exclusions).live()
 

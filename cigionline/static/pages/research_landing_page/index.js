@@ -89,7 +89,7 @@ root.render(
         value: 'research.ProjectPage',
       }],
     }]}
-    exclusions={['working-papers']}
+    exclusions={['working-papers', 'unofficial-publications']}
     RowComponent={ResearchContentListing}
     tableColumns={[{
       colSpan: 4,
