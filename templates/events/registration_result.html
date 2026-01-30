@@ -17,41 +17,12 @@
         {% endif %}
       </div>
 
-      <h1>Registration status</h1>
+      <h1>Registration submitted</h1>
 
-      {% if status == "ok" %}
       <div class="alert alert-success" role="alert">
-        Thanks! Your registration{% if registrant and registrant.registration_type %}
-        for <strong>{{ registrant.registration_type.name }}</strong>{% endif %} was received and confirmed.
-        We’ve emailed you a confirmation.
+        Thanks! If a registration was submitted for this email address, you’ll receive an email shortly.
+        If you already registered, we’ll email you a link to manage your registration.
       </div>
-
-      {% elif status == "wait" %}
-      <div class="alert alert-warning" role="alert">
-        Thanks! You’re on the waitlist. We’ll email you if a spot opens.
-      </div>
-
-      {% elif status == "err" %}
-      <div class="alert alert-danger" role="alert">
-        We couldn’t submit your registration. Please review the issues below and try again.
-      </div>
-      {% if messages %}
-      <ul class="mb-4">
-        {% for m in messages %}
-        <li>{{ m }}</li>
-        {% endfor %}
-      </ul>
-      {% endif %}
-
-      {% elif status == "bot" %}
-      <div class="alert alert-info" role="alert">
-        It looks like the form wasn’t submitted correctly. Please try again.
-      </div>
-      {% else %}
-      <div class="alert alert-secondary" role="alert">
-        Registration status unknown. Please return to the event page and try again.
-      </div>
-      {% endif %}
     </div>
   </div>
 </section>

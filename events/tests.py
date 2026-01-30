@@ -1,11 +1,93 @@
 from datetime import datetime
 from home.models import HomePage, Think7HomePage
 from wagtail.test.utils import WagtailPageTestCase
+from django.test import TestCase
 
 from .models import EventListPage, EventPage
 from .email_rendering import render_streamfield_email_html
 
 from unittest.mock import patch
+
+
+class DuplicateRegistrationTests(TestCase):
+    """Duplicate email registrations should not create multiple active rows."""
+
+    @patch("events.models.send_confirmation_email")
+    def test_duplicate_registration_does_not_create_second_registrant(self, send_mock):
+        from events.models import EventPage, RegistrationType, Registrant
+        from wagtail.models import Site
+
+        # Minimal Site/Page setup so the EventPage route can resolve.
+        root = Site.objects.get(is_default_site=True).root_page
+        event = EventPage(title="Dup Test Event")
+        root.add_child(instance=event)
+        event.save_revision().publish()
+
+        reg_type = RegistrationType(event=event, name="General", slug="general", sort_order=0, is_public=True)
+        reg_type.save()
+
+        # Pre-existing (active) registrant
+        Registrant.objects.create(
+            event=event,
+            registration_type=reg_type,
+            email="test@example.com",
+            first_name="A",
+            last_name="B",
+            status=Registrant.Status.CONFIRMED,
+        )
+
+        before = Registrant.objects.filter(event=event, email__iexact="test@example.com").count()
+
+        # Post again with same email
+        resp = self.client.post(
+            f"{event.url}register/type/{reg_type.slug}/",
+            data={
+                "first_name": "New",
+                "last_name": "User",
+                "email": "test@example.com",
+                "website": "",
+            },
+        )
+
+        self.assertEqual(resp.status_code, 302)
+        after = Registrant.objects.filter(event=event, email__iexact="test@example.com").count()
+        self.assertEqual(before, after)
+        self.assertTrue(send_mock.called)
+
+    @patch("events.models.send_confirmation_email")
+    def test_duplicate_registration_allows_if_cancelled(self, send_mock):
+        from events.models import EventPage, RegistrationType, Registrant
+        from wagtail.models import Site
+
+        root = Site.objects.get(is_default_site=True).root_page
+        event = EventPage(title="Dup Cancelled Event")
+        root.add_child(instance=event)
+        event.save_revision().publish()
+
+        reg_type = RegistrationType(event=event, name="General", slug="general", sort_order=0, is_public=True)
+        reg_type.save()
+
+        Registrant.objects.create(
+            event=event,
+            registration_type=reg_type,
+            email="test@example.com",
+            status=Registrant.Status.CANCELLED,
+        )
+
+        before = Registrant.objects.filter(event=event, email__iexact="test@example.com").count()
+
+        resp = self.client.post(
+            f"{event.url}register/type/{reg_type.slug}/",
+            data={
+                "first_name": "New",
+                "last_name": "User",
+                "email": "test@example.com",
+                "website": "",
+            },
+        )
+        self.assertEqual(resp.status_code, 302)
+        after = Registrant.objects.filter(event=event, email__iexact="test@example.com").count()
+        self.assertEqual(after, before + 1)
 
 
 class EventListPageTests(WagtailPageTestCase):

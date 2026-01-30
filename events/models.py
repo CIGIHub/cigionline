@@ -555,6 +555,37 @@ class EventPage(
 
             form = form_class(request.POST, request.FILES)
             if form.is_valid():
+                # Best-practice duplicate handling (privacy-safe): if this email is
+                # already registered for this event, don't create another Registrant.
+                # Instead, email a management link to that address.
+                #
+                # NOTE: We treat this like a successful submission to avoid leaking
+                # whether an email is registered.
+                email = (form.cleaned_data.get("email") or "").strip().lower()
+                if invite and getattr(invite, "email", None):
+                    email = invite.email.strip().lower()
+
+                if email:
+                    existing = (
+                        Registrant.objects.select_related("registration_type")
+                        .filter(event=self, email__iexact=email)
+                        .exclude(status=Registrant.Status.CANCELLED)
+                        .order_by("-id")
+                        .first()
+                    )
+                    if existing:
+                        # Ensure the existing registrant has a usable manage token
+                        # and email them. We keep the UI message generic.
+                        try:
+                            confirmed_existing = existing.status == Registrant.Status.CONFIRMED
+                            send_confirmation_email(existing, confirmed_existing)
+                        except Exception:
+                            # Don't break the registration flow if email sending fails.
+                            pass
+
+                        base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+                        return redirect(f"{base}register/result/?s=ok")
+
                 registrant = save_registrant_from_form(self, reg_type, form, invite)
 
                 # Atomically burn invite usage if present
@@ -567,8 +598,8 @@ class EventPage(
                 send_confirmation_email(registrant, confirmed)
 
                 base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
-                s = "ok" if confirmed else "wait"
-                return redirect(f"{base}register/result/?s={s}&rid={registrant.pk}")
+                # Generic result to avoid leaking whether they were confirmed vs waitlisted.
+                return redirect(f"{base}register/result/?s=ok")
             else:
                 for field, errs in form.errors.items():
                     label = form.fields.get(field).label if field in form.fields else field
