@@ -654,7 +654,6 @@ class CIGIOnlineElevatedSearchQueryCompiler:
         if 'unofficial-publications' in self.exclusions if self.exclusions else []:
             pub_type_exclusions.append('Unofficial Publications')
         exclusions = {'contentpage__publicationpage__publication_type__title__in': pub_type_exclusions}
-        print(exclusions)
 
         return Page.objects.filter(path__startswith='00010001').not_type(NewsletterPage).exclude(**exclusions).live()
 
