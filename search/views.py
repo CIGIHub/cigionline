@@ -112,7 +112,7 @@ def search_api(request):
         eventaccess=request.GET.getlist('eventaccess', None),
         experts=request.GET.get('expert', None),
         countries=request.GET.getlist('country', None),
-        exclusions=request.GET.getlist('exclusions', None),
+        exclusions=request.GET.get('exclusions', None),
         additional_authored_pages=request.GET.get('additional_authored_pages', None),
     )
     promoted_pages = []
@@ -133,7 +133,7 @@ def search_api(request):
             topics=request.GET.getlist('topic', None),
             experts=request.GET.get('expert', None),
             countries=request.GET.getlist('country', None),
-            exclusions=request.GET.getlist('exclusions', None),
+            exclusions=request.GET.get('exclusions', None),
         )
 
     aggregations = pages.get_aggregations()
