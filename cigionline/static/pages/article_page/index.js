@@ -9,16 +9,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const fab = player.querySelector('.tts-fab');
   const progress = player.querySelector('.tts-progress');
-  const bar       = player.querySelector('.tts-bar');
+  const bar = player.querySelector('.tts-bar');
   const timeEl = document.getElementById('ttsTime');
   const promptEl = document.getElementById('ttsPrompt');
-  const sentinel  = document.getElementById('ttsSentinel');
-  const closeBtn  = player.querySelector('.tts-close'); // ⬅️ now from template
+  const sentinel = document.getElementById('ttsSentinel');
+  const closeBtn = player.querySelector('.tts-close');
+
+  // speed UI elements
+  const speedBtn = player.querySelector('.tts-speed-btn');
+  const speedMenu = player.querySelector('.tts-speed-menu');
+  const speedOptions = player.querySelectorAll('.tts-speed-option');
+
+  const speedRateNum = speedBtn ? speedBtn.querySelector('.rate-num') : null;
 
   // Session flags
-  let hasInteracted = false;      // true after first play this session
-  let sentinelOutOfView = false;  // true when we've scrolled past the sentinel
+  let hasInteracted = false;
+  let sentinelOutOfView = false;
   let stickyDismissed = false;
+
+  // playback speed config + persistence
+  const speedSteps = [0.75, 1, 1.25, 1.5];
+  const speedStorageKey = 'ttsPlaybackRate';
 
   const fmt = (t) => {
     if (!isFinite(t)) return '00:00';
@@ -57,7 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Show progress (and hide prompt) after the first play
   const flipToProgress = () => {
     if (!player.classList.contains('has-started')) {
       player.classList.add('has-started');
@@ -66,14 +76,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Sticky only when: scrolled past sentinel AND user has interacted AND not dismissed
   const updateSticky = () => {
     const shouldStick = Boolean(sentinelOutOfView && hasInteracted && !stickyDismissed);
     player.classList.toggle('is-sticky', shouldStick);
-    // No direct style toggling; CSS shows .tts-close when .is-sticky is present
   };
 
-  // Measure prompt width so progress matches it exactly
   const setLineWidth = () => {
     if (!promptEl) return;
     const style = getComputedStyle(promptEl);
@@ -83,6 +90,92 @@ document.addEventListener('DOMContentLoaded', () => {
     player.style.setProperty('--tts-line', w > 0 ? `${w}px` : '12ch');
     if (wasHidden) promptEl.style.display = 'none';
   };
+
+  // speed helpers
+  // CHANGED: keep for aria-label only; do NOT write it into button text.
+  const formatRate = (rate) => String(Number(rate)) + '×';
+
+  const applyRate = (rate) => {
+    const numericRate = Number(rate);
+    if (!isFinite(numericRate) || numericRate <= 0) return;
+    if (!speedSteps.includes(numericRate)) return;
+
+    audio.playbackRate = numericRate;
+
+    // CHANGED: do NOT overwrite speedBtn textContent (it nukes child spans and CSS hook)
+    // Update the number span only; CSS appends the × via ::after
+    if (speedRateNum) {
+      speedRateNum.textContent = String(numericRate);
+    }
+
+    if (speedBtn) {
+      speedBtn.setAttribute('aria-label', `Playback speed ${formatRate(numericRate)}`);
+    }
+
+    if (speedOptions && speedOptions.length) {
+      speedOptions.forEach((optionButton) => {
+        const optionRate = Number(optionButton.getAttribute('data-rate'));
+        const isSelected = optionRate === numericRate;
+        optionButton.classList.toggle('is-selected', isSelected);
+        optionButton.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+      });
+    }
+  };
+
+  const getInitialRate = () => 1;
+
+  const openSpeedMenu = () => {
+    if (!speedBtn || !speedMenu) return;
+    speedBtn.setAttribute('aria-expanded', 'true');
+    speedMenu.setAttribute('aria-hidden', 'false');
+    player.classList.add('speed-open');
+  };
+
+  const closeSpeedMenu = () => {
+    if (!speedBtn || !speedMenu) return;
+    speedBtn.setAttribute('aria-expanded', 'false');
+    speedMenu.setAttribute('aria-hidden', 'true');
+    player.classList.remove('speed-open');
+  };
+
+  const toggleSpeedMenu = () => {
+    const expanded = speedBtn && speedBtn.getAttribute('aria-expanded') === 'true';
+    if (expanded) closeSpeedMenu();
+    else openSpeedMenu();
+  };
+
+  // speed button click opens/closes menu
+  speedBtn && speedBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleSpeedMenu();
+  });
+
+  // speed option click selects speed and closes
+  speedOptions && speedOptions.forEach((optionButton) => {
+    optionButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const nextRate = optionButton.getAttribute('data-rate');
+      applyRate(nextRate);
+
+      try {
+        window.localStorage.setItem(speedStorageKey, String(Number(nextRate)));
+      } catch (error) {}
+
+      closeSpeedMenu();
+    });
+  });
+
+  // close menu on outside click
+  document.addEventListener('click', (e) => {
+    if (!speedMenu || !speedBtn) return;
+    const clickedInside = player.contains(e.target);
+    if (!clickedInside) closeSpeedMenu();
+  });
+
+  // close menu on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeSpeedMenu();
+  });
 
   // Play/pause toggle (no reset)
   fab && fab.addEventListener('click', () => {
@@ -95,19 +188,17 @@ document.addEventListener('DOMContentLoaded', () => {
         updateSticky();
       }).catch(() => {});
     } else {
-      audio.pause(); // pause does NOT close sticky
+      audio.pause();
     }
   });
 
-  // Close button: pause if playing, then dismiss sticky for this session
   closeBtn && closeBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     stickyDismissed = true;
     if (!audio.paused) audio.pause();
-    updateSticky(); // hides sticky (and the close button via CSS)
+    updateSticky();
   });
 
-  // Click-to-seek on progress track
   progress && progress.addEventListener('click', (e) => {
     const rect = progress.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -117,7 +208,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Audio events
   audio.addEventListener('play', () => {
     stickyDismissed = false;
     hasInteracted = true;
@@ -128,20 +218,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   audio.addEventListener('pause', () => {
     setPlayingState(false);
-    // keep sticky open after pause (user closes via X)
     updateSticky();
   });
 
   audio.addEventListener('ended', () => {
     setPlayingState(false);
-    // keep sticky open after end
     updateSticky();
   });
 
   audio.addEventListener('timeupdate', () => { updateTime(); updateProgress(); });
   audio.addEventListener('loadedmetadata', () => { updateTime(); updateProgress(); });
 
-  // Sticky behavior with IntersectionObserver
   if ('IntersectionObserver' in window && sentinel) {
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -160,11 +247,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: true });
   }
 
-  // Pause if navigating away (optional)
-  // document.addEventListener('visibilitychange', () => {
-  //   if (document.hidden && !audio.paused) audio.pause();
-  // });
-
   // If page loads with a non-zero currentTime, show progress immediately
   if ((audio.currentTime || 0) > 0) {
     hasInteracted = true;
@@ -173,9 +255,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initial layout
   setLineWidth();
+
+  // apply saved/default speed on init + mark selected option
+  applyRate(getInitialRate());
+
   updateTime();
   updateProgress();
 
-  // Keep line width in sync with viewport changes
   window.addEventListener('resize', setLineWidth, { passive: true });
 });
