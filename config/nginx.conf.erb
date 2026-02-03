@@ -176,7 +176,7 @@ http {
 			}
 		<% end %>
 
-    <% if ENV['INTERACTIVE_2021ANNUALREPORT_PROXY'] %>
+        <% if ENV['INTERACTIVE_2021ANNUALREPORT_PROXY'] %>
 			location /interactives/2021annualreport {
 				proxy_pass https://<%= ENV['INTERACTIVE_2021ANNUALREPORT_PROXY'] %>;
 				proxy_set_header X-Real-IP $remote_addr;
@@ -315,6 +315,21 @@ http {
 		<% if ENV['INTERACTIVE_SURVEYOFPROGRESS_PROXY'] %>
 			location /interactives/survey-of-progress/ {
 				proxy_pass http://<%= ENV['INTERACTIVE_SURVEYOFPROGRESS_PROXY'] %>/;
+			}
+		<% end %>
+
+		<% if ENV['MAILCHIMP_SITE_PROXY'] %>
+			location /canadian-productivity/ {
+				proxy_pass https://<%= ENV['MAILCHIMP_SITE_PROXY'] %>/canadian-productivity/;
+				
+				proxy_ssl_server_name on;
+  			proxy_set_header Host lp.cigionline.org;
+				
+				proxy_set_header X-Real-IP $remote_addr;
+				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+				proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+				proxy_set_header X-Real-IP $remote_addr;
 			}
 		<% end %>
 	}
