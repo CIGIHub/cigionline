@@ -194,7 +194,9 @@
         </div>
       {% endif %}
 
-      {% include 'includes/disclaimer.html' with additional_disclaimers=self.get_additional_disclaimers %}
+      {% if not self.hide_disclaimer %}
+        {% include 'includes/disclaimer.html' with additional_disclaimers=self.get_additional_disclaimers %}
+      {% endif %}
 
       {% if self.is_opinion and self.author_count > 0 %}
         {% include "includes/about_the_author.html" with authors=self.authors.all author_count=self.author_count %}
