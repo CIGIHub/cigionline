@@ -204,9 +204,96 @@ class EmailTemplateRenderingTests(WagtailPageTestCase):
         self.assertIn("Test Event", html)
         self.assertTrue(len(text) > 0)
 
-        response_3 = self.get_api_response(12, 2010)
-        self.assertEqual(response_3['meta']['total_count'], 0)
-        self.assertEqual(len(response_3['items']), 0)
+    def test_registrant_answers_merge_variable_renders(self):
+        from wagtail.models import Site
+        from events.models import EventPage, RegistrationType, Registrant, EmailTemplate
+        from events.email_rendering import render_streamfield_email_html
+
+        root = Site.objects.get(is_default_site=True).root_page
+        event = EventPage(title="Answers Event")
+        root.add_child(instance=event)
+        event.save_revision().publish()
+
+        reg_type = RegistrationType(event=event, name="General", slug="general", sort_order=0, is_public=True)
+        reg_type.save()
+
+        registrant = Registrant.objects.create(
+            event=event,
+            registration_type=reg_type,
+            email="a@example.com",
+            first_name="A",
+            last_name="B",
+            answers={"f_company": "CIGI", "f_role": "Researcher"},
+        )
+
+        tmpl = EmailTemplate(title="T", subject="S", body=[{"type": "answers", "value": None}])
+
+        from events.emailing import _render_registrant_answers
+
+        answers_html, answers_text = _render_registrant_answers(registrant)
+
+        html, _text = render_streamfield_email_html(
+            template_obj=tmpl,
+            ctx={
+                "event": event,
+                "registrant": registrant,
+                "registration_type": reg_type,
+                "confirmed": True,
+                "manage_url": "https://example.com/manage",
+                "registrant_answers_html": answers_html,
+                "registrant_answers_text": answers_text,
+            },
+        )
+
+        self.assertIn("Registration details", html)
+        self.assertIn("CIGI", html)
+
+    def test_registrant_answers_does_not_treat_f_uuid_as_builtin_email(self):
+        """If an answer label shows a UUID, it can't be the built-in Registrant.email.
+
+        Built-in identity fields are stored on the Registrant model and are excluded
+        from answers output when present under literal keys like 'email'. Dynamic
+        fields are stored under keys like f_<uuid>.
+        """
+
+        import uuid
+
+        from wagtail.models import Site
+        from events.models import EventPage, RegistrationType, Registrant
+        from events.emailing import _render_registrant_answers
+
+        root = Site.objects.get(is_default_site=True).root_page
+        event = EventPage(title="Answers UUID Event")
+        root.add_child(instance=event)
+        event.save_revision().publish()
+
+        reg_type = RegistrationType(event=event, name="General", slug="general", sort_order=0, is_public=True)
+        reg_type.save()
+
+        fake_field_key = uuid.uuid4()
+        registrant = Registrant.objects.create(
+            event=event,
+            registration_type=reg_type,
+            email="built-in@example.com",
+            first_name="A",
+            last_name="B",
+            answers={
+                "email": "should-not-appear@example.com",
+                f"f_{fake_field_key}": "dynamic@example.com",
+                "f_company": "CIGI",
+            },
+        )
+
+        _html, text = _render_registrant_answers(registrant)
+
+        # Literal 'email' is treated as identity field and excluded.
+        self.assertNotIn("should-not-appear@example.com", text)
+        # Unresolvable dynamic UUID-style key is rendered under a neutral fallback label.
+        self.assertIn("dynamic@example.com", text)
+        self.assertNotIn(str(fake_field_key), text)
+        self.assertIn("Additional question", text)
+        # Other non-uuid keys still render.
+        self.assertIn("CIGI", text)
 
 # class EventPageViewSetTests(WagtailPageTestCase):
 #     fixtures = ['events_search_table.json']

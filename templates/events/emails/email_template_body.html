@@ -110,6 +110,11 @@
                       </tr>
                     </table>
 
+                  {% elif block.block_type == "answers" %}
+                    {% if registrant_answers_html %}
+                      {{ registrant_answers_html|safe }}
+                    {% endif %}
+
                   {% elif block.block_type == "attachment_hint" %}
                     {# Non-rendered in emails (admin-only hint). #}
                   {% endif %}

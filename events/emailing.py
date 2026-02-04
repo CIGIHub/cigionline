@@ -10,6 +10,123 @@ from .models import Registrant, EmailTemplate
 from .email_rendering import render_email_subject, render_streamfield_email_html
 
 
+def _render_registrant_answers(registrant: Registrant) -> tuple[str, str]:
+    """Render the registrant's dynamic answers as (html, text).
+
+    Intended for use as a merge variable inside email templates.
+    """
+
+    answers = registrant.answers
+    if not isinstance(answers, dict) or not answers:
+        return ("", "")
+
+    def _fmt_value(v) -> str:
+        if v is None or v == "" or v == [] or v == {}:
+            return ""
+        if isinstance(v, bool):
+            return "Yes" if v else "No"
+        if isinstance(v, (int, float)):
+            # Avoid showing trailing .0 for whole numbers.
+            if isinstance(v, float) and v.is_integer():
+                return str(int(v))
+            return str(v)
+        if isinstance(v, (list, tuple)):
+            parts = [p for p in (_fmt_value(x) for x in v) if p]
+            return ", ".join(parts)
+        if isinstance(v, dict):
+            # File upload values from save_registrant_from_form
+            if "name" in v:
+                return str(v.get("name") or "")
+            return str(v)
+        return str(v)
+
+    def _is_internal_key(k: str) -> bool:
+        # Hide honeypot + internal conditional toggles.
+        if k == "website":
+            return True
+        if k.endswith("__enabled"):
+            return True
+        return False
+
+    def _label_for_key(answer_key: str) -> str:
+        # Dynamic fields are stored as f_<uuid> plus optional suffixes like:
+        #   __details (conditional_text)
+        #   __other   (conditional_dropdown_other)
+        if not answer_key.startswith("f_"):
+            return answer_key
+
+        base = answer_key
+        suffix = ""
+        if answer_key.endswith("__details"):
+            base = answer_key[: -len("__details")]
+            suffix = " (details)"
+        elif answer_key.endswith("__other"):
+            base = answer_key[: -len("__other")]
+            suffix = " (other)"
+
+        # base expected: f_<uuid>
+        raw_uuid = base[2:]
+        # Normalize UUID (strip braces) and validate before querying.
+        try:
+            import uuid
+
+            uuid_obj = uuid.UUID(raw_uuid)
+        except Exception:
+            return answer_key
+        try:
+            # registrant.event.registration_form_template.fields uses UUIDField field_key
+            ff = (
+                registrant.event.registration_form_template.fields.filter(field_key=uuid_obj)
+                .only("label", "conditional_details_label")
+                .first()
+            )
+            if ff:
+                # Prefer the configured conditional details label for __details
+                if answer_key.endswith("__details") and getattr(ff, "conditional_details_label", ""):
+                    return (ff.conditional_details_label or ff.label) + suffix
+                return (ff.label or answer_key) + suffix
+        except Exception:
+            pass
+
+        # If we can't resolve the UUID to a current RegistrationFormField (e.g.
+        # form template has changed since this registrant submitted), avoid showing
+        # raw UUIDs in email. Use a neutral fallback label instead.
+        return "Additional question" + suffix
+
+    # Drop internal keys + empties; resolve labels + format values.
+    items: list[tuple[str, str]] = []
+    for k, v in answers.items():
+        if _is_internal_key(str(k)):
+            continue
+
+        # Don't repeat identity fields if they were (incorrectly) stored in answers.
+        if str(k) in {"email", "first_name", "last_name"}:
+            continue
+
+        fv = _fmt_value(v)
+        if not fv:
+            continue
+
+        label = _label_for_key(str(k))
+        items.append((label, fv))
+
+    if not items:
+        return ("", "")
+
+    # Keep output simple and email-client-safe.
+    html = render_to_string(
+        "events/emails/_registrant_answers.html",
+        {"items": items},
+    ).strip()
+
+    text_lines = ["Registration details:"]
+    for k, v in items:
+        text_lines.append(f"- {k}: {v}")
+    text = "\n".join(text_lines)
+
+    return (html, text)
+
+
 def send_event_campaign_email(campaign, registrant: Registrant) -> None:
     """Send one scheduled EmailCampaign email to a registrant.
 
@@ -39,6 +156,10 @@ def send_event_campaign_email(campaign, registrant: Registrant) -> None:
         "status_label": registrant.status.upper(),
         "manage_url": manage_url,
     }
+
+    answers_html, answers_text = _render_registrant_answers(registrant)
+    ctx["registrant_answers_html"] = answers_html
+    ctx["registrant_answers_text"] = answers_text
 
     # Reserve send (idempotency). If it already exists, do nothing.
     send_obj, created = EmailCampaignSend.objects.get_or_create(
@@ -105,6 +226,10 @@ def send_confirmation_email(registrant: Registrant, confirmed: bool) -> None:
         "status_label": "CONFIRMED ✅" if confirmed else "WAITLISTED ⏳",
         "manage_url": manage_url,
     }
+
+    answers_html, answers_text = _render_registrant_answers(registrant)
+    ctx["registrant_answers_html"] = answers_html
+    ctx["registrant_answers_text"] = answers_text
 
     if template_obj:
         subject = render_email_subject(template_obj.subject, ctx)

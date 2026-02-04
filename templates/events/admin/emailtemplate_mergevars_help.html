@@ -5,4 +5,7 @@
   <li><code>{% verbatim %}{{ registrant.last_name }}{% endverbatim %}</code></li>
   <li><code>{% verbatim %}{{ registrant.email }}{% endverbatim %}</code></li>
   <li><code>{% verbatim %}{{ registration_type.name }}{% endverbatim %}</code></li>
+  <li><code>{% verbatim %}{{ registrant.answers }}{% endverbatim %}</code> (raw JSON dict)</li>
+  <li><code>{% verbatim %}{{ registrant_answers_html|safe }}{% endverbatim %}</code> (formatted answers table)</li>
+  <li><code>{% verbatim %}{{ registrant_answers_text }}{% endverbatim %}</code> (plain-text list of answers)</li>
 </ul>

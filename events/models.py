@@ -1266,6 +1266,10 @@ class EmailTemplate(PreviewableMixin, models.Model):
             ),
             ("divider", blocks.StaticBlock(icon="horizontalrule", label="Divider")),
             (
+                "answers",
+                blocks.StaticBlock(icon="list-ul", label="Registrant Answers"),
+            ),
+            (
                 "attachment_hint",
                 blocks.StructBlock(
                     [
