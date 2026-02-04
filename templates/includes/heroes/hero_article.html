@@ -23,6 +23,32 @@
                       aria-hidden='true'>
                     <div class='tts-bar' style='width:0%'></div>
                   </div>
+                    <div class='tts-speed-wrap'>
+                      <button
+                        class='tts-speed-btn'
+                        type='button'
+                        aria-label='Playback speed'
+                        aria-haspopup='listbox'
+                        aria-expanded='false'
+                        aria-controls='ttsSpeedMenu'
+                      >
+                        <span class="rate-num">1</span>
+                      </button>
+                      <div class='tts-speed-menu' id='ttsSpeedMenu' role='listbox' aria-hidden='true'>
+                        <button type="button" class="tts-speed-option" role="option" data-rate="0.75">
+                          <span class="rate-num">0.75</span>
+                        </button>
+                        <button type="button" class="tts-speed-option" role="option" data-rate="1">
+                          <span class="rate-num">1</span>
+                        </button>
+                        <button type="button" class="tts-speed-option" role="option" data-rate="1.25">
+                          <span class="rate-num">1.25</span>
+                        </button>
+                        <button type="button" class="tts-speed-option" role="option" data-rate="1.5">
+                          <span class="rate-num">1.5</span>
+                        </button>
+                      </div>
+                    </div>
                   <span class='tts-time' id='ttsTime'>00:00</span>
                 </div>
                 <button class='tts-close' type='button' aria-label='Close player' title='Close'>×</button>
