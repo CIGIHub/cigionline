@@ -186,7 +186,12 @@
 
 /* TTS */
 .hero-social-links {
+  @include media-breakpoint-down(sm) {
+    flex-direction: column;
+  }
+
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
 }
