@@ -1,16 +1,111 @@
 from __future__ import annotations
-
+import pytz
 from django.conf import settings
 from django.template.loader import render_to_string
-from django.utils.html import strip_tags
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-
-from .models import Registrant, EmailTemplate
 from .email_rendering import render_email_subject, render_streamfield_email_html
+from .models import Registrant
 
 
-def _render_registrant_answers(registrant: Registrant) -> tuple[str, str]:
+def _event_email_merge_vars(event) -> dict:
+    """Pre-format event date/time/location merge vars for email templates.
+
+    We expose strings (not datetimes) to keep templates simple and consistent.
+    """
+
+    # --- Date/time ---
+    # For editor-facing email merge vars we want the *wall-clock time* that was
+    # entered in the Event admin (i.e., the event's selected `time_zone`).
+    #
+    # In this codebase, `publishing_date` / `event_end` are typically stored as
+    # UTC datetimes (Django/Wagtail behaviour with USE_TZ=True), and the admin
+    # displays them in the site's configured timezone.
+    #
+    # Therefore: treat the stored values as UTC and convert them to the event's
+    # configured timezone for display.
+    #
+    # NOTE: We intentionally do *not* use EventPage.event_start_time_utc here.
+    # That property exists to work around legacy storage assumptions and can
+    # shift the wall-clock time relative to what editors see in the admin.
+    start_utc = getattr(event, "publishing_date", None)
+    end_utc = getattr(event, "event_end", None)
+
+    tz_name = getattr(event, "time_zone", None) or "America/Toronto"
+    try:
+        tz = pytz.timezone(tz_name)
+    except Exception:
+        tz = None
+
+    def _to_local(dt):
+        if not dt:
+            return None
+        try:
+            if tz:
+                return dt.astimezone(tz)
+        except Exception:
+            pass
+        return dt
+
+    start_local = _to_local(start_utc)
+    end_local = _to_local(end_utc)
+
+    event_date = start_local.strftime("%B %-d, %Y") if start_local else ""
+
+    def _fmt_time(dt):
+        if not dt:
+            return ""
+        return dt.strftime("%-I:%M %p").lstrip("0")
+
+    start_time = _fmt_time(start_local)
+    end_time = _fmt_time(end_local)
+    event_time = start_time if not end_time else f"{start_time} – {end_time}"
+
+    event_timezone = getattr(event, "time_zone_label", "") or ""
+    event_datetime = " · ".join([x for x in [event_date, event_time] if x])
+    if event_timezone:
+        event_datetime = (event_datetime + f" ({event_timezone})").strip()
+
+    # --- Location ---
+    event_format = getattr(event, "event_format", "")
+    location_name = getattr(event, "location_name", "") or ""
+
+    # Prefer model helper if available.
+    location_address = ""
+    try:
+        if hasattr(event, "location_string"):
+            location_address = event.location_string() or ""
+    except Exception:
+        location_address = ""
+
+    location_map_url = ""
+    try:
+        if hasattr(event, "location_map_url"):
+            location_map_url = event.location_map_url() or ""
+    except Exception:
+        location_map_url = ""
+
+    # For virtual events, show a simple "Virtual" label.
+    location_display = ""
+    if (event_format or "").lower() == "virtual":
+        location_display = "Virtual"
+    else:
+        parts = [location_name, location_address]
+        location_display = ", ".join([p for p in parts if p])
+
+    return {
+        "event_date": event_date,
+        "event_time": event_time,
+        "event_timezone": event_timezone,
+        "event_datetime": event_datetime,
+        "event_location_name": location_name,
+        "event_location_address": location_address,
+        "event_location_map_url": location_map_url,
+        "event_location": location_display,
+    }
+
+
+def _render_registrant_answers(registrant) -> tuple[str, str]:
     """Render the registrant's dynamic answers as (html, text).
 
     Intended for use as a merge variable inside email templates.
@@ -57,12 +152,13 @@ def _render_registrant_answers(registrant: Registrant) -> tuple[str, str]:
 
         base = answer_key
         suffix = ""
+        kind = ""
         if answer_key.endswith("__details"):
             base = answer_key[: -len("__details")]
-            suffix = " (details)"
+            kind = "Details"
         elif answer_key.endswith("__other"):
             base = answer_key[: -len("__other")]
-            suffix = " (other)"
+            kind = "Other"
 
         # base expected: f_<uuid>
         raw_uuid = base[2:]
@@ -83,15 +179,23 @@ def _render_registrant_answers(registrant: Registrant) -> tuple[str, str]:
             if ff:
                 # Prefer the configured conditional details label for __details
                 if answer_key.endswith("__details") and getattr(ff, "conditional_details_label", ""):
-                    return (ff.conditional_details_label or ff.label) + suffix
-                return (ff.label or answer_key) + suffix
+                    base_label = ff.conditional_details_label or ff.label
+                else:
+                    base_label = ff.label or answer_key
+
+                if kind:
+                    # Inline qualifier reads better than parentheses in emails
+                    return f"{base_label} — {kind}"
+                return base_label
         except Exception:
             pass
 
         # If we can't resolve the UUID to a current RegistrationFormField (e.g.
         # form template has changed since this registrant submitted), avoid showing
         # raw UUIDs in email. Use a neutral fallback label instead.
-        return "Additional question" + suffix
+        if kind:
+            return f"Additional question — {kind}"
+        return "Additional question"
 
     # Drop internal keys + empties; resolve labels + format values.
     items: list[tuple[str, str]] = []
@@ -127,7 +231,7 @@ def _render_registrant_answers(registrant: Registrant) -> tuple[str, str]:
     return (html, text)
 
 
-def send_event_campaign_email(campaign, registrant: Registrant) -> None:
+def send_event_campaign_email(campaign, registrant) -> None:
     """Send one scheduled EmailCampaign email to a registrant.
 
     Creates an EmailCampaignSend row to ensure idempotency.
@@ -138,7 +242,7 @@ def send_event_campaign_email(campaign, registrant: Registrant) -> None:
     api_key = settings.SENDGRID_API_KEY
 
     event = campaign.event
-    template_obj: EmailTemplate = campaign.template
+    template_obj = campaign.template
 
     raw_token = registrant.ensure_manage_token()
     if not raw_token:
@@ -156,6 +260,7 @@ def send_event_campaign_email(campaign, registrant: Registrant) -> None:
         "status_label": registrant.status.upper(),
         "manage_url": manage_url,
     }
+    ctx.update(_event_email_merge_vars(event))
 
     answers_html, answers_text = _render_registrant_answers(registrant)
     ctx["registrant_answers_html"] = answers_html
@@ -196,16 +301,29 @@ def _render_subject(subject_template: str, ctx: dict) -> str:
     return render_email_subject(subject_template, ctx)
 
 
-def _render_email_body(template_obj: EmailTemplate, ctx: dict) -> tuple[str, str]:
+def _render_email_body(template_obj, ctx: dict) -> tuple[str, str]:
     # Backwards-compatible wrapper.
     return render_streamfield_email_html(template_obj=template_obj, ctx=ctx)
 
 
-def send_confirmation_email(registrant: Registrant, confirmed: bool) -> None:
+def send_confirmation_email(registrant, confirmed: bool) -> None:
     api_key = settings.SENDGRID_API_KEY
 
     event = registrant.event
-    template_obj = event.confirmation_template if confirmed else event.waitlist_template
+    # Allow per-registration-type overrides (fall back to event defaults).
+    reg_type = getattr(registrant, "registration_type", None)
+    if confirmed:
+        template_obj = (
+            getattr(reg_type, "confirmation_template_override", None)
+            if reg_type
+            else None
+        ) or event.confirmation_template
+    else:
+        template_obj = (
+            getattr(reg_type, "waitlist_template_override", None)
+            if reg_type
+            else None
+        ) or event.waitlist_template
 
     # Build a self-service link the registrant can use to update/cancel.
     raw_token = registrant.ensure_manage_token()
@@ -226,6 +344,7 @@ def send_confirmation_email(registrant: Registrant, confirmed: bool) -> None:
         "status_label": "CONFIRMED ✅" if confirmed else "WAITLISTED ⏳",
         "manage_url": manage_url,
     }
+    ctx.update(_event_email_merge_vars(event))
 
     answers_html, answers_text = _render_registrant_answers(registrant)
     ctx["registrant_answers_html"] = answers_html

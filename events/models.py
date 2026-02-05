@@ -925,12 +925,47 @@ class RegistrationType(Orderable):
     is_public = models.BooleanField(default=True)
     custom_confirmation_text = RichTextField(blank=True)
 
+    # Optional email template overrides for this type (leave blank to use Event defaults)
+    confirmation_template_override = models.ForeignKey(
+        'events.EmailTemplate',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        help_text='Overrides the event confirmation template for this registration type.',
+    )
+    waitlist_template_override = models.ForeignKey(
+        'events.EmailTemplate',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        help_text='Overrides the event waitlist template for this registration type.',
+    )
+    reminder_template_override = models.ForeignKey(
+        'events.EmailTemplate',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        help_text='Overrides the event reminder template for this registration type.',
+    )
+
     panels = [
         FieldPanel("name"),
         FieldPanel("slug"),
         FieldPanel("capacity"),
         FieldPanel("is_public"),
         FieldPanel("custom_confirmation_text"),
+        MultiFieldPanel(
+            [
+                FieldPanel("confirmation_template_override"),
+                FieldPanel("waitlist_template_override"),
+            ],
+            heading="Email templates (optional overrides)",
+            help_text="Leave blank to use the Event defaults.",
+            classname="collapsible collapsed",
+        ),
     ]
 
     def __str__(self) -> str:
@@ -1307,12 +1342,37 @@ class EmailTemplate(PreviewableMixin, models.Model):
 
         from django.http import HttpResponse
         from .email_rendering import render_streamfield_email_html
+        from django.utils import timezone
 
         class _DummySite:
             root_url = request.build_absolute_uri("/").rstrip("/")
 
         class _DummyEvent:
             title = "Sample Event"
+            publishing_date = timezone.now()
+            event_end = timezone.now()
+            time_zone = "America/Toronto"
+
+            @property
+            def time_zone_label(self):
+                return "EST (UTC–05:00)"
+
+            event_format = "virtual"
+            location_name = ""
+
+            def location_string(self):
+                return ""
+
+            def location_map_url(self):
+                return ""
+
+            @property
+            def event_start_time_utc(self):
+                return self.publishing_date
+
+            @property
+            def event_end_time_utc(self):
+                return self.event_end
 
             def get_site(self):
                 return _DummySite()
@@ -1367,8 +1427,8 @@ class EmailCampaign(models.Model):
         FieldPanel('scheduled_for'),
         FieldPanel('sent_at'),
         FieldPanel('completed_at'),
-        FieldPanel('include_statuses'),
         FieldPanel('include_type_slugs'),
+        FieldPanel('include_statuses'),
         FieldPanel('attachment'),
     ]
 

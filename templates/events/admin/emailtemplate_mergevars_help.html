@@ -1,6 +1,14 @@
 <ul>
   <li><code>{% verbatim %}{{ event.title }}{% endverbatim %}</code></li>
   <li><code>{% verbatim %}{{ event.url }}{% endverbatim %}</code></li>
+  <li><code>{% verbatim %}{{ event_date }}{% endverbatim %}</code> (e.g., February 5, 2026)</li>
+  <li><code>{% verbatim %}{{ event_time }}{% endverbatim %}</code> (e.g., 11:00 AM – 12:30 PM)</li>
+  <li><code>{% verbatim %}{{ event_timezone }}{% endverbatim %}</code> (e.g., EST (UTC–05:00))</li>
+  <li><code>{% verbatim %}{{ event_datetime }}{% endverbatim %}</code> (combined)</li>
+  <li><code>{% verbatim %}{{ event_location }}{% endverbatim %}</code> ("Virtual" or venue/address)</li>
+  <li><code>{% verbatim %}{{ event_location_name }}{% endverbatim %}</code></li>
+  <li><code>{% verbatim %}{{ event_location_address }}{% endverbatim %}</code></li>
+  <li><code>{% verbatim %}{{ event_location_map_url }}{% endverbatim %}</code></li>
   <li><code>{% verbatim %}{{ registrant.first_name }}{% endverbatim %}</code></li>
   <li><code>{% verbatim %}{{ registrant.last_name }}{% endverbatim %}</code></li>
   <li><code>{% verbatim %}{{ registrant.email }}{% endverbatim %}</code></li>
