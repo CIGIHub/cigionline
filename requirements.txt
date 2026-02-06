@@ -1,3 +1,4 @@
+premailer>=3.10.0
 anyascii==0.2.0
 asgiref==3.8.1
 astroid==2.12.12
