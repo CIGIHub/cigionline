@@ -10,6 +10,7 @@ from core.models import (
 from django.contrib import messages
 from django.db import models, transaction
 from django.utils import timezone
+import logging
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect
@@ -155,6 +156,7 @@ class EventPage(
     ShareablePageAbstract,
     ThemeablePageAbstract,
 ):
+    logger = logging.getLogger(__name__)
     class EventAccessOptions(models.IntegerChoices):
         PRIVATE = (0, 'Private')
         PUBLIC = (1, 'Public')
@@ -303,6 +305,14 @@ class EventPage(
 
     # Registration related fields
     registration_open = models.BooleanField(default=False)
+    allow_guest_registrations = models.BooleanField(
+        default=False,
+        help_text="Allow one email to register multiple attendees (guests).",
+    )
+    max_guest_registrations = models.PositiveIntegerField(
+        default=5,
+        help_text="Maximum number of additional guests allowed per registration (default: 5).",
+    )
     is_private_registration = models.BooleanField(
         default=False, help_text="Require invite token or private link to register."
     )
@@ -513,9 +523,18 @@ class EventPage(
 
     @route(r"^register/type/(?P<type_slug>[-\w]+)/$")
     def register_form(self, request, type_slug: str, *args, **kwargs):
-        from .forms import build_dynamic_form
+        from django.shortcuts import redirect
+        from django.conf import settings
         from .utils import save_registrant_from_form
-        from .emailing import send_confirmation_email, send_duplicate_registration_manage_email
+        from .models import Registrant
+        from .emailing import (
+            send_confirmation_email,
+            send_duplicate_registration_manage_email,
+            # (guest/group emails added in events/emailing.py)
+            send_group_confirmation_email,
+            send_group_duplicate_manage_email,
+        )
+        from .guest_registration import build_primary_and_guest_forms
 
         if not self.registration_open:
             return self.render(
@@ -546,15 +565,63 @@ class EventPage(
                     context_overrides={"event": self},
                 )
 
-        form_class = build_dynamic_form(self, reg_type, invite)
+        # Primary form + optional guest formset (if enabled on the event)
+        forms_obj = None
 
         if request.method == "POST":
+            self.logger.info(
+                "register_form POST start event_id=%s type_slug=%s allow_guests=%s",
+                self.pk,
+                type_slug,
+                getattr(self, "allow_guest_registrations", False),
+            )
             if request.POST.get("website"):
                 base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
                 return redirect(f"{base}register/result/?s=bot")
 
-            form = form_class(request.POST, request.FILES)
-            if form.is_valid():
+            forms_obj = build_primary_and_guest_forms(
+                event=self,
+                reg_type=reg_type,
+                invite=invite,
+                post_data=request.POST,
+                files_data=request.FILES,
+            )
+
+            self.logger.info(
+                "built forms primary_bound=%s guest_formset=%s guest_total=%s",
+                True,
+                bool(forms_obj.guest_formset is not None),
+                (forms_obj.guest_formset.total_form_count() if forms_obj.guest_formset is not None else None),
+            )
+
+            form = forms_obj.primary_form
+            guest_formset = forms_obj.guest_formset
+
+            forms_valid = form.is_valid() and (guest_formset.is_valid() if guest_formset is not None else True)
+
+            if not form.is_valid():
+                self.logger.warning(
+                    "primary form invalid event_id=%s errors=%s",
+                    self.pk,
+                    dict(form.errors),
+                )
+            if guest_formset is not None and not guest_formset.is_valid():
+                # formset.errors is a list of dicts (per-form)
+                self.logger.warning(
+                    "guest formset invalid event_id=%s non_form_errors=%s errors=%s management=%s",
+                    self.pk,
+                    list(guest_formset.non_form_errors()),
+                    guest_formset.errors,
+                    {
+                        "TOTAL_FORMS": request.POST.get("guests-TOTAL_FORMS"),
+                        "INITIAL_FORMS": request.POST.get("guests-INITIAL_FORMS"),
+                        "MIN_NUM_FORMS": request.POST.get("guests-MIN_NUM_FORMS"),
+                        "MAX_NUM_FORMS": request.POST.get("guests-MAX_NUM_FORMS"),
+                    },
+                )
+
+            if forms_valid:
+                self.logger.info("forms valid event_id=%s", self.pk)
                 # Best-practice duplicate handling (privacy-safe): if this email is
                 # already registered for this event, don't create another Registrant.
                 # Instead, email a management link to that address.
@@ -565,6 +632,12 @@ class EventPage(
                 if invite and getattr(invite, "email", None):
                     email = invite.email.strip().lower()
 
+                self.logger.info(
+                    "effective email=%s invite_id=%s",
+                    email,
+                    getattr(invite, "pk", None),
+                )
+
                 if email:
                     existing = (
                         Registrant.objects.select_related("registration_type")
@@ -574,16 +647,210 @@ class EventPage(
                         .first()
                     )
                     if existing:
+                        self.logger.info(
+                            "duplicate registration detected event_id=%s existing_registrant_id=%s group_id=%s",
+                            self.pk,
+                            existing.pk,
+                            getattr(existing, "group_id", None),
+                        )
                         # Ensure the existing registrant has a usable manage token
                         # and email them. We keep the UI message generic.
                         try:
-                            send_duplicate_registration_manage_email(existing)
+                            if getattr(existing, "group_id", None):
+                                send_group_duplicate_manage_email(existing.group)
+                            else:
+                                send_duplicate_registration_manage_email(existing)
                         except Exception:
-                            # Don't break the registration flow if email sending fails.
-                            pass
+                            # Don't break the registration flow if email sending fails, but log it.
+                            self.logger.exception(
+                                "Failed to send duplicate-manage email for registrant_id=%s event_id=%s",
+                                existing.pk,
+                                self.pk,
+                            )
 
                         base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
                         return redirect(f"{base}register/result/?s=ok")
+
+                # If there are guests, create a group and one Registrant per attendee.
+                # Don't treat an empty extra form as a guest submission.
+                def _has_guest_data(fs) -> bool:
+                    if fs is None:
+                        return False
+                    for f in fs.forms:
+                        cd = getattr(f, "cleaned_data", None) or {}
+                        if any((cd.get(k) or "").strip() for k in ("first_name", "last_name")):
+                            return True
+                        # Any other non-empty value counts too (e.g., dynamic fields).
+                        for v in cd.values():
+                            if v not in (None, "", [], {}, False):
+                                return True
+                    return False
+
+                use_guests = _has_guest_data(guest_formset)
+                self.logger.info(
+                    "guest detection event_id=%s use_guests=%s",
+                    self.pk,
+                    use_guests,
+                )
+
+                if use_guests:
+                    self.logger.info("group registration path start event_id=%s", self.pk)
+                    # Create group + attendees. Capacity is applied per-attendee
+                    # (confirm-until-full).
+                    try:
+                        group = RegistrationGroup.objects.create(
+                            event=self,
+                            registration_type=reg_type,
+                            primary_email=email,
+                        )
+                    except Exception:
+                        self.logger.exception(
+                            "failed to create RegistrationGroup event_id=%s email=%s",
+                            self.pk,
+                            email,
+                        )
+                        raise
+
+                    self.logger.info(
+                        "created RegistrationGroup group_id=%s event_id=%s",
+                        group.pk,
+                        self.pk,
+                    )
+                    raw_group_token = group.ensure_manage_token()
+                    if not raw_group_token:
+                        group.manage_token_hash = ""
+                        raw_group_token = group.ensure_manage_token()
+
+                    self.logger.info(
+                        "group manage token created=%s group_id=%s",
+                        bool(raw_group_token),
+                        group.pk,
+                    )
+
+                    base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+                    # Prefer a fully-qualified URL in emails.
+                    if base and base.startswith("/"):
+                        site_base = getattr(settings, "WAGTAILADMIN_BASE_URL", "").rstrip("/")
+                        if site_base:
+                            base = f"{site_base}{base}"
+                    manage_url = f"{base}register/manage/group/?gid={group.pk}&t={raw_group_token}"
+
+                    created: list[Registrant] = []
+                    statuses: list[bool] = []
+
+                    try:
+                        primary = save_registrant_from_form(self, reg_type, form, invite)
+                    except Exception:
+                        self.logger.exception(
+                            "failed to create primary registrant event_id=%s group_id=%s",
+                            self.pk,
+                            group.pk,
+                        )
+                        raise
+
+                    self.logger.info(
+                        "created primary registrant registrant_id=%s group_id=%s",
+                        primary.pk,
+                        group.pk,
+                    )
+                    primary.group = group
+                    primary.email = email  # normalized / invite override
+                    primary.save(update_fields=["group", "email"])
+                    try:
+                        statuses.append(primary.confirm_with_capacity())
+                    except Exception:
+                        self.logger.exception(
+                            "confirm_with_capacity failed for primary registrant_id=%s",
+                            primary.pk,
+                        )
+                        statuses.append(False)
+                    created.append(primary)
+
+                    # Guests: no file support in v1.
+                    for gf in guest_formset.forms:
+                        if not gf.cleaned_data:
+                            continue
+                        self.logger.debug(
+                            "processing guest form cleaned_keys=%s",
+                            sorted(list(gf.cleaned_data.keys())),
+                        )
+                        # Build a lightweight form-like object for save_registrant_from_form
+                        class _F:
+                            cleaned_data = {}
+
+                        fake = _F()
+                        fake.cleaned_data = {
+                            **gf.cleaned_data,
+                            "email": email,
+                            "website": "",
+                        }
+                        try:
+                            guest = save_registrant_from_form(self, reg_type, fake, invite)
+                        except Exception:
+                            self.logger.exception(
+                                "failed to create guest registrant event_id=%s group_id=%s",
+                                self.pk,
+                                group.pk,
+                            )
+                            raise
+
+                        self.logger.info(
+                            "created guest registrant registrant_id=%s group_id=%s",
+                            guest.pk,
+                            group.pk,
+                        )
+                        guest.group = group
+                        guest.email = email
+                        guest.save(update_fields=["group", "email"])
+                        try:
+                            statuses.append(guest.confirm_with_capacity())
+                        except Exception:
+                            self.logger.exception(
+                                "confirm_with_capacity failed for guest registrant_id=%s",
+                                guest.pk,
+                            )
+                            statuses.append(False)
+                        created.append(guest)
+
+                    # Atomically burn invite usage if present (count as one submission).
+                    if invite:
+                        try:
+                            updated = Invite.objects.filter(
+                                pk=invite.pk, used_count__lt=models.F("max_uses")
+                            ).update(used_count=models.F("used_count") + 1)
+                            self.logger.info(
+                                "invite usage incremented invite_id=%s updated=%s",
+                                invite.pk,
+                                updated,
+                            )
+                        except Exception:
+                            self.logger.exception(
+                                "failed to increment invite usage invite_id=%s",
+                                invite.pk,
+                            )
+
+                    try:
+                        send_group_confirmation_email(
+                            group=group,
+                            registrants=created,
+                            confirmed_flags=statuses,
+                            manage_url=manage_url,
+                        )
+                    except Exception:
+                        # Don't break registration UX, but do log so we can debug missing emails.
+                        self.logger.exception(
+                            "Failed to send group confirmation email for group_id=%s event_id=%s",
+                            group.pk,
+                            self.pk,
+                        )
+
+                    self.logger.info(
+                        "group registration path complete group_id=%s created_registrants=%s",
+                        group.pk,
+                        [r.pk for r in created],
+                    )
+
+                    return redirect(f"{base}register/result/?s=ok")
 
                 registrant = save_registrant_from_form(self, reg_type, form, invite)
 
@@ -600,24 +867,51 @@ class EventPage(
                 # Generic result to avoid leaking whether they were confirmed vs waitlisted.
                 return redirect(f"{base}register/result/?s=ok")
             else:
+                # Primary form errors
                 for field, errs in form.errors.items():
                     label = form.fields.get(field).label if field in form.fields else field
                     for e in errs:
                         messages.error(request, f"{label}: {e}" if label else str(e))
 
+                # Guest errors (if any)
+                if forms_obj and forms_obj.guest_formset is not None:
+                    for idx, gf in enumerate(forms_obj.guest_formset.forms, start=1):
+                        if not gf.errors:
+                            continue
+                        for field, errs in gf.errors.items():
+                            label = gf.fields.get(field).label if field in gf.fields else field
+                            for e in errs:
+                                messages.error(
+                                    request,
+                                    f"Guest {idx} — {label}: {e}" if label else f"Guest {idx}: {e}",
+                                )
+
                 base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
                 return self.render(
                     request,
                     template="events/registration_form.html",
-                    context_overrides={"event": self, "reg_type": reg_type, "form": form, "invite": invite},
+                    context_overrides={
+                        "event": self,
+                        "reg_type": reg_type,
+                        "form": form,
+                        "guest_formset": (forms_obj.guest_formset if forms_obj else None),
+                        "invite": invite,
+                    },
                 )
         else:
-            form = form_class()
+            forms_obj = build_primary_and_guest_forms(event=self, reg_type=reg_type, invite=invite)
+            form = forms_obj.primary_form
 
         return self.render(
             request,
             template="events/registration_form.html",
-            context_overrides={"event": self, "reg_type": reg_type, "form": form, "invite": invite},
+            context_overrides={
+                "event": self,
+                "reg_type": reg_type,
+                "form": form,
+                "guest_formset": (forms_obj.guest_formset if forms_obj else None),
+                "invite": invite,
+            },
         )
 
     @route(r"^register/manage/$")
@@ -625,12 +919,25 @@ class EventPage(
         """Self-service page: review + update answers or cancel."""
 
         from django.http import HttpResponse
-        from .registrant_management import get_registrant_for_manage_link
+        from .registrant_management import (
+            get_registrant_for_manage_link,
+            get_registrant_for_group_manage_link,
+        )
         from .forms import build_dynamic_form
 
         token = request.GET.get("t", "")
         rid = request.GET.get("rid", "")
-        registrant = get_registrant_for_manage_link(registrant_id=int(rid or 0), token=token)
+        gid = request.GET.get("gid", "")
+
+        # If gid is present, treat token as a group token and ensure the registrant belongs to that group.
+        if gid:
+            registrant = get_registrant_for_group_manage_link(
+                group_id=int(gid or 0),
+                registrant_id=int(rid or 0),
+                token=token,
+            )
+        else:
+            registrant = get_registrant_for_manage_link(registrant_id=int(rid or 0), token=token)
         if registrant.event_id != self.id:
             return HttpResponse("Not found", status=404)
 
@@ -699,7 +1006,10 @@ class EventPage(
     def manage_registration_update(self, request, *args, **kwargs):
         from django.http import HttpResponse
         from django.shortcuts import redirect
-        from .registrant_management import get_registrant_for_manage_link
+        from .registrant_management import (
+            get_registrant_for_manage_link,
+            get_registrant_for_group_manage_link,
+        )
         from .forms import build_dynamic_form
         from .utils import _jsonable
 
@@ -708,7 +1018,16 @@ class EventPage(
 
         token = request.GET.get("t", "")
         rid = request.GET.get("rid", "")
-        registrant = get_registrant_for_manage_link(registrant_id=int(rid or 0), token=token)
+        gid = request.GET.get("gid", "")
+
+        if gid:
+            registrant = get_registrant_for_group_manage_link(
+                group_id=int(gid or 0),
+                registrant_id=int(rid or 0),
+                token=token,
+            )
+        else:
+            registrant = get_registrant_for_manage_link(registrant_id=int(rid or 0), token=token)
         if registrant.event_id != self.id:
             return HttpResponse("Not found", status=404)
 
@@ -758,6 +1077,8 @@ class EventPage(
         registrant.save(update_fields=["first_name", "last_name", "answers"])
 
         base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+        if gid:
+            return redirect(f"{base}register/manage/group/?gid={gid}&t={token}&updated=1")
         return redirect(f"{base}register/manage/?rid={registrant.pk}&t={token}&updated=1")
 
     @route(r"^register/manage/cancel/$")
@@ -781,6 +1102,61 @@ class EventPage(
 
         base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
         return redirect(f"{base}register/manage/?rid={registrant.pk}&t={token}&cancelled=1")
+
+    @route(r"^register/manage/group/$")
+    def manage_registration_group(self, request, *args, **kwargs):
+        """Group self-service page: list/edit/cancel each attendee."""
+
+        from django.http import HttpResponse
+        from .registrant_management import get_group_for_manage_link
+
+        token = request.GET.get("t", "")
+        gid = request.GET.get("gid", "")
+        group = get_group_for_manage_link(group_id=int(gid or 0), token=token)
+        if group.event_id != self.id:
+            return HttpResponse("Not found", status=404)
+
+        registrants = list(group.registrants.select_related("registration_type").order_by("id"))
+        return self.render(
+            request,
+            template="events/registration_manage_group.html",
+            context_overrides={
+                "event": self,
+                "group": group,
+                "registrants": registrants,
+                "token": token,
+            },
+        )
+
+    @route(r"^register/manage/group/cancel/$")
+    def manage_registration_group_cancel(self, request, *args, **kwargs):
+        """Cancel a single attendee within a group using the group token."""
+
+        from django.http import HttpResponse
+        from django.shortcuts import redirect
+        from .registrant_management import get_registrant_for_group_manage_link
+
+        if request.method != "POST":
+            return HttpResponse("Method not allowed", status=405)
+
+        token = request.GET.get("t", "")
+        gid = request.GET.get("gid", "")
+        rid = request.GET.get("rid", "")
+
+        registrant = get_registrant_for_group_manage_link(
+            group_id=int(gid or 0),
+            registrant_id=int(rid or 0),
+            token=token,
+        )
+        if registrant.event_id != self.id:
+            return HttpResponse("Not found", status=404)
+
+        if registrant.status != Registrant.Status.CANCELLED:
+            registrant.status = Registrant.Status.CANCELLED
+            registrant.save(update_fields=["status"])
+
+        base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+        return redirect(f"{base}register/manage/group/?gid={gid}&t={token}&cancelled=1")
 
     def _get_invite_from_request(self, request):
         token = request.GET.get("invite")
@@ -895,6 +1271,8 @@ class EventPage(
             MultiFieldPanel(
                 [
                     FieldPanel('registration_open'),
+                    FieldPanel('allow_guest_registrations'),
+                    FieldPanel('max_guest_registrations'),
                     FieldPanel('is_private_registration'),
                     FieldPanel('registration_image_banner'),
                 ],
@@ -1194,6 +1572,54 @@ class Invite(Orderable):
         return True
 
 
+class RegistrationGroup(models.Model):
+    """A group of one or more Registrants created by a single primary email.
+
+    Used to support "register multiple guests" while still creating one
+    Registrant row per attendee.
+    """
+
+    event = models.ForeignKey(
+        "events.EventPage",
+        on_delete=models.CASCADE,
+        related_name="registration_groups",
+    )
+    registration_type = models.ForeignKey(
+        "events.RegistrationType",
+        on_delete=models.PROTECT,
+        related_name="registration_groups",
+    )
+    primary_email = models.EmailField()
+
+    # Self-service management token for group management.
+    manage_token_hash = models.CharField(max_length=64, blank=True, editable=False, db_index=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def ensure_manage_token(self) -> str:
+        """Generate and persist a new token if missing; returns the *raw* token."""
+
+        if self.manage_token_hash:
+            return ""
+
+        import secrets
+        import hashlib
+
+        raw = secrets.token_urlsafe(32)
+        self.manage_token_hash = hashlib.sha256(raw.encode("utf-8")).hexdigest()
+        self.save(update_fields=["manage_token_hash"])
+        return raw
+
+    @staticmethod
+    def hash_manage_token(raw_token: str) -> str:
+        import hashlib
+
+        return hashlib.sha256((raw_token or "").encode("utf-8")).hexdigest()
+
+    def __str__(self) -> str:
+        return f"Group {self.pk} for {self.event.title} ({self.primary_email})"
+
+
 class Registrant(models.Model):
     class Status(models.TextChoices):
         PENDING = "pending", "Pending"
@@ -1203,6 +1629,13 @@ class Registrant(models.Model):
 
     event = models.ForeignKey("events.EventPage", on_delete=models.CASCADE, related_name="registrants")
     registration_type = models.ForeignKey(RegistrationType, on_delete=models.PROTECT, related_name="registrants")
+    group = models.ForeignKey(
+        "events.RegistrationGroup",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="registrants",
+    )
     email = models.EmailField()
     first_name = models.CharField(max_length=120, blank=True)
     last_name = models.CharField(max_length=120, blank=True)

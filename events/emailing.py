@@ -467,3 +467,166 @@ def send_duplicate_registration_manage_email(registrant) -> None:
     response = sg.send(message)
     if response.status_code != 202:
         raise RuntimeError(f"Failed to send email, status code: {response.status_code}")
+
+
+def send_group_confirmation_email(*, group, registrants: list, confirmed_flags: list[bool], manage_url: str) -> None:
+    """Send a single confirmation email to the primary email for a group registration.
+
+    Capacity is applied per registrant (confirm-until-full), so this email may
+    include a mix of confirmed and waitlisted attendees.
+    """
+
+    api_key = getattr(settings, "SENDGRID_API_KEY", "")
+    if not api_key:
+        raise RuntimeError("SENDGRID_API_KEY is not configured")
+
+    event = group.event
+
+    people = []
+    for r, ok in zip(registrants, confirmed_flags):
+        status = "CONFIRMED ✅" if ok else "WAITLISTED ⏳"
+        name = (f"{r.first_name} {r.last_name}").strip() or r.email
+        people.append((name, status))
+
+    ctx = {
+        "event": event,
+        # The shared email wrapper expects `registrant` for button/address blocks.
+        # For group emails, use the primary attendee as the representative.
+        "registrant": registrants[0] if registrants else None,
+        "manage_url": manage_url,
+        "group": group,
+        "people": people,
+    }
+    ctx.update(_event_email_merge_vars(event))
+
+    subject = render_email_subject(
+        "Registration received — {{ event.title }}",
+        ctx,
+    )
+
+    lines = [
+        "Thanks for registering.",
+        "",
+        "Attendees:",
+    ]
+    for name, status in people:
+        lines.append(f"- {name}: {status}")
+    lines += [
+        "",
+        "Use the link below to manage your registration(s):",
+        manage_url,
+    ]
+    text = "\n".join(lines)
+
+    # Render via the shared email wrapper for consistent branding.
+    class _StaticTemplate:
+        body = [
+            ("heading", {"text": "Registration received", "level": "h2"}),
+            (
+                "paragraph",
+                "<p>Thanks for registering. Below is the status of each attendee.</p>",
+            ),
+            (
+                "paragraph",
+                "<ul>" + "".join(
+                    [f"<li><strong>{html.escape(n)}</strong>: {html.escape(s)}</li>" for (n, s) in people]
+                ) + "</ul>",
+            ),
+        ]
+
+    from dataclasses import dataclass
+
+    @dataclass
+    class _Block:
+        block_type: str
+        value: object
+
+    template_obj = _StaticTemplate()
+    template_obj.body = [_Block(t, v) for (t, v) in template_obj.body]
+
+    html_body, _text2 = render_streamfield_email_html(template_obj=template_obj, ctx=ctx)
+
+    message = Mail(
+        from_email=settings.SENDGRID_FROM_EMAIL_EVENTS,
+        to_emails=group.primary_email,
+        subject=subject,
+        plain_text_content=text,
+        html_content=html_body,
+    )
+
+    sg = SendGridAPIClient(api_key)
+    response = sg.send(message)
+    if response.status_code != 202:
+        raise RuntimeError(f"Failed to send email, status code: {response.status_code}")
+
+
+def send_group_duplicate_manage_email(group) -> None:
+    """Email a group manage link when someone re-registers with the same email.
+
+    Intentionally non-editor-overridable.
+    """
+
+    api_key = getattr(settings, "SENDGRID_API_KEY", "")
+    if not api_key:
+        raise RuntimeError("SENDGRID_API_KEY is not configured")
+    event = group.event
+
+    raw_token = group.ensure_manage_token()
+    if not raw_token:
+        group.manage_token_hash = ""
+        raw_token = group.ensure_manage_token()
+
+    base = event.get_url(request=None) or ("/" + event.url_path.lstrip("/"))
+    # Prefer absolute URL for emails.
+    if base and base.startswith("/"):
+        site_base = getattr(settings, "WAGTAILADMIN_BASE_URL", "").rstrip("/")
+        if site_base:
+            base = f"{site_base}{base}"
+    manage_url = f"{base}register/manage/group/?gid={group.pk}&t={raw_token}"
+
+    ctx = {
+        "event": event,
+        "manage_url": manage_url,
+        "group": group,
+    }
+    ctx.update(_event_email_merge_vars(event))
+
+    subject = render_email_subject(
+        "Manage your registrations — {{ event.title }}",
+        ctx,
+    )
+
+    class _StaticTemplate:
+        body = [
+            ("heading", {"text": "Manage your registrations", "level": "h2"}),
+            (
+                "paragraph",
+                "<p>You have already registered for this event with this email address. "
+                "Please use the <strong>Manage registration</strong> button to review, update, or cancel registrations.</p>",
+            ),
+        ]
+
+    from dataclasses import dataclass
+
+    @dataclass
+    class _Block:
+        block_type: str
+        value: object
+
+    template_obj = _StaticTemplate()
+    template_obj.body = [_Block(t, v) for (t, v) in template_obj.body]
+
+    html_body, text = render_streamfield_email_html(template_obj=template_obj, ctx=ctx)
+
+    message = Mail(
+        from_email=settings.SENDGRID_FROM_EMAIL_EVENTS,
+        to_emails=group.primary_email,
+        subject=subject,
+        plain_text_content=text,
+        html_content=html_body,
+    )
+
+    sg = SendGridAPIClient(api_key)
+    response = sg.send(message)
+    if response.status_code != 202:
+        raise RuntimeError(f"Failed to send email, status code: {response.status_code}")

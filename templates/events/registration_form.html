@@ -32,7 +32,7 @@
           {% endfor %}
         {% endif %}
   
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" class="cigi-form">
           {% csrf_token %}
           {# Non-field errors if you render them here #}
           {% if form.non_field_errors %}
@@ -48,6 +48,75 @@
           </div>
 
           {% include "events/includes/_field.html" with field=form.email %}
+
+          {% if event.allow_guest_registrations and guest_formset %}
+            {% if guest_formset.non_form_errors %}
+              <div class="cigi-alert">
+                <ul>{% for e in guest_formset.non_form_errors %}<li>{{ e }}</li>{% endfor %}</ul>
+              </div>
+            {% endif %}
+
+            <hr />
+            <div class="mb-3">
+              <div class="d-flex align-items-center justify-content-between">
+                <div>
+                  <strong>Guests</strong>
+                  <div class="text-muted">Add up to {{ event.max_guest_registrations }} guests.</div>
+                </div>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-guest-add
+                  data-guest-max="{{ event.max_guest_registrations }}">
+                  + Add guest
+                </button>
+              </div>
+            </div>
+
+            {{ guest_formset.management_form }}
+
+            <div data-guest-container>
+              {# Render any bound guest forms from a POST (so errors show). #}
+              {% for gf in guest_formset.forms %}
+                <div class="guest-block" data-guest-block>
+                  <h4 class="h5">Guest {{ forloop.counter }}</h4>
+                  <div class="cigi-grid cigi-grid--2">
+                    {% include "events/includes/_field.html" with field=gf.first_name %}
+                    {% include "events/includes/_field.html" with field=gf.last_name %}
+                  </div>
+                  {% for field in gf %}
+                    {% if field.name != 'first_name' and field.name != 'last_name' %}
+                      {% include "events/includes/_field.html" with field=field %}
+                    {% endif %}
+                  {% endfor %}
+                  <div class="cigi-actions">
+                    <button type="button" class="btn" data-guest-remove>Remove guest</button>
+                  </div>
+                  <hr />
+                </div>
+              {% endfor %}
+            </div>
+
+            {# Prototype guest block for JS cloning. Will be hidden and used client-side. #}
+            <template data-guest-prototype>
+              <div class="guest-block" data-guest-block>
+                <h4 class="h5">Guest __INDEX__</h4>
+                <div class="cigi-grid cigi-grid--2">
+                  {% include "events/includes/_field.html" with field=guest_formset.empty_form.first_name %}
+                  {% include "events/includes/_field.html" with field=guest_formset.empty_form.last_name %}
+                </div>
+                {% for field in guest_formset.empty_form %}
+                  {% if field.name != 'first_name' and field.name != 'last_name' %}
+                    {% include "events/includes/_field.html" with field=field %}
+                  {% endif %}
+                {% endfor %}
+                <div class="cigi-actions">
+                  <button type="button" class="btn" data-guest-remove>Remove guest</button>
+                </div>
+                <hr />
+              </div>
+            </template>
+          {% endif %}
 
           {% for field in form %}
             {% if field.name != 'first_name' and field.name != 'last_name' and field.name != 'email' and field.name != 'website' %}

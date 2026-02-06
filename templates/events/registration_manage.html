@@ -20,6 +20,14 @@
       <div class="col-lg-8">
         <a href="{{ event.url }}" class="btn btn-link p-2 mb-3">&larr; Back to event</a>
 
+        {% if request.GET.gid %}
+          <a
+            href="{{ event.url }}register/manage/group/?gid={{ request.GET.gid }}&t={{ token }}"
+            class="btn btn-link p-2 mb-3">
+            &larr; Back to registrants
+          </a>
+        {% endif %}
+
         <p class="text-muted mb-4">Manage your registration</p>
 
         {% if request.GET.updated %}
@@ -46,7 +54,7 @@
         {% if registrant.status == "cancelled" %}
           <div class="alert alert-warning" role="alert">This registration is already cancelled.</div>
         {% else %}
-          <form method="post" action="{{ event.url }}register/manage/update/?rid={{ registrant.pk }}&t={{ token }}" enctype="multipart/form-data">
+          <form method="post" action="{{ event.url }}register/manage/update/?rid={{ registrant.pk }}&t={{ token }}{% if request.GET.gid %}&gid={{ request.GET.gid }}{% endif %}" enctype="multipart/form-data">
             {% csrf_token %}
 
             {# Non-field errors (e.g., conditional validation) #}
@@ -90,7 +98,7 @@
 
           <hr />
 
-          <form method="post" action="{{ event.url }}register/manage/cancel/?rid={{ registrant.pk }}&t={{ token }}">
+          <form method="post" action="{{ event.url }}register/manage/cancel/?rid={{ registrant.pk }}&t={{ token }}{% if request.GET.gid %}&gid={{ request.GET.gid }}{% endif %}">
             {% csrf_token %}
             <div class="cigi-actions">
               <button type="submit" class="btn" onclick="return confirm('Cancel your registration?');">Cancel registration</button>

@@ -71,7 +71,14 @@ WAGTAIL_FIELD_MAP = {
 }
 
 
-def build_dynamic_form(event, reg_type, invite=None, *, require_email: bool = True):
+def build_dynamic_form(
+    event,
+    reg_type,
+    invite=None,
+    *,
+    require_email: bool = True,
+    include_honeypot: bool = True,
+):
     """
     Build a dynamic Form class from RegistrationFormField rules (no admin/panels tricks).
     """
@@ -247,16 +254,21 @@ def build_dynamic_form(event, reg_type, invite=None, *, require_email: bool = Tr
         fields.append((key, field_obj))
 
     # Honeypot (off-screen in template CSS, but keep it a real input)
-    fields.append((
-        HoneypotMixin.hp_field,
-        forms.CharField(required=False, label="website",
-                        widget=forms.TextInput(attrs={"autocomplete": "off"})),
-    ))
+    if include_honeypot:
+        fields.append((
+            HoneypotMixin.hp_field,
+            forms.CharField(
+                required=False,
+                label="website",
+                widget=forms.TextInput(attrs={"autocomplete": "off"}),
+            ),
+        ))
 
     attrs = dict(fields)
     attrs["__module__"] = __name__
 
-    DynamicForm = type("EventDynamicForm", (HoneypotMixin, forms.Form), attrs)
+    bases = (HoneypotMixin, forms.Form) if include_honeypot else (forms.Form,)
+    DynamicForm = type("EventDynamicForm", bases, attrs)
 
     def _dynamic_clean(self):
         cleaned = super(DynamicForm, self).clean()
@@ -279,6 +291,16 @@ def build_dynamic_form(event, reg_type, invite=None, *, require_email: bool = Tr
                 self.add_error(rule["details_key"], "Please specify.")
             if not enabled:
                 cleaned[rule["details_key"]] = ""
+
+        # If conditional detail/other fields are missing, those fields already
+        # have errors, but add a top-level hint to reduce confusion.
+        if self.errors and any(
+            k.endswith("__details") or k.endswith("__other") for k in self.errors.keys()
+        ):
+            self.add_error(
+                None,
+                "Some questions need additional details. Please fill in the fields marked 'Please specify.'",
+            )
 
         return cleaned
 
