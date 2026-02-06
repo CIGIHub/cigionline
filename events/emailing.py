@@ -1,11 +1,18 @@
 from __future__ import annotations
+
+import html
+from typing import TYPE_CHECKING
+
 import pytz
 from django.conf import settings
 from django.template.loader import render_to_string
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+
 from .email_rendering import render_email_subject, render_streamfield_email_html
-from .models import Registrant
+
+if TYPE_CHECKING:
+    from .models import Registrant, EmailTemplate
 
 
 def _event_email_merge_vars(event) -> dict:
@@ -371,6 +378,83 @@ def send_confirmation_email(registrant, confirmed: bool) -> None:
         subject=subject,
         plain_text_content=text,
         html_content=html,
+    )
+
+    sg = SendGridAPIClient(api_key)
+    response = sg.send(message)
+    if response.status_code != 202:
+        raise RuntimeError(f"Failed to send email, status code: {response.status_code}")
+
+
+def send_duplicate_registration_manage_email(registrant) -> None:
+    """Email a registrant a management link when they attempt to re-register.
+
+    This is intentionally *not* editor-overridable: it's a security/privacy
+    control and should remain consistent.
+    """
+
+    api_key = settings.SENDGRID_API_KEY
+    event = registrant.event
+
+    # Build a fresh self-service link.
+    raw_token = registrant.ensure_manage_token()
+    if not raw_token:
+        # Token already existed; we can't recover the raw token (stored hashed).
+        # Regenerate a fresh token so we can email a valid link.
+        registrant.manage_token_hash = ""
+        raw_token = registrant.ensure_manage_token()
+
+    base = event.get_url(request=None) or ("/" + event.url_path.lstrip("/"))
+    manage_url = f"{base}register/manage/?rid={registrant.pk}&t={raw_token}"
+
+    ctx = {
+        "event": event,
+        "registrant": registrant,
+        "registration_type": getattr(registrant, "registration_type", None),
+        "manage_url": manage_url,
+    }
+    ctx.update(_event_email_merge_vars(event))
+
+    subject = render_email_subject(
+        "Manage your registration — {{ event.title }}",
+        ctx,
+    )
+
+    # Keep the content intentionally minimal and stable, but render it through
+    # the shared email wrapper for consistent styling.
+    class _StaticTemplate:
+        body = [
+            ("heading", {"text": "Manage your registration", "level": "h2"}),
+            (
+                "paragraph",
+                (
+                    f"<p>It looks like you (or someone using your email address) tried to register again for <strong>{html.escape(event.title)}</strong>. "
+                    "To review or update your registration, use the button above.</p>"
+                ),
+            ),
+            ("paragraph", "<p>If you didn't request this, you can ignore this email.</p>"),
+        ]
+
+    # Adapt the wrapper template's `{% for block in body %}` expectations.
+    # It uses `block.block_type` and `block.value`.
+    from dataclasses import dataclass
+
+    @dataclass
+    class _Block:
+        block_type: str
+        value: object
+
+    template_obj = _StaticTemplate()
+    template_obj.body = [_Block(t, v) for (t, v) in template_obj.body]
+
+    html_body, text = render_streamfield_email_html(template_obj=template_obj, ctx=ctx)
+
+    message = Mail(
+        from_email=settings.SENDGRID_FROM_EMAIL_EVENTS,
+        to_emails=registrant.email,
+        subject=subject,
+        plain_text_content=text,
+        html_content=html_body,
     )
 
     sg = SendGridAPIClient(api_key)

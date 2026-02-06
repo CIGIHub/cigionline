@@ -515,7 +515,7 @@ class EventPage(
     def register_form(self, request, type_slug: str, *args, **kwargs):
         from .forms import build_dynamic_form
         from .utils import save_registrant_from_form
-        from .emailing import send_confirmation_email
+        from .emailing import send_confirmation_email, send_duplicate_registration_manage_email
 
         if not self.registration_open:
             return self.render(
@@ -577,8 +577,7 @@ class EventPage(
                         # Ensure the existing registrant has a usable manage token
                         # and email them. We keep the UI message generic.
                         try:
-                            confirmed_existing = existing.status == Registrant.Status.CONFIRMED
-                            send_confirmation_email(existing, confirmed_existing)
+                            send_duplicate_registration_manage_email(existing)
                         except Exception:
                             # Don't break the registration flow if email sending fails.
                             pass
