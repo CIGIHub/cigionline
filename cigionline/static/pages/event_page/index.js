@@ -20,42 +20,44 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!detailsInput) return;
 
     // Prefer a wrapper if you have one; fallback to parent
-    const wrapper =
-      detailsInput.closest('.cigi-field') ||
-      detailsInput.closest('.w-field') ||
-      detailsInput.parentElement;
+    const wrapper = detailsInput.closest('.cigi-field')
+      || detailsInput.closest('.w-field')
+      || detailsInput.parentElement;
 
-    const sync = () => {
+    const sync = (opts = {}) => {
+      const { clearOnHide = false } = opts;
       const show = toggle.checked;
       if (wrapper) wrapper.style.display = show ? '' : 'none';
-      if (!show) detailsInput.value = '';
+      // Don't clear on initial load or we can wipe server-provided initial values
+      // (notably on the manage-registration page).
+      if (!show && clearOnHide) detailsInput.value = '';
     };
 
-    sync();
-    toggle.addEventListener('change', sync);
+    sync({ clearOnHide: false });
+    toggle.addEventListener('change', () => sync({ clearOnHide: true }));
   });
 
   document
     .querySelectorAll("[data-conditional-select='1']")
     .forEach((select) => {
       const targetName = select.getAttribute('data-conditional-target');
-      const triggerValue =
-        select.getAttribute('data-conditional-trigger-value') || 'Other';
+      const triggerValue = select.getAttribute('data-conditional-trigger-value') || 'Other';
       const otherInput = document.getElementById(`id_${targetName}`);
       if (!otherInput) return;
 
-      const wrapper =
-        otherInput.closest('.cigi-field') ||
-        otherInput.closest('.field') ||
-        otherInput.parentElement;
+      const wrapper = otherInput.closest('.cigi-field')
+        || otherInput.closest('.field')
+        || otherInput.parentElement;
 
-      const sync = () => {
+      const sync = (opts = {}) => {
+        const { clearOnHide = false } = opts;
         const show = (select.value || '').trim() === triggerValue;
         if (wrapper) wrapper.style.display = show ? '' : 'none';
-        if (!show) otherInput.value = '';
+        // Same idea: keep any server-rendered initial value on load.
+        if (!show && clearOnHide) otherInput.value = '';
       };
 
-      sync();
-      select.addEventListener('change', sync);
+      sync({ clearOnHide: false });
+      select.addEventListener('change', () => sync({ clearOnHide: true }));
     });
 });

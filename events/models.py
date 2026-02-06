@@ -641,6 +641,41 @@ class EventPage(
         initial = {}
         if isinstance(registrant.answers, dict):
             initial.update(registrant.answers)
+
+        # Backfill conditional 'Other' textbox initial values.
+        # conditional_dropdown_other uses two fields:
+        #   - f_<uuid> (select)
+        #   - f_<uuid>__other (textbox)
+        # If the textbox key is absent from stored answers, the select can still
+        # show "Other" but the textbox will render blank.
+        try:
+            tpl = getattr(self, "registration_form_template", None)
+            if tpl and isinstance(initial, dict):
+                for ff in tpl.fields.all().only(
+                    "field_key",
+                    "field_type",
+                    "conditional_other_value",
+                ):
+                    if getattr(ff, "field_type", "") != "conditional_dropdown_other":
+                        continue
+
+                    base_key = f"f_{ff.field_key}"
+                    other_key = f"{base_key}__other"
+
+                    trigger = (getattr(ff, "conditional_other_value", "") or "").strip() or "Other"
+                    selected = (initial.get(base_key) or "").strip()
+
+                    # Ensure the key exists in initial so the form binds it.
+                    if other_key not in initial:
+                        initial[other_key] = ""
+
+                    # If they previously chose the trigger value, restore the typed text.
+                    if selected == trigger and registrant.answers and isinstance(registrant.answers, dict):
+                        prev_other = (registrant.answers.get(other_key) or "").strip()
+                        if prev_other and not (initial.get(other_key) or "").strip():
+                            initial[other_key] = prev_other
+        except Exception:
+            pass
         initial.update({
             "first_name": registrant.first_name,
             "last_name": registrant.last_name,

@@ -415,6 +415,10 @@ def send_duplicate_registration_manage_email(registrant) -> None:
     }
     ctx.update(_event_email_merge_vars(event))
 
+    answers_html, answers_text = _render_registrant_answers(registrant)
+    ctx["registrant_answers_html"] = answers_html
+    ctx["registrant_answers_text"] = answers_text
+
     subject = render_email_subject(
         "Manage your registration — {{ event.title }}",
         ctx,
@@ -428,10 +432,12 @@ def send_duplicate_registration_manage_email(registrant) -> None:
             (
                 "paragraph",
                 (
-                    f"<p>It looks like you (or someone using your email address) tried to register again for <strong>{html.escape(event.title)}</strong>. "
-                    "To review or update your registration, use the button above.</p>"
+                    "<p>You have already registered for this event with this email address. "
+                    "Here is the information you provided at registration; if you need to cancel your registration, "
+                    "please use the <strong>Manage registration</strong> button in this message.</p>"
                 ),
             ),
+            ("answers", None),
             ("paragraph", "<p>If you didn't request this, you can ignore this email.</p>"),
         ]
 
