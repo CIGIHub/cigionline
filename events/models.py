@@ -41,6 +41,7 @@ import uuid
 
 
 def _split_slugs(s: str):
+    # Preserve original behaviour (case-sensitive) for existing callers.
     return [x.strip() for x in (s or "").split(",") if x.strip()]
 
 
@@ -469,22 +470,32 @@ class EventPage(
         """
         invite = self._get_invite_from_request(request)
 
+        # Base types: public events show public types; private events can show all types.
         if self.is_private_registration:
             if not invite or not invite.is_valid():
-                return self.render(request, context_overrides={
-                    "registration_error": "Private registration. Please use your invite link."
-                })
+                return self.render(
+                    request,
+                    context_overrides={
+                        "registration_error": "Private registration. Please use your invite link."
+                    },
+                )
             types_qs = self.registration_types.all()
-            rule = invite.allowed_rule
-            if rule == "only":
-                allowed = set(_split_slugs(invite.allowed_type_slugs))
-                types_qs = types_qs.filter(slug__in=allowed)
-            elif rule == "except":
-                blocked = set(_split_slugs(invite.allowed_type_slugs))
-                if blocked:
-                    types_qs = types_qs.exclude(slug__in=blocked)
         else:
             types_qs = self.registration_types.filter(is_public=True)
+
+        # If an invite is present and valid, apply its restrictions/expansions even on
+        # public events. This lets certain RegistrationTypes remain non-public but still
+        # be accessible via an invite link.
+        if invite and invite.is_valid():
+            types_qs = self.registration_types.all()
+            rule = (invite.allowed_rule or "").strip().lower()
+            if rule == "only":
+                allowed = set(_split_tokens(invite.allowed_type_slugs))
+                types_qs = types_qs.filter(slug__in=allowed)
+            elif rule == "except":
+                blocked = set(_split_tokens(invite.allowed_type_slugs))
+                if blocked:
+                    types_qs = types_qs.exclude(slug__in=blocked)
 
         types = list(types_qs.order_by("sort_order"))
         if not types:
@@ -494,8 +505,19 @@ class EventPage(
                 context_overrides={"event": self},
             )
 
+        # If this is an invite flow and the invite restricts allowed types to a
+        # single option, skip the chooser and send them straight to that form.
+        # This should work even when the target type is non-public.
+        if invite and (invite.allowed_rule or "").strip().lower() == "only":
+            allowed = [t for t in types if invite.allows_type_slug(t.slug)]
+            if len(allowed) == 1:
+                base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+                return redirect(f"{base}register/type/{allowed[0].slug}/?invite={invite.token}")
+
         if len(types) == 1:
             base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+            if invite:
+                return redirect(f"{base}register/type/{types[0].slug}/?invite={invite.token}")
             return redirect(f"{base}register/type/{types[0].slug}/")
 
         return self.render(
@@ -1599,13 +1621,16 @@ class Invite(Orderable):
         return True
 
     def _allowed_set(self):
-        return {s.strip() for s in (self.allowed_type_slugs or "").split(",") if s.strip()}
+        # Always compare slugs case-insensitively; RegistrationType.slug is
+        # generally lowercase but admin input might not be.
+        return {s.strip().lower() for s in (self.allowed_type_slugs or "").split(",") if s.strip()}
 
     def allows_type_slug(self, slug: str) -> bool:
-        s = slug.strip()
-        if self.allowed_rule == self.Rule.ONLY:
+        s = (slug or "").strip().lower()
+        rule = (self.allowed_rule or "").strip().lower()
+        if rule == "only":
             return s in self._allowed_set()
-        if self.allowed_rule == self.Rule.EXCEPT:
+        if rule == "except":
             return s not in self._allowed_set()
         return True
 

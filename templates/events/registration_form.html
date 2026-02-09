@@ -49,6 +49,13 @@
 
           {% include "events/includes/_field.html" with field=form.email %}
 
+          {# All other primary registrant fields #}
+          {% for field in form %}
+            {% if field.name != 'first_name' and field.name != 'last_name' and field.name != 'email' and field.name != 'website' %}
+              {% include "events/includes/_field.html" with field=field %}
+            {% endif %}
+          {% endfor %}
+
           {% if event.allow_guest_registrations and guest_formset %}
             {% if guest_formset.non_form_errors %}
               <div class="cigi-alert">
@@ -56,12 +63,11 @@
               </div>
             {% endif %}
 
-            <hr />
-            <div class="mb-3">
-              <div class="d-flex align-items-center justify-content-between">
+            <div class="my-5 p-3 p-md-4" style="border: 1px solid rgba(0,0,0,.15); border-radius: 8px; background: rgba(0,0,0,.02);">
+              <div class="d-flex align-items-start justify-content-between gap-3 flex-wrap">
                 <div>
-                  <strong>Guests</strong>
-                  <div class="text-muted">Add up to {{ event.max_guest_registrations }} guests.</div>
+                  <h3 class="h5 mb-1">Add guests (optional)</h3>
+                  <div class="text-muted">Register additional attendees using the same email. You can add up to {{ event.max_guest_registrations }}.</div>
                 </div>
                 <button
                   type="button"
@@ -71,58 +77,54 @@
                   + Add guest
                 </button>
               </div>
-            </div>
 
-            {{ guest_formset.management_form }}
+              {{ guest_formset.management_form }}
 
-            <div data-guest-container>
-              {# Render any bound guest forms from a POST (so errors show). #}
-              {% for gf in guest_formset.forms %}
-                <div class="guest-block" data-guest-block>
-                  <h4 class="h5">Guest {{ forloop.counter }}</h4>
-                  <div class="cigi-grid cigi-grid--2">
-                    {% include "events/includes/_field.html" with field=gf.first_name %}
-                    {% include "events/includes/_field.html" with field=gf.last_name %}
+              <div class="mt-3" data-guest-container>
+                {# Render any bound guest forms from a POST (so errors show). #}
+                {% for gf in guest_formset.forms %}
+                  {% if request.method != 'POST' and gf.empty_permitted %}
+                    {# keep hidden here; user will add via the prototype #}
+                  {% else %}
+                  <div class="guest-block" data-guest-block style="padding: 1rem; border: 1px dashed rgba(0,0,0,.25); border-radius: 8px; margin-bottom: 1rem; background: #fff;">
+                    <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
+                      <h4 class="h5 mb-0">Guest {{ forloop.counter }}</h4>
+                      <button type="button" class="btn btn-link" data-guest-remove>Remove guest</button>
+                    </div>
+                    <div class="mt-3 cigi-grid cigi-grid--2">
+                      {% include "events/includes/_field.html" with field=gf.first_name %}
+                      {% include "events/includes/_field.html" with field=gf.last_name %}
+                    </div>
+                    {% for field in gf %}
+                      {% if field.name != 'first_name' and field.name != 'last_name' %}
+                        {% include "events/includes/_field.html" with field=field %}
+                      {% endif %}
+                    {% endfor %}
                   </div>
-                  {% for field in gf %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+
+              {# Prototype guest block for JS cloning. Will be hidden and used client-side. #}
+              <template data-guest-prototype>
+                <div class="guest-block" data-guest-block style="padding: 1rem; border: 1px dashed rgba(0,0,0,.25); border-radius: 8px; margin-bottom: 1rem; background: #fff;">
+                  <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
+                    <h4 class="h5 mb-0">Guest __INDEX__</h4>
+                    <button type="button" class="btn btn-link" data-guest-remove>Remove guest</button>
+                  </div>
+                  <div class="mt-3 cigi-grid cigi-grid--2">
+                    {% include "events/includes/_field.html" with field=guest_formset.empty_form.first_name %}
+                    {% include "events/includes/_field.html" with field=guest_formset.empty_form.last_name %}
+                  </div>
+                  {% for field in guest_formset.empty_form %}
                     {% if field.name != 'first_name' and field.name != 'last_name' %}
                       {% include "events/includes/_field.html" with field=field %}
                     {% endif %}
                   {% endfor %}
-                  <div class="cigi-actions">
-                    <button type="button" class="btn" data-guest-remove>Remove guest</button>
-                  </div>
-                  <hr />
                 </div>
-              {% endfor %}
+              </template>
             </div>
-
-            {# Prototype guest block for JS cloning. Will be hidden and used client-side. #}
-            <template data-guest-prototype>
-              <div class="guest-block" data-guest-block>
-                <h4 class="h5">Guest __INDEX__</h4>
-                <div class="cigi-grid cigi-grid--2">
-                  {% include "events/includes/_field.html" with field=guest_formset.empty_form.first_name %}
-                  {% include "events/includes/_field.html" with field=guest_formset.empty_form.last_name %}
-                </div>
-                {% for field in guest_formset.empty_form %}
-                  {% if field.name != 'first_name' and field.name != 'last_name' %}
-                    {% include "events/includes/_field.html" with field=field %}
-                  {% endif %}
-                {% endfor %}
-                <div class="cigi-actions">
-                  <button type="button" class="btn" data-guest-remove>Remove guest</button>
-                </div>
-                <hr />
-              </div>
-            </template>
           {% endif %}
-
-          {% for field in form %}
-            {% if field.name != 'first_name' and field.name != 'last_name' and field.name != 'email' and field.name != 'website' %}
-              {% include "events/includes/_field.html" with field=field %}
-            {% endif %}
-          {% endfor %}
 
           {# Honeypot: render but hide visually #}
           {% if form.website %}

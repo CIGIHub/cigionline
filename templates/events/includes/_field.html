@@ -1,6 +1,11 @@
 {% load events_form %}
 
-<div class="cigi-field{% if field.errors %} has-errors{% endif %}">
+{% with details_for=field.field.widget.attrs.data_conditional_details_for %}
+  <div
+    class="cigi-field{% if field.errors %} has-errors{% endif %}"
+    {% if details_for %}style="display:none;"{% endif %}
+  >
+{% endwith %}
   {% if field|is_conditional_toggle %}
     <div class="cigi-label">
       <span>

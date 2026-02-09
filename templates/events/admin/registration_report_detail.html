@@ -42,7 +42,7 @@
           </a>
         </td>
         <td class="w-min"><code>{{ r.slug }}</code></td>
-        <td class="w-min">{% if r.capacity %}{{ r.capacity }}{% else %}—{% endif %}</td>
+  <td class="w-min">{% if r.capacity is not None %}{{ r.capacity }}{% else %}—{% endif %}</td>
         <td class="w-min">{{ r.confirmed }}</td>
         <td class="w-min">{{ r.waitlisted }}</td>
         <td class="w-min">

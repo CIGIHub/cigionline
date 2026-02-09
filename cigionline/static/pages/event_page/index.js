@@ -36,50 +36,50 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  const initConditionalWithin = (root) => {
-    // Re-run conditional sync hooks for newly inserted guest blocks.
-    root.querySelectorAll('[data-conditional-target]').forEach((toggle) => {
-      const detailsName = toggle.getAttribute('data-conditional-target');
-      // In guest formsets there may be multiple fields with the same suffix
-      // (e.g. id_guests-0-foo__details, id_guests-1-foo__details).
-      // Resolve relative to the same guest block to avoid finding the first one.
-      const scope = toggle.closest('[data-guest-block]') || root;
-      const detailsInput = scope.querySelector(`#id_${CSS.escape(detailsName)}`);
-      if (!detailsInput) return;
-      const wrapper = detailsInput.closest('.cigi-field')
-        || detailsInput.closest('.w-field')
-        || detailsInput.parentElement;
-      const sync = (opts = {}) => {
-        const { clearOnHide = false } = opts;
-        const show = toggle.checked;
-        if (wrapper) wrapper.style.display = show ? '' : 'none';
-        if (!show && clearOnHide) detailsInput.value = '';
-      };
-      sync({ clearOnHide: false });
-      toggle.addEventListener('change', () => sync({ clearOnHide: true }));
-    });
+  const findTargetInput = (scope, rawName) => {
+    if (!rawName) return null;
+    // Prefer ID produced by non-formset fields.
+    let el = scope.querySelector(`#id_${CSS.escape(rawName)}`);
+    // Formsets: id includes prefix (e.g., id_guests-0-<rawName>).
+    if (!el) el = scope.querySelector(`[id$='-${CSS.escape(rawName)}']`);
+    return el;
+  };
 
-    root.querySelectorAll("[data-conditional-select='1']").forEach((select) => {
-      const targetName = select.getAttribute('data-conditional-target');
-      const triggerValue = select.getAttribute('data-conditional-trigger-value') || 'Other';
-      const scope = select.closest('[data-guest-block]') || root;
-      const otherInput = scope.querySelector(`#id_${CSS.escape(targetName)}`);
-      if (!otherInput) return;
+  const getFieldWrapper = (input) => (
+    input?.closest('.cigi-field')
+    || input?.closest('.w-field')
+    || input?.closest('.field')
+    || input?.parentElement
+  );
 
-      const wrapper = otherInput.closest('.cigi-field')
-        || otherInput.closest('.field')
-        || otherInput.parentElement;
+  const syncConditionalToggle = (toggleEl, opts = {}) => {
+    const { clearOnHide = false } = opts;
+    const detailsName = toggleEl.getAttribute('data-conditional-target');
+    const scope = toggleEl.closest('[data-guest-block]') || toggleEl.closest('form') || document;
+    const detailsInput = findTargetInput(scope, detailsName);
+    if (!detailsInput) return;
+    const wrapper = getFieldWrapper(detailsInput);
+    const show = !!toggleEl.checked;
+    if (wrapper) wrapper.style.display = show ? '' : 'none';
+    if (!show && clearOnHide) detailsInput.value = '';
+  };
 
-      const sync = (opts = {}) => {
-        const { clearOnHide = false } = opts;
-        const show = (select.value || '').trim() === triggerValue;
-        if (wrapper) wrapper.style.display = show ? '' : 'none';
-        if (!show && clearOnHide) otherInput.value = '';
-      };
+  const syncConditionalSelectOther = (selectEl, opts = {}) => {
+    const { clearOnHide = false } = opts;
+    const targetName = selectEl.getAttribute('data-conditional-target');
+    const triggerValue = selectEl.getAttribute('data-conditional-trigger-value') || 'Other';
+    const scope = selectEl.closest('[data-guest-block]') || selectEl.closest('form') || document;
+    const otherInput = findTargetInput(scope, targetName);
+    if (!otherInput) return;
+    const wrapper = getFieldWrapper(otherInput);
+    const show = (selectEl.value || '').trim() === triggerValue;
+    if (wrapper) wrapper.style.display = show ? '' : 'none';
+    if (!show && clearOnHide) otherInput.value = '';
+  };
 
-      sync({ clearOnHide: false });
-      select.addEventListener('change', () => sync({ clearOnHide: true }));
-    });
+  const initConditionalsIn = (root) => {
+    root.querySelectorAll('[data-conditional-target]').forEach((t) => syncConditionalToggle(t));
+    root.querySelectorAll("[data-conditional-select='1']").forEach((s) => syncConditionalSelectOther(s));
   };
 
   const addGuest = () => {
@@ -111,8 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
     guestContainer.appendChild(wrapper);
     updateTotalForms();
     renumberGuests();
-    // Initialize conditionals only within the newly added block.
-    initConditionalWithin(wrapper);
+    // Sync conditionals only within the newly added block.
+    initConditionalsIn(wrapper);
   };
 
   const removeGuest = (btn) => {
@@ -137,53 +137,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     // Ensure TOTAL_FORMS is correct on initial load.
     updateTotalForms();
-    initConditionalWithin(guestContainer);
+    initConditionalsIn(guestContainer);
   }
 
-  document.querySelectorAll('[data-conditional-target]').forEach((toggle) => {
-    const detailsName = toggle.getAttribute('data-conditional-target');
-    const detailsInput = document.getElementById(`id_${detailsName}`);
-    if (!detailsInput) return;
-
-    // Prefer a wrapper if you have one; fallback to parent
-    const wrapper = detailsInput.closest('.cigi-field')
-      || detailsInput.closest('.w-field')
-      || detailsInput.parentElement;
-
-    const sync = (opts = {}) => {
-      const { clearOnHide = false } = opts;
-      const show = toggle.checked;
-      if (wrapper) wrapper.style.display = show ? '' : 'none';
-      // Don't clear on initial load or we can wipe server-provided initial values
-      // (notably on the manage-registration page).
-      if (!show && clearOnHide) detailsInput.value = '';
-    };
-
-    sync({ clearOnHide: false });
-    toggle.addEventListener('change', () => sync({ clearOnHide: true }));
-  });
-
-  document
-    .querySelectorAll("[data-conditional-select='1']")
-    .forEach((select) => {
-      const targetName = select.getAttribute('data-conditional-target');
-      const triggerValue = select.getAttribute('data-conditional-trigger-value') || 'Other';
-      const otherInput = document.getElementById(`id_${targetName}`);
-      if (!otherInput) return;
-
-      const wrapper = otherInput.closest('.cigi-field')
-        || otherInput.closest('.field')
-        || otherInput.parentElement;
-
-      const sync = (opts = {}) => {
-        const { clearOnHide = false } = opts;
-        const show = (select.value || '').trim() === triggerValue;
-        if (wrapper) wrapper.style.display = show ? '' : 'none';
-        // Same idea: keep any server-rendered initial value on load.
-        if (!show && clearOnHide) otherInput.value = '';
-      };
-
-      sync({ clearOnHide: false });
-      select.addEventListener('change', () => sync({ clearOnHide: true }));
+  // Delegated conditional handling so dynamically-added guest blocks Just Work.
+  const formEl = document.querySelector('form.cigi-form') || document.querySelector('form');
+  if (formEl) {
+    formEl.addEventListener('change', (e) => {
+      const t = e.target;
+      if (!t) return;
+      if (t.matches('[data-conditional-target]')) {
+        syncConditionalToggle(t, { clearOnHide: true });
+      }
+      if (t.matches("[data-conditional-select='1']")) {
+        syncConditionalSelectOther(t, { clearOnHide: true });
+      }
     });
+
+    // Initial sync for primary + any server-rendered guests.
+    initConditionalsIn(formEl);
+  }
 });

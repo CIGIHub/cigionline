@@ -171,6 +171,9 @@ def build_dynamic_form(
                     "rows": 3,
                     "class": BASE_INPUT_CLASS,
                     "data-conditional-details-for": needs_key,
+                    # Duplicate key for Django template-friendly access.
+                    # Django templates can't access dict keys with hyphens via dot-notation.
+                    "data_conditional_details_for": needs_key,
                 }),
             )
 
@@ -217,6 +220,8 @@ def build_dynamic_form(
             )
 
             other_field.widget.attrs["data-conditional-details-for"] = select_key
+            # Duplicate key for Django template-friendly access.
+            other_field.widget.attrs["data_conditional_details_for"] = select_key
 
             fields.append((select_key, select_field))
             fields.append((other_key, other_field))
