@@ -40,7 +40,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Re-run conditional sync hooks for newly inserted guest blocks.
     root.querySelectorAll('[data-conditional-target]').forEach((toggle) => {
       const detailsName = toggle.getAttribute('data-conditional-target');
-      const detailsInput = document.getElementById(`id_${detailsName}`);
+      // In guest formsets there may be multiple fields with the same suffix
+      // (e.g. id_guests-0-foo__details, id_guests-1-foo__details).
+      // Resolve relative to the same guest block to avoid finding the first one.
+      const scope = toggle.closest('[data-guest-block]') || root;
+      const detailsInput = scope.querySelector(`#id_${CSS.escape(detailsName)}`);
       if (!detailsInput) return;
       const wrapper = detailsInput.closest('.cigi-field')
         || detailsInput.closest('.w-field')
@@ -58,7 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
     root.querySelectorAll("[data-conditional-select='1']").forEach((select) => {
       const targetName = select.getAttribute('data-conditional-target');
       const triggerValue = select.getAttribute('data-conditional-trigger-value') || 'Other';
-      const otherInput = document.getElementById(`id_${targetName}`);
+      const scope = select.closest('[data-guest-block]') || root;
+      const otherInput = scope.querySelector(`#id_${CSS.escape(targetName)}`);
       if (!otherInput) return;
 
       const wrapper = otherInput.closest('.cigi-field')
@@ -106,7 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
     guestContainer.appendChild(wrapper);
     updateTotalForms();
     renumberGuests();
-    initConditionalWithin(guestContainer);
+    // Initialize conditionals only within the newly added block.
+    initConditionalWithin(wrapper);
   };
 
   const removeGuest = (btn) => {

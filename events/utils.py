@@ -25,33 +25,35 @@ def _jsonable(value):
 def save_registrant_from_form(event, reg_type, form, invite=None):
     Registrant = apps.get_model('events', 'Registrant')
 
-    cleaned = form.cleaned_data.copy()
-    first = cleaned.pop("first_name", "")
-    last = cleaned.pop("last_name", "")
-    email = cleaned.pop("email", "")
-
-    cleaned.pop("website", None)  # honeypot field
-
-    if invite and getattr(invite, "email", None):
-        email = invite.email
-
-    uploaded_doc_ids = []
-    # convert uploaded files to Wagtail Documents
-    for key, val in list(cleaned.items()):
-        if hasattr(val, "read"):
-            doc = Document.objects.create(
-                title=getattr(val, "name", "upload"),
-                file=val
-            )
-            uploaded_doc_ids.append(doc.id)
-            cleaned[key] = {
-                "document_id": doc.id,
-                "name": getattr(val, "name", "upload")
-            }
-
-    cleaned = _jsonable(cleaned)
-
+    # IMPORTANT: keep file -> Document creation and Registrant creation in the
+    # same transaction so we don't leave orphaned Document rows if anything fails.
     with transaction.atomic():
+        cleaned = form.cleaned_data.copy()
+        first = cleaned.pop("first_name", "")
+        last = cleaned.pop("last_name", "")
+        email = cleaned.pop("email", "")
+
+        cleaned.pop("website", None)  # honeypot field
+
+        if invite and getattr(invite, "email", None):
+            email = invite.email
+
+        uploaded_doc_ids = []
+        # Convert uploaded files to Wagtail Documents.
+        for key, val in list(cleaned.items()):
+            if hasattr(val, "read"):
+                doc = Document.objects.create(
+                    title=getattr(val, "name", "upload"),
+                    file=val,
+                )
+                uploaded_doc_ids.append(doc.id)
+                cleaned[key] = {
+                    "document_id": doc.id,
+                    "name": getattr(val, "name", "upload"),
+                }
+
+        cleaned = _jsonable(cleaned)
+
         registrant = Registrant.objects.create(
             event=event,
             registration_type=reg_type,
@@ -63,4 +65,4 @@ def save_registrant_from_form(event, reg_type, form, invite=None):
             invite=invite,
             status="pending",
         )
-    return registrant
+        return registrant

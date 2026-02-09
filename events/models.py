@@ -525,6 +525,7 @@ class EventPage(
     def register_form(self, request, type_slug: str, *args, **kwargs):
         from django.shortcuts import redirect
         from django.conf import settings
+        from django.db import transaction
         from .utils import save_registrant_from_form
         from .models import Registrant
         from .emailing import (
@@ -695,140 +696,134 @@ class EventPage(
 
                 if use_guests:
                     self.logger.info("group registration path start event_id=%s", self.pk)
+
                     # Create group + attendees. Capacity is applied per-attendee
                     # (confirm-until-full).
                     try:
-                        group = RegistrationGroup.objects.create(
-                            event=self,
-                            registration_type=reg_type,
-                            primary_email=email,
-                        )
-                    except Exception:
-                        self.logger.exception(
-                            "failed to create RegistrationGroup event_id=%s email=%s",
-                            self.pk,
-                            email,
-                        )
-                        raise
+                        with transaction.atomic():
+                            # Reserve invite usage *inside the same transaction* so
+                            # nothing persists if the invite is maxed out.
+                            if invite:
+                                updated = Invite.objects.filter(
+                                    pk=invite.pk, used_count__lt=models.F("max_uses")
+                                ).update(used_count=models.F("used_count") + 1)
+                                self.logger.info(
+                                    "invite usage reserved invite_id=%s updated=%s",
+                                    invite.pk,
+                                    updated,
+                                )
+                                if updated != 1:
+                                    messages.error(
+                                        request,
+                                        "This invite link has already been used the maximum number of times.",
+                                    )
+                                    return self.render(
+                                        request,
+                                        template="events/registration_no_types.html",
+                                        context_overrides={
+                                            "event": self,
+                                            "registration_error": "This invite link has already been used the maximum number of times.",
+                                        },
+                                    )
 
-                    self.logger.info(
-                        "created RegistrationGroup group_id=%s event_id=%s",
-                        group.pk,
-                        self.pk,
-                    )
-                    raw_group_token = group.ensure_manage_token()
-                    if not raw_group_token:
-                        group.manage_token_hash = ""
-                        raw_group_token = group.ensure_manage_token()
+                            group = RegistrationGroup.objects.create(
+                                event=self,
+                                registration_type=reg_type,
+                                primary_email=email,
+                            )
 
-                    self.logger.info(
-                        "group manage token created=%s group_id=%s",
-                        bool(raw_group_token),
-                        group.pk,
-                    )
-
-                    base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
-                    # Prefer a fully-qualified URL in emails.
-                    if base and base.startswith("/"):
-                        site_base = getattr(settings, "WAGTAILADMIN_BASE_URL", "").rstrip("/")
-                        if site_base:
-                            base = f"{site_base}{base}"
-                    manage_url = f"{base}register/manage/group/?gid={group.pk}&t={raw_group_token}"
-
-                    created: list[Registrant] = []
-                    statuses: list[bool] = []
-
-                    try:
-                        primary = save_registrant_from_form(self, reg_type, form, invite)
-                    except Exception:
-                        self.logger.exception(
-                            "failed to create primary registrant event_id=%s group_id=%s",
-                            self.pk,
-                            group.pk,
-                        )
-                        raise
-
-                    self.logger.info(
-                        "created primary registrant registrant_id=%s group_id=%s",
-                        primary.pk,
-                        group.pk,
-                    )
-                    primary.group = group
-                    primary.email = email  # normalized / invite override
-                    primary.save(update_fields=["group", "email"])
-                    try:
-                        statuses.append(primary.confirm_with_capacity())
-                    except Exception:
-                        self.logger.exception(
-                            "confirm_with_capacity failed for primary registrant_id=%s",
-                            primary.pk,
-                        )
-                        statuses.append(False)
-                    created.append(primary)
-
-                    # Guests: no file support in v1.
-                    for gf in guest_formset.forms:
-                        if not gf.cleaned_data:
-                            continue
-                        self.logger.debug(
-                            "processing guest form cleaned_keys=%s",
-                            sorted(list(gf.cleaned_data.keys())),
-                        )
-                        # Build a lightweight form-like object for save_registrant_from_form
-                        class _F:
-                            cleaned_data = {}
-
-                        fake = _F()
-                        fake.cleaned_data = {
-                            **gf.cleaned_data,
-                            "email": email,
-                            "website": "",
-                        }
-                        try:
-                            guest = save_registrant_from_form(self, reg_type, fake, invite)
-                        except Exception:
-                            self.logger.exception(
-                                "failed to create guest registrant event_id=%s group_id=%s",
+                            self.logger.info(
+                                "created RegistrationGroup group_id=%s event_id=%s",
+                                group.pk,
                                 self.pk,
+                            )
+
+                            raw_group_token = group.ensure_manage_token()
+                            if not raw_group_token:
+                                group.manage_token_hash = ""
+                                raw_group_token = group.ensure_manage_token()
+
+                            self.logger.info(
+                                "group manage token created=%s group_id=%s",
+                                bool(raw_group_token),
                                 group.pk,
                             )
-                            raise
 
-                        self.logger.info(
-                            "created guest registrant registrant_id=%s group_id=%s",
-                            guest.pk,
-                            group.pk,
-                        )
-                        guest.group = group
-                        guest.email = email
-                        guest.save(update_fields=["group", "email"])
-                        try:
-                            statuses.append(guest.confirm_with_capacity())
-                        except Exception:
-                            self.logger.exception(
-                                "confirm_with_capacity failed for guest registrant_id=%s",
-                                guest.pk,
-                            )
-                            statuses.append(False)
-                        created.append(guest)
+                            base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+                            # Prefer a fully-qualified URL in emails.
+                            if base and base.startswith("/"):
+                                site_base = getattr(settings, "WAGTAILADMIN_BASE_URL", "").rstrip("/")
+                                if site_base:
+                                    base = f"{site_base}{base}"
+                            manage_url = f"{base}register/manage/group/?gid={group.pk}&t={raw_group_token}"
 
-                    # Atomically burn invite usage if present (count as one submission).
-                    if invite:
-                        try:
-                            updated = Invite.objects.filter(
-                                pk=invite.pk, used_count__lt=models.F("max_uses")
-                            ).update(used_count=models.F("used_count") + 1)
+                            created: list[Registrant] = []
+                            statuses: list[bool] = []
+
+                            primary = save_registrant_from_form(self, reg_type, form, invite)
                             self.logger.info(
-                                "invite usage incremented invite_id=%s updated=%s",
-                                invite.pk,
-                                updated,
+                                "created primary registrant registrant_id=%s group_id=%s",
+                                primary.pk,
+                                group.pk,
                             )
-                        except Exception:
-                            self.logger.exception(
-                                "failed to increment invite usage invite_id=%s",
-                                invite.pk,
-                            )
+                            primary.group = group
+                            primary.email = email  # normalized / invite override
+                            primary.save(update_fields=["group", "email"])
+                            try:
+                                statuses.append(primary.confirm_with_capacity())
+                            except Exception:
+                                self.logger.exception(
+                                    "confirm_with_capacity failed for primary registrant_id=%s",
+                                    primary.pk,
+                                )
+                                statuses.append(False)
+                            created.append(primary)
 
+                            # Guests: no file support in v1.
+                            for gf in guest_formset.forms:
+                                if not gf.cleaned_data:
+                                    continue
+                                self.logger.debug(
+                                    "processing guest form cleaned_keys=%s",
+                                    sorted(list(gf.cleaned_data.keys())),
+                                )
+                                class _F:
+                                    cleaned_data = {}
+                                fake = _F()
+                                fake.cleaned_data = {
+                                    **gf.cleaned_data,
+                                    "email": email,
+                                    "website": "",
+                                }
+                                guest = save_registrant_from_form(self, reg_type, fake, invite)
+                                self.logger.info(
+                                    "created guest registrant registrant_id=%s group_id=%s",
+                                    guest.pk,
+                                    group.pk,
+                                )
+                                guest.group = group
+                                guest.email = email
+                                guest.save(update_fields=["group", "email"])
+                                try:
+                                    statuses.append(guest.confirm_with_capacity())
+                                except Exception:
+                                    self.logger.exception(
+                                        "confirm_with_capacity failed for guest registrant_id=%s",
+                                        guest.pk,
+                                    )
+                                    statuses.append(False)
+                                created.append(guest)
+
+                        # End transaction.atomic (DB writes committed here)
+
+                    except Exception:
+                        self.logger.exception(
+                            "group registration failed event_id=%s",
+                            self.pk,
+                        )
+                        raise
+
+                    # Send email after commit.
                     try:
                         send_group_confirmation_email(
                             group=group,
@@ -837,7 +832,6 @@ class EventPage(
                             manage_url=manage_url,
                         )
                     except Exception:
-                        # Don't break registration UX, but do log so we can debug missing emails.
                         self.logger.exception(
                             "Failed to send group confirmation email for group_id=%s event_id=%s",
                             group.pk,
@@ -852,16 +846,46 @@ class EventPage(
 
                     return redirect(f"{base}register/result/?s=ok")
 
-                registrant = save_registrant_from_form(self, reg_type, form, invite)
-
-                # Atomically burn invite usage if present
-                if invite:
-                    Invite.objects.filter(
-                        pk=invite.pk, used_count__lt=models.F("max_uses")
-                    ).update(used_count=models.F("used_count") + 1)
+                try:
+                    with transaction.atomic():
+                        # Reserve invite usage *inside the same transaction* so
+                        # nothing persists if the invite is maxed out.
+                        if invite:
+                            updated = Invite.objects.filter(
+                                pk=invite.pk, used_count__lt=models.F("max_uses")
+                            ).update(used_count=models.F("used_count") + 1)
+                            self.logger.info(
+                                "invite usage reserved invite_id=%s updated=%s",
+                                invite.pk,
+                                updated,
+                            )
+                            if updated != 1:
+                                messages.error(
+                                    request,
+                                    "This invite link has already been used the maximum number of times.",
+                                )
+                                return self.render(
+                                    request,
+                                    template="events/registration_no_types.html",
+                                    context_overrides={
+                                        "event": self,
+                                        "registration_error": "This invite link has already been used the maximum number of times.",
+                                    },
+                                )
+                        registrant = save_registrant_from_form(self, reg_type, form, invite)
+                except Exception:
+                    raise
 
                 confirmed = registrant.confirm_with_capacity()
-                send_confirmation_email(registrant, confirmed)
+                try:
+                    send_confirmation_email(registrant, confirmed)
+                except Exception:
+                    # Don't break registration UX, but do log so we can debug missing emails.
+                    self.logger.exception(
+                        "Failed to send confirmation email registrant_id=%s event_id=%s",
+                        registrant.pk,
+                        self.pk,
+                    )
 
                 base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
                 # Generic result to avoid leaking whether they were confirmed vs waitlisted.
@@ -1085,14 +1109,26 @@ class EventPage(
     def manage_registration_cancel(self, request, *args, **kwargs):
         from django.http import HttpResponse
         from django.shortcuts import redirect
-        from .registrant_management import get_registrant_for_manage_link
+        from .registrant_management import (
+            get_registrant_for_manage_link,
+            get_registrant_for_group_manage_link,
+        )
 
         if request.method != "POST":
             return HttpResponse("Method not allowed", status=405)
 
         token = request.GET.get("t", "")
         rid = request.GET.get("rid", "")
-        registrant = get_registrant_for_manage_link(registrant_id=int(rid or 0), token=token)
+        gid = request.GET.get("gid", "")
+
+        if gid:
+            registrant = get_registrant_for_group_manage_link(
+                group_id=int(gid or 0),
+                registrant_id=int(rid or 0),
+                token=token,
+            )
+        else:
+            registrant = get_registrant_for_manage_link(registrant_id=int(rid or 0), token=token)
         if registrant.event_id != self.id:
             return HttpResponse("Not found", status=404)
 
@@ -1101,6 +1137,8 @@ class EventPage(
             registrant.save(update_fields=["status"])
 
         base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+        if gid:
+            return redirect(f"{base}register/manage/group/?gid={gid}&t={token}&cancelled=1")
         return redirect(f"{base}register/manage/?rid={registrant.pk}&t={token}&cancelled=1")
 
     @route(r"^register/manage/group/$")
