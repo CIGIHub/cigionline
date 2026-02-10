@@ -238,6 +238,54 @@ def _render_registrant_answers(registrant) -> tuple[str, str]:
     return (html, text)
 
 
+def _render_group_registrant_answers(registrants: list) -> tuple[str, str]:
+    """Render all registrants' dynamic answers as (html, text).
+
+    This is used for group (multi-attendee) registrations so that the email
+    "answers" stream block can show answers per attendee.
+
+    Output is safe to insert directly into the existing `answers` block slot
+    (`registrant_answers_html`) in the shared wrapper template.
+    """
+
+    if not registrants:
+        return ("", "")
+
+    sections_html: list[str] = []
+    lines: list[str] = ["Registration details (all attendees):"]
+
+    for idx, r in enumerate(registrants, start=1):
+        name = (f"{getattr(r, 'first_name', '')} {getattr(r, 'last_name', '')}").strip() or getattr(r, "email", "") or f"Attendee {idx}"
+
+        answers_html, answers_text = _render_registrant_answers(r)
+        if not answers_html and not answers_text:
+            # Skip entirely empty answer sets.
+            continue
+
+        # Wrap each attendee in a clearly-labeled section.
+        sections_html.append(
+            render_to_string(
+                "events/emails/_registrant_answers_group_section.html",
+                {
+                    "attendee_label": name,
+                    "answers_html": answers_html,
+                },
+            ).strip()
+        )
+
+        lines.append("")
+        lines.append(f"{name}:")
+        # Indent bullet list from the per-registrant renderer.
+        for ln in (answers_text or "").splitlines():
+            if not ln.strip():
+                continue
+            if ln.startswith("Registration details"):
+                continue
+            lines.append(f"  {ln}")
+
+    return ("\n".join(sections_html).strip(), "\n".join(lines).strip())
+
+
 def send_event_campaign_email(campaign, registrant) -> None:
     """Send one scheduled EmailCampaign email to a registrant.
 
@@ -488,21 +536,43 @@ def send_group_confirmation_email(*, group, registrants: list, confirmed_flags: 
         name = (f"{r.first_name} {r.last_name}").strip() or r.email
         people.append((name, status))
 
+    # Use the first registrant's type for template selection (all members of a
+    # group share the same registration type).
+    representative = registrants[0] if registrants else None
+    reg_type = getattr(representative, "registration_type", None)
+
+    # Match single-registration behavior for template selection.
+    # Group confirmations can include both confirmed and waitlisted attendees;
+    # if any attendee is confirmed, treat the email as a "confirmation".
+    any_confirmed = any(bool(x) for x in confirmed_flags)
+    template_obj = (
+        (getattr(reg_type, "confirmation_template_override", None) if any_confirmed else getattr(reg_type, "waitlist_template_override", None))
+        if reg_type
+        else None
+    ) or (event.confirmation_template if any_confirmed else event.waitlist_template)
+
     ctx = {
         "event": event,
         # The shared email wrapper expects `registrant` for button/address blocks.
         # For group emails, use the primary attendee as the representative.
-        "registrant": registrants[0] if registrants else None,
+        "registrant": representative,
+        "registration_type": reg_type,
+        "confirmed": any_confirmed,
+        "status_label": "CONFIRMED ✅" if any_confirmed else "WAITLISTED ⏳",
         "manage_url": manage_url,
         "group": group,
         "people": people,
     }
     ctx.update(_event_email_merge_vars(event))
 
-    subject = render_email_subject(
-        "Registration received — {{ event.title }}",
-        ctx,
-    )
+    answers_html, answers_text = _render_group_registrant_answers(registrants)
+    ctx["registrant_answers_html"] = answers_html
+    ctx["registrant_answers_text"] = answers_text
+
+    if template_obj:
+        subject = render_email_subject(template_obj.subject, ctx)
+    else:
+        subject = render_email_subject("Registration received — {{ event.title }}", ctx)
 
     lines = [
         "Thanks for registering.",
@@ -518,33 +588,36 @@ def send_group_confirmation_email(*, group, registrants: list, confirmed_flags: 
     ]
     text = "\n".join(lines)
 
-    # Render via the shared email wrapper for consistent branding.
-    class _StaticTemplate:
-        body = [
-            ("heading", {"text": "Registration received", "level": "h2"}),
-            (
-                "paragraph",
-                "<p>Thanks for registering. Below is the status of each attendee.</p>",
-            ),
-            (
-                "paragraph",
-                "<ul>" + "".join(
-                    [f"<li><strong>{html.escape(n)}</strong>: {html.escape(s)}</li>" for (n, s) in people]
-                ) + "</ul>",
-            ),
-        ]
+    if template_obj:
+        html_body, _text2 = render_streamfield_email_html(template_obj=template_obj, ctx=ctx)
+    else:
+        # Render via the shared email wrapper for consistent branding.
+        class _StaticTemplate:
+            body = [
+                ("heading", {"text": "Registration received", "level": "h2"}),
+                (
+                    "paragraph",
+                    "<p>Thanks for registering. Below is the status of each attendee.</p>",
+                ),
+                (
+                    "paragraph",
+                    "<ul>" + "".join(
+                        [f"<li><strong>{html.escape(n)}</strong>: {html.escape(s)}</li>" for (n, s) in people]
+                    ) + "</ul>",
+                ),
+                ("answers", None),
+            ]
 
-    from dataclasses import dataclass
+        from dataclasses import dataclass
 
-    @dataclass
-    class _Block:
-        block_type: str
-        value: object
+        @dataclass
+        class _Block:
+            block_type: str
+            value: object
 
-    template_obj = _StaticTemplate()
-    template_obj.body = [_Block(t, v) for (t, v) in template_obj.body]
-
-    html_body, _text2 = render_streamfield_email_html(template_obj=template_obj, ctx=ctx)
+        tmp = _StaticTemplate()
+        tmp.body = [_Block(t, v) for (t, v) in tmp.body]
+        html_body, _text2 = render_streamfield_email_html(template_obj=tmp, ctx=ctx)
 
     message = Mail(
         from_email=settings.SENDGRID_FROM_EMAIL_EVENTS,
