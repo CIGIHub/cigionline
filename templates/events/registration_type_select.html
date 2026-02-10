@@ -18,6 +18,15 @@
           {% endif %}
         </div>
         <p class="mb-4">Choose your registration type:</p>
+
+        {% if invite %}
+          <p class="mb-4">
+            <a class="btn btn-outline-secondary" href="{{ event.url }}register/?no_invite=1">
+              Register without invite
+            </a>
+          </p>
+        {% endif %}
+
         <ul class="types-list">
           {% for t in types %}
           <li>

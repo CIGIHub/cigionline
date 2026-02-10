@@ -78,6 +78,13 @@
                 Register
               </button>
             </a>
+            {% if invite %}
+              <a href="{{ event.url }}register/?no_invite=1">
+                <button class="register btn btn-outline-secondary btn-lg mb-4">
+                  Register without invite
+                </button>
+              </a>
+            {% endif %}
           </div>
         </div>
       </div>

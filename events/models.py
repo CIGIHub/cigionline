@@ -435,10 +435,12 @@ class EventPage(
         return label
 
     def get_context(self, request):
+        invite = self._get_invite_from_request(request)
         context = super().get_context(request)
         context['location_string'] = self.location_string()
         context['event_format_string'] = self.get_event_format_display()
         context['location_map_url'] = self.location_map_url()
+        context['invite'] = invite
         return context
 
     def get_template(self, request, *args, **kwargs):
@@ -1219,6 +1221,12 @@ class EventPage(
         return redirect(f"{base}register/manage/group/?gid={gid}&t={token}&cancelled=1")
 
     def _get_invite_from_request(self, request):
+        # Allow users to explicitly drop an invite that was persisted in session.
+        # Example: /register/?no_invite=1
+        if str(request.GET.get("no_invite") or "").strip().lower() in {"1", "true", "yes"}:
+            request.session.pop(f"invite:{self.id}", None)
+            return None
+
         token = request.GET.get("invite")
         if token:
             inv = Invite.objects.filter(event=self, token=token).first()
