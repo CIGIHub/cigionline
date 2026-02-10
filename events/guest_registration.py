@@ -18,8 +18,8 @@ class GuestForms:
 def build_primary_and_guest_forms(*, event, reg_type, invite, post_data=None, files_data=None) -> GuestForms:
     """Build the primary registration form and an optional guest formset.
 
-    - Guests are only enabled when event.allow_guest_registrations is True.
-    - Max guests enforced by event.max_guest_registrations (default 5).
+    - Guests are only enabled when reg_type.allow_group_registrations is True.
+    - Max guests enforced by reg_type.max_guest_registrations (default 5).
     - Guests share the primary email; guest forms do not include email nor honeypot.
     """
 
@@ -28,11 +28,11 @@ def build_primary_and_guest_forms(*, event, reg_type, invite, post_data=None, fi
     # Primary form binds normally.
     primary_form = primary_form_class(post_data, files_data) if post_data is not None else primary_form_class()
 
-    if not getattr(event, "allow_guest_registrations", False):
+    if not getattr(reg_type, "allow_group_registrations", False):
         guest_formset = None
         return GuestForms(primary_form=primary_form, guest_formset=guest_formset)
 
-    max_guests = int(getattr(event, "max_guest_registrations", 5) or 5)
+    max_guests = int(getattr(reg_type, "max_guest_registrations", 5) or 5)
     max_guests = max(0, min(max_guests, 25))  # sanity cap
 
     guest_form_class = build_dynamic_form(

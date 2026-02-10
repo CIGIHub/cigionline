@@ -306,14 +306,6 @@ class EventPage(
 
     # Registration related fields
     registration_open = models.BooleanField(default=False)
-    allow_guest_registrations = models.BooleanField(
-        default=False,
-        help_text="Allow one email to register multiple attendees (guests).",
-    )
-    max_guest_registrations = models.PositiveIntegerField(
-        default=5,
-        help_text="Maximum number of additional guests allowed per registration (default: 5).",
-    )
     is_private_registration = models.BooleanField(
         default=False, help_text="Require invite token or private link to register."
     )
@@ -598,7 +590,7 @@ class EventPage(
                 "register_form POST start event_id=%s type_slug=%s allow_guests=%s",
                 self.pk,
                 type_slug,
-                getattr(self, "allow_guest_registrations", False),
+                getattr(reg_type, "allow_group_registrations", False),
             )
             if request.POST.get("website"):
                 base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
@@ -1339,8 +1331,6 @@ class EventPage(
             MultiFieldPanel(
                 [
                     FieldPanel('registration_open'),
-                    FieldPanel('allow_guest_registrations'),
-                    FieldPanel('max_guest_registrations'),
                     FieldPanel('is_private_registration'),
                     FieldPanel('registration_image_banner'),
                 ],
@@ -1405,6 +1395,15 @@ class RegistrationType(Orderable):
     is_public = models.BooleanField(default=True)
     custom_confirmation_text = RichTextField(blank=True)
 
+    allow_group_registrations = models.BooleanField(
+        default=False,
+        help_text="Allow one email to register multiple attendees (guests) for this registration type.",
+    )
+    max_guest_registrations = models.PositiveIntegerField(
+        default=5,
+        help_text="Maximum number of additional guests allowed for this registration type (default: 5).",
+    )
+
     # Optional email template overrides for this type (leave blank to use Event defaults)
     confirmation_template_override = models.ForeignKey(
         'events.EmailTemplate',
@@ -1436,7 +1435,14 @@ class RegistrationType(Orderable):
         FieldPanel("slug"),
         FieldPanel("capacity"),
         FieldPanel("is_public"),
-        FieldPanel("custom_confirmation_text"),
+        MultiFieldPanel(
+            [
+                FieldPanel("allow_group_registrations"),
+                FieldPanel("max_guest_registrations"),
+            ],
+            heading="Group registrations",
+            classname="collapsible collapsed",
+        ),
         MultiFieldPanel(
             [
                 FieldPanel("confirmation_template_override"),
@@ -1592,7 +1598,7 @@ class Invite(Orderable):
     class Rule(models.TextChoices):
         ALL = "all", "All"
         ONLY = "only", "Only these"
-    allowed_rule = models.CharField(max_length=10, choices=Rule.choices, default=Rule.ALL)
+    allowed_rule = models.CharField(max_length=10, choices=Rule.choices)
     allowed_type_slugs = models.TextField(blank=True, help_text="Example: vip,speaker")
 
     token = models.CharField(max_length=64, unique=True, db_index=True, blank=True, editable=False)
