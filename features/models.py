@@ -1,5 +1,5 @@
 
-from distutils.log import error
+import logging
 from django.db import models
 from django.utils import timezone
 from events.models import EventPage, EventListPage
@@ -16,6 +16,8 @@ from .blocks import (
     FeaturedPromotionBlock,
 )
 import traceback
+
+logger = logging.getLogger(__name__)
 
 
 class FeaturesListPage(Page):
@@ -177,7 +179,7 @@ class HomePageFeaturedEventsList(Page):
             ).in_bulk(featured_event_ids)
             featured_events = [featured_events[x] for x in featured_events]
         except Exception:
-            error(traceback.format_exc())
+            logger.exception("Failed to build featured events")
 
         if len(featured_events) == 0:
             featured_events = EventListPage.objects.first().get_featured_events()[:3]
@@ -186,16 +188,20 @@ class HomePageFeaturedEventsList(Page):
                 future_events = EventPage.objects.prefetch_related(
                     'multimedia_page',
                     'topics',
-                ).live().public().filter(publishing_date__gt=now).order_by('publishing_date')[:3]
+                ).live().public().filter(exclude_from_search=False, publishing_date__gt=now).order_by('publishing_date')[:3]
                 if len(future_events) < 3:
                     Q = models.Q
                     past_events = EventPage.objects.prefetch_related(
                         'multimedia_page',
                         'topics',
-                    ).live().public().filter(Q(event_end__isnull=True, publishing_date__lt=now) | Q(event_end__lt=now)).order_by('-publishing_date')[:3]
+                    ).live().public().filter(exclude_from_search=False).filter(Q(event_end__isnull=True, publishing_date__lt=now) | Q(event_end__lt=now)).order_by('-publishing_date')[:3]
                     featured_events = (list(future_events) + list(past_events))[:3]
                 else:
                     featured_events = future_events
+
+            # Ensure we never auto-pick events that are excluded from search.
+            # (Editors can still feature them explicitly via the featured list.)
+            featured_events = [e for e in featured_events if not getattr(e, 'exclude_from_search', False)]
 
         context['featured_events'] = featured_events
         return context
