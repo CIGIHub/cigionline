@@ -68,7 +68,6 @@ class InviteViewSet(ModelViewSet):
         "token",
         "event",
         "email",
-        "allowed_rule",
         "allowed_type_slugs",
         "max_uses",
         "used_count",
@@ -82,7 +81,6 @@ class InviteViewSet(ModelViewSet):
     form_fields = [
         "event",
         "email",
-        "allowed_rule",
         "allowed_type_slugs",
         "max_uses",
         "expires_at",
@@ -308,8 +306,12 @@ class RegistrationReportViewSet(ViewSet):
                 url = ""
                 key = f"f_{ff.field_key}"
                 val = answers.get(key)
-                meta = (answers or {}).get(val) or {}
-                if isinstance(meta, dict):
+                # File fields store a dict in answers under the field key:
+                #   {"document_id": 123, "name": "file.pdf"}
+                # Older/broken code attempted to treat `val` as a key, which fails
+                # when `val` is a dict (unhashable).
+                meta = val if isinstance(val, dict) else {}
+                if meta:
                     doc_id = meta.get("document_id")
                     if doc_id:
                         doc = Document.objects.filter(pk=doc_id).only("id", "file").first()

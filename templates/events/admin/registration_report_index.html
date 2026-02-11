@@ -26,7 +26,15 @@
         {% for row in rows %}
           <tr>
             <td class="title">
-              <a href="{{ row.event.url }}" target="_blank" rel="noopener">{{ row.event.title }}</a>
+              <div class="title-wrapper">
+                <a class="title-link" href="{% url detail_url_name pk=row.event.pk %}">
+                  {{ row.event.title }}
+                </a>
+              </div>
+              <div class="buttons">
+                <a href="{{ row.event.url }}" class="button button-secondary" rel="noopener">View Event</a>
+                <a href="/admin/pages/{{ row.event.pk }}/edit/" class="button button-secondary">Edit Event</a>
+              </div>
             </td>
             <td class="w-min">{{ row.type_count }}</td>
             <td class="w-min">{{ row.confirmed_total }}</td>

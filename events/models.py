@@ -482,14 +482,9 @@ class EventPage(
         # be accessible via an invite link.
         if invite and invite.is_valid():
             types_qs = self.registration_types.all()
-            rule = (invite.allowed_rule or "").strip().lower()
-            if rule == "only":
-                allowed = set(_split_tokens(invite.allowed_type_slugs))
+            allowed = set(_split_tokens(invite.allowed_type_slugs))
+            if allowed:
                 types_qs = types_qs.filter(slug__in=allowed)
-            elif rule == "except":
-                blocked = set(_split_tokens(invite.allowed_type_slugs))
-                if blocked:
-                    types_qs = types_qs.exclude(slug__in=blocked)
 
         types = list(types_qs.order_by("sort_order"))
         if not types:
@@ -502,7 +497,7 @@ class EventPage(
         # If this is an invite flow and the invite restricts allowed types to a
         # single option, skip the chooser and send them straight to that form.
         # This should work even when the target type is non-public.
-        if invite and (invite.allowed_rule or "").strip().lower() == "only":
+        if invite:
             allowed = [t for t in types if invite.allows_type_slug(t.slug)]
             if len(allowed) == 1:
                 base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
@@ -1595,10 +1590,8 @@ class Invite(Orderable):
     used_count = models.PositiveIntegerField(default=0)
     expires_at = models.DateTimeField(null=True, blank=True)
 
-    class Rule(models.TextChoices):
-        ALL = "all", "All"
-        ONLY = "only", "Only these"
-    allowed_rule = models.CharField(max_length=10, choices=Rule.choices)
+    # If filled in, this acts as an allowlist of RegistrationType.slug values (comma-separated).
+    # If blank, the invite does not restrict which types are available.
     allowed_type_slugs = models.TextField(blank=True, help_text="Example: vip,speaker")
 
     token = models.CharField(max_length=64, unique=True, db_index=True, blank=True, editable=False)
@@ -1606,7 +1599,6 @@ class Invite(Orderable):
 
     panels = [
         FieldPanel("email"),
-        FieldPanel("allowed_rule"),
         FieldPanel("allowed_type_slugs"),
         FieldPanel("max_uses"),
         FieldPanel("expires_at"),
@@ -1641,12 +1633,10 @@ class Invite(Orderable):
 
     def allows_type_slug(self, slug: str) -> bool:
         s = (slug or "").strip().lower()
-        rule = (self.allowed_rule or "").strip().lower()
-        if rule == "only":
-            return s in self._allowed_set()
-        if rule == "except":
-            return s not in self._allowed_set()
-        return True
+        allowed = self._allowed_set()
+        if not allowed:
+            return True
+        return s in allowed
 
 
 class RegistrationGroup(models.Model):

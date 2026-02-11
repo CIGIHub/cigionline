@@ -96,3 +96,11 @@
 .registration-registrants-report-section table.listing.full-width {
   margin-bottom: 0;
 }
+
+.registration-reports-body .title .title-wrapper {
+  font-size: 1.25rem;
+}
+
+.registration-reports-body .title .buttons {
+  margin-top: 1rem;
+}
