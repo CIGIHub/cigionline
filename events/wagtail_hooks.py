@@ -263,10 +263,24 @@ class RegistrationReportViewSet(ViewSet):
         ]
 
         for ff in form_fields:
-            if ff.field_type != "file":
-                header.append(ff.label)
+            if ff.field_type == "file":
+                continue
+
+            # Some field types store their data in multiple keys.
+            if ff.field_type == "conditional_text":
+                header.append(f"{ff.label} (enabled)")
+                header.append(f"{ff.label} (details)")
+                continue
+
+            if ff.field_type == "conditional_dropdown_other":
+                header.append(f"{ff.label} (selection)")
+                header.append(f"{ff.label} (other)")
+                continue
+
+            header.append(ff.label)
 
         for ff in file_fields:
+            header.append(f"{ff.label} (file name)")
             header.append(f"{ff.label} (file url)")
 
         # CSV response (with BOM so Excel handles UTF-8)
@@ -297,30 +311,45 @@ class RegistrationReportViewSet(ViewSet):
             for ff in form_fields:
                 if ff.field_type == "file":
                     continue
-                key = f"f_{ff.field_key}"
-                val = answers.get(key)
-                non_file_cells.append(_fmt(val))
 
-            file_url_cells = []
+                base_key = f"f_{ff.field_key}"
+
+                if ff.field_type == "conditional_text":
+                    enabled = answers.get(f"{base_key}__enabled")
+                    details = answers.get(f"{base_key}__details")
+                    non_file_cells.append(_fmt(enabled))
+                    non_file_cells.append(_fmt(details))
+                    continue
+
+                if ff.field_type == "conditional_dropdown_other":
+                    selection = answers.get(base_key)
+                    other = answers.get(f"{base_key}__other")
+                    non_file_cells.append(_fmt(selection))
+                    non_file_cells.append(_fmt(other))
+                    continue
+
+                non_file_cells.append(_fmt(answers.get(base_key)))
+
+            file_cells = []
             for ff in file_fields:
-                url = ""
+                file_name = ""
+                file_url = ""
+
                 key = f"f_{ff.field_key}"
                 val = answers.get(key)
-                # File fields store a dict in answers under the field key:
-                #   {"document_id": 123, "name": "file.pdf"}
-                # Older/broken code attempted to treat `val` as a key, which fails
-                # when `val` is a dict (unhashable).
                 meta = val if isinstance(val, dict) else {}
                 if meta:
+                    file_name = str(meta.get("name") or "")
                     doc_id = meta.get("document_id")
                     if doc_id:
                         doc = Document.objects.filter(pk=doc_id).only("id", "file").first()
                         if doc and getattr(doc.file, "url", None):
-                            url = _abs_url(doc.file.url)
+                            file_url = _abs_url(doc.file.url)
 
-                file_url_cells.append(url)
+                file_cells.append(file_name)
+                file_cells.append(file_url)
 
-            writer.writerow(base_row + non_file_cells + file_url_cells)
+            writer.writerow(base_row + non_file_cells + file_cells)
 
         return resp
 
