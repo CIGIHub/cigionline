@@ -5,11 +5,14 @@
     <p><strong>Invite link:</strong></p>
     <input type="text"
            readonly
-           value="{{ base }}register/?invite={{ self.instance.token }}"
+           value="{{ base }}?invite={{ self.instance.token }}"
            style="width:100%">
     <p class="help">
-      Rule: {{ self.instance.get_allowed_rule_display }}
-      {% if self.instance.allowed_type_slugs %} — {{ self.instance.allowed_type_slugs }}{% endif %}
+      {% if self.instance.allowed_type_slugs %}
+        Allowed types: {{ self.instance.allowed_type_slugs }}
+      {% else %}
+        Allowed types: (all)
+      {% endif %}
     </p>
   {% else %}
     <p>Save this invite to generate the link.</p>

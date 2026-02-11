@@ -427,6 +427,9 @@ class EventPage(
         return label
 
     def get_context(self, request):
+        # Allow invite links to point at the event page itself (not /register/).
+        # Visiting /event/?invite=TOKEN should persist the token in session so that
+        # clicking "Register" later uses the same invite rules.
         invite = self._get_invite_from_request(request)
         context = super().get_context(request)
         context['location_string'] = self.location_string()
