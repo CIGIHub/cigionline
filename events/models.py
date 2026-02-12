@@ -12,7 +12,6 @@ from django.db import models, transaction
 from django.utils import timezone
 import logging
 from django.utils.translation import gettext_lazy as _
-from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from modelcluster.fields import ParentalKey
@@ -538,7 +537,6 @@ class EventPage(
 
     @route(r"^register/type/(?P<type_slug>[-\w]+)/$")
     def register_form(self, request, type_slug: str, *args, **kwargs):
-        from django.shortcuts import redirect
         from django.conf import settings
         from django.db import transaction
         from .utils import save_registrant_from_form
@@ -957,7 +955,6 @@ class EventPage(
     def manage_registration(self, request, *args, **kwargs):
         """Self-service page: review + update answers or cancel."""
 
-        from django.http import HttpResponse
         from .registrant_management import (
             get_registrant_for_manage_link,
             get_registrant_for_group_manage_link,
@@ -1043,8 +1040,6 @@ class EventPage(
 
     @route(r"^register/manage/update/$")
     def manage_registration_update(self, request, *args, **kwargs):
-        from django.http import HttpResponse
-        from django.shortcuts import redirect
         from .registrant_management import (
             get_registrant_for_manage_link,
             get_registrant_for_group_manage_link,
@@ -1122,8 +1117,6 @@ class EventPage(
 
     @route(r"^register/manage/cancel/$")
     def manage_registration_cancel(self, request, *args, **kwargs):
-        from django.http import HttpResponse
-        from django.shortcuts import redirect
         from .registrant_management import (
             get_registrant_for_manage_link,
             get_registrant_for_group_manage_link,
@@ -1160,7 +1153,6 @@ class EventPage(
     def manage_registration_group(self, request, *args, **kwargs):
         """Group self-service page: list/edit/cancel each attendee."""
 
-        from django.http import HttpResponse
         from .registrant_management import get_group_for_manage_link
 
         token = request.GET.get("t", "")
@@ -1185,8 +1177,6 @@ class EventPage(
     def manage_registration_group_cancel(self, request, *args, **kwargs):
         """Cancel a single attendee within a group using the group token."""
 
-        from django.http import HttpResponse
-        from django.shortcuts import redirect
         from .registrant_management import get_registrant_for_group_manage_link
 
         if request.method != "POST":
@@ -1989,7 +1979,6 @@ class EmailTemplate(PreviewableMixin, models.Model):
         sample context values (event/registrant/type) so merge vars resolve.
         """
 
-        from django.http import HttpResponse
         from .email_rendering import render_streamfield_email_html
         from django.utils import timezone
 

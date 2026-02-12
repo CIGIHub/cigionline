@@ -2,22 +2,27 @@ from utils.admin_utils import title_with_actions, live_icon
 from wagtail.admin.ui.tables import Column
 from wagtail.admin.widgets import AdminPageChooser
 from wagtail.admin.viewsets.base import ViewSet, ViewSetGroup
-import csv
-from .models import EmailTemplate, EmailCampaign, Invite, Registrant, EventListPage, EventPage, RegistrationFormTemplate
-from django.core.paginator import Paginator
-from django.db.models import Q
+
+from .models import (
+    EmailTemplate,
+    EmailCampaign,
+    Invite,
+    Registrant,
+    EventListPage,
+    EventPage,
+    RegistrationFormTemplate,
+)
+
 from django.urls import path, reverse
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.http import HttpResponse
-from django.utils.text import slugify
-from django.utils import timezone
 from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.utils.decorators import method_decorator
 from django.utils.html import format_html
+
 from wagtail import hooks
-from wagtail.documents.models import Document
 from wagtail.admin.viewsets.model import ModelViewSet
 
 from .reporting import (

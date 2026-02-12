@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import csv
 from dataclasses import dataclass
-from typing import Any, Iterable
+from typing import Any
 
 from django.core.paginator import Paginator
 from django.db.models import Q

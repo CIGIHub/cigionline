@@ -12,7 +12,7 @@ from sendgrid.helpers.mail import Mail
 from .email_rendering import render_email_subject, render_streamfield_email_html
 
 if TYPE_CHECKING:
-    from .models import Registrant, EmailTemplate
+    from .models import Registrant
 
 
 def _event_email_merge_vars(event) -> dict:
