@@ -68,7 +68,7 @@
     </section>
   {% endif %}
 
-  {% if self.registration_open and not self.is_private_registration %}
+  {% if self.registration_open and not self.is_private_registration or self.registration_open and invite %}
     <section>
       <div class="container">
         <div class="row justify-content-center">
@@ -78,13 +78,6 @@
                 Register
               </button>
             </a>
-            {% if invite %}
-              <a href="{{ event.url }}register/?no_invite=1">
-                <button class="register btn btn-outline-secondary btn-lg mb-4">
-                  Register without invite
-                </button>
-              </a>
-            {% endif %}
           </div>
         </div>
       </div>

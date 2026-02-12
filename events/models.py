@@ -13,6 +13,7 @@ from django.utils import timezone
 import logging
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
@@ -1211,12 +1212,6 @@ class EventPage(
         return redirect(f"{base}register/manage/group/?gid={gid}&t={token}&cancelled=1")
 
     def _get_invite_from_request(self, request):
-        # Allow users to explicitly drop an invite that was persisted in session.
-        # Example: /register/?no_invite=1
-        if str(request.GET.get("no_invite") or "").strip().lower() in {"1", "true", "yes"}:
-            request.session.pop(f"invite:{self.id}", None)
-            return None
-
         token = request.GET.get("invite")
         if token:
             inv = Invite.objects.filter(event=self, token=token).first()
@@ -1375,12 +1370,129 @@ class EventPage(
         ]
 
     parent_page_types = ['events.EventListPage']
-    subpage_types = []
+    subpage_types = ['events.EventRegistrationReportPage']
     templates = 'events/event_page.html'
 
     class Meta:
         verbose_name = 'Event'
         verbose_name_plural = 'Events'
+
+
+class EventRegistrationReportPage(RoutablePageMixin, Page):
+    """Public-facing registration capacity report for an event.
+
+    Protect this page using Wagtail's built-in privacy / password restriction UI.
+    """
+
+    parent_page_types = ["events.EventPage"]
+    subpage_types = []
+
+    # Keep the edit UI minimal; password/privacy is managed via Wagtail Settings.
+    content_panels = Page.content_panels
+
+    def serve(self, request, *args, **kwargs):
+        """Ensure routable subpaths (e.g. /type/<slug>/export.csv) resolve reliably.
+
+        In some setups Wagtail can end up serving this page via the base Page
+        implementation, which bypasses RoutablePageMixin's route resolution.
+        Explicitly delegating here makes route handling unambiguous.
+        """
+
+        return RoutablePageMixin.serve(self, request, *args, **kwargs)
+
+    def _get_event(self):
+        return self.get_parent().specific
+
+    @route(r"^$")
+    def index(self, request, *args, **kwargs):
+        """Landing page showing capacities per registration type."""
+
+        return self.render(request)
+
+    @route(r"^type/(?P<type_slug>[-\w]+)/$")
+    def type_registrants(self, request, type_slug: str, *args, **kwargs):
+        from django.shortcuts import get_object_or_404
+        from django.template.response import TemplateResponse
+
+        from .reporting import (
+            attach_answer_cells,
+            build_answer_columns,
+            filter_registrants_queryset,
+            paginate_queryset,
+        )
+
+        event = self._get_event()
+        rtype = get_object_or_404(event.registration_types, slug=type_slug)
+
+        q = (request.GET.get("q") or "").strip()
+        status = (request.GET.get("status") or "").strip().lower()
+
+        registrants = filter_registrants_queryset(event=event, rtype=rtype, q=q, status=status)
+        columns = build_answer_columns(event)
+        page_obj = paginate_queryset(registrants, request=request, per_page=50)
+        attach_answer_cells(page_obj, columns=columns)
+
+        return TemplateResponse(
+            request,
+            "events/registration_report_type_public.html",
+            {
+                "page": self,
+                "report_page": self,
+                "event": event,
+                "rtype": rtype,
+                "page_obj": page_obj,
+                "q": q,
+                "status": status,
+                "columns": [c.__dict__ for c in columns],
+            },
+        )
+
+    @route(r"^type/(?P<type_slug>[-\w]+)/export/?$")
+    def type_registrants_csv(self, request, type_slug: str, *args, **kwargs):
+        from django.shortcuts import get_object_or_404
+
+        from .reporting import registrants_csv_response
+        from .models import Registrant
+
+        event = self._get_event()
+        rtype = get_object_or_404(event.registration_types, slug=type_slug)
+        registrants = (
+            Registrant.objects.filter(event=event, registration_type=rtype)
+            .select_related("registration_type", "invite")
+            .only(
+                "id",
+                "created_at",
+                "status",
+                "first_name",
+                "last_name",
+                "email",
+                "registration_type__name",
+                "registration_type__slug",
+                "answers",
+                "invite_id",
+                "invite__email",
+            )
+            .order_by("created_at")
+        )
+        return registrants_csv_response(
+            request=request,
+            event=event,
+            registrants_qs=registrants,
+            filename_prefix=f"{event.title}-{rtype.slug}",
+        )
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+
+        from .reporting import build_type_rows
+
+        event = self._get_event()
+        context["event"] = event
+        context["type_rows"] = build_type_rows(event)
+        return context
+
+    class Meta:
+        verbose_name = "Event registration report"
 
 
 class RegistrationType(Orderable):

@@ -17,6 +17,25 @@
       <thead>
         <tr>
           <th>{% trans "Event" %}</th>
+          <th class="w-min">
+            {% with next_dir="asc" %}
+              {% if sort == "publishing_date" and dir == "asc" %}{% with next_dir="desc" %}{% endwith %}{% endif %}
+            {% endwith %}
+            <a href="?sort=publishing_date&dir={% if sort == 'publishing_date' and dir == 'desc' %}asc{% else %}desc{% endif %}">
+              {% trans "Publishing date" %}
+              {% if sort == 'publishing_date' %}
+                {% if dir == 'asc' %}▲{% else %}▼{% endif %}
+              {% endif %}
+            </a>
+          </th>
+          <th class="w-min">
+            <a href="?sort=last_published_at&dir={% if sort == 'last_published_at' and dir == 'desc' %}asc{% else %}desc{% endif %}">
+              {% trans "Last published" %}
+              {% if sort == 'last_published_at' %}
+                {% if dir == 'asc' %}▲{% else %}▼{% endif %}
+              {% endif %}
+            </a>
+          </th>
           <th class="w-min">{% trans "Types" %}</th>
           <th class="w-min">{% trans "Confirmed (total)" %}</th>
           <th class="w-min">{% trans "View" %}</th>
@@ -36,6 +55,12 @@
                 <a href="/admin/pages/{{ row.event.pk }}/edit/" class="button button-secondary">Edit Event</a>
               </div>
             </td>
+            <td class="w-min">
+              {% if row.publishing_date %}{{ row.publishing_date|date:"Y-m-d" }}{% else %}—{% endif %}
+            </td>
+            <td class="w-min">
+              {% if row.last_published_at %}{{ row.last_published_at|date:"Y-m-d" }}{% else %}—{% endif %}
+            </td>
             <td class="w-min">{{ row.type_count }}</td>
             <td class="w-min">{{ row.confirmed_total }}</td>
             <td class="w-min column-view">
@@ -45,7 +70,7 @@
             </td>
           </tr>
         {% empty %}
-          <tr><td colspan="4">{% trans "No events with registration enabled." %}</td></tr>
+          <tr><td colspan="6">{% trans "No events with registration enabled." %}</td></tr>
         {% endfor %}
       </tbody>
     </table>

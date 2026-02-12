@@ -20,6 +20,15 @@ from wagtail import hooks
 from wagtail.documents.models import Document
 from wagtail.admin.viewsets.model import ModelViewSet
 
+from .reporting import (
+    attach_answer_cells,
+    build_answer_columns,
+    build_type_rows,
+    filter_registrants_queryset,
+    paginate_queryset,
+    registrants_csv_response,
+)
+
 
 class EventPageListingViewSet(ModelViewSet):
     model = EventPage
@@ -142,11 +151,21 @@ class RegistrationReportViewSet(ViewSet):
     url_prefix = "event-registrations/reports"
 
     def index_view(self, request):
+        sort = (request.GET.get("sort") or "publishing_date").strip()
+        direction = (request.GET.get("dir") or "desc").strip().lower()
+
+        sort_map = {
+            "publishing_date": "publishing_date",
+            "last_published_at": "last_published_at",
+        }
+        sort_field = sort_map.get(sort, "publishing_date")
+        prefix = "-" if direction != "asc" else ""
+
         events = (
             EventPage.objects.live()
             .filter(registration_open=True)
             .specific()
-            .order_by("-first_published_at")
+            .order_by(f"{prefix}{sort_field}")
         )
 
         rows = []
@@ -159,6 +178,8 @@ class RegistrationReportViewSet(ViewSet):
                 "event": ev,
                 "type_count": len(types),
                 "confirmed_total": confirmed_total,
+                "publishing_date": getattr(ev, "publishing_date", None),
+                "last_published_at": getattr(ev, "last_published_at", None),
             })
 
         return TemplateResponse(
@@ -167,6 +188,8 @@ class RegistrationReportViewSet(ViewSet):
             {
                 "view": self,
                 "rows": rows,
+                "sort": sort_field,
+                "dir": "asc" if direction == "asc" else "desc",
                 "index_url_name": self.get_url_name("index"),
                 "detail_url_name": self.get_url_name("detail"),
                 "export_csv_url_name": self.get_url_name("export_csv"),
@@ -176,26 +199,7 @@ class RegistrationReportViewSet(ViewSet):
     def detail_view(self, request, pk: int):
         event = get_object_or_404(EventPage.objects.specific(), pk=pk)
 
-        # Build per-type capacity metrics
-        type_rows = []
-        for rtype in event.registration_types.all().order_by("sort_order"):
-            confirmed = rtype.registrants.filter(
-                status=Registrant.Status.CONFIRMED
-            ).count()
-            waitlisted = rtype.registrants.filter(
-                status=Registrant.Status.WAITLISTED
-            ).count()
-            cap = rtype.capacity  # can be None
-            remaining = None if cap is None else max(cap - confirmed, 0)
-            type_rows.append({
-                "id": rtype.pk,
-                "name": rtype.name,
-                "slug": rtype.slug,
-                "capacity": cap,
-                "confirmed": confirmed,
-                "waitlisted": waitlisted,
-                "remaining": remaining,
-            })
+        type_rows = build_type_rows(event)
 
         return TemplateResponse(
             request,
@@ -220,275 +224,44 @@ class RegistrationReportViewSet(ViewSet):
         """
         event = get_object_or_404(EventPage.objects.specific(), pk=pk)
 
-        def _abs_url(url: str) -> str:
-            if not url:
-                return ""
-            return url if url.startswith("http://") or url.startswith("https://") else request.build_absolute_uri(url)
-
-        def _fmt(val):
-            if val is None:
-                return ""
-            if isinstance(val, (list, tuple)):
-                return "; ".join(str(v) for v in val)
-            if isinstance(val, bool):
-                return "Yes" if val else "No"
-            if isinstance(val, dict):
-                if "name" in val:
-                    return val.get("name") or ""
-                return "; ".join(f"{k}={v}" for k, v in val.items())
-            return str(val)
-
         registrants = (
-            Registrant.objects
-            .filter(event=event)
+            Registrant.objects.filter(event=event)
             .select_related("registration_type", "invite")
-            .only("id", "created_at", "status", "first_name", "last_name", "email", "registration_type__name", "registration_type__slug", "answers", "invite_id", "invite__email")
+            .only(
+                "id",
+                "created_at",
+                "status",
+                "first_name",
+                "last_name",
+                "email",
+                "registration_type__name",
+                "registration_type__slug",
+                "answers",
+                "invite_id",
+                "invite__email",
+            )
             .order_by("created_at")
         )
-
-        form_fields = list(event.registration_form_template.fields.all().order_by("sort_order"))
-        file_fields = [ff for ff in form_fields if ff.field_type == "file"]
-
-        header = [
-            "Registrant ID",
-            "Created",
-            "Status",
-            "Registration Type",
-            "Type Slug",
-            "First Name",
-            "Last Name",
-            "Email",
-            "Invited?",
-            "Invite Email",
-        ]
-
-        for ff in form_fields:
-            if ff.field_type == "file":
-                continue
-
-            # Some field types store their data in multiple keys.
-            if ff.field_type == "conditional_text":
-                header.append(f"{ff.label} (enabled)")
-                header.append(f"{ff.label} (details)")
-                continue
-
-            if ff.field_type == "conditional_dropdown_other":
-                header.append(f"{ff.label} (selection)")
-                header.append(f"{ff.label} (other)")
-                continue
-
-            header.append(ff.label)
-
-        for ff in file_fields:
-            header.append(f"{ff.label} (file name)")
-            header.append(f"{ff.label} (file url)")
-
-        # CSV response (with BOM so Excel handles UTF-8)
-        filename = f"{slugify(event.title)}-registrants-{timezone.now().date().isoformat()}.csv"
-        resp = HttpResponse(content_type="text/csv; charset=utf-8")
-        resp["Content-Disposition"] = f'attachment; filename="{filename}"'
-        resp.write("\ufeff")  # UTF-8 BOM for Excel
-        writer = csv.writer(resp)
-        writer.writerow(header)
-
-        for r in registrants:
-            base_row = [
-                r.pk,
-                getattr(r, "created_at", "") or "",
-                getattr(r, "status", ""),
-                getattr(r.registration_type, "name", ""),
-                getattr(r.registration_type, "slug", ""),
-                getattr(r, "first_name", ""),
-                getattr(r, "last_name", ""),
-                getattr(r, "email", ""),
-                "Yes" if getattr(r, "invite_id", None) else "No",
-                getattr(r.invite, "email", "") if getattr(r, "invite_id", None) else "",
-            ]
-
-            answers = getattr(r, "answers", {}) or {}
-
-            non_file_cells = []
-            for ff in form_fields:
-                if ff.field_type == "file":
-                    continue
-
-                base_key = f"f_{ff.field_key}"
-
-                if ff.field_type == "conditional_text":
-                    enabled = answers.get(f"{base_key}__enabled")
-                    details = answers.get(f"{base_key}__details")
-                    non_file_cells.append(_fmt(enabled))
-                    non_file_cells.append(_fmt(details))
-                    continue
-
-                if ff.field_type == "conditional_dropdown_other":
-                    selection = answers.get(base_key)
-                    other = answers.get(f"{base_key}__other")
-                    non_file_cells.append(_fmt(selection))
-                    non_file_cells.append(_fmt(other))
-                    continue
-
-                non_file_cells.append(_fmt(answers.get(base_key)))
-
-            file_cells = []
-            for ff in file_fields:
-                file_name = ""
-                file_url = ""
-
-                key = f"f_{ff.field_key}"
-                val = answers.get(key)
-                meta = val if isinstance(val, dict) else {}
-                if meta:
-                    file_name = str(meta.get("name") or "")
-                    doc_id = meta.get("document_id")
-                    if doc_id:
-                        doc = Document.objects.filter(pk=doc_id).only("id", "file").first()
-                        if doc and getattr(doc.file, "url", None):
-                            file_url = _abs_url(doc.file.url)
-
-                file_cells.append(file_name)
-                file_cells.append(file_url)
-
-            writer.writerow(base_row + non_file_cells + file_cells)
-
-        return resp
+        return registrants_csv_response(
+            request=request,
+            event=event,
+            registrants_qs=registrants,
+            filename_prefix=event.title,
+        )
 
     def type_registrants_view(self, request, pk: int, type_id: int):
-        def _fmt_answer(val, field_type: str):
-            if val is None:
-                return ""
-            if isinstance(val, bool):
-                return "Yes" if val else "No"
-            if isinstance(val, (list, tuple)):
-                return "; ".join(str(v) for v in val)
-            if isinstance(val, dict):
-                # file field stored like {"document_id": 123, "name": "x.pdf"}
-                if field_type == "file":
-                    return val.get("name") or ""
-                return "; ".join(f"{k}={v}" for k, v in val.items())
-            return str(val)
-
         event = get_object_or_404(EventPage.objects.specific(), pk=pk)
         rtype = get_object_or_404(event.registration_types, pk=type_id)
 
         q = (request.GET.get("q") or "").strip()
         status = (request.GET.get("status") or "").strip().lower()  # e.g., confirmed|waitlisted|pending
 
-        registrants = (
-            Registrant.objects
-            .filter(event=event, registration_type=rtype)
-            .select_related("invite")
-            .order_by("-created_at")
-        )
-        if q:
-            registrants = registrants.filter(
-                Q(email__icontains=q) |
-                Q(first_name__icontains=q) |
-                Q(last_name__icontains=q)
-            )
-        if status in {"confirmed", "waitlisted", "pending"}:
-            registrants = registrants.filter(status=status)
+        registrants = filter_registrants_queryset(event=event, rtype=rtype, q=q, status=status)
+        columns = build_answer_columns(event)
+        page_obj = paginate_queryset(registrants, request=request, per_page=50)
 
-        form_fields = list(event.registration_form_template.fields.all().order_by("sort_order"))
-
-        columns = []
-        for ff in form_fields:
-            base = f"f_{ff.field_key}"
-
-            if ff.field_type == "conditional_dropdown_other":
-                trigger = (getattr(ff, "conditional_other_value", "") or "").strip() or "Other"
-                columns.append({
-                    "label": ff.label,
-                    "type": "conditional_dropdown_other",
-                    "key_select": base,
-                    "key_other": f"{base}__other",
-                    "trigger_value": trigger,
-                })
-            elif ff.field_type == "conditional_text":
-                columns.append({
-                    "label": ff.label,
-                    "type": "conditional_text",
-                    "key_enabled": f"{base}__enabled",
-                    "key_details": f"{base}__details",
-                })
-            else:
-                columns.append({
-                    "label": ff.label,
-                    "type": ff.field_type,
-                    "key": base,
-                })
-
-        paginator = Paginator(registrants, 50)
-        page_obj = paginator.get_page(request.GET.get("p", 1))
-
-        doc_ids = set()
+        attach_answer_cells(page_obj, columns=columns)
         for r in page_obj.object_list:
-            ans = r.answers or {}
-            for col in columns:
-                if col["type"] == "file":
-                    meta = ans.get(col["key"]) or {}
-                    if isinstance(meta, dict) and meta.get("document_id"):
-                        doc_ids.add(meta["document_id"])
-
-        docs_by_id = {
-            d.id: d
-            for d in Document.objects.filter(id__in=doc_ids).only("id", "file", "title")
-        }
-
-        for r in page_obj.object_list:
-            ans = r.answers or {}
-            cells = []
-
-            for col in columns:
-                # --- CONDITIONAL TEXT (checkbox + details) ---
-                if col["type"] == "conditional_text":
-                    enabled = bool(ans.get(col["key_enabled"]))
-                    details = (ans.get(col["key_details"]) or "").strip()
-
-                    cells.append({
-                        "text": (details or "Yes") if enabled else "",
-                        "url": "",
-                    })
-                    continue
-
-                # --- CONDITIONAL DROPDOWN + OTHER TEXTBOX (combined column) ---
-                if col["type"] == "conditional_dropdown_other":
-                    selected = (ans.get(col["key_select"]) or "").strip()
-                    other = (ans.get(col["key_other"]) or "").strip()
-                    trigger = (col.get("trigger_value") or "Other").strip()
-
-                    # display rules:
-                    # - if nothing selected: blank
-                    # - if selected == trigger and other has text: show other (or "Other — <other>")
-                    # - otherwise show selected
-                    if not selected:
-                        text = ""
-                    elif selected == trigger:
-                        text = f"{trigger} — {other}" if other else trigger
-                    else:
-                        text = selected
-
-                    cells.append({"text": text, "url": ""})
-                    continue
-
-                # --- NORMAL FIELDS ---
-                val = ans.get(col["key"])
-
-                # file field: answers store {"document_id":..., "name":...}
-                if col["type"] == "file" and isinstance(val, dict) and val.get("document_id"):
-                    doc = docs_by_id.get(val["document_id"])
-                    cells.append({
-                        "text": val.get("name") or (doc.title if doc else ""),
-                        "url": (doc.file.url if doc and getattr(doc.file, "url", None) else ""),
-                    })
-                else:
-                    cells.append({
-                        "text": _fmt_answer(val, col["type"]),
-                        "url": "",
-                    })
-
-            r.answer_cells = cells
-            r.invited = bool(getattr(r, "invite_id", None))
             r.edit_url = reverse("registrants:edit", args=[r.pk])
 
         return TemplateResponse(
@@ -506,7 +279,7 @@ class RegistrationReportViewSet(ViewSet):
                 "type_url_name": self.get_url_name("type_registrants"),
                 "export_csv_url_name": self.get_url_name("export_csv"),
                 "unregister_url_name": self.get_url_name("unregister"),
-                "columns": columns,
+                "columns": [c.__dict__ for c in columns],
             },
         )
 
