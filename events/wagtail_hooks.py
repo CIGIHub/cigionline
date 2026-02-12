@@ -8,10 +8,13 @@ from .models import (
     EmailCampaign,
     Invite,
     Registrant,
+    RegistrationType,
     EventListPage,
     EventPage,
     RegistrationFormTemplate,
 )
+
+from django.db import models as dj_models
 
 from django.urls import path, reverse
 from django.shortcuts import get_object_or_404, redirect
@@ -158,6 +161,7 @@ class RegistrationReportViewSet(ViewSet):
     def index_view(self, request):
         sort = (request.GET.get("sort") or "publishing_date").strip()
         direction = (request.GET.get("dir") or "desc").strip().lower()
+        q = (request.GET.get("q") or "").strip()
 
         sort_map = {
             "publishing_date": "publishing_date",
@@ -166,12 +170,11 @@ class RegistrationReportViewSet(ViewSet):
         sort_field = sort_map.get(sort, "publishing_date")
         prefix = "-" if direction != "asc" else ""
 
-        events = (
-            EventPage.objects.live()
-            .filter(registration_open=True)
-            .specific()
-            .order_by(f"{prefix}{sort_field}")
-        )
+        events_qs = EventPage.objects.live().filter(registration_open=True)
+        if q:
+            events_qs = events_qs.filter(title__icontains=q)
+
+        events = events_qs.specific().order_by(f"{prefix}{sort_field}")
 
         rows = []
         for ev in events:
@@ -195,6 +198,7 @@ class RegistrationReportViewSet(ViewSet):
                 "rows": rows,
                 "sort": sort_field,
                 "dir": "asc" if direction == "asc" else "desc",
+                "q": q,
                 "index_url_name": self.get_url_name("index"),
                 "detail_url_name": self.get_url_name("detail"),
                 "export_csv_url_name": self.get_url_name("export_csv"),
@@ -347,9 +351,20 @@ class RegistrationFormTemplate(ModelViewSet):
     name = "registrationformtemplate"
     list_display = [
         'title',
+        Column(
+            "created_at",
+            label="Created",
+            sort_key="created_at",
+        ),
+        Column(
+            "used_by_events",
+            label="Used by events",
+            accessor=lambda obj: EventPage.objects.filter(registration_form_template_id=obj.pk).count(),
+            sort_key=None,
+        ),
     ]
     search_fields = ('title',)
-    ordering = ['title']
+    ordering = ["-created_at", "title"]
 
 
 class EmailTemplateViewSet(ModelViewSet):
@@ -368,9 +383,34 @@ class EmailTemplateViewSet(ModelViewSet):
                 obj.title,
             ),
         ),
+        Column(
+            "created_at",
+            label="Created",
+            sort_key="created_at",
+        ),
+        Column(
+            "used_by_events",
+            label="Used by events",
+            accessor=lambda obj: (
+                EventPage.objects.filter(
+                    dj_models.Q(confirmation_template_id=obj.pk)
+                    | dj_models.Q(waitlist_template_id=obj.pk)
+                    | dj_models.Q(reminder_template_id=obj.pk)
+                ).count()
+                + RegistrationType.objects.filter(
+                    dj_models.Q(confirmation_template_override_id=obj.pk)
+                    | dj_models.Q(waitlist_template_override_id=obj.pk)
+                    | dj_models.Q(reminder_template_override_id=obj.pk)
+                )
+                .values("event_id")
+                .distinct()
+                .count()
+            ),
+            sort_key=None,
+        ),
     ]
     search_fields = ('title',)
-    ordering = ['title']
+    ordering = ["-created_at", "title"]
 
 
 class EmailCampaignViewSet(ModelViewSet):

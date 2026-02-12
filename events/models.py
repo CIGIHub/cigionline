@@ -1883,6 +1883,7 @@ class Registrant(models.Model):
 class EmailTemplate(PreviewableMixin, models.Model):
     title = models.CharField(max_length=120)
     subject = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
     # Body supports rich content + optional placeholder merge fields
     body = StreamField(
         [
@@ -2105,6 +2106,7 @@ class EmailCampaignSend(models.Model):
 class RegistrationFormTemplate(ClusterableModel):
     title = models.CharField(max_length=120, unique=True)
     description = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     panels = [
         FieldPanel("title"),

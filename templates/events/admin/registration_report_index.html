@@ -13,6 +13,26 @@
   </header>
 
   <div class="nice-padding registration-reports-body">
+    <form method="get" class="w-form w-mb-4" style="margin-bottom: 1rem;">
+      <div class="field">
+        <label class="w-sr-only" for="id_q">{% trans "Search" %}</label>
+        <input
+          type="search"
+          name="q"
+          id="id_q"
+          placeholder="{% trans 'Search events' %}"
+          value="{{ q|default:'' }}"
+          style="max-width: 420px;"
+        />
+        <input type="hidden" name="sort" value="{{ sort }}" />
+        <input type="hidden" name="dir" value="{{ dir }}" />
+        <button type="submit" class="button">{% trans "Search" %}</button>
+        {% if q %}
+          <a class="button button-secondary" href="?sort={{ sort }}&dir={{ dir }}">{% trans "Clear" %}</a>
+        {% endif %}
+      </div>
+    </form>
+
     <table class="listing">
       <thead>
         <tr>
