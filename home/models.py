@@ -1,4 +1,4 @@
-from distutils.log import error
+import logging
 from django.db import models
 from modelcluster.fields import ParentalKey
 from publications.models import PublicationPage, PublicationListPage
@@ -26,7 +26,8 @@ from django.utils import timezone
 from people.models import PersonPage
 from multimedia.models import MultimediaPage
 import random
-import traceback
+
+logger = logging.getLogger(__name__)
 
 
 class HomePage(Page):
@@ -118,7 +119,7 @@ class HomePage(Page):
             hide_flags = [bool(item.value.get("hide_publication_date")) for item in featured_pages_list]
             featured_items = [{"page_id": pid, "hide_publication_date": hide} for pid, hide in zip(featured_page_ids, hide_flags)]
         except Exception:
-            error(traceback.format_exc())
+            logger.exception("Failed to build featured experts")
             featured_page_ids = self.featured_pages.order_by('sort_order').values_list('featured_page', flat=True)
         pages = Page.objects.specific().in_bulk(featured_page_ids)
         return [{"page": pages[x["page_id"]], "hide_publication_date": x["hide_publication_date"]} for x in featured_items]
@@ -128,7 +129,7 @@ class HomePage(Page):
             featured_experts = HomePageFeaturedExpertsList.objects.first().featured_experts
             featured_expert_ids = [expert.value['page'].id for expert in featured_experts]
         except Exception:
-            error(traceback.format_exc())
+            logger.exception("Failed to build featured highlights")
             featured_expert_ids = self.featured_experts.values_list('featured_expert', flat=True)
 
         experts = PersonPage.objects.in_bulk(featured_expert_ids)
@@ -152,7 +153,7 @@ class HomePage(Page):
             highlight_pages = HomePageFeaturedHighlightsList.objects.first().featured_highlights
             highlight_page_ids = [page.value['page'].id for page in highlight_pages]
         except Exception:
-            error(traceback.format_exc())
+            logger.exception("Failed to build featured publications")
             highlight_page_ids = self.highlight_pages.values_list('highlight_page', flat=True)
 
         pages = Page.objects.specific().prefetch_related(
@@ -166,7 +167,7 @@ class HomePage(Page):
             featured_multimedia = HomePageFeaturedMultimediaList.objects.first().featured_multimedia
             featured_multimedia_ids = [multimedia.value['page'].id for multimedia in featured_multimedia]
         except Exception:
-            error(traceback.format_exc())
+            logger.exception("Failed to build featured publications (fallback)")
             featured_multimedia_ids = self.featured_multimedia.values_list('featured_multimedia', flat=True)
 
         multimedia = MultimediaPage.objects.prefetch_related(
@@ -186,7 +187,7 @@ class HomePage(Page):
             ).in_bulk(featured_publication_ids)
             featured_publications = [featured_publications_query_set[x] for x in featured_publication_ids]
         except Exception:
-            error(traceback.format_exc())
+            logger.exception("Failed to build featured events")
 
         if len(featured_publications) == 0:
             featured_page_ids = []
@@ -194,7 +195,7 @@ class HomePage(Page):
                 featured_pages_list = HomePageFeaturedContentList.objects.first().featured_pages
                 featured_page_ids = [page.value['page'].id for page in featured_pages_list]
             except Exception:
-                error(traceback.format_exc())
+                logger.exception("Failed to build featured events (fallback)")
                 featured_page_ids = self.featured_pages.values_list('featured_page', flat=True)
             featured_publications = PublicationPage.objects.prefetch_related(
                 'authors__author',
@@ -214,7 +215,7 @@ class HomePage(Page):
             ).in_bulk(featured_event_ids)
             featured_events = [featured_events[x] for x in featured_events]
         except Exception:
-            error(traceback.format_exc())
+            logger.exception("Failed to build featured multimedia")
 
         if len(featured_events) == 0:
             featured_events = EventListPage.objects.first().get_featured_events()[:3]
@@ -223,16 +224,20 @@ class HomePage(Page):
                 future_events = EventPage.objects.prefetch_related(
                     'multimedia_page',
                     'topics',
-                ).live().public().filter(publishing_date__gt=now).order_by('publishing_date')[:3]
+                ).live().public().filter(exclude_from_search=False, publishing_date__gt=now).order_by('publishing_date')[:3]
                 if len(future_events) < 3:
                     Q = models.Q
                     past_events = EventPage.objects.prefetch_related(
                         'multimedia_page',
                         'topics',
-                    ).live().public().filter(Q(event_end__isnull=True, publishing_date__lt=now) | Q(event_end__lt=now)).order_by('-publishing_date')[:3]
+                    ).live().public().filter(exclude_from_search=False).filter(Q(event_end__isnull=True, publishing_date__lt=now) | Q(event_end__lt=now)).order_by('-publishing_date')[:3]
                     featured_events = (list(future_events) + list(past_events))[:3]
                 else:
                     featured_events = future_events
+
+            # Ensure we never auto-pick events that are excluded from search.
+            # (Editors can still feature them explicitly via the featured list.)
+            featured_events = [e for e in featured_events if not getattr(e, 'exclude_from_search', False)]
 
         return featured_events
 
