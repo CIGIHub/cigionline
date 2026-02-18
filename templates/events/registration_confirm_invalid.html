@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Registration confirmation — {{ event.title }}{% endblock %}
+
+{% block content %}
+  <section class="event-registration-confirmation-section">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <h1 class="h2">Registration confirmation</h1>
+          <p class="lead">This confirmation link is no longer valid.</p>
+          <p>If you think this is a mistake, please try registering again from the event page.</p>
+          <p><a class="btn btn-primary" href="{{ event.url }}">Back to event</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

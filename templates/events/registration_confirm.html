@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Registration confirmation — {{ event.title }}{% endblock %}
+
+{% block content %}
+  <section class="event-registration-form-section">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <h1 class="h2">Registration confirmation</h1>
+
+          {% if confirmed %}
+            <p class="lead">Thanks, {{ registrant.first_name|default:registrant.email }}. Your registration is confirmed.</p>
+          {% else %}
+            <p class="lead">Thanks, {{ registrant.first_name|default:registrant.email }}. You’ve been added to the waitlist.</p>
+          {% endif %}
+
+          <p>
+            <strong>Event:</strong> {{ event.title }}<br>
+            <strong>Registration type:</strong> {{ registrant.registration_type.name }}
+          </p>
+
+          <p><a class="btn btn-primary" href="{{ event.url }}">Back to event</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

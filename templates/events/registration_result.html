@@ -20,7 +20,13 @@
       <h1>Registration submitted</h1>
 
       <div class="alert alert-success" role="alert">
-        Thank you! If a new registration was submitted for this email address, you’ll receive a confirmation email shortly. If you had already registered with this address, we’ll email you a link to manage your registration.
+        {% if status == "pending" %}
+          Thank you! Please check your email and click the confirmation link to finalize your registration.
+          If you had already registered with this address, we’ll email you a link to manage your registration.
+        {% else %}
+          Thank you! If a new registration was submitted for this email address, you’ll receive an email shortly.
+          If you had already registered with this address, we’ll email you a link to manage your registration.
+        {% endif %}
       </div>
     </div>
   </div>

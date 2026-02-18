@@ -396,7 +396,7 @@ def send_confirmation_email(registrant, confirmed: bool) -> None:
         "registrant": registrant,
         "registration_type": registrant.registration_type,
         "confirmed": confirmed,
-        "status_label": "CONFIRMED ✅" if confirmed else "WAITLISTED ⏳",
+        "status_label": "Confirmed" if confirmed else "Waitlisted",
         "manage_url": manage_url,
     }
     ctx.update(_event_email_merge_vars(event))
@@ -414,7 +414,7 @@ def send_confirmation_email(registrant, confirmed: bool) -> None:
             f"Hi {registrant.first_name or registrant.email},",
             "",
             f"Thanks for registering for {event.title}.",
-            "Status: " + ("CONFIRMED ✅" if confirmed else "WAITLISTED ⏳"),
+            "Status: " + ("Confirmed" if confirmed else "Waitlisted"),
         ]
         lines.append("We look forward to seeing you!" if confirmed else "We’ll notify you if a spot opens.")
         text = "\n".join(lines)
@@ -517,6 +517,93 @@ def send_duplicate_registration_manage_email(registrant) -> None:
         raise RuntimeError(f"Failed to send email, status code: {response.status_code}")
 
 
+def send_registration_pending_confirm_email(registrant) -> None:
+    """Send a 'confirm your registration' email (double opt-in).
+
+    Registrant created in PENDING state. The email contains a signed-ish token
+    (hashed in DB) embedded in the confirm URL.
+    """
+
+    api_key = settings.SENDGRID_API_KEY
+    event = registrant.event
+
+    raw_token = registrant.ensure_manage_token()
+    if not raw_token:
+        registrant.manage_token_hash = ""
+        raw_token = registrant.ensure_manage_token()
+
+    base = event.get_url(request=None) or ("/" + event.url_path.lstrip("/"))
+    # Prefer a fully-qualified URL in emails.
+    if base and base.startswith("/"):
+        site_base = getattr(settings, "WAGTAILADMIN_BASE_URL", "").rstrip("/")
+        if site_base:
+            base = f"{site_base}{base}"
+
+    confirm_url = f"{base}register/confirm/?rid={registrant.pk}&t={raw_token}"
+
+    ctx = {
+        "event": event,
+        "registrant": registrant,
+        "registration_type": getattr(registrant, "registration_type", None),
+        "confirmed": False,
+        "status_label": "Pending",  # useful in templates
+        "confirm_url": confirm_url,
+    }
+    ctx.update(_event_email_merge_vars(event))
+
+    answers_html, answers_text = _render_registrant_answers(registrant)
+    ctx["registrant_answers_html"] = answers_html
+    ctx["registrant_answers_text"] = answers_text
+
+    subject = render_email_subject(
+        "Confirm your registration — {{ event.title }}",
+        ctx,
+    )
+
+    class _StaticTemplate:
+        body = [
+            ("heading", {"text": "Confirm your registration", "level": "h2"}),
+            (
+                "paragraph",
+                (
+                    "<p>Thanks for registering for <strong>{{ event.title }}</strong>. "
+                    "Please confirm your registration by clicking the button below.</p>"
+                ),
+            ),
+            ("button", {"text": "Confirm registration", "url": "{{ confirm_url }}"}),
+            ("answers", None),
+            (
+                "paragraph",
+                "<p>If you didn’t request this, you can ignore this email.</p>",
+            ),
+        ]
+
+    from dataclasses import dataclass
+
+    @dataclass
+    class _Block:
+        block_type: str
+        value: object
+
+    template_obj = _StaticTemplate()
+    template_obj.body = [_Block(t, v) for (t, v) in template_obj.body]
+
+    html_body, text = render_streamfield_email_html(template_obj=template_obj, ctx=ctx)
+
+    message = Mail(
+        from_email=settings.SENDGRID_FROM_EMAIL_EVENTS,
+        to_emails=registrant.email,
+        subject=subject,
+        plain_text_content=text,
+        html_content=html_body,
+    )
+
+    sg = SendGridAPIClient(api_key)
+    response = sg.send(message)
+    if response.status_code != 202:
+        raise RuntimeError(f"Failed to send email, status code: {response.status_code}")
+
+
 def send_group_confirmation_email(*, group, registrants: list, confirmed_flags: list[bool], manage_url: str) -> None:
     """Send a single confirmation email to the primary email for a group registration.
 
@@ -532,7 +619,7 @@ def send_group_confirmation_email(*, group, registrants: list, confirmed_flags: 
 
     people = []
     for r, ok in zip(registrants, confirmed_flags):
-        status = "CONFIRMED ✅" if ok else "WAITLISTED ⏳"
+        status = "Confirmed" if ok else "Waitlisted"
         name = (f"{r.first_name} {r.last_name}").strip() or r.email
         people.append((name, status))
 
@@ -558,7 +645,7 @@ def send_group_confirmation_email(*, group, registrants: list, confirmed_flags: 
         "registrant": representative,
         "registration_type": reg_type,
         "confirmed": any_confirmed,
-        "status_label": "CONFIRMED ✅" if any_confirmed else "WAITLISTED ⏳",
+        "status_label": "Confirmed" if any_confirmed else "Waitlisted",
         "manage_url": manage_url,
         "group": group,
         "people": people,
