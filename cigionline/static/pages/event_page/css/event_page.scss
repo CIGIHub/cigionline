@@ -57,7 +57,15 @@
 }
 
 .event-registration-form-section {
-  margin-top: 6rem;
+  margin-top: 4rem;
+
+  .list-group {
+    .list-group-item {
+      .gap-2 {
+        gap: 0.5rem;
+      }
+    }
+  }
 }
 
 .registration-banner-image {

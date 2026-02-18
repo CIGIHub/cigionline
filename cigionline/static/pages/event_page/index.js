@@ -17,8 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Registration page UX: smooth-scroll to the main interactive section ---
   // This nudges the user past the hero/banner so it's obvious the page changed.
   // Only runs on the registration subpages (types/form/manage/etc).
+  // On the "registration submitted" page, we want to land specifically on the
+  // Action Required blurb when present.
   const scrollTarget = document.querySelector(
-    '.event-registration-type-select-section, .event-registration-form-section, .event-registration-result-section, .event-registration-no-types-section',
+    '#registration-action-required, .event-registration-type-select-section, .event-registration-form-section, .event-registration-result-section, .event-registration-no-types-section',
   );
 
   const shouldAutoscroll = () => {
