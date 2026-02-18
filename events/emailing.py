@@ -204,9 +204,54 @@ def _render_registrant_answers(registrant) -> tuple[str, str]:
             return f"Additional question — {kind}"
         return "Additional question"
 
+    def _sorted_answer_keys() -> list[str]:
+        """Return answer keys in stable 'form order'.
+
+        `registrant.answers` is a JSON dict, so its iteration order depends on
+        insertion order at submission time and can drift (especially when
+        conditional fields change). For emails we want the same ordering as the
+        form template: RegistrationFormField.sort_order.
+        """
+
+        keys = [str(k) for k in answers.keys()]
+
+        # Map base field key -> order index.
+        order_map: dict[str, int] = {}
+
+        try:
+            tmpl = getattr(registrant.event, "registration_form_template", None)
+            if tmpl:
+                for i, ff in enumerate(tmpl.fields.all().order_by("sort_order", "id"), start=1):
+                    # Stored answer keys look like: f_<uuid>
+                    order_map[f"f_{ff.field_key}"] = i
+        except Exception:
+            # If anything goes wrong, fall back to insertion order.
+            return keys
+
+        def _sort_key(k: str):
+            # Group conditional suffix keys right after their base field.
+            base = k
+            suffix_rank = 0
+            if k.endswith("__enabled"):
+                base = k[: -len("__enabled")]
+                suffix_rank = 1
+            elif k.endswith("__details"):
+                base = k[: -len("__details")]
+                suffix_rank = 2
+            elif k.endswith("__other"):
+                base = k[: -len("__other")]
+                suffix_rank = 3
+
+            # Unknown keys go after known dynamic fields but stay stable.
+            base_rank = order_map.get(base, 10_000)
+            return (base_rank, suffix_rank, k)
+
+        return sorted(keys, key=_sort_key)
+
     # Drop internal keys + empties; resolve labels + format values.
     items: list[tuple[str, str]] = []
-    for k, v in answers.items():
+    for k in _sorted_answer_keys():
+        v = answers.get(k)
         if _is_internal_key(str(k)):
             continue
 
