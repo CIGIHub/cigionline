@@ -604,6 +604,105 @@ def send_registration_pending_confirm_email(registrant) -> None:
         raise RuntimeError(f"Failed to send email, status code: {response.status_code}")
 
 
+def send_group_registration_pending_confirm_email(*, group) -> None:
+    """Send a single 'confirm your registration' email for a group registration.
+
+    This emails the group's primary_email with one confirmation link that, when
+    clicked, confirms/waitlists all pending registrants in the group.
+    """
+
+    api_key = getattr(settings, "SENDGRID_API_KEY", "")
+    if not api_key:
+        raise RuntimeError("SENDGRID_API_KEY is not configured")
+
+    event = group.event
+
+    raw_token = group.ensure_manage_token()
+    if not raw_token:
+        group.manage_token_hash = ""
+        raw_token = group.ensure_manage_token()
+
+    base = event.get_url(request=None) or ("/" + event.url_path.lstrip("/"))
+    if base and base.startswith("/"):
+        site_base = getattr(settings, "WAGTAILADMIN_BASE_URL", "").rstrip("/")
+        if site_base:
+            base = f"{site_base}{base}"
+
+    confirm_url = f"{base}register/confirm-group/?gid={group.pk}&t={raw_token}"
+
+    # Summarize attendees in the email.
+    registrants = list(group.registrants.order_by("id"))
+    people = []
+    for r in registrants:
+        name = (f"{r.first_name} {r.last_name}").strip() or r.email
+        people.append(name)
+
+    representative = registrants[0] if registrants else None
+    reg_type = getattr(representative, "registration_type", None)
+
+    ctx = {
+        "event": event,
+        "registrant": representative,
+        "registration_type": reg_type,
+        "confirmed": False,
+        "status_label": "Pending",
+        "confirm_url": confirm_url,
+        "group": group,
+        "people": [(p, "Pending") for p in people],
+    }
+    ctx.update(_event_email_merge_vars(event))
+
+    # Render answers inline (if any). This uses the group helper to keep output consistent.
+    answers_html, answers_text = _render_group_registrant_answers(registrants)
+    ctx["registrant_answers_html"] = answers_html
+    ctx["registrant_answers_text"] = answers_text
+
+    subject = render_email_subject(
+        "Confirm your registrations — {{ event.title }}",
+        ctx,
+    )
+
+    class _StaticTemplate:
+        body = [
+            ("heading", {"text": "Confirm your registrations", "level": "h2"}),
+            (
+                "paragraph",
+                (
+                    "<p>Thanks for registering for <strong>{{ event.title }}</strong>. "
+                    "Please confirm your registrations by clicking the button below.</p>"
+                ),
+            ),
+            ("button", {"text": "Confirm registrations", "url": "{{ confirm_url }}"}),
+            ("answers", None),
+            ("paragraph", "<p>If you didn’t request this, you can ignore this email.</p>"),
+        ]
+
+    from dataclasses import dataclass
+
+    @dataclass
+    class _Block:
+        block_type: str
+        value: object
+
+    template_obj = _StaticTemplate()
+    template_obj.body = [_Block(t, v) for (t, v) in template_obj.body]
+
+    html_body, text = render_streamfield_email_html(template_obj=template_obj, ctx=ctx)
+
+    message = Mail(
+        from_email=settings.SENDGRID_FROM_EMAIL_EVENTS,
+        to_emails=group.primary_email,
+        subject=subject,
+        plain_text_content=text,
+        html_content=html_body,
+    )
+
+    sg = SendGridAPIClient(api_key)
+    response = sg.send(message)
+    if response.status_code != 202:
+        raise RuntimeError(f"Failed to send email, status code: {response.status_code}")
+
+
 def send_registration_cancelled_email(registrant) -> None:
     """Send a 'your registration was cancelled' email.
 

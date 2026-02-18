@@ -77,6 +77,7 @@ def build_dynamic_form(
     *,
     require_email: bool = True,
     include_honeypot: bool = True,
+    is_guest_form: bool = False,
 ):
     """
     Build a dynamic Form class from RegistrationFormField rules (no admin/panels tricks).
@@ -99,6 +100,9 @@ def build_dynamic_form(
     fields_qs = event.registration_form_template.fields.all()
 
     for ff in fields_qs.order_by("sort_order"):
+        if is_guest_form and getattr(ff, "exclude_from_guest_forms", False):
+            continue
+
         vis_slugs = _split_slugs(ff.visible_type_slugs)
         if not _match(ff.visible_rule, vis_slugs, current_slug):
             continue

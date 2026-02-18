@@ -118,6 +118,109 @@ class EventPageTests(WagtailPageTestCase):
         )
 
 
+class GuestRegistrationQuestionExclusionTests(TestCase):
+    def test_exclude_from_guest_forms_omits_field_for_guests(self):
+        from wagtail.models import Site
+        from events.models import EventPage, RegistrationType, RegistrationFormTemplate, RegistrationFormField
+        from events.guest_registration import build_primary_and_guest_forms
+
+        root = Site.objects.get(is_default_site=True).root_page
+        event = EventPage(title="Guest Exclusion Event")
+        root.add_child(instance=event)
+        event.save_revision().publish()
+
+        tmpl = RegistrationFormTemplate.objects.create(name="Guest Exclusion Template")
+        event.registration_form_template = tmpl
+        event.save(update_fields=["registration_form_template"])
+
+        # Create a question that should NOT appear for guest registrants.
+        RegistrationFormField.objects.create(
+            template=tmpl,
+            label="Primary-only question",
+            field_type="singleline",
+            required=False,
+            sort_order=0,
+            exclude_from_guest_forms=True,
+        )
+
+        reg_type = RegistrationType.objects.create(
+            event=event,
+            name="General",
+            slug="general",
+            sort_order=0,
+            is_public=True,
+            allow_group_registrations=True,
+            max_guest_registrations=2,
+        )
+
+        forms_obj = build_primary_and_guest_forms(event=event, reg_type=reg_type, invite=None)
+        self.assertIn(
+            "f_" + str(RegistrationFormField.objects.first().field_key),
+            forms_obj.primary_form.fields,
+        )
+
+        self.assertIsNotNone(forms_obj.guest_formset)
+        guest_form = forms_obj.guest_formset.forms[0]
+        self.assertNotIn(
+            "f_" + str(RegistrationFormField.objects.first().field_key),
+            guest_form.fields,
+        )
+
+
+class GroupDoubleOptInTests(TestCase):
+    @patch("events.models.send_group_registration_pending_confirm_email")
+    def test_group_registration_sends_single_pending_confirm_email_and_stays_pending(self, send_mock):
+        from wagtail.models import Site
+        from events.models import EventPage, RegistrationType, RegistrationFormTemplate
+
+        root = Site.objects.get(is_default_site=True).root_page
+        event = EventPage(title="Group Pending Confirm Event", registration_open=True)
+        root.add_child(instance=event)
+        event.save_revision().publish()
+
+        tmpl = RegistrationFormTemplate.objects.create(name="Group Pending Template")
+        event.registration_form_template = tmpl
+        event.save(update_fields=["registration_form_template"])
+
+        reg_type = RegistrationType.objects.create(
+            event=event,
+            name="General",
+            slug="general",
+            sort_order=0,
+            is_public=True,
+            allow_group_registrations=True,
+            max_guest_registrations=2,
+        )
+
+        resp = self.client.post(
+            f"{event.url}register/type/{reg_type.slug}/",
+            data={
+                "first_name": "Primary",
+                "last_name": "User",
+                "email": "primary@example.com",
+                "website": "",
+                # One guest
+                "guests-TOTAL_FORMS": "1",
+                "guests-INITIAL_FORMS": "0",
+                "guests-MIN_NUM_FORMS": "0",
+                "guests-MAX_NUM_FORMS": "2",
+                "guests-0-first_name": "Guest",
+                "guests-0-last_name": "One",
+            },
+        )
+
+        self.assertEqual(resp.status_code, 302)
+        self.assertIn("register/result/?s=pending", resp["Location"])
+        self.assertTrue(send_mock.called)
+
+        from events.models import Registrant
+
+        statuses = list(Registrant.objects.filter(event=event).values_list("status", flat=True))
+        # Primary + guest should remain pending until confirm-group is clicked.
+        self.assertTrue(statuses)
+        self.assertTrue(all(s == Registrant.Status.PENDING for s in statuses))
+
+
 class EventsAPITests(WagtailPageTestCase):
     fixtures = ['events_search_table.json']
 

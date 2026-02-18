@@ -548,6 +548,7 @@ class EventPage(
             # (guest/group emails added in events/emailing.py)
             send_group_confirmation_email,
             send_group_duplicate_manage_email,
+            send_group_registration_pending_confirm_email,
         )
         from .guest_registration import build_primary_and_guest_forms
 
@@ -827,30 +828,14 @@ class EventPage(
                         raise
 
                     # Send email after commit.
-                    # For group registrations, we keep the existing behaviour for now
-                    # (immediate confirm/waitlist) because the UX and email templates
-                    # are group-oriented. If you want double opt-in for groups too,
-                    # we can extend this with a group confirm link.
+                    # Double opt-in for group registrations: send ONE confirm link
+                    # to the primary email, and keep all attendees PENDING until
+                    # the group confirm endpoint is clicked.
                     try:
-                        statuses = []
-                        for r in created:
-                            try:
-                                statuses.append(r.confirm_with_capacity())
-                            except Exception:
-                                self.logger.exception(
-                                    "confirm_with_capacity failed for registrant_id=%s",
-                                    r.pk,
-                                )
-                                statuses.append(False)
-                        send_group_confirmation_email(
-                            group=group,
-                            registrants=created,
-                            confirmed_flags=statuses,
-                            manage_url=manage_url,
-                        )
+                        send_group_registration_pending_confirm_email(group=group)
                     except Exception:
                         self.logger.exception(
-                            "Failed to send group confirmation email for group_id=%s event_id=%s",
+                            "Failed to send group pending-confirm email for group_id=%s event_id=%s",
                             group.pk,
                             self.pk,
                         )
@@ -861,7 +846,7 @@ class EventPage(
                         [r.pk for r in created],
                     )
 
-                    return redirect(f"{base}register/result/?s=ok")
+                    return redirect(f"{base}register/result/?s=pending")
 
                 try:
                     with transaction.atomic():
@@ -1315,6 +1300,101 @@ class EventPage(
             },
         )
 
+    @route(r"^register/confirm-group/$")
+    def confirm_group_registration(self, request, *args, **kwargs):
+        """Email confirmation endpoint for group (multi-registrant) registrations."""
+
+        from django.conf import settings
+        from django.http import HttpResponse
+        from .models import Registrant
+        from .registrant_management import get_group_for_manage_link
+        from .emailing import send_group_confirmation_email
+
+        token = (request.GET.get("t") or "").strip()
+        gid = request.GET.get("gid")
+        if not (token and gid):
+            return HttpResponse("Not found", status=404)
+
+        group = get_group_for_manage_link(group_id=int(gid or 0), token=token)
+        if group.event_id != self.id:
+            return HttpResponse("Not found", status=404)
+
+        registrants = list(
+            Registrant.objects.select_related("registration_type")
+            .filter(group=group, event=self)
+            .order_by("id")
+        )
+        if not registrants:
+            return HttpResponse("Not found", status=404)
+
+        confirmed_flags: list[bool] = []
+        any_changed = False
+
+        for r in registrants:
+            # If already processed, preserve the state.
+            if r.status in {Registrant.Status.CONFIRMED, Registrant.Status.WAITLISTED}:
+                confirmed_flags.append(r.status == Registrant.Status.CONFIRMED)
+                continue
+            if r.status != Registrant.Status.PENDING:
+                # Cancelled or unknown state; treat as not confirmed.
+                confirmed_flags.append(False)
+                continue
+
+            try:
+                confirmed_flags.append(bool(r.confirm_with_capacity()))
+                any_changed = True
+            except Exception:
+                self.logger.exception(
+                    "confirm_with_capacity failed for registrant_id=%s",
+                    r.pk,
+                )
+                confirmed_flags.append(False)
+
+        # Build manage_url (absolute preferred, like the other emails)
+        base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+        if base and base.startswith("/"):
+            site_base = getattr(settings, "WAGTAILADMIN_BASE_URL", "").rstrip("/")
+            if site_base:
+                base = f"{site_base}{base}"
+        manage_url = f"{base}register/manage/group/?gid={group.pk}&t={token}"
+
+        # Send the existing group confirmation email after confirm.
+        # Avoid resending if nothing changed (e.g., link revisited).
+        if any_changed:
+            try:
+                send_group_confirmation_email(
+                    group=group,
+                    registrants=registrants,
+                    confirmed_flags=confirmed_flags,
+                    manage_url=manage_url,
+                )
+            except Exception:
+                self.logger.exception(
+                    "Failed to send group confirmation email for group_id=%s event_id=%s",
+                    group.pk,
+                    self.pk,
+                )
+
+        any_confirmed = any(bool(x) for x in confirmed_flags)
+
+        return self.render(
+            request,
+            template="events/registration_confirm.html",
+            context_overrides={
+                "event": self,
+                "registrant": registrants[0],
+                "confirmed": any_confirmed,
+                "group": group,
+                "people": [
+                    (
+                        (f"{r.first_name} {r.last_name}").strip() or r.email,
+                        "Confirmed" if ok else "Waitlisted",
+                    )
+                    for (r, ok) in zip(registrants, confirmed_flags)
+                ],
+            },
+        )
+
     def _get_invite_from_request(self, request):
         token = request.GET.get("invite")
         if token:
@@ -1761,7 +1841,16 @@ class RegistrationFormField(AbstractFormField):
         help_text="Require textbox when 'Other' is selected.",
     )
 
+    exclude_from_guest_forms = models.BooleanField(
+        default=False,
+        help_text=(
+            "Exclude this question from guest attendee forms when using "
+            "multi-registrations (primary + guests)."
+        ),
+    )
+
     panels = AbstractFormField.panels + [
+        FieldPanel("exclude_from_guest_forms"),
         MultiFieldPanel(
             [
                 FieldPanel("visible_rule"),

@@ -41,6 +41,7 @@ def build_primary_and_guest_forms(*, event, reg_type, invite, post_data=None, fi
         invite,
         require_email=False,
         include_honeypot=False,
+        is_guest_form=True,
     )
 
     # Guests share the primary email; remove the email field entirely.
