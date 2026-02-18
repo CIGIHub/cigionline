@@ -1,8 +1,13 @@
 {% extends "base.html" %}
+{% load webpack_loader %}
 
 {% block title %}Registration confirmation — {{ event.title }}{% endblock %}
+{% block extra_css %}
+  {% render_bundle 'eventPage' 'css' %}
+{% endblock %}
 
 {% block content %}
+  {% include "includes/heroes/hero_event.html" with topics=event.topics_sorted title=event.title date=event.publishing_date end_date=event.event_end event_type=event.get_event_type_display event_access=event.get_event_access_display authors=event.authors.all author_count=event.author_count registration_url=event.registration_url time_zone=event.time_zone time_zone_label=event.time_zone_label is_past=event.is_past %}
   <section class="event-registration-form-section">
     <div class="container">
       <div class="row justify-content-center">

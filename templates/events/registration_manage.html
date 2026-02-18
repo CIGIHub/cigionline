@@ -101,10 +101,35 @@
           <form method="post" action="{{ event.url }}register/manage/cancel/?rid={{ registrant.pk }}&t={{ token }}{% if request.GET.gid %}&gid={{ request.GET.gid }}{% endif %}">
             {% csrf_token %}
             <div class="cigi-actions">
-              <button type="submit" class="btn" onclick="return confirm('Cancel your registration?');">Cancel registration</button>
+              <button
+                type="button"
+                class="btn"
+                data-modal-open="cancel-registration-modal">
+                Cancel registration
+              </button>
             </div>
           </form>
         {% endif %}
+
+        <div class="cigi-modal" id="cancel-registration-modal" role="dialog" aria-modal="true" aria-labelledby="cancel-registration-title" aria-hidden="true">
+          <div class="cigi-modal__backdrop" data-modal-close></div>
+          <div class="cigi-modal__dialog" role="document">
+            <div class="cigi-modal__header">
+              <h2 class="cigi-modal__title" id="cancel-registration-title">Cancel registration?</h2>
+              <button type="button" class="cigi-modal__close" data-modal-close aria-label="Close">×</button>
+            </div>
+
+            <div class="cigi-modal__body">
+              <p>Are you sure you want to cancel your registration for <strong>{{ event.title }}</strong>?</p>
+              <p class="text-muted">This action can’t be undone.</p>
+            </div>
+
+            <div class="cigi-modal__footer">
+              <button type="button" class="btn" data-modal-close>Keep registration</button>
+              <button type="button" class="btn btn-primary" data-modal-submit="cancel-registration-modal">Yes, cancel</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

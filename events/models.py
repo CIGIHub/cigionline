@@ -975,11 +975,10 @@ class EventPage(
                 group_id=int(gid or 0),
                 registrant_id=int(rid or 0),
                 token=token,
+                event_id=self.id,
             )
         else:
-            registrant = get_registrant_for_manage_link(registrant_id=int(rid or 0), token=token)
-        if registrant.event_id != self.id:
-            return HttpResponse("Not found", status=404)
+            registrant = get_registrant_for_manage_link(registrant_id=int(rid or 0), token=token, event_id=self.id)
 
         reg_type = registrant.registration_type
         form_class = build_dynamic_form(self, reg_type, registrant.invite, require_email=False)
@@ -1063,11 +1062,10 @@ class EventPage(
                 group_id=int(gid or 0),
                 registrant_id=int(rid or 0),
                 token=token,
+                event_id=self.id,
             )
         else:
-            registrant = get_registrant_for_manage_link(registrant_id=int(rid or 0), token=token)
-        if registrant.event_id != self.id:
-            return HttpResponse("Not found", status=404)
+            registrant = get_registrant_for_manage_link(registrant_id=int(rid or 0), token=token, event_id=self.id)
 
         reg_type = registrant.registration_type
         form_class = build_dynamic_form(self, reg_type, registrant.invite, require_email=False)
@@ -1138,20 +1136,31 @@ class EventPage(
                 group_id=int(gid or 0),
                 registrant_id=int(rid or 0),
                 token=token,
+                event_id=self.id,
             )
         else:
-            registrant = get_registrant_for_manage_link(registrant_id=int(rid or 0), token=token)
-        if registrant.event_id != self.id:
-            return HttpResponse("Not found", status=404)
+            registrant = get_registrant_for_manage_link(registrant_id=int(rid or 0), token=token, event_id=self.id)
 
+        send_cancel_email = False
         if registrant.status != Registrant.Status.CANCELLED:
             registrant.status = Registrant.Status.CANCELLED
             registrant.save(update_fields=["status"])
+            send_cancel_email = True
+
+        if send_cancel_email:
+            try:
+                from .emailing import send_registration_cancelled_email
+
+                send_registration_cancelled_email(registrant)
+            except Exception:
+                self.logger.exception(
+                    "Failed to send cancellation email registrant_id=%s event_id=%s",
+                    registrant.pk,
+                    self.pk,
+                )
 
         base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
-        if gid:
-            return redirect(f"{base}register/manage/group/?gid={gid}&t={token}&cancelled=1")
-        return redirect(f"{base}register/manage/?rid={registrant.pk}&t={token}&cancelled=1")
+        return redirect(f"{base}register/cancelled/")
 
     @route(r"^register/manage/group/$")
     def manage_registration_group(self, request, *args, **kwargs):
@@ -1194,16 +1203,44 @@ class EventPage(
             group_id=int(gid or 0),
             registrant_id=int(rid or 0),
             token=token,
+            event_id=self.id,
         )
-        if registrant.event_id != self.id:
-            return HttpResponse("Not found", status=404)
 
+        send_cancel_email = False
         if registrant.status != Registrant.Status.CANCELLED:
             registrant.status = Registrant.Status.CANCELLED
             registrant.save(update_fields=["status"])
+            send_cancel_email = True
+
+        if send_cancel_email:
+            try:
+                from .emailing import send_registration_cancelled_email
+
+                send_registration_cancelled_email(registrant)
+            except Exception:
+                self.logger.exception(
+                    "Failed to send cancellation email registrant_id=%s event_id=%s",
+                    registrant.pk,
+                    self.pk,
+                )
 
         base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
-        return redirect(f"{base}register/manage/group/?gid={gid}&t={token}&cancelled=1")
+        return redirect(f"{base}register/cancelled/")
+
+    @route(r"^register/cancelled/$")
+    def registration_cancelled(self, request, *args, **kwargs):
+        """Friendly landing page after a cancellation action."""
+
+        # Intentionally does not require any query params.
+        # The cancel endpoint already verified token/rid and performed the
+        # state transition; this page is just a friendly confirmation.
+        return self.render(
+            request,
+            template="events/registration_cancelled.html",
+            context_overrides={
+                "event": self,
+            },
+        )
 
     @route(r"^register/confirm/$")
     def confirm_registration(self, request, *args, **kwargs):

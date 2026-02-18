@@ -49,8 +49,31 @@
                   {% if r.status != "cancelled" %}
                     <form method="post" action="{{ event.url }}register/manage/group/cancel/?rid={{ r.pk }}&gid={{ group.pk }}&t={{ token }}">
                       {% csrf_token %}
-                      <button type="submit" class="btn" onclick="return confirm('Cancel this registration?');">Cancel</button>
+                      <button
+                        type="button"
+                        class="btn"
+                        data-modal-open="group-cancel-modal-{{ r.pk }}">
+                        Cancel
+                      </button>
                     </form>
+
+                    <div class="cigi-modal" id="group-cancel-modal-{{ r.pk }}" role="dialog" aria-modal="true" aria-labelledby="group-cancel-title-{{ r.pk }}" aria-hidden="true">
+                      <div class="cigi-modal__backdrop" data-modal-close></div>
+                      <div class="cigi-modal__dialog" role="document">
+                        <div class="cigi-modal__header">
+                          <h2 class="cigi-modal__title" id="group-cancel-title-{{ r.pk }}">Cancel registration?</h2>
+                          <button type="button" class="cigi-modal__close" data-modal-close aria-label="Close">×</button>
+                        </div>
+                        <div class="cigi-modal__body">
+                          <p>Cancel <strong>{{ r.first_name }} {{ r.last_name }}</strong>’s registration for <strong>{{ event.title }}</strong>?</p>
+                          <p class="text-muted">This action can’t be undone.</p>
+                        </div>
+                        <div class="cigi-modal__footer">
+                          <button type="button" class="btn" data-modal-close>Keep</button>
+                          <button type="button" class="btn btn-primary" data-modal-submit="group-cancel-modal-{{ r.pk }}">Yes, cancel</button>
+                        </div>
+                      </div>
+                    </div>
                   {% endif %}
                 </div>
               </div>

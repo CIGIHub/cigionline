@@ -338,3 +338,69 @@
   margin-top: 6rem;
   margin-bottom: 4rem;
 }
+
+/* Lightweight modal (used on registration manage pages) */
+.cigi-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+}
+
+.cigi-modal.is-open {
+  display: block;
+}
+
+.cigi-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.cigi-modal__dialog {
+  position: relative;
+  width: min(560px, calc(100vw - 2rem));
+  margin: 10vh auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  padding: 1rem;
+  outline: none;
+}
+
+.cigi-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.cigi-modal__title {
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.cigi-modal__close {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  font-size: 1.5rem;
+  line-height: 1;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+}
+
+.cigi-modal__body {
+  margin-bottom: 1rem;
+}
+
+.cigi-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+html.has-open-modal {
+  overflow: hidden;
+}

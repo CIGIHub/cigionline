@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from django.shortcuts import get_object_or_404
+from django.http import Http404
 
 from .models import Registrant, RegistrationGroup
 
@@ -13,7 +14,7 @@ class ManageLinkResult:
     ok: bool
 
 
-def get_registrant_for_manage_link(*, registrant_id: int, token: str) -> Registrant:
+def get_registrant_for_manage_link(*, registrant_id: int, token: str, event_id: int | None = None) -> Registrant:
     """Lookup registrant for a self-service manage link.
 
     Security model:
@@ -25,7 +26,10 @@ def get_registrant_for_manage_link(*, registrant_id: int, token: str) -> Registr
     """
 
     token_hash = Registrant.hash_manage_token(token)
-    return get_object_or_404(Registrant, pk=registrant_id, manage_token_hash=token_hash)
+    qs = Registrant.objects.all()
+    if event_id is not None:
+        qs = qs.filter(event_id=event_id)
+    return get_object_or_404(qs, pk=registrant_id, manage_token_hash=token_hash)
 
 
 def get_group_for_manage_link(*, group_id: int, token: str) -> RegistrationGroup:
@@ -35,8 +39,11 @@ def get_group_for_manage_link(*, group_id: int, token: str) -> RegistrationGroup
     return get_object_or_404(RegistrationGroup, pk=group_id, manage_token_hash=token_hash)
 
 
-def get_registrant_for_group_manage_link(*, group_id: int, registrant_id: int, token: str) -> Registrant:
+def get_registrant_for_group_manage_link(*, group_id: int, registrant_id: int, token: str, event_id: int | None = None) -> Registrant:
     """Lookup a Registrant within a group given the group manage token."""
 
     group = get_group_for_manage_link(group_id=group_id, token=token)
+    if event_id is not None and group.event_id != event_id:
+        # Avoid leaking existence of groups across events.
+        raise Http404
     return get_object_or_404(Registrant, pk=registrant_id, group=group)

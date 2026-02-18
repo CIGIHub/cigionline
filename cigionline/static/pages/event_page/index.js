@@ -14,6 +14,116 @@ document.addEventListener('change', function (e) {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+  // --- Modal helpers (used for cancel confirmation on manage pages) ---
+  let activeModal = null;
+  let lastActiveElement = null;
+
+  const getModalById = (id) => (id ? document.getElementById(id) : null);
+
+  const getFocusable = (root) => {
+    if (!root) return [];
+    return Array.from(
+      root.querySelectorAll(
+        'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
+      ),
+    ).filter((el) => el.offsetParent !== null);
+  };
+
+  const closeModal = (modal) => {
+    if (!modal) return;
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.documentElement.classList.remove('has-open-modal');
+
+    if (activeModal === modal) activeModal = null;
+
+    // Restore focus to the element that opened the modal.
+    if (lastActiveElement && typeof lastActiveElement.focus === 'function') {
+      lastActiveElement.focus();
+    }
+    lastActiveElement = null;
+  };
+
+  const openModal = (modal) => {
+    if (!modal) return;
+
+    // Close any existing modal first.
+    if (activeModal && activeModal !== modal) closeModal(activeModal);
+
+    lastActiveElement = document.activeElement;
+    activeModal = modal;
+
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.documentElement.classList.add('has-open-modal');
+
+    // Focus first focusable element in dialog.
+    const dialog = modal.querySelector('.cigi-modal__dialog') || modal;
+    const focusables = getFocusable(dialog);
+    (focusables[0] || dialog).focus?.();
+  };
+
+  // Open modal
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-modal-open]');
+    if (!btn) return;
+    const id = btn.getAttribute('data-modal-open');
+    const modal = getModalById(id);
+    if (!modal) return;
+    e.preventDefault();
+    openModal(modal);
+  });
+
+  // Close modal
+  document.addEventListener('click', (e) => {
+    const closeBtn = e.target.closest('[data-modal-close]');
+    if (!closeBtn) return;
+    const modal = e.target.closest('.cigi-modal');
+    if (!modal) return;
+    e.preventDefault();
+    closeModal(modal);
+  });
+
+  // Confirm action: submit the first form that contains the opener for this modal
+  document.addEventListener('click', (e) => {
+    const submitBtn = e.target.closest('[data-modal-submit]');
+    if (!submitBtn) return;
+    const id = submitBtn.getAttribute('data-modal-submit');
+    const modal = getModalById(id);
+    if (!modal) return;
+    e.preventDefault();
+    // The templates place the modal right after the form.
+    const form = modal.previousElementSibling?.tagName === 'FORM' ? modal.previousElementSibling : null;
+    if (form) form.submit();
+    else closeModal(modal);
+  });
+
+  // ESC to close + basic focus trap
+  document.addEventListener('keydown', (e) => {
+    if (!activeModal) return;
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeModal(activeModal);
+      return;
+    }
+
+    if (e.key !== 'Tab') return;
+    const dialog = activeModal.querySelector('.cigi-modal__dialog') || activeModal;
+    const focusables = getFocusable(dialog);
+    if (!focusables.length) return;
+
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
+
   // --- Guest registration (optional per event) ---
   const guestAddBtn = document.querySelector('[data-guest-add]');
   const guestContainer = document.querySelector('[data-guest-container]');

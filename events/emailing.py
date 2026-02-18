@@ -604,6 +604,75 @@ def send_registration_pending_confirm_email(registrant) -> None:
         raise RuntimeError(f"Failed to send email, status code: {response.status_code}")
 
 
+def send_registration_cancelled_email(registrant) -> None:
+    """Send a 'your registration was cancelled' email.
+
+    This is sent when a user cancels via the self-service manage page.
+    """
+
+    api_key = settings.SENDGRID_API_KEY
+    event = registrant.event
+
+    base = event.get_url(request=None) or ("/" + event.url_path.lstrip("/"))
+    if base and base.startswith("/"):
+        site_base = getattr(settings, "WAGTAILADMIN_BASE_URL", "").rstrip("/")
+        if site_base:
+            base = f"{site_base}{base}"
+
+    ctx = {
+        "event": event,
+        "registrant": registrant,
+        "registration_type": getattr(registrant, "registration_type", None),
+        "confirmed": False,
+        "status_label": "Cancelled",
+    }
+    ctx.update(_event_email_merge_vars(event))
+
+    answers_html, answers_text = _render_registrant_answers(registrant)
+    ctx["registrant_answers_html"] = answers_html
+    ctx["registrant_answers_text"] = answers_text
+
+    subject = render_email_subject(
+        "Registration cancelled — {{ event.title }}",
+        ctx,
+    )
+
+    class _StaticTemplate:
+        body = [
+            ("heading", {"text": "Registration cancelled", "level": "h2"}),
+            (
+                "paragraph",
+                "<p>This is a confirmation that your registration has been cancelled.</p>",
+            ),
+            ("answers", None),
+        ]
+
+    from dataclasses import dataclass
+
+    @dataclass
+    class _Block:
+        block_type: str
+        value: object
+
+    template_obj = _StaticTemplate()
+    template_obj.body = [_Block(t, v) for (t, v) in template_obj.body]
+
+    html_body, text = render_streamfield_email_html(template_obj=template_obj, ctx=ctx)
+
+    message = Mail(
+        from_email=settings.SENDGRID_FROM_EMAIL_EVENTS,
+        to_emails=registrant.email,
+        subject=subject,
+        plain_text_content=text,
+        html_content=html_body,
+    )
+
+    sg = SendGridAPIClient(api_key)
+    response = sg.send(message)
+    if response.status_code != 202:
+        raise RuntimeError(f"Failed to send email, status code: {response.status_code}")
+
+
 def send_group_confirmation_email(*, group, registrants: list, confirmed_flags: list[bool], manage_url: str) -> None:
     """Send a single confirmation email to the primary email for a group registration.
 

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load webpack_loader %}
+
+{% block title %}Registration cancelled — {{ event.title }}{% endblock %}
+
+{% block extra_css %}
+  {% render_bundle 'eventPage' 'css' %}
+{% endblock %}
+
+{% block extra_js %}
+  {% render_bundle 'eventPage' 'js' %}
+{% endblock %}
+
+{% block content %}
+{% include "includes/heroes/hero_event.html" with topics=event.topics_sorted title=event.title date=event.publishing_date end_date=event.event_end event_type=event.get_event_type_display event_access=event.get_event_access_display authors=event.authors.all author_count=event.author_count registration_url=event.registration_url time_zone=event.time_zone time_zone_label=event.time_zone_label is_past=event.is_past %}
+
+<section class="event-registration-form-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <a href="{{ event.url }}" class="btn btn-link p-2 mb-3">&larr; Back to event</a>
+
+        <h1>Registration cancelled</h1>
+
+        <div class="alert alert-warning" role="alert">
+          Your registration has been cancelled.
+        </div>
+
+        {% if registrant %}
+          <div class="cigi-alert mb-4">
+            <ul>
+              <li><strong>Name:</strong> {{ registrant.first_name }} {{ registrant.last_name }}</li>
+              <li><strong>Email:</strong> {{ registrant.email }}</li>
+              {% if registrant.registration_type %}
+                <li><strong>Registration type:</strong> {{ registrant.registration_type.name }}</li>
+              {% endif %}
+            </ul>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
