@@ -25,8 +25,13 @@ from django.views.decorators.http import require_POST
 from django.utils.decorators import method_decorator
 from django.utils.html import format_html
 
+import logging
+
 from wagtail import hooks
 from wagtail.admin.viewsets.model import ModelViewSet
+
+
+logger = logging.getLogger(__name__)
 
 from .reporting import (
     attach_answer_cells,
@@ -305,11 +310,14 @@ class RegistrationReportViewSet(ViewSet):
             event=event,
         )
 
+        send_cancel_email = False
+
         if registrant.status != Registrant.Status.CANCELLED:
             old_status = registrant.status
             registrant.status = Registrant.Status.CANCELLED
             registrant.save(update_fields=["status"])
             messages.success(request, f"Unregistered ID: {registrant.pk} - {registrant.first_name} {registrant.last_name} ({registrant.email}) (was {old_status}).")
+            send_cancel_email = True
 
             if old_status == Registrant.Status.CONFIRMED and registrant.registration_type.capacity is not None:
                 next_up = (
@@ -328,6 +336,20 @@ class RegistrationReportViewSet(ViewSet):
                     messages.success(request, f"Promoted ID: {next_up.pk} - {next_up.first_name} {next_up.last_name} ({next_up.email}) from waitlist.")
         else:
             messages.info(request, f"{registrant.email} is already cancelled.")
+
+        if send_cancel_email:
+            try:
+                from .emailing import send_registration_cancelled_email
+
+                send_registration_cancelled_email(registrant)
+                messages.success(request, f"Cancellation email sent to {registrant.email}.")
+            except Exception:
+                logger.exception(
+                    "Failed to send cancellation email registrant_id=%s event_id=%s",
+                    registrant.pk,
+                    event.pk,
+                )
+                messages.warning(request, f"Could not send cancellation email to {registrant.email}.")
 
         # ✅ Redirect back to the same type registrants page
         url = reverse(self.get_url_name("type_registrants"), args=[event.pk, registrant.registration_type_id])
