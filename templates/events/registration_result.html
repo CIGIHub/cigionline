@@ -19,9 +19,10 @@
 
       <h1>Registration submitted</h1>
 
-      <div class="alert alert-success" role="alert">
+      <div class="alert {% if status == 'pending' %}alert-warning{% else %}alert-success{% endif %}" role="alert">
         {% if status == "pending" %}
-          Thank you! Please check your email and click the confirmation link to finalize your registration.
+          <strong>Action required:</strong>
+          Please check your email and click the confirmation link to finalize your registration.
           If you had already registered with this address, we’ll email you a link to manage your registration.
         {% else %}
           Thank you! If a new registration was submitted for this email address, you’ll receive an email shortly.

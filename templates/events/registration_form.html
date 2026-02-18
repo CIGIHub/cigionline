@@ -24,6 +24,7 @@
 
         <p class="text-muted mb-4">Registration type: {{ reg_type.name }}</p>
 
+
         <p class="text-muted mb-4">If you wish to modify or cancel your registration, you can do so from your original confirmation. Re-entering your information here will send you another confirmation which will also allow you to modify or cancel your registration.</p>
   
         {% if messages %}
@@ -31,6 +32,12 @@
             <div class="alert alert-{{ message.tags|default:'info' }} mb-4">{{ message }}</div>
           {% endfor %}
         {% endif %}
+
+        <div class="alert alert-info mb-4" role="alert">
+          <strong>Two-step registration:</strong>
+          After you submit this form, you’ll receive an email with a confirmation link.
+          Your registration isn’t finalized until you click that link.
+        </div>
   
         <form method="post" enctype="multipart/form-data" class="cigi-form">
           {% csrf_token %}

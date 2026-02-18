@@ -611,7 +611,7 @@ def send_registration_pending_confirm_email(registrant) -> None:
             (
                 "paragraph",
                 (
-                    "<p>Thanks for registering for <strong>{{ event.title }}</strong>. "
+                    "<p>Thank you for your interest in this event."
                     "Please confirm your registration by clicking the button below.</p>"
                 ),
             ),
