@@ -14,6 +14,40 @@ document.addEventListener('change', function (e) {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+  // --- Registration page UX: smooth-scroll to the main interactive section ---
+  // This nudges the user past the hero/banner so it's obvious the page changed.
+  // Only runs on the registration subpages (types/form/manage/etc).
+  const scrollTarget = document.querySelector(
+    '.event-registration-type-select-section, .event-registration-form-section, .event-registration-result-section, .event-registration-no-types-section',
+  );
+
+  const shouldAutoscroll = () => {
+    // Avoid fighting user intent (e.g., back/forward restoring scroll position).
+    // Also avoid scrolling when a modal is open.
+    if (!scrollTarget) return false;
+    if (document.documentElement.classList.contains('has-open-modal')) return false;
+
+    const navEntries = performance.getEntriesByType?.('navigation');
+    const navType = navEntries && navEntries.length ? navEntries[0].type : null;
+    if (navType === 'back_forward') return false;
+
+    // If URL has a hash, let the browser handle that.
+    if (window.location.hash) return false;
+
+    // If we're already at/near the target, do nothing.
+    const rect = scrollTarget.getBoundingClientRect();
+    if (rect.top >= -8 && rect.top <= 120) return false;
+
+    return true;
+  };
+
+  if (shouldAutoscroll()) {
+    // Defer one tick so layout/images settle a bit before measuring.
+    window.setTimeout(() => {
+      scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+  }
+
   // --- Modal helpers (used for cancel confirmation on manage pages) ---
   let activeModal = null;
   let lastActiveElement = null;
