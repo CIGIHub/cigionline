@@ -73,7 +73,7 @@
       <div class="container">
         <div class="row justify-content-center">
           <div class="col col-md-10 col-lg-8">
-            <a href="{{ self.url }}register/">
+            <a href="{{ self.url }}register/{% if invite %}?invite={{ invite.token }}{% endif %}">
               <button class="register btn btn-primary btn-lg mb-4">
                 Register
               </button>
