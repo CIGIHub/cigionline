@@ -40,6 +40,14 @@ import urllib.parse
 import uuid
 
 
+def _safe_int(value, default=0) -> int:
+    """Parse an integer from a query param, returning *default* on failure."""
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return default
+
+
 def _split_slugs(s: str):
     # Preserve original behaviour (case-sensitive) for existing callers.
     return [x.strip() for x in (s or "").split(",") if x.strip()]
@@ -465,6 +473,13 @@ class EventPage(
         allowed RegistrationType choices OR skips straight to form
         if only one type is available.
         """
+        if not self.registration_open:
+            return self.render(
+                request,
+                template="events/registration_no_types.html",
+                context_overrides={"event": self},
+            )
+
         invite = self._get_invite_from_request(request)
 
         # Base types: public events show public types; private events can show all types.
@@ -615,13 +630,13 @@ class EventPage(
 
             forms_valid = form.is_valid() and (guest_formset.is_valid() if guest_formset is not None else True)
 
-            if not form.is_valid():
+            if not forms_valid and form.errors:
                 self.logger.warning(
                     "primary form invalid event_id=%s errors=%s",
                     self.pk,
                     dict(form.errors),
                 )
-            if guest_formset is not None and not guest_formset.is_valid():
+            if not forms_valid and guest_formset is not None and guest_formset.errors:
                 # formset.errors is a list of dicts (per-form)
                 self.logger.warning(
                     "guest formset invalid event_id=%s non_form_errors=%s errors=%s management=%s",
@@ -654,42 +669,54 @@ class EventPage(
                     getattr(invite, "pk", None),
                 )
 
-                if email:
-                    existing = (
-                        Registrant.objects.select_related("registration_type")
-                        .filter(event=self, email__iexact=email)
-                        .exclude(status=Registrant.Status.CANCELLED)
-                        .order_by("-id")
-                        .first()
-                    )
-                    if existing:
-                        self.logger.info(
-                            "duplicate registration detected event_id=%s existing_registrant_id=%s group_id=%s",
-                            self.pk,
-                            existing.pk,
-                            getattr(existing, "group_id", None),
+                # Use select_for_update inside a transaction to serialize
+                # concurrent duplicate checks for the same email address.
+                # NOTE: This prevents the most common race (two requests both
+                # finding the same existing registrant).  For the rarer case
+                # where NO registrant yet exists and two requests arrive
+                # simultaneously, consider adding a partial unique index:
+                #   CREATE UNIQUE INDEX ... ON events_registrant
+                #     (event_id, LOWER(email)) WHERE status != 'cancelled';
+                with transaction.atomic():
+                    if email:
+                        existing = (
+                            Registrant.objects.select_for_update()
+                            .select_related("registration_type")
+                            .filter(event=self, email__iexact=email)
+                            .exclude(status=Registrant.Status.CANCELLED)
+                            .order_by("-id")
+                            .first()
                         )
-                        # Ensure the existing registrant has a usable manage token
-                        # and email them. We keep the UI message generic.
-                        try:
-                            if getattr(existing, "group_id", None):
-                                send_group_duplicate_manage_email(existing.group)
+                    else:
+                        existing = None
+                if existing:
+                    self.logger.info(
+                        "duplicate registration detected event_id=%s existing_registrant_id=%s group_id=%s",
+                        self.pk,
+                        existing.pk,
+                        getattr(existing, "group_id", None),
+                    )
+                    # Ensure the existing registrant has a usable manage token
+                    # and email them. We keep the UI message generic.
+                    try:
+                        if getattr(existing, "group_id", None):
+                            send_group_duplicate_manage_email(existing.group)
+                        else:
+                            # If they're still pending, re-send the confirm link.
+                            if existing.status == Registrant.Status.PENDING:
+                                send_registration_pending_confirm_email(existing)
                             else:
-                                # If they're still pending, re-send the confirm link.
-                                if existing.status == Registrant.Status.PENDING:
-                                    send_registration_pending_confirm_email(existing)
-                                else:
-                                    send_duplicate_registration_manage_email(existing)
-                        except Exception:
-                            # Don't break the registration flow if email sending fails, but log it.
-                            self.logger.exception(
-                                "Failed to send duplicate-manage email for registrant_id=%s event_id=%s",
-                                existing.pk,
-                                self.pk,
-                            )
+                                send_duplicate_registration_manage_email(existing)
+                    except Exception:
+                        # Don't break the registration flow if email sending fails, but log it.
+                        self.logger.exception(
+                            "Failed to send duplicate-manage email for registrant_id=%s event_id=%s",
+                            existing.pk,
+                            self.pk,
+                        )
 
-                        base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
-                        return redirect(f"{base}register/result/?s=ok")
+                    base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+                    return redirect(f"{base}register/result/?s=ok")
 
                 # If there are guests, create a group and one Registrant per attendee.
                 # Don't treat an empty extra form as a guest submission.
@@ -848,7 +875,6 @@ class EventPage(
 
                     return redirect(f"{base}register/result/?s=pending")
 
-                try:
                     with transaction.atomic():
                         # Reserve invite usage *inside the same transaction* so
                         # nothing persists if the invite is maxed out.
@@ -875,8 +901,6 @@ class EventPage(
                                     },
                                 )
                         registrant = save_registrant_from_form(self, reg_type, form, invite)
-                except Exception:
-                    raise
 
                 # Double opt-in flow: send a confirm link and keep PENDING until clicked.
                 try:
@@ -957,13 +981,13 @@ class EventPage(
         # If gid is present, treat token as a group token and ensure the registrant belongs to that group.
         if gid:
             registrant = get_registrant_for_group_manage_link(
-                group_id=int(gid or 0),
-                registrant_id=int(rid or 0),
+                group_id=_safe_int(gid),
+                registrant_id=_safe_int(rid),
                 token=token,
                 event_id=self.id,
             )
         else:
-            registrant = get_registrant_for_manage_link(registrant_id=int(rid or 0), token=token, event_id=self.id)
+            registrant = get_registrant_for_manage_link(registrant_id=_safe_int(rid), token=token, event_id=self.id)
 
         reg_type = registrant.registration_type
         form_class = build_dynamic_form(self, reg_type, registrant.invite, require_email=False)
@@ -1044,13 +1068,13 @@ class EventPage(
 
         if gid:
             registrant = get_registrant_for_group_manage_link(
-                group_id=int(gid or 0),
-                registrant_id=int(rid or 0),
+                group_id=_safe_int(gid),
+                registrant_id=_safe_int(rid),
                 token=token,
                 event_id=self.id,
             )
         else:
-            registrant = get_registrant_for_manage_link(registrant_id=int(rid or 0), token=token, event_id=self.id)
+            registrant = get_registrant_for_manage_link(registrant_id=_safe_int(rid), token=token, event_id=self.id)
 
         reg_type = registrant.registration_type
         form_class = build_dynamic_form(self, reg_type, registrant.invite, require_email=False)
@@ -1118,13 +1142,13 @@ class EventPage(
 
         if gid:
             registrant = get_registrant_for_group_manage_link(
-                group_id=int(gid or 0),
-                registrant_id=int(rid or 0),
+                group_id=_safe_int(gid),
+                registrant_id=_safe_int(rid),
                 token=token,
                 event_id=self.id,
             )
         else:
-            registrant = get_registrant_for_manage_link(registrant_id=int(rid or 0), token=token, event_id=self.id)
+            registrant = get_registrant_for_manage_link(registrant_id=_safe_int(rid), token=token, event_id=self.id)
 
         send_cancel_email = False
         if registrant.status != Registrant.Status.CANCELLED:
@@ -1145,6 +1169,8 @@ class EventPage(
                 )
 
         base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+        if gid:
+            return redirect(f"{base}register/manage/group/?gid={gid}&t={token}&cancelled=1")
         return redirect(f"{base}register/cancelled/")
 
     @route(r"^register/manage/group/$")
@@ -1155,7 +1181,7 @@ class EventPage(
 
         token = request.GET.get("t", "")
         gid = request.GET.get("gid", "")
-        group = get_group_for_manage_link(group_id=int(gid or 0), token=token)
+        group = get_group_for_manage_link(group_id=_safe_int(gid), token=token)
         if group.event_id != self.id:
             return HttpResponse("Not found", status=404)
 
@@ -1185,8 +1211,8 @@ class EventPage(
         rid = request.GET.get("rid", "")
 
         registrant = get_registrant_for_group_manage_link(
-            group_id=int(gid or 0),
-            registrant_id=int(rid or 0),
+            group_id=_safe_int(gid),
+            registrant_id=_safe_int(rid),
             token=token,
             event_id=self.id,
         )
@@ -1210,7 +1236,7 @@ class EventPage(
                 )
 
         base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
-        return redirect(f"{base}register/cancelled/")
+        return redirect(f"{base}register/manage/group/?gid={gid}&t={token}&cancelled=1")
 
     @route(r"^register/cancelled/$")
     def registration_cancelled(self, request, *args, **kwargs):
@@ -1315,7 +1341,7 @@ class EventPage(
         if not (token and gid):
             return HttpResponse("Not found", status=404)
 
-        group = get_group_for_manage_link(group_id=int(gid or 0), token=token)
+        group = get_group_for_manage_link(group_id=_safe_int(gid), token=token)
         if group.event_id != self.id:
             return HttpResponse("Not found", status=404)
 
@@ -1396,15 +1422,20 @@ class EventPage(
         )
 
     def _get_invite_from_request(self, request):
+        session_key = f"invite:{self.id}"
         token = request.GET.get("invite")
         if token:
             inv = Invite.objects.filter(event=self, token=token).first()
             if inv:
-                request.session[f"invite:{self.id}"] = token
+                request.session[session_key] = token
                 return inv
-        token = request.session.get(f"invite:{self.id}")
+        token = request.session.get(session_key)
         if token:
-            return Invite.objects.filter(event=self, token=token).first()
+            inv = Invite.objects.filter(event=self, token=token).first()
+            if inv and inv.is_valid():
+                return inv
+            # Token expired or revoked — clear stale session entry.
+            del request.session[session_key]
         return None
 
     content_panels = [
@@ -1927,10 +1958,8 @@ class Invite(Orderable):
     def is_valid(self) -> bool:
         """Still usable? (not expired, under max uses)"""
         if self.expires_at and timezone.now() >= self.expires_at:
-            print("expired")
             return False
         if self.max_uses is not None and self.used_count >= self.max_uses:
-            print("maxed out")
             return False
         return True
 

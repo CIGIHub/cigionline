@@ -45,8 +45,12 @@ def build_primary_and_guest_forms(*, event, reg_type, invite, post_data=None, fi
     )
 
     # Guests share the primary email; remove the email field entirely.
+    # Use a copy to avoid mutating the class-level base_fields dict, which
+    # could leak state if the dynamically-created class were ever cached.
     if "email" in guest_form_class.base_fields:
-        guest_form_class.base_fields.pop("email")
+        guest_form_class.base_fields = {
+            k: v for k, v in guest_form_class.base_fields.items() if k != "email"
+        }
 
     # On GET (unbound), render one empty form so the template always includes
     # proper formset management fields + a usable prototype even if JS is disabled.

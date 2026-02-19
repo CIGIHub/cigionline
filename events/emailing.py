@@ -15,6 +15,19 @@ if TYPE_CHECKING:
     from .models import Registrant
 
 
+def _absolute_event_base(event) -> str:
+    """Return an absolute base URL for the event, suitable for email links.
+
+    Falls back to a relative path only if WAGTAILADMIN_BASE_URL is not set.
+    """
+    base = event.get_url(request=None) or ("/" + event.url_path.lstrip("/"))
+    if base and base.startswith("/"):
+        site_base = getattr(settings, "WAGTAILADMIN_BASE_URL", "").rstrip("/")
+        if site_base:
+            base = f"{site_base}{base}"
+    return base
+
+
 def _event_email_merge_vars(event) -> dict:
     """Pre-format event date/time/location merge vars for email templates.
 
@@ -349,7 +362,7 @@ def send_event_campaign_email(campaign, registrant) -> None:
         registrant.manage_token_hash = ""
         raw_token = registrant.ensure_manage_token()
 
-    base = event.get_url(request=None) or ("/" + event.url_path.lstrip("/"))
+    base = _absolute_event_base(event)
     manage_url = f"{base}register/manage/?rid={registrant.pk}&t={raw_token}"
 
     ctx = {
@@ -433,7 +446,7 @@ def send_confirmation_email(registrant, confirmed: bool) -> None:
         registrant.manage_token_hash = ""
         raw_token = registrant.ensure_manage_token()
 
-    base = event.get_url(request=None) or ("/" + event.url_path.lstrip("/"))
+    base = _absolute_event_base(event)
     manage_url = f"{base}register/manage/?rid={registrant.pk}&t={raw_token}"
 
     ctx = {
@@ -497,7 +510,7 @@ def send_duplicate_registration_manage_email(registrant) -> None:
         registrant.manage_token_hash = ""
         raw_token = registrant.ensure_manage_token()
 
-    base = event.get_url(request=None) or ("/" + event.url_path.lstrip("/"))
+    base = _absolute_event_base(event)
     manage_url = f"{base}register/manage/?rid={registrant.pk}&t={raw_token}"
 
     ctx = {
@@ -577,12 +590,7 @@ def send_registration_pending_confirm_email(registrant) -> None:
         registrant.manage_token_hash = ""
         raw_token = registrant.ensure_manage_token()
 
-    base = event.get_url(request=None) or ("/" + event.url_path.lstrip("/"))
-    # Prefer a fully-qualified URL in emails.
-    if base and base.startswith("/"):
-        site_base = getattr(settings, "WAGTAILADMIN_BASE_URL", "").rstrip("/")
-        if site_base:
-            base = f"{site_base}{base}"
+    base = _absolute_event_base(event)
 
     confirm_url = f"{base}register/confirm/?rid={registrant.pk}&t={raw_token}"
 
@@ -611,7 +619,7 @@ def send_registration_pending_confirm_email(registrant) -> None:
             (
                 "paragraph",
                 (
-                    "<p>Thank you for your interest in this event."
+                    "<p>Thank you for your interest in this event. "
                     "Please confirm your registration by clicking the button below.</p>"
                 ),
             ),
@@ -667,11 +675,7 @@ def send_group_registration_pending_confirm_email(*, group) -> None:
         group.manage_token_hash = ""
         raw_token = group.ensure_manage_token()
 
-    base = event.get_url(request=None) or ("/" + event.url_path.lstrip("/"))
-    if base and base.startswith("/"):
-        site_base = getattr(settings, "WAGTAILADMIN_BASE_URL", "").rstrip("/")
-        if site_base:
-            base = f"{site_base}{base}"
+    base = _absolute_event_base(event)
 
     confirm_url = f"{base}register/confirm-group/?gid={group.pk}&t={raw_token}"
 
@@ -757,11 +761,7 @@ def send_registration_cancelled_email(registrant) -> None:
     api_key = settings.SENDGRID_API_KEY
     event = registrant.event
 
-    base = event.get_url(request=None) or ("/" + event.url_path.lstrip("/"))
-    if base and base.startswith("/"):
-        site_base = getattr(settings, "WAGTAILADMIN_BASE_URL", "").rstrip("/")
-        if site_base:
-            base = f"{site_base}{base}"
+    base = _absolute_event_base(event)
 
     ctx = {
         "event": event,
@@ -949,12 +949,7 @@ def send_group_duplicate_manage_email(group) -> None:
         group.manage_token_hash = ""
         raw_token = group.ensure_manage_token()
 
-    base = event.get_url(request=None) or ("/" + event.url_path.lstrip("/"))
-    # Prefer absolute URL for emails.
-    if base and base.startswith("/"):
-        site_base = getattr(settings, "WAGTAILADMIN_BASE_URL", "").rstrip("/")
-        if site_base:
-            base = f"{site_base}{base}"
+    base = _absolute_event_base(event)
     manage_url = f"{base}register/manage/group/?gid={group.pk}&t={raw_token}"
 
     ctx = {
