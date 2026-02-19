@@ -248,6 +248,11 @@ class ArticlePage(
         verbose_name='Hide Excerpt',
         help_text='For "CIGI in the News" only: when enabled, hide excerpt and display full article instead',
     )
+    hide_disclaimer = models.BooleanField(
+        default=False,
+        verbose_name='Hide Disclaimer',
+        help_text='When enabled, hide disclaimer at the bottom of the page',
+    )
     image_banner = models.ForeignKey(
         'images.CigionlineImage',
         null=True,
@@ -458,6 +463,7 @@ class ArticlePage(
                     ['articles.ArticleTypePage'],
                 ),
                 FieldPanel('hide_excerpt'),
+                FieldPanel('hide_disclaimer'),
                 FieldPanel('publishing_date'),
                 FieldPanel('website_url'),
                 FieldPanel('website_button_text'),

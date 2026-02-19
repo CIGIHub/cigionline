@@ -266,6 +266,13 @@ class PersonPage(
         verbose_name='Digital Policy Hub Biography',
         help_text='A short biography that is used on the Digital Policy Hub theme.',
     )
+    additional_authored_pages = StreamField(
+        [
+            ('page', blocks.PageChooserBlock(required=True))
+        ],
+        blank=True,
+        help_text='Additional pages to list in the search table',
+    )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -346,6 +353,16 @@ class PersonPage(
     @property
     def is_external_profile(self):
         return self.person_types.filter(name='External profile').exists()
+
+    def additional_authored_pages_json(self):
+        pages = []
+        for block in self.additional_authored_pages:
+            if block.block_type == 'page' and block.value:
+                page = block.value.specific
+                pages.append({
+                    'id': page.id,
+                })
+        return pages
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
@@ -441,9 +458,10 @@ class PersonPage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('external_publications')
+                FieldPanel('external_publications'),
+                FieldPanel('additional_authored_pages'),
             ],
-            heading='External Publications',
+            heading='Publications',
             classname='collapsible collapsed'
         ),
         MultiFieldPanel(

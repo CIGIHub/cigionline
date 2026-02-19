@@ -185,17 +185,21 @@ def program_content_within_range(request):
 
 
 def program_affiliates(request):
+    def convert_youtube(url):
+        if url and "youtu.be/" in url:
+            return url.replace("https://youtu.be/", "https://www.youtube.com/watch?v=")
+        return url
+
     request_type = request.GET.get('type')
     response = HttpResponse(content_type='text/csv; charset=utf-8')
     response.write('\ufeff')
 
-    # results = []
     pages_list = []
     authors_list = []
     projects = ProjectPage.objects.live().filter(archive=0).order_by('title')
 
     for project in projects:
-        # include landing page
+        # include landing page (no video url for project)
         url = unquote(project.url)
         if url.startswith("https://www.cigionline.org"):
             url = url[len("https://www.cigionline.org"):]
@@ -204,6 +208,7 @@ def program_affiliates(request):
             'title': project.title,
             'url': url,
             'pdf': '',
+            'video_url': '',
         })
 
         # pull content pages
@@ -211,11 +216,17 @@ def program_affiliates(request):
         authors = []
 
         for page in content_pages:
+            # normalise page url once
+            url = unquote(page.url)
+            if url.startswith("https://www.cigionline.org"):
+                url = url[len("https://www.cigionline.org"):]
+
+            # try to grab multimedia_url from the specific page
+            multimedia_url = getattr(page.specific, 'multimedia_url', '') or ''
+            multimedia_url = convert_youtube(unquote(multimedia_url)) if multimedia_url else ''
+
             if hasattr(page.specific, 'pdf_downloads'):
                 for pdf in page.specific.pdf_downloads:
-                    url = unquote(page.url)
-                    if url.startswith("https://www.cigionline.org"):
-                        url = url[len("https://www.cigionline.org"):]
                     pdf_url = unquote(pdf.value['file'].url) if pdf.value['file'] else ''
                     if not pdf_url.startswith("https://www.cigionline.org"):
                         pdf_url = f'https://www.cigionline.org{pdf_url}'
@@ -224,38 +235,34 @@ def program_affiliates(request):
                         'title': page.title,
                         'url': url,
                         'pdf': pdf_url,
+                        'video_url': multimedia_url,
                     })
             else:
-                url = unquote(page.url)
-                if url.startswith("https://www.cigionline.org"):
-                    url = url[len("https://www.cigionline.org"):]
                 pages_list.append({
                     'program': project.title,
                     'title': page.title,
                     'url': url,
                     'pdf': '',
+                    'video_url': multimedia_url,
                 })
 
             authors += [author for author in getattr(page.specific, 'authors', None).all()]
 
-        authors_list += [{
-            'program': project.title,
-            'name': author.author.title,
-            'url': unquote(author.author.url) if author.author.url else '',
-        } for author in list(set(authors))]
-
-        # results.append({
-        #     "project": project.title,
-        #     "project_slug": project.slug,
-        #     "content_pages": pages_list,
-        #     "authors": authors_list,
-        # })
+        for author in list(set(authors)):
+            url = unquote(author.author.url) if author.author.url else ''
+            if url.startswith("https://www.cigionline.org"):
+                url = url[len("https://www.cigionline.org"):]
+            authors_list += [{
+                'program': project.title,
+                'name': author.author.title,
+                'url': url,
+            }]
 
     # request experts
     if request_type == 'experts':
         response['Content-Disposition'] = 'attachment; filename="program_experts.csv"'
         writer = csv.writer(response)
-        writer.writerow(['Program', 'Expert', 'URL'])
+        writer.writerow(['Programs', 'Expert', 'URL'])      # CSV header
         for author in authors_list:
             writer.writerow([author['program'], author['name'], author['url']])
         return response
@@ -263,9 +270,14 @@ def program_affiliates(request):
     # default to content page requests
     response['Content-Disposition'] = 'attachment; filename="program_pages.csv"'
     writer = csv.writer(response)
-    writer.writerow(['Program', 'Page', 'URL', 'PDF'])
+    writer.writerow(['Programs', 'Title', 'Page URL', 'Link URL', 'Video URL'])     # CSV header
     for page in pages_list:
-        writer.writerow([page['program'], page['title'], page['url'], page['pdf']])
+        writer.writerow([
+            page['program'],
+            page['title'],
+            page['url'],
+            page['pdf'],
+            page['video_url'],
+        ])
 
-    # return JsonResponse(results, safe=False)
     return response
