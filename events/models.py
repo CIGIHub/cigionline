@@ -1,4 +1,4 @@
-from .forms import EventSubmissionForm
+from .forms_admin import EventPageAdminForm
 from core.models import (
     BasicPageAbstract,
     ContentPage,
@@ -7,31 +7,59 @@ from core.models import (
     ShareablePageAbstract,
     ThemeablePageAbstract
 )
-from django.db import models
-from django.http import JsonResponse
-from django.middleware.csrf import get_token
-from django.shortcuts import render
+from django.contrib import messages
+from django.db import models, transaction
 from django.utils import timezone
+import logging
+from django.utils.translation import gettext_lazy as _
+from django.http import HttpResponse
+from django.shortcuts import redirect
 from modelcluster.fields import ParentalKey
+from modelcluster.models import ClusterableModel
 from streams.blocks import AbstractSubmissionBlock
-from uploads.models import DocumentUpload
-from utils.email_utils import send_email_digital_finance, extract_errors_as_string, send_email_digifincon_debug
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
+    HelpPanel,
 )
+from wagtail.admin.panels import TabbedInterface, ObjectList
 from wagtail.fields import RichTextField, StreamField
-from wagtail.models import Orderable, Page, Collection
+from wagtail.models import Orderable, Page, PreviewableMixin
 from wagtail.documents.blocks import DocumentChooserBlock
-from wagtail.documents.models import Document
 from wagtail.search import index
+from wagtail.snippets.models import register_snippet
+from wagtail import blocks
+from wagtail.contrib.forms.models import AbstractFormField
+from wagtail.contrib.routable_page.models import RoutablePageMixin, route
+from wagtail.images.blocks import ImageChooserBlock
 import pytz
 import re
 import urllib.parse
-import traceback
-import logging
+import uuid
+
+
+def _split_slugs(s: str):
+    # Preserve original behaviour (case-sensitive) for existing callers.
+    return [x.strip() for x in (s or "").split(",") if x.strip()]
+
+
+def _split_tokens(s: str):
+    """Split a comma-separated string into normalized tokens."""
+
+    return [x.strip().lower() for x in (s or "").split(",") if x.strip()]
+
+
+def _match(rule: str, slugs: list[str], current_slug: str) -> bool:
+    S = set(slugs)
+    if rule == "all":
+        return True
+    if rule == "only":
+        return current_slug in S
+    if rule == "except":
+        return current_slug not in S
+    return True
 
 
 class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
@@ -122,12 +150,14 @@ class EventListPageFeaturedEvent(Orderable):
 
 
 class EventPage(
+    RoutablePageMixin,
     BasicPageAbstract,
     ContentPage,
     FeatureablePageAbstract,
     ShareablePageAbstract,
     ThemeablePageAbstract,
 ):
+    logger = logging.getLogger(__name__)
     class EventAccessOptions(models.IntegerChoices):
         PRIVATE = (0, 'Private')
         PUBLIC = (1, 'Public')
@@ -184,6 +214,8 @@ class EventPage(
         SYDNEY = ('Australia/Sydney', '(UTC+10:00/11:00) AUS Eastern Time')
         AUCKLAND = ('Pacific/Auckland', '(UTC+12:00/13:00) New Zealand Time')
 
+    base_form_class = EventPageAdminForm
+
     body = StreamField(
         BasicPageAbstract.body_default_blocks + [
             ('abstract_submission_block', AbstractSubmissionBlock()),
@@ -237,6 +269,15 @@ class EventPage(
     )
     registration_url = models.URLField(blank=True, max_length=512)
     registration_text = models.CharField(blank=True, max_length=64)
+    registration_image_banner = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Banner Image',
+        help_text='A banner image to be displayed as background of the hero section.',
+    )
     related_files = StreamField(
         [
             ('file', DocumentChooserBlock()),
@@ -262,6 +303,29 @@ class EventPage(
         help_text='Override the button text for the event website. If empty, the button will read "Event Website".'
     )
     website_url = models.URLField(blank=True, null=True, max_length=512)
+
+    # Registration related fields
+    registration_open = models.BooleanField(default=False)
+    is_private_registration = models.BooleanField(
+        default=False, help_text="Require invite token or private link to register."
+    )
+    confirmation_template = models.ForeignKey(
+        'events.EmailTemplate', null=True, blank=True, on_delete=models.SET_NULL, related_name='+'
+    )
+    waitlist_template = models.ForeignKey(
+        'events.EmailTemplate', null=True, blank=True, on_delete=models.SET_NULL, related_name='+'
+    )
+    reminder_template = models.ForeignKey(
+        'events.EmailTemplate', null=True, blank=True, on_delete=models.SET_NULL, related_name='+'
+    )
+    registration_form_template = models.ForeignKey(
+        "events.RegistrationFormTemplate",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        help_text="Choose a reusable set of registration fields."
+    )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -363,10 +427,15 @@ class EventPage(
         return label
 
     def get_context(self, request):
+        # Allow invite links to point at the event page itself (not /register/).
+        # Visiting /event/?invite=TOKEN should persist the token in session so that
+        # clicking "Register" later uses the same invite rules.
+        invite = self._get_invite_from_request(request)
         context = super().get_context(request)
         context['location_string'] = self.location_string()
         context['event_format_string'] = self.get_event_format_display()
         context['location_map_url'] = self.location_map_url()
+        context['invite'] = invite
         return context
 
     def get_template(self, request, *args, **kwargs):
@@ -379,128 +448,964 @@ class EventPage(
             return f'themes/{self.get_theme_dir()}/event_page.html'
         return standard_template
 
-    def serve(self, request):
-        get_token(request)
-        form = EventSubmissionForm()
-        email_recipient = ''
+    @property
+    def total_confirmed(self):
+        return self.registrants.filter(status=Registrant.Status.CONFIRMED).count()
 
-        if self.theme and self.theme.name == 'Digital Finance':
-            email_recipient = 'digitalfinanceinquiries@cigionline.org'
-        if self.email_recipient:
-            email_recipient = self.email_recipient
+    @property
+    def register_url(self):
+        return self.url + "register/"
 
-        if self.theme:
-            template = f'themes/{self.get_theme_dir()}/event_page.html'
-        else:
-            template = 'events/event_page.html'
+    # ---------- ROUTES ----------
 
-        if email_recipient and request.method == "POST":
-            form = EventSubmissionForm(request.POST, request.FILES)
-            if form.is_valid():
-                uploaded_file = form.cleaned_data['file']
-                email = form.cleaned_data['email']
-                valid_extensions = ['.pdf', '.doc', '.docx']
-                file_extension = uploaded_file.name.lower().split('.')[-1]
+    @route(r"^register/$")
+    def register_entry(self, request, *args, **kwargs):
+        """
+        Landing step. Validates invite token (if required) and shows
+        allowed RegistrationType choices OR skips straight to form
+        if only one type is available.
+        """
+        invite = self._get_invite_from_request(request)
 
-                if f'.{file_extension}' in valid_extensions:
-                    if self.theme.name == 'Digital Finance':
-                        collection = Collection.objects.get(name='Digital Finance Conference Abstracts')
-                    else:
-                        collection = Collection.objects.get(
-                            name='Event submissions',
-                        )
-
-                    try:
-                        document = Document.objects.create(
-                            title=uploaded_file.name,
-                            file=uploaded_file,
-                            collection=collection,
-                        )
-                        DocumentUpload.objects.create(
-                            document=document, email=email
-                        )
-                        if email_recipient:
-                            try:
-                                send_email_digital_finance(
-                                    recipient=email_recipient,
-                                    subject='Digital Finance Abstract Uploaded Successfully',
-                                    body=f'File "{uploaded_file.name}" was uploaded by {email}.\n\nYou can download it from: {request.build_absolute_uri(document.file.url)}\n\n'
-                                )
-                                send_email_digital_finance(
-                                    recipient=email,
-                                    subject='Abstract Submission Upload Successful',
-                                    body=f'Your file "{uploaded_file.name}" was uploaded successfully. Thank you for your submission.',
-                                )
-                            except Exception as e:
-                                print(str(e))
-                        return JsonResponse(
-                            {
-                                'status': 'success',
-                                'message': 'File uploaded successfully!',
-                            }
-                        )
-
-                    except Exception as e:
-                        logging.error("Exception during event form submission", exc_info=True)
-                        error_trace = traceback.format_exc()
-                        print(str(e))
-                        send_email_digifincon_debug(
-                            recipient='jxu@cigionline.org',
-                            subject='File Upload Failed',
-                            body=f"""
-                                    An error occurred during abstract submission:
-
-                                    Error: {str(e)}
-
-                                    Traceback:
-                                    {error_trace}
-                                """,
-                        )
-
-                        if email_recipient:
-                            send_email_digital_finance(
-                                recipient=email_recipient,
-                                subject='File Upload Failed',
-                                body=f'File upload failed for {email}. Error: {str(e)}',
-                            )
-                        return JsonResponse(
-                            {
-                                'status': 'error',
-                                'message': f'Failed to save file: {str(e)}',
-                            }
-                        )
-                else:
-                    if email_recipient:
-                        send_email_digital_finance(
-                            recipient=email_recipient,
-                            subject='File Upload Failed',
-                            body=f'File upload failed for {email}. Invalid file type.',
-                        )
-                return JsonResponse(
-                    {
-                        'status': 'error',
-                        'message': 'Invalid file type. Only .pdf, .doc, and .docx files are allowed.',
-                    }
+        # Base types: public events show public types; private events can show all types.
+        if self.is_private_registration:
+            if not invite or not invite.is_valid():
+                return self.render(
+                    request,
+                    context_overrides={
+                        "registration_error": "Private registration. Please use your invite link."
+                    },
                 )
-            else:
-                error_message = " ".join(extract_errors_as_string(form.errors))
+            types_qs = self.registration_types.all()
+        else:
+            types_qs = self.registration_types.filter(is_public=True)
 
-                if email_recipient:
-                    send_email_digital_finance(
-                        recipient=email_recipient,
-                        subject='Form Submission Failed',
-                        body=f'Form submission failed for {form.cleaned_data.get('email', 'Unknown email')}. Invalid data. {error_message}',
+        # If an invite is present and valid, apply its restrictions/expansions even on
+        # public events. This lets certain RegistrationTypes remain non-public but still
+        # be accessible via an invite link.
+        if invite and invite.is_valid():
+            types_qs = self.registration_types.all()
+            allowed = set(_split_tokens(invite.allowed_type_slugs))
+            if allowed:
+                types_qs = types_qs.filter(slug__in=allowed)
+
+        types = list(types_qs.order_by("sort_order"))
+        if not types:
+            return self.render(
+                request,
+                template="events/registration_no_types.html",
+                context_overrides={"event": self},
+            )
+
+        # If this is an invite flow and the invite restricts allowed types to a
+        # single option, skip the chooser and send them straight to that form.
+        # This should work even when the target type is non-public.
+        if invite:
+            allowed = [t for t in types if invite.allows_type_slug(t.slug)]
+            if len(allowed) == 1:
+                base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+                return redirect(f"{base}register/type/{allowed[0].slug}/?invite={invite.token}")
+
+        if len(types) == 1:
+            base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+            if invite:
+                return redirect(f"{base}register/type/{types[0].slug}/?invite={invite.token}")
+            return redirect(f"{base}register/type/{types[0].slug}/")
+
+        return self.render(
+            request,
+            template="events/registration_type_select.html",
+            context_overrides={"event": self, "types": types, "invite": invite},
+        )
+
+    @route(r"^register/result/$")
+    def register_result(self, request, *args, **kwargs):
+        from .models import Registrant
+        status = request.GET.get("s")
+        rid = request.GET.get("rid")
+        registrant = None
+        if rid and status in {"ok", "wait"}:
+            registrant = (
+                Registrant.objects.select_related("registration_type")
+                .filter(pk=rid, event=self).first()
+            )
+        return self.render(
+            request,
+            template="events/registration_result.html",
+            context_overrides={"event": self, "status": status, "registrant": registrant},
+        )
+
+    @route(r"^register/type/(?P<type_slug>[-\w]+)/$")
+    def register_form(self, request, type_slug: str, *args, **kwargs):
+        from django.conf import settings
+        from django.db import transaction
+        from .utils import save_registrant_from_form
+        from .models import Registrant
+        from .emailing import (
+            send_confirmation_email,
+            send_registration_pending_confirm_email,
+            send_duplicate_registration_manage_email,
+            # (guest/group emails added in events/emailing.py)
+            send_group_confirmation_email,
+            send_group_duplicate_manage_email,
+            send_group_registration_pending_confirm_email,
+        )
+        from .guest_registration import build_primary_and_guest_forms
+
+        if not self.registration_open:
+            return self.render(
+                request,
+                template="events/registration_no_types.html",
+                context_overrides={"event": self},
+            )
+
+        try:
+            reg_type = self.registration_types.get(slug=type_slug)
+        except RegistrationType.DoesNotExist:
+            return self.render(
+                request, template="events/registration_no_types.html", context_overrides={"event": self}
+            )
+
+        invite = self._get_invite_from_request(request)
+        if self.is_private_registration:
+            if not invite or not invite.is_valid():
+                return self.render(
+                    request,
+                    template="events/registration_no_types.html",
+                    context_overrides={"event": self},
+                )
+            if not invite.allows_type_slug(reg_type.slug):
+                return self.render(
+                    request,
+                    template="events/registration_no_types.html",
+                    context_overrides={"event": self},
+                )
+
+        # Primary form + optional guest formset (if enabled on the event)
+        forms_obj = None
+
+        if request.method == "POST":
+            self.logger.info(
+                "register_form POST start event_id=%s type_slug=%s allow_guests=%s",
+                self.pk,
+                type_slug,
+                getattr(reg_type, "allow_group_registrations", False),
+            )
+            if request.POST.get("website"):
+                base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+                return redirect(f"{base}register/result/?s=bot")
+
+            forms_obj = build_primary_and_guest_forms(
+                event=self,
+                reg_type=reg_type,
+                invite=invite,
+                post_data=request.POST,
+                files_data=request.FILES,
+            )
+
+            self.logger.info(
+                "built forms primary_bound=%s guest_formset=%s guest_total=%s",
+                True,
+                bool(forms_obj.guest_formset is not None),
+                (forms_obj.guest_formset.total_form_count() if forms_obj.guest_formset is not None else None),
+            )
+
+            form = forms_obj.primary_form
+            guest_formset = forms_obj.guest_formset
+
+            forms_valid = form.is_valid() and (guest_formset.is_valid() if guest_formset is not None else True)
+
+            if not form.is_valid():
+                self.logger.warning(
+                    "primary form invalid event_id=%s errors=%s",
+                    self.pk,
+                    dict(form.errors),
+                )
+            if guest_formset is not None and not guest_formset.is_valid():
+                # formset.errors is a list of dicts (per-form)
+                self.logger.warning(
+                    "guest formset invalid event_id=%s non_form_errors=%s errors=%s management=%s",
+                    self.pk,
+                    list(guest_formset.non_form_errors()),
+                    guest_formset.errors,
+                    {
+                        "TOTAL_FORMS": request.POST.get("guests-TOTAL_FORMS"),
+                        "INITIAL_FORMS": request.POST.get("guests-INITIAL_FORMS"),
+                        "MIN_NUM_FORMS": request.POST.get("guests-MIN_NUM_FORMS"),
+                        "MAX_NUM_FORMS": request.POST.get("guests-MAX_NUM_FORMS"),
+                    },
+                )
+
+            if forms_valid:
+                self.logger.info("forms valid event_id=%s", self.pk)
+                # Best-practice duplicate handling (privacy-safe): if this email is
+                # already registered for this event, don't create another Registrant.
+                # Instead, email a management link to that address.
+                #
+                # NOTE: We treat this like a successful submission to avoid leaking
+                # whether an email is registered.
+                email = (form.cleaned_data.get("email") or "").strip().lower()
+                if invite and getattr(invite, "email", None):
+                    email = invite.email.strip().lower()
+
+                self.logger.info(
+                    "effective email=%s invite_id=%s",
+                    email,
+                    getattr(invite, "pk", None),
+                )
+
+                if email:
+                    existing = (
+                        Registrant.objects.select_related("registration_type")
+                        .filter(event=self, email__iexact=email)
+                        .exclude(status=Registrant.Status.CANCELLED)
+                        .order_by("-id")
+                        .first()
+                    )
+                    if existing:
+                        self.logger.info(
+                            "duplicate registration detected event_id=%s existing_registrant_id=%s group_id=%s",
+                            self.pk,
+                            existing.pk,
+                            getattr(existing, "group_id", None),
+                        )
+                        # Ensure the existing registrant has a usable manage token
+                        # and email them. We keep the UI message generic.
+                        try:
+                            if getattr(existing, "group_id", None):
+                                send_group_duplicate_manage_email(existing.group)
+                            else:
+                                # If they're still pending, re-send the confirm link.
+                                if existing.status == Registrant.Status.PENDING:
+                                    send_registration_pending_confirm_email(existing)
+                                else:
+                                    send_duplicate_registration_manage_email(existing)
+                        except Exception:
+                            # Don't break the registration flow if email sending fails, but log it.
+                            self.logger.exception(
+                                "Failed to send duplicate-manage email for registrant_id=%s event_id=%s",
+                                existing.pk,
+                                self.pk,
+                            )
+
+                        base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+                        return redirect(f"{base}register/result/?s=ok")
+
+                # If there are guests, create a group and one Registrant per attendee.
+                # Don't treat an empty extra form as a guest submission.
+                def _has_guest_data(fs) -> bool:
+                    if fs is None:
+                        return False
+                    for f in fs.forms:
+                        cd = getattr(f, "cleaned_data", None) or {}
+                        if any((cd.get(k) or "").strip() for k in ("first_name", "last_name")):
+                            return True
+                        # Any other non-empty value counts too (e.g., dynamic fields).
+                        for v in cd.values():
+                            if v not in (None, "", [], {}, False):
+                                return True
+                    return False
+
+                use_guests = _has_guest_data(guest_formset)
+                self.logger.info(
+                    "guest detection event_id=%s use_guests=%s",
+                    self.pk,
+                    use_guests,
+                )
+
+                if use_guests:
+                    self.logger.info("group registration path start event_id=%s", self.pk)
+
+                    # Create group + attendees. Capacity is applied per-attendee
+                    # (confirm-until-full).
+                    try:
+                        with transaction.atomic():
+                            # Reserve invite usage *inside the same transaction* so
+                            # nothing persists if the invite is maxed out.
+                            if invite:
+                                updated = Invite.objects.filter(
+                                    pk=invite.pk, used_count__lt=models.F("max_uses")
+                                ).update(used_count=models.F("used_count") + 1)
+                                self.logger.info(
+                                    "invite usage reserved invite_id=%s updated=%s",
+                                    invite.pk,
+                                    updated,
+                                )
+                                if updated != 1:
+                                    messages.error(
+                                        request,
+                                        "This invite link has already been used the maximum number of times.",
+                                    )
+                                    return self.render(
+                                        request,
+                                        template="events/registration_no_types.html",
+                                        context_overrides={
+                                            "event": self,
+                                            "registration_error": "This invite link has already been used the maximum number of times.",
+                                        },
+                                    )
+
+                            group = RegistrationGroup.objects.create(
+                                event=self,
+                                registration_type=reg_type,
+                                primary_email=email,
+                            )
+
+                            self.logger.info(
+                                "created RegistrationGroup group_id=%s event_id=%s",
+                                group.pk,
+                                self.pk,
+                            )
+
+                            raw_group_token = group.ensure_manage_token()
+                            if not raw_group_token:
+                                group.manage_token_hash = ""
+                                raw_group_token = group.ensure_manage_token()
+
+                            self.logger.info(
+                                "group manage token created=%s group_id=%s",
+                                bool(raw_group_token),
+                                group.pk,
+                            )
+
+                            base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+                            # Prefer a fully-qualified URL in emails.
+                            if base and base.startswith("/"):
+                                site_base = getattr(settings, "WAGTAILADMIN_BASE_URL", "").rstrip("/")
+                                if site_base:
+                                    base = f"{site_base}{base}"
+                            manage_url = f"{base}register/manage/group/?gid={group.pk}&t={raw_group_token}"
+
+                            created: list[Registrant] = []
+                            # Double opt-in: new registrants start PENDING and only
+                            # become CONFIRMED/WAITLISTED after they click their email link.
+
+                            primary = save_registrant_from_form(self, reg_type, form, invite)
+                            self.logger.info(
+                                "created primary registrant registrant_id=%s group_id=%s",
+                                primary.pk,
+                                group.pk,
+                            )
+                            primary.group = group
+                            primary.email = email  # normalized / invite override
+                            primary.save(update_fields=["group", "email"])
+                            created.append(primary)
+
+                            # Guests: no file support in v1.
+                            for gf in guest_formset.forms:
+                                if not gf.cleaned_data:
+                                    continue
+                                self.logger.debug(
+                                    "processing guest form cleaned_keys=%s",
+                                    sorted(list(gf.cleaned_data.keys())),
+                                )
+                                class _F:
+                                    cleaned_data = {}
+                                fake = _F()
+                                fake.cleaned_data = {
+                                    **gf.cleaned_data,
+                                    "email": email,
+                                    "website": "",
+                                }
+                                guest = save_registrant_from_form(self, reg_type, fake, invite)
+                                self.logger.info(
+                                    "created guest registrant registrant_id=%s group_id=%s",
+                                    guest.pk,
+                                    group.pk,
+                                )
+                                guest.group = group
+                                guest.email = email
+                                guest.save(update_fields=["group", "email"])
+                                created.append(guest)
+
+                        # End transaction.atomic (DB writes committed here)
+
+                    except Exception:
+                        self.logger.exception(
+                            "group registration failed event_id=%s",
+                            self.pk,
+                        )
+                        raise
+
+                    # Send email after commit.
+                    # Double opt-in for group registrations: send ONE confirm link
+                    # to the primary email, and keep all attendees PENDING until
+                    # the group confirm endpoint is clicked.
+                    try:
+                        send_group_registration_pending_confirm_email(group=group)
+                    except Exception:
+                        self.logger.exception(
+                            "Failed to send group pending-confirm email for group_id=%s event_id=%s",
+                            group.pk,
+                            self.pk,
+                        )
+
+                    self.logger.info(
+                        "group registration path complete group_id=%s created_registrants=%s",
+                        group.pk,
+                        [r.pk for r in created],
                     )
 
-                return JsonResponse(
-                    {'status': 'error', 'message': f'Invalid form submission. {error_message}'}
+                    return redirect(f"{base}register/result/?s=pending")
+
+                try:
+                    with transaction.atomic():
+                        # Reserve invite usage *inside the same transaction* so
+                        # nothing persists if the invite is maxed out.
+                        if invite:
+                            updated = Invite.objects.filter(
+                                pk=invite.pk, used_count__lt=models.F("max_uses")
+                            ).update(used_count=models.F("used_count") + 1)
+                            self.logger.info(
+                                "invite usage reserved invite_id=%s updated=%s",
+                                invite.pk,
+                                updated,
+                            )
+                            if updated != 1:
+                                messages.error(
+                                    request,
+                                    "This invite link has already been used the maximum number of times.",
+                                )
+                                return self.render(
+                                    request,
+                                    template="events/registration_no_types.html",
+                                    context_overrides={
+                                        "event": self,
+                                        "registration_error": "This invite link has already been used the maximum number of times.",
+                                    },
+                                )
+                        registrant = save_registrant_from_form(self, reg_type, form, invite)
+                except Exception:
+                    raise
+
+                # Double opt-in flow: send a confirm link and keep PENDING until clicked.
+                try:
+                    send_registration_pending_confirm_email(registrant)
+                except Exception:
+                    # Don't break registration UX, but do log so we can debug missing emails.
+                    self.logger.exception(
+                        "Failed to send pending-confirm email registrant_id=%s event_id=%s",
+                        registrant.pk,
+                        self.pk,
+                    )
+
+                base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+                # New result state for double opt-in.
+                return redirect(f"{base}register/result/?s=pending")
+            else:
+                # Primary form errors
+                for field, errs in form.errors.items():
+                    label = form.fields.get(field).label if field in form.fields else field
+                    for e in errs:
+                        messages.error(request, f"{label}: {e}" if label else str(e))
+
+                # Guest errors (if any)
+                if forms_obj and forms_obj.guest_formset is not None:
+                    for idx, gf in enumerate(forms_obj.guest_formset.forms, start=1):
+                        if not gf.errors:
+                            continue
+                        for field, errs in gf.errors.items():
+                            label = gf.fields.get(field).label if field in gf.fields else field
+                            for e in errs:
+                                messages.error(
+                                    request,
+                                    f"Guest {idx} — {label}: {e}" if label else f"Guest {idx}: {e}",
+                                )
+
+                base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+                return self.render(
+                    request,
+                    template="events/registration_form.html",
+                    context_overrides={
+                        "event": self,
+                        "reg_type": reg_type,
+                        "form": form,
+                        "guest_formset": (forms_obj.guest_formset if forms_obj else None),
+                        "invite": invite,
+                    },
+                )
+        else:
+            forms_obj = build_primary_and_guest_forms(event=self, reg_type=reg_type, invite=invite)
+            form = forms_obj.primary_form
+
+        return self.render(
+            request,
+            template="events/registration_form.html",
+            context_overrides={
+                "event": self,
+                "reg_type": reg_type,
+                "form": form,
+                "guest_formset": (forms_obj.guest_formset if forms_obj else None),
+                "invite": invite,
+            },
+        )
+
+    @route(r"^register/manage/$")
+    def manage_registration(self, request, *args, **kwargs):
+        """Self-service page: review + update answers or cancel."""
+
+        from .registrant_management import (
+            get_registrant_for_manage_link,
+            get_registrant_for_group_manage_link,
+        )
+        from .forms import build_dynamic_form
+
+        token = request.GET.get("t", "")
+        rid = request.GET.get("rid", "")
+        gid = request.GET.get("gid", "")
+
+        # If gid is present, treat token as a group token and ensure the registrant belongs to that group.
+        if gid:
+            registrant = get_registrant_for_group_manage_link(
+                group_id=int(gid or 0),
+                registrant_id=int(rid or 0),
+                token=token,
+                event_id=self.id,
+            )
+        else:
+            registrant = get_registrant_for_manage_link(registrant_id=int(rid or 0), token=token, event_id=self.id)
+
+        reg_type = registrant.registration_type
+        form_class = build_dynamic_form(self, reg_type, registrant.invite, require_email=False)
+
+        # Pre-fill initial values from stored answers + core fields.
+        initial = {}
+        if isinstance(registrant.answers, dict):
+            initial.update(registrant.answers)
+
+        # Backfill conditional 'Other' textbox initial values.
+        # conditional_dropdown_other uses two fields:
+        #   - f_<uuid> (select)
+        #   - f_<uuid>__other (textbox)
+        # If the textbox key is absent from stored answers, the select can still
+        # show "Other" but the textbox will render blank.
+        try:
+            tpl = getattr(self, "registration_form_template", None)
+            if tpl and isinstance(initial, dict):
+                for ff in tpl.fields.all().only(
+                    "field_key",
+                    "field_type",
+                    "conditional_other_value",
+                ):
+                    if getattr(ff, "field_type", "") != "conditional_dropdown_other":
+                        continue
+
+                    base_key = f"f_{ff.field_key}"
+                    other_key = f"{base_key}__other"
+
+                    trigger = (getattr(ff, "conditional_other_value", "") or "").strip() or "Other"
+                    selected = (initial.get(base_key) or "").strip()
+
+                    # Ensure the key exists in initial so the form binds it.
+                    if other_key not in initial:
+                        initial[other_key] = ""
+
+                    # If they previously chose the trigger value, restore the typed text.
+                    if selected == trigger and registrant.answers and isinstance(registrant.answers, dict):
+                        prev_other = (registrant.answers.get(other_key) or "").strip()
+                        if prev_other and not (initial.get(other_key) or "").strip():
+                            initial[other_key] = prev_other
+        except Exception:
+            pass
+        initial.update({
+            "first_name": registrant.first_name,
+            "last_name": registrant.last_name,
+        })
+
+        form = form_class(initial=initial)
+
+        return self.render(
+            request,
+            template="events/registration_manage.html",
+            context_overrides={
+                "event": self,
+                "registrant": registrant,
+                "reg_type": reg_type,
+                "form": form,
+                "token": token,
+            },
+        )
+
+    @route(r"^register/manage/update/$")
+    def manage_registration_update(self, request, *args, **kwargs):
+        from .registrant_management import (
+            get_registrant_for_manage_link,
+            get_registrant_for_group_manage_link,
+        )
+        from .forms import build_dynamic_form
+        from .utils import _jsonable
+
+        if request.method != "POST":
+            return HttpResponse("Method not allowed", status=405)
+
+        token = request.GET.get("t", "")
+        rid = request.GET.get("rid", "")
+        gid = request.GET.get("gid", "")
+
+        if gid:
+            registrant = get_registrant_for_group_manage_link(
+                group_id=int(gid or 0),
+                registrant_id=int(rid or 0),
+                token=token,
+                event_id=self.id,
+            )
+        else:
+            registrant = get_registrant_for_manage_link(registrant_id=int(rid or 0), token=token, event_id=self.id)
+
+        reg_type = registrant.registration_type
+        form_class = build_dynamic_form(self, reg_type, registrant.invite, require_email=False)
+        form = form_class(request.POST, request.FILES or None)
+
+        if not form.is_valid():
+            # Bubble up exactly what's invalid (including __all__ errors like honeypot/conditional rules)
+            for field, errs in form.errors.items():
+                if field == "__all__":
+                    for e in errs:
+                        messages.error(request, str(e))
+                    continue
+                label = form.fields.get(field).label if field in form.fields else field
+                for e in errs:
+                    messages.error(request, f"{label}: {e}" if label else str(e))
+
+            return self.render(
+                request,
+                template="events/registration_manage.html",
+                context_overrides={
+                    "event": self,
+                    "registrant": registrant,
+                    "reg_type": reg_type,
+                    "form": form,
+                    "token": token,
+                },
+            )
+
+        # Extra safety: even if a bot bypasses form validation or a future change removes
+        # the honeypot clean(), we still want to hard-block here.
+        if request.POST.get("website"):
+            return HttpResponse("Invalid submission.", status=400)
+
+        cleaned = form.cleaned_data.copy()
+        cleaned.pop("website", None)
+
+        registrant.first_name = cleaned.pop("first_name", registrant.first_name)
+        registrant.last_name = cleaned.pop("last_name", registrant.last_name)
+        # We intentionally do NOT allow changing email via self-service.
+        # Ignore posted value and also prevent storing it into answers.
+        cleaned.pop("email", None)
+
+        # Persist answers (basic JSON-ability). File handling isn't supported in update yet.
+        registrant.answers = _jsonable(cleaned)
+        registrant.save(update_fields=["first_name", "last_name", "answers"])
+
+        base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+        if gid:
+            return redirect(f"{base}register/manage/group/?gid={gid}&t={token}&updated=1")
+        return redirect(f"{base}register/manage/?rid={registrant.pk}&t={token}&updated=1")
+
+    @route(r"^register/manage/cancel/$")
+    def manage_registration_cancel(self, request, *args, **kwargs):
+        from .registrant_management import (
+            get_registrant_for_manage_link,
+            get_registrant_for_group_manage_link,
+        )
+
+        if request.method != "POST":
+            return HttpResponse("Method not allowed", status=405)
+
+        token = request.GET.get("t", "")
+        rid = request.GET.get("rid", "")
+        gid = request.GET.get("gid", "")
+
+        if gid:
+            registrant = get_registrant_for_group_manage_link(
+                group_id=int(gid or 0),
+                registrant_id=int(rid or 0),
+                token=token,
+                event_id=self.id,
+            )
+        else:
+            registrant = get_registrant_for_manage_link(registrant_id=int(rid or 0), token=token, event_id=self.id)
+
+        send_cancel_email = False
+        if registrant.status != Registrant.Status.CANCELLED:
+            registrant.status = Registrant.Status.CANCELLED
+            registrant.save(update_fields=["status"])
+            send_cancel_email = True
+
+        if send_cancel_email:
+            try:
+                from .emailing import send_registration_cancelled_email
+
+                send_registration_cancelled_email(registrant)
+            except Exception:
+                self.logger.exception(
+                    "Failed to send cancellation email registrant_id=%s event_id=%s",
+                    registrant.pk,
+                    self.pk,
                 )
 
-        return render(request, template, {
-            "page": self,
-            "self": self,
-            "form": form,
-        })
+        base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+        return redirect(f"{base}register/cancelled/")
+
+    @route(r"^register/manage/group/$")
+    def manage_registration_group(self, request, *args, **kwargs):
+        """Group self-service page: list/edit/cancel each attendee."""
+
+        from .registrant_management import get_group_for_manage_link
+
+        token = request.GET.get("t", "")
+        gid = request.GET.get("gid", "")
+        group = get_group_for_manage_link(group_id=int(gid or 0), token=token)
+        if group.event_id != self.id:
+            return HttpResponse("Not found", status=404)
+
+        registrants = list(group.registrants.select_related("registration_type").order_by("id"))
+        return self.render(
+            request,
+            template="events/registration_manage_group.html",
+            context_overrides={
+                "event": self,
+                "group": group,
+                "registrants": registrants,
+                "token": token,
+            },
+        )
+
+    @route(r"^register/manage/group/cancel/$")
+    def manage_registration_group_cancel(self, request, *args, **kwargs):
+        """Cancel a single attendee within a group using the group token."""
+
+        from .registrant_management import get_registrant_for_group_manage_link
+
+        if request.method != "POST":
+            return HttpResponse("Method not allowed", status=405)
+
+        token = request.GET.get("t", "")
+        gid = request.GET.get("gid", "")
+        rid = request.GET.get("rid", "")
+
+        registrant = get_registrant_for_group_manage_link(
+            group_id=int(gid or 0),
+            registrant_id=int(rid or 0),
+            token=token,
+            event_id=self.id,
+        )
+
+        send_cancel_email = False
+        if registrant.status != Registrant.Status.CANCELLED:
+            registrant.status = Registrant.Status.CANCELLED
+            registrant.save(update_fields=["status"])
+            send_cancel_email = True
+
+        if send_cancel_email:
+            try:
+                from .emailing import send_registration_cancelled_email
+
+                send_registration_cancelled_email(registrant)
+            except Exception:
+                self.logger.exception(
+                    "Failed to send cancellation email registrant_id=%s event_id=%s",
+                    registrant.pk,
+                    self.pk,
+                )
+
+        base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+        return redirect(f"{base}register/cancelled/")
+
+    @route(r"^register/cancelled/$")
+    def registration_cancelled(self, request, *args, **kwargs):
+        """Friendly landing page after a cancellation action."""
+
+        # Intentionally does not require any query params.
+        # The cancel endpoint already verified token/rid and performed the
+        # state transition; this page is just a friendly confirmation.
+        return self.render(
+            request,
+            template="events/registration_cancelled.html",
+            context_overrides={
+                "event": self,
+            },
+        )
+
+    @route(r"^register/confirm/$")
+    def confirm_registration(self, request, *args, **kwargs):
+        """Email confirmation endpoint for double opt-in registrations."""
+
+        from django.conf import settings
+        from django.http import HttpResponse
+        from .models import Registrant
+
+        token = (request.GET.get("t") or "").strip()
+        rid = request.GET.get("rid")
+        if not (token and rid):
+            return HttpResponse("Not found", status=404)
+
+        registrant = (
+            Registrant.objects.select_related("registration_type")
+            .filter(pk=rid, event=self)
+            .first()
+        )
+        if not registrant:
+            return HttpResponse("Not found", status=404)
+
+        token_hash = Registrant.hash_manage_token(token)
+        if not registrant.manage_token_hash or registrant.manage_token_hash != token_hash:
+            return HttpResponse("Not found", status=404)
+
+        # If already processed, just show the confirmation UI.
+        if registrant.status in {Registrant.Status.CONFIRMED, Registrant.Status.WAITLISTED}:
+            return self.render(
+                request,
+                template="events/registration_confirm.html",
+                context_overrides={
+                    "event": self,
+                    "registrant": registrant,
+                    "confirmed": registrant.status == Registrant.Status.CONFIRMED,
+                },
+            )
+
+        if registrant.status != Registrant.Status.PENDING:
+            # Cancelled or unknown state.
+            return self.render(
+                request,
+                template="events/registration_confirm_invalid.html",
+                context_overrides={
+                    "event": self,
+                    "registrant": registrant,
+                },
+            )
+
+        confirmed = registrant.confirm_with_capacity()
+
+        # Optional: send the existing confirmation/waitlist email now that
+        # they are confirmed/waitlisted.
+        try:
+            from .emailing import send_confirmation_email
+
+            send_confirmation_email(registrant, confirmed)
+        except Exception:
+            self.logger.exception(
+                "Failed to send post-confirmation email registrant_id=%s event_id=%s",
+                registrant.pk,
+                self.pk,
+            )
+
+        return self.render(
+            request,
+            template="events/registration_confirm.html",
+            context_overrides={
+                "event": self,
+                "registrant": registrant,
+                "confirmed": confirmed,
+            },
+        )
+
+    @route(r"^register/confirm-group/$")
+    def confirm_group_registration(self, request, *args, **kwargs):
+        """Email confirmation endpoint for group (multi-registrant) registrations."""
+
+        from django.conf import settings
+        from django.http import HttpResponse
+        from .models import Registrant
+        from .registrant_management import get_group_for_manage_link
+        from .emailing import send_group_confirmation_email
+
+        token = (request.GET.get("t") or "").strip()
+        gid = request.GET.get("gid")
+        if not (token and gid):
+            return HttpResponse("Not found", status=404)
+
+        group = get_group_for_manage_link(group_id=int(gid or 0), token=token)
+        if group.event_id != self.id:
+            return HttpResponse("Not found", status=404)
+
+        registrants = list(
+            Registrant.objects.select_related("registration_type")
+            .filter(group=group, event=self)
+            .order_by("id")
+        )
+        if not registrants:
+            return HttpResponse("Not found", status=404)
+
+        confirmed_flags: list[bool] = []
+        any_changed = False
+
+        for r in registrants:
+            # If already processed, preserve the state.
+            if r.status in {Registrant.Status.CONFIRMED, Registrant.Status.WAITLISTED}:
+                confirmed_flags.append(r.status == Registrant.Status.CONFIRMED)
+                continue
+            if r.status != Registrant.Status.PENDING:
+                # Cancelled or unknown state; treat as not confirmed.
+                confirmed_flags.append(False)
+                continue
+
+            try:
+                confirmed_flags.append(bool(r.confirm_with_capacity()))
+                any_changed = True
+            except Exception:
+                self.logger.exception(
+                    "confirm_with_capacity failed for registrant_id=%s",
+                    r.pk,
+                )
+                confirmed_flags.append(False)
+
+        # Build manage_url (absolute preferred, like the other emails)
+        base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+        if base and base.startswith("/"):
+            site_base = getattr(settings, "WAGTAILADMIN_BASE_URL", "").rstrip("/")
+            if site_base:
+                base = f"{site_base}{base}"
+        manage_url = f"{base}register/manage/group/?gid={group.pk}&t={token}"
+
+        # Send the existing group confirmation email after confirm.
+        # Avoid resending if nothing changed (e.g., link revisited).
+        if any_changed:
+            try:
+                send_group_confirmation_email(
+                    group=group,
+                    registrants=registrants,
+                    confirmed_flags=confirmed_flags,
+                    manage_url=manage_url,
+                )
+            except Exception:
+                self.logger.exception(
+                    "Failed to send group confirmation email for group_id=%s event_id=%s",
+                    group.pk,
+                    self.pk,
+                )
+
+        any_confirmed = any(bool(x) for x in confirmed_flags)
+
+        return self.render(
+            request,
+            template="events/registration_confirm.html",
+            context_overrides={
+                "event": self,
+                "registrant": registrants[0],
+                "confirmed": any_confirmed,
+                "group": group,
+                "people": [
+                    (
+                        (f"{r.first_name} {r.last_name}").strip() or r.email,
+                        "Confirmed" if ok else "Waitlisted",
+                    )
+                    for (r, ok) in zip(registrants, confirmed_flags)
+                ],
+            },
+        )
+
+    def _get_invite_from_request(self, request):
+        token = request.GET.get("invite")
+        if token:
+            inv = Invite.objects.filter(event=self, token=token).first()
+            if inv:
+                request.session[f"invite:{self.id}"] = token
+                return inv
+        token = request.session.get(f"invite:{self.id}")
+        if token:
+            return Invite.objects.filter(event=self, token=token).first()
+        return None
 
     content_panels = [
         BasicPageAbstract.title_panel,
@@ -597,6 +1502,49 @@ class EventPage(
     settings_panels = Page.settings_panels + [
         ThemeablePageAbstract.theme_panel,
     ]
+    edit_handler = TabbedInterface([
+        ObjectList(content_panels, heading='Content'),
+        ObjectList([
+            MultiFieldPanel(
+                [
+                    FieldPanel('registration_open'),
+                    FieldPanel('is_private_registration'),
+                    FieldPanel('registration_image_banner'),
+                ],
+                heading='General Settings',
+                classname='collapsible collapsed',
+            ),
+            MultiFieldPanel(
+                [
+                    FieldPanel('confirmation_template'),
+                    FieldPanel('waitlist_template'),
+                ],
+                heading='Email Templates',
+                classname='collapsible collapsed',
+            ),
+            MultiFieldPanel(
+                [
+                    InlinePanel('registration_types', label='Registration Types'),
+                ],
+                heading='Registration Types',
+                classname='collapsible collapsed',
+            ),
+            MultiFieldPanel(
+                [
+                    FieldPanel("registration_form_template"),
+                ],
+                heading='Registration Form Template',
+                classname='collapsible collapsed',
+            ),
+            MultiFieldPanel(
+                [InlinePanel("invites", label="Invites")],
+                heading="Invites",
+                classname="collapsible collapsed",
+            ),
+        ], heading='Registration'),
+        ObjectList(promote_panels, heading='Promote'),
+        ObjectList(settings_panels, heading='Settings', classname='settings'),
+    ])
 
     search_fields = BasicPageAbstract.search_fields \
         + ContentPage.search_fields \
@@ -606,9 +1554,774 @@ class EventPage(
         ]
 
     parent_page_types = ['events.EventListPage']
-    subpage_types = []
+    subpage_types = ['events.EventRegistrationReportPage']
     templates = 'events/event_page.html'
 
     class Meta:
         verbose_name = 'Event'
         verbose_name_plural = 'Events'
+
+
+class EventRegistrationReportPage(RoutablePageMixin, Page):
+    """Public-facing registration capacity report for an event.
+
+    Protect this page using Wagtail's built-in privacy / password restriction UI.
+    """
+
+    parent_page_types = ["events.EventPage"]
+    subpage_types = []
+
+    # Keep the edit UI minimal; password/privacy is managed via Wagtail Settings.
+    content_panels = Page.content_panels
+
+    def serve(self, request, *args, **kwargs):
+        """Ensure routable subpaths (e.g. /type/<slug>/export.csv) resolve reliably.
+
+        In some setups Wagtail can end up serving this page via the base Page
+        implementation, which bypasses RoutablePageMixin's route resolution.
+        Explicitly delegating here makes route handling unambiguous.
+        """
+
+        return RoutablePageMixin.serve(self, request, *args, **kwargs)
+
+    def _get_event(self):
+        return self.get_parent().specific
+
+    @route(r"^$")
+    def index(self, request, *args, **kwargs):
+        """Landing page showing capacities per registration type."""
+
+        return self.render(request)
+
+    @route(r"^type/(?P<type_slug>[-\w]+)/$")
+    def type_registrants(self, request, type_slug: str, *args, **kwargs):
+        from django.shortcuts import get_object_or_404
+        from django.template.response import TemplateResponse
+
+        from .reporting import (
+            attach_answer_cells,
+            build_answer_columns,
+            filter_registrants_queryset,
+            paginate_queryset,
+        )
+
+        event = self._get_event()
+        rtype = get_object_or_404(event.registration_types, slug=type_slug)
+
+        q = (request.GET.get("q") or "").strip()
+        status = (request.GET.get("status") or "").strip().lower()
+
+        registrants = filter_registrants_queryset(event=event, rtype=rtype, q=q, status=status)
+        columns = build_answer_columns(event)
+        page_obj = paginate_queryset(registrants, request=request, per_page=50)
+        attach_answer_cells(page_obj, columns=columns)
+
+        return TemplateResponse(
+            request,
+            "events/registration_report_type_public.html",
+            {
+                "page": self,
+                "report_page": self,
+                "event": event,
+                "rtype": rtype,
+                "page_obj": page_obj,
+                "q": q,
+                "status": status,
+                "columns": [c.__dict__ for c in columns],
+            },
+        )
+
+    @route(r"^type/(?P<type_slug>[-\w]+)/export/?$")
+    def type_registrants_csv(self, request, type_slug: str, *args, **kwargs):
+        from django.shortcuts import get_object_or_404
+
+        from .reporting import registrants_csv_response
+        from .models import Registrant
+
+        event = self._get_event()
+        rtype = get_object_or_404(event.registration_types, slug=type_slug)
+        registrants = (
+            Registrant.objects.filter(event=event, registration_type=rtype)
+            .select_related("registration_type", "invite")
+            .only(
+                "id",
+                "created_at",
+                "status",
+                "first_name",
+                "last_name",
+                "email",
+                "registration_type__name",
+                "registration_type__slug",
+                "answers",
+                "invite_id",
+                "invite__email",
+            )
+            .order_by("created_at")
+        )
+        return registrants_csv_response(
+            request=request,
+            event=event,
+            registrants_qs=registrants,
+            filename_prefix=f"{event.title}-{rtype.slug}",
+        )
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+
+        from .reporting import build_type_rows
+
+        event = self._get_event()
+        context["event"] = event
+        context["type_rows"] = build_type_rows(event)
+        return context
+
+    class Meta:
+        verbose_name = "Event registration report"
+
+
+class RegistrationType(Orderable):
+    event = ParentalKey(
+        "events.EventPage", related_name="registration_types", on_delete=models.CASCADE
+    )
+    name = models.CharField(max_length=120)
+    slug = models.SlugField(max_length=140)
+    capacity = models.PositiveIntegerField(null=True, blank=True)
+    is_public = models.BooleanField(default=True)
+    custom_confirmation_text = RichTextField(blank=True)
+
+    allow_group_registrations = models.BooleanField(
+        default=False,
+        help_text="Allow one email to register multiple attendees (guests) for this registration type.",
+    )
+    max_guest_registrations = models.PositiveIntegerField(
+        default=5,
+        help_text="Maximum number of additional guests allowed for this registration type (default: 5).",
+    )
+
+    # Optional email template overrides for this type (leave blank to use Event defaults)
+    confirmation_template_override = models.ForeignKey(
+        'events.EmailTemplate',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        help_text='Overrides the event confirmation template for this registration type.',
+    )
+    waitlist_template_override = models.ForeignKey(
+        'events.EmailTemplate',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        help_text='Overrides the event waitlist template for this registration type.',
+    )
+    reminder_template_override = models.ForeignKey(
+        'events.EmailTemplate',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        help_text='Overrides the event reminder template for this registration type.',
+    )
+
+    panels = [
+        FieldPanel("name"),
+        FieldPanel("slug"),
+        FieldPanel("capacity"),
+        FieldPanel("is_public"),
+        MultiFieldPanel(
+            [
+                FieldPanel("allow_group_registrations"),
+                FieldPanel("max_guest_registrations"),
+            ],
+            heading="Group registrations",
+            classname="collapsible collapsed",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("confirmation_template_override"),
+                FieldPanel("waitlist_template_override"),
+            ],
+            heading="Email templates (optional overrides)",
+            help_text="Leave blank to use the Event defaults.",
+            classname="collapsible collapsed",
+        ),
+    ]
+
+    def __str__(self) -> str:
+        return f"{self.name}" + (f" (cap {self.capacity})" if self.capacity is not None else "")
+
+
+class RegistrationFormField(AbstractFormField):
+    FIELD_CHOICES = (
+        ("singleline", _("Single line text")),
+        ("multiline", _("Multi-line text")),
+        ("email", _("Email")),
+        ("number", _("Number")),
+        ("url", _("URL")),
+        ("checkbox", _("Checkbox")),
+        ("checkboxes", _("Checkboxes")),
+        ("dropdown", _("Drop down")),
+        ("multiselect", _("Multiple select")),
+        ("radio", _("Radio buttons")),
+        ("date", _("Date")),
+        ("datetime", _("Date/time")),
+        ("hidden", _("Hidden field")),
+        ("file", _("File upload")),
+        ("conditional_text", _("Conditional text (checkbox + details)")),
+        ("conditional_dropdown_other", _("Conditional dropdown (Other + textbox)")),
+    )
+    field_key = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
+    template = ParentalKey(
+        "events.RegistrationFormTemplate",
+        related_name="fields",
+        on_delete=models.CASCADE,
+    )
+
+    file_allowed_types = models.CharField(
+        max_length=255, blank=True,
+        help_text="Allowed extensions (comma-separated), e.g. pdf,docx,png"
+    )
+    file_max_mb = models.PositiveIntegerField(
+        null=True, blank=True,
+        help_text="Max file size (MB). Leave blank for no limit."
+    )
+
+    field_type = models.CharField(
+        max_length=32,
+        choices=FIELD_CHOICES,
+        default="singleline",
+    )
+
+    class Rule(models.TextChoices):
+        ALL = "all", "All types"
+        ONLY = "only", "Only these types"
+        EXCEPT = "except", "All except these types"
+
+    visible_rule = models.CharField(max_length=10, choices=Rule.choices, default=Rule.ALL)
+    visible_type_slugs = models.TextField(blank=True, help_text="Comma-separated type slugs (e.g., vip,speaker)")
+
+    required_rule = models.CharField(max_length=10, choices=Rule.choices, default=Rule.ALL)
+    required_type_slugs = models.TextField(blank=True, help_text="Comma-separated type slugs")
+
+    conditional_label = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Label shown for the checkbox. If blank, uses the field's main label.",
+    )
+    conditional_details_label = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Label for the details textbox (shown only when checked).",
+    )
+    conditional_details_help_text = models.TextField(
+        blank=True,
+        help_text="Help text shown under the details textbox.",
+    )
+    conditional_details_required = models.BooleanField(
+        default=True,
+        help_text="Require details textbox when checkbox is checked.",
+    )
+    conditional_other_value = models.CharField(
+        max_length=120,
+        blank=True,
+        help_text='Which dropdown value triggers the textbox (default: "Other").',
+    )
+    conditional_other_label = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Label for the textbox shown when 'Other' is selected.",
+    )
+    conditional_other_help_text = models.TextField(
+        blank=True,
+        help_text="Help text for the 'Other' textbox.",
+    )
+    conditional_other_required = models.BooleanField(
+        default=True,
+        help_text="Require textbox when 'Other' is selected.",
+    )
+
+    exclude_from_guest_forms = models.BooleanField(
+        default=False,
+        help_text=(
+            "Exclude this question from guest attendee forms when using "
+            "multi-registrations (primary + guests)."
+        ),
+    )
+
+    panels = AbstractFormField.panels + [
+        FieldPanel("exclude_from_guest_forms"),
+        MultiFieldPanel(
+            [
+                FieldPanel("visible_rule"),
+                FieldPanel("visible_type_slugs"),
+            ],
+            heading="Visibility rules",
+            classname="collapsible collapsed",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("required_rule"),
+                FieldPanel("required_type_slugs"),
+            ],
+            heading="Requiredness rules",
+            classname="collapsible collapsed",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("conditional_label"),
+                FieldPanel("conditional_details_label"),
+                FieldPanel("conditional_details_help_text"),
+                FieldPanel("conditional_details_required"),
+            ],
+            heading="Conditional form settings",
+            classname="collapsible collapsed",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("conditional_other_value"),
+                FieldPanel("conditional_other_label"),
+                FieldPanel("conditional_other_help_text"),
+                FieldPanel("conditional_other_required"),
+            ],
+            heading="Conditional 'Other' settings",
+            classname="collapsible collapsed",
+        )
+    ]
+
+
+class Invite(Orderable):
+    event = ParentalKey("events.EventPage", related_name="invites", on_delete=models.CASCADE)
+
+    email = models.EmailField(blank=True)
+    max_uses = models.PositiveIntegerField(default=1)
+    used_count = models.PositiveIntegerField(default=0)
+    expires_at = models.DateTimeField(null=True, blank=True)
+
+    # If filled in, this acts as an allowlist of RegistrationType.slug values (comma-separated).
+    # If blank, the invite does not restrict which types are available.
+    allowed_type_slugs = models.TextField(blank=True, help_text="Example: vip,speaker")
+
+    token = models.CharField(max_length=64, unique=True, db_index=True, blank=True, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    panels = [
+        FieldPanel("email"),
+        FieldPanel("allowed_type_slugs"),
+        FieldPanel("max_uses"),
+        FieldPanel("expires_at"),
+        FieldPanel("used_count", read_only=True),
+        FieldPanel("token", read_only=True),
+        HelpPanel(template="events/includes/invite_link_help_panel.html", heading="Invite link"),
+    ]
+
+    def save(self, *args, **kwargs):
+        if not self.token:
+            import secrets
+            self.token = secrets.token_urlsafe(24)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Invite for {self.event.title} ({self.email or self.token})"
+
+    def is_valid(self) -> bool:
+        """Still usable? (not expired, under max uses)"""
+        if self.expires_at and timezone.now() >= self.expires_at:
+            print("expired")
+            return False
+        if self.max_uses is not None and self.used_count >= self.max_uses:
+            print("maxed out")
+            return False
+        return True
+
+    def _allowed_set(self):
+        # Always compare slugs case-insensitively; RegistrationType.slug is
+        # generally lowercase but admin input might not be.
+        return {s.strip().lower() for s in (self.allowed_type_slugs or "").split(",") if s.strip()}
+
+    def allows_type_slug(self, slug: str) -> bool:
+        s = (slug or "").strip().lower()
+        allowed = self._allowed_set()
+        if not allowed:
+            return True
+        return s in allowed
+
+
+class RegistrationGroup(models.Model):
+    """A group of one or more Registrants created by a single primary email.
+
+    Used to support "register multiple guests" while still creating one
+    Registrant row per attendee.
+    """
+
+    event = models.ForeignKey(
+        "events.EventPage",
+        on_delete=models.CASCADE,
+        related_name="registration_groups",
+    )
+    registration_type = models.ForeignKey(
+        "events.RegistrationType",
+        on_delete=models.PROTECT,
+        related_name="registration_groups",
+    )
+    primary_email = models.EmailField()
+
+    # Self-service management token for group management.
+    manage_token_hash = models.CharField(max_length=64, blank=True, editable=False, db_index=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def ensure_manage_token(self) -> str:
+        """Generate and persist a new token if missing; returns the *raw* token."""
+
+        if self.manage_token_hash:
+            return ""
+
+        import secrets
+        import hashlib
+
+        raw = secrets.token_urlsafe(32)
+        self.manage_token_hash = hashlib.sha256(raw.encode("utf-8")).hexdigest()
+        self.save(update_fields=["manage_token_hash"])
+        return raw
+
+    @staticmethod
+    def hash_manage_token(raw_token: str) -> str:
+        import hashlib
+
+        return hashlib.sha256((raw_token or "").encode("utf-8")).hexdigest()
+
+    def __str__(self) -> str:
+        return f"Group {self.pk} for {self.event.title} ({self.primary_email})"
+
+
+class Registrant(models.Model):
+    class Status(models.TextChoices):
+        PENDING = "pending", "Pending"
+        CONFIRMED = "confirmed", "Confirmed"
+        WAITLISTED = "waitlisted", "Waitlisted"
+        CANCELLED = "cancelled", "Cancelled"
+
+    event = models.ForeignKey("events.EventPage", on_delete=models.CASCADE, related_name="registrants")
+    registration_type = models.ForeignKey(RegistrationType, on_delete=models.PROTECT, related_name="registrants")
+    group = models.ForeignKey(
+        "events.RegistrationGroup",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="registrants",
+    )
+    email = models.EmailField()
+    first_name = models.CharField(max_length=120, blank=True)
+    last_name = models.CharField(max_length=120, blank=True)
+
+    # Store dynamic answers + uploaded docs metadata
+    answers = models.JSONField(default=dict, blank=True)
+    uploaded_document_ids = models.JSONField(default=list, blank=True)
+
+    invite = models.ForeignKey(Invite, null=True, blank=True, on_delete=models.SET_NULL, related_name="registrants")
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
+
+    # Self-service management token for a "manage your registration" link.
+    # Stored hashed so leaked DB dumps don't expose usable tokens.
+    manage_token_hash = models.CharField(max_length=64, blank=True, editable=False, db_index=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def ensure_manage_token(self) -> str:
+        """Generate and persist a new token if missing; returns the *raw* token.
+
+        Raw token is only returned at generation time and is intended to be
+        embedded into the confirmation email.
+        """
+
+        if self.manage_token_hash:
+            return ""
+
+        import secrets
+        import hashlib
+
+        raw = secrets.token_urlsafe(32)
+        self.manage_token_hash = hashlib.sha256(raw.encode("utf-8")).hexdigest()
+        self.save(update_fields=["manage_token_hash"])
+        return raw
+
+    @staticmethod
+    def hash_manage_token(raw_token: str) -> str:
+        import hashlib
+
+        return hashlib.sha256((raw_token or "").encode("utf-8")).hexdigest()
+
+    def __str__(self) -> str:
+        return f"{self.email} @ {self.event.title} ({self.registration_type.name})"
+
+    def confirm_with_capacity(self) -> bool:
+        """
+        Try to confirm respecting capacity. If capacity is None, always confirm.
+        Uses an atomic update on the type to avoid race conditions.
+        """
+        if self.registration_type.capacity is None:
+            self.status = Registrant.Status.CONFIRMED
+            self.save(update_fields=["status"])
+            return True
+
+        with transaction.atomic():
+            RegistrationType.objects.select_for_update().get(pk=self.registration_type_id)
+            confirmed_count = Registrant.objects.filter(
+                registration_type_id=self.registration_type_id,
+                status=Registrant.Status.CONFIRMED
+            ).count()
+
+            if confirmed_count < (self.registration_type.capacity or 0):
+                self.status = Registrant.Status.CONFIRMED
+                self.save(update_fields=["status"])
+                return True
+
+            self.status = Registrant.Status.WAITLISTED
+            self.save(update_fields=["status"])
+            return False
+
+
+@register_snippet
+class EmailTemplate(PreviewableMixin, models.Model):
+    title = models.CharField(max_length=120)
+    subject = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+    # Body supports rich content + optional placeholder merge fields
+    body = StreamField(
+        [
+            ("heading", blocks.StructBlock(
+                [
+                    ("text", blocks.CharBlock(required=True, max_length=200)),
+                    (
+                        "level",
+                        blocks.ChoiceBlock(
+                            choices=[("h1", "H1"), ("h2", "H2"), ("h3", "H3")],
+                            default="h2",
+                            required=True,
+                        ),
+                    ),
+                ],
+                icon="title",
+                label="Heading",
+            )),
+            (
+                "paragraph",
+                blocks.RichTextBlock(features=["bold", "italic", "link", "ul", "ol"]),
+            ),
+            (
+                "button",
+                blocks.StructBlock(
+                    [
+                        ("text", blocks.CharBlock(required=True, max_length=64)),
+                        ("url", blocks.URLBlock(required=True)),
+                    ],
+                    icon="link",
+                    label="Button",
+                ),
+            ),
+            (
+                "image",
+                blocks.StructBlock(
+                    [
+                        ("image", ImageChooserBlock(required=False)),
+                        ("image_url", blocks.URLBlock(required=False, help_text="Use if you can't choose an image.")),
+                        ("alt", blocks.CharBlock(required=False, max_length=200)),
+                        (
+                            "alignment",
+                            blocks.ChoiceBlock(
+                                choices=[("left", "Left"), ("center", "Center"), ("right", "Right")],
+                                default="center",
+                                required=True,
+                            ),
+                        ),
+                        ("max_width", blocks.IntegerBlock(required=False, help_text="In pixels (e.g., 560).")),
+                        ("link", blocks.URLBlock(required=False)),
+                    ],
+                    icon="image",
+                    label="Image",
+                ),
+            ),
+            ("divider", blocks.StaticBlock(icon="horizontalrule", label="Divider")),
+            (
+                "answers",
+                blocks.StaticBlock(icon="list-ul", label="Registrant Answers"),
+            ),
+            (
+                "attachment_hint",
+                blocks.StructBlock(
+                    [
+                        ("note", blocks.TextBlock(required=False)),
+                    ],
+                    icon="paperclip",
+                    label="Attachment Hint (non‑rendered)",
+                ),
+            ),
+        ],
+        use_json_field=True,
+    )
+
+    panels = [
+        FieldPanel('title'),
+        FieldPanel('subject'),
+        FieldPanel('body'),
+        HelpPanel(template="events/admin/emailtemplate_mergevars_help.html", heading="Available merge variables"),
+    ]
+
+    def __str__(self):
+        return self.title
+
+    # Wagtail preview support (shows a Preview button in the snippet editor)
+    preview_modes = [
+        ("email", "Email"),
+    ]
+
+    def serve_preview(self, request, mode_name):
+        """Render a realistic email preview in the admin.
+
+        We reuse the exact same HTML renderer used for actual sends, but with
+        sample context values (event/registrant/type) so merge vars resolve.
+        """
+
+        from .email_rendering import render_streamfield_email_html
+        from django.utils import timezone
+
+        class _DummySite:
+            root_url = request.build_absolute_uri("/").rstrip("/")
+
+        class _DummyEvent:
+            title = "Sample Event"
+            publishing_date = timezone.now()
+            event_end = timezone.now()
+            time_zone = "America/Toronto"
+
+            @property
+            def time_zone_label(self):
+                return "EST (UTC–05:00)"
+
+            event_format = "virtual"
+            location_name = ""
+
+            def location_string(self):
+                return ""
+
+            def location_map_url(self):
+                return ""
+
+            @property
+            def event_start_time_utc(self):
+                return self.publishing_date
+
+            @property
+            def event_end_time_utc(self):
+                return self.event_end
+
+            def get_site(self):
+                return _DummySite()
+
+        class _DummyRegistrant:
+            first_name = "Jane"
+            email = "jane@example.com"
+
+        class _DummyType:
+            name = "General"
+
+        base = request.build_absolute_uri("/").rstrip("/")
+        manage_url = f"{base}/events/sample-event/register/manage/?rid=123&t=sample"
+
+        ctx = {
+            "event": _DummyEvent(),
+            "registrant": _DummyRegistrant(),
+            "registration_type": _DummyType(),
+            "confirmed": True,
+            "status_label": "Confirmed",
+            "manage_url": manage_url,
+        }
+
+        html, _text = render_streamfield_email_html(template_obj=self, ctx=ctx)
+        return HttpResponse(html)
+
+
+class EmailCampaign(models.Model):
+    event = models.ForeignKey(EventPage, on_delete=models.CASCADE, related_name='email_campaigns')
+    template = models.ForeignKey(EmailTemplate, on_delete=models.PROTECT)
+    scheduled_for = models.DateTimeField()
+    sent_at = models.DateTimeField(null=True, blank=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
+    # Audience filters
+    include_statuses = models.TextField(
+        blank=True,
+        default="",
+        help_text='Comma-separated registrant statuses (e.g. "confirmed,waitlisted"). Leave blank for all.',
+    )
+    include_type_slugs = models.TextField(
+        blank=True,
+        default="",
+        help_text='Comma-separated registration type slugs (e.g. "general,student"). Leave blank for all.',
+    )
+    # Optional single attachment via Wagtail Documents
+    attachment = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    panels = [
+        FieldPanel('event'),
+        FieldPanel('template'),
+        FieldPanel('scheduled_for'),
+        FieldPanel('sent_at'),
+        FieldPanel('completed_at'),
+        FieldPanel('include_type_slugs'),
+        FieldPanel('include_statuses'),
+        FieldPanel('attachment'),
+    ]
+
+    def get_include_statuses(self) -> list[str]:
+        return _split_tokens(self.include_statuses)
+
+    def get_include_type_slugs(self) -> list[str]:
+        return _split_slugs(self.include_type_slugs)
+
+
+class EmailCampaignSend(models.Model):
+    """Tracks delivery of an EmailCampaign to a Registrant.
+
+    This makes campaign execution idempotent: recurring jobs can safely run
+    without re-sending to the same person.
+    """
+
+    campaign = models.ForeignKey(
+        EmailCampaign, on_delete=models.CASCADE, related_name="sends"
+    )
+    registrant = models.ForeignKey(
+        "events.Registrant", on_delete=models.CASCADE, related_name="campaign_sends"
+    )
+    sent_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["campaign", "registrant"],
+                name="uniq_events_emailcampaignsend_campaign_registrant",
+            )
+        ]
+
+
+@register_snippet
+class RegistrationFormTemplate(ClusterableModel):
+    title = models.CharField(max_length=120, unique=True)
+    description = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    panels = [
+        FieldPanel("title"),
+        FieldPanel("description"),
+        MultiFieldPanel(
+            [
+                InlinePanel("fields", label="Fields"),
+            ],
+            heading="Form Fields",
+            classname="js-registration-fields-inline"
+        ),
+    ]
+
+    def __str__(self):
+        return self.title

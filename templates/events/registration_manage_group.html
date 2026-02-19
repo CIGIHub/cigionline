@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load webpack_loader %}
+
+{% block title %}Manage registrations — {{ event.title }}{% endblock %}
+
+{% block extra_css %}
+  {% render_bundle 'eventPage' 'css' %}
+{% endblock %}
+
+{% block extra_js %}
+  {% render_bundle 'eventPage' 'js' %}
+{% endblock %}
+
+{% block content %}
+{% include "includes/heroes/hero_event.html" with topics=event.topics_sorted title=event.title date=event.publishing_date end_date=event.event_end event_type=event.get_event_type_display event_access=event.get_event_access_display authors=event.authors.all author_count=event.author_count registration_url=event.registration_url time_zone=event.time_zone time_zone_label=event.time_zone_label is_past=event.is_past %}
+
+<section class="event-registration-form-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <a href="{{ event.url }}" class="btn btn-link p-2 mb-3">&larr; Back to event</a>
+
+        <p class="text-muted mb-4">Manage your registrations</p>
+
+        {% if request.GET.updated %}
+          <div class="alert alert-success mb-4">The registration has been updated.</div>
+        {% endif %}
+        {% if request.GET.cancelled %}
+          <div class="alert alert-warning mb-4">The registration has been cancelled.</div>
+        {% endif %}
+
+        <div class="cigi-alert mb-4">
+          <ul>
+            <li><strong>Primary email:</strong> {{ group.primary_email }}</li>
+            <li><strong>Total attendees:</strong> {{ registrants|length }}</li>
+          </ul>
+        </div>
+
+        <div class="list-group mb-4">
+          {% for r in registrants %}
+            <div class="list-group-item">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <div><strong>{{ r.first_name }} {{ r.last_name }}</strong></div>
+                  <div class="text-muted">Status: {{ r.get_status_display }}</div>
+                </div>
+                <div class="d-flex gap-2">
+                  <a class="btn btn-primary" href="{{ event.url }}register/manage/?rid={{ r.pk }}&t={{ token }}&gid={{ group.pk }}">Edit</a>
+                  {% if r.status != "cancelled" %}
+                    <form method="post" action="{{ event.url }}register/manage/group/cancel/?rid={{ r.pk }}&gid={{ group.pk }}&t={{ token }}">
+                      {% csrf_token %}
+                      <button
+                        type="button"
+                        class="btn"
+                        data-modal-open="group-cancel-modal-{{ r.pk }}">
+                        Cancel
+                      </button>
+                    </form>
+
+                    <div class="cigi-modal" id="group-cancel-modal-{{ r.pk }}" role="dialog" aria-modal="true" aria-labelledby="group-cancel-title-{{ r.pk }}" aria-hidden="true">
+                      <div class="cigi-modal__backdrop" data-modal-close></div>
+                      <div class="cigi-modal__dialog" role="document">
+                        <div class="cigi-modal__header">
+                          <h2 class="cigi-modal__title" id="group-cancel-title-{{ r.pk }}">Cancel registration?</h2>
+                          <button type="button" class="cigi-modal__close" data-modal-close aria-label="Close">×</button>
+                        </div>
+                        <div class="cigi-modal__body">
+                          <p>Cancel <strong>{{ r.first_name }} {{ r.last_name }}</strong>’s registration for <strong>{{ event.title }}</strong>?</p>
+                          <p class="text-muted">This action can’t be undone.</p>
+                        </div>
+                        <div class="cigi-modal__footer">
+                          <button type="button" class="btn" data-modal-close>Keep</button>
+                          <button type="button" class="btn btn-primary" data-modal-submit="group-cancel-modal-{{ r.pk }}">Yes, cancel</button>
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

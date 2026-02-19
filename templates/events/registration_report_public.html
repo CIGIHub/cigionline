@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ event.title }} — {% trans "Registration report" %}{% endblock %}
+
+{% block content %}
+<section class="py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <a href="{{ event.url }}" class="btn btn-link p-0 mb-3">&larr; {% trans "Back to event" %}</a>
+
+        <div class="d-flex align-items-start justify-content-between gap-3 flex-wrap mb-3">
+          <div>
+            <h1 class="h3 mb-1">{% trans "Registration report" %}</h1>
+            <div class="text-muted">{{ event.title }}</div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-striped table-hover align-middle">
+            <thead>
+              <tr>
+                <th scope="col">{% trans "Type" %}</th>
+                <th scope="col" class="text-nowrap">{% trans "Slug" %}</th>
+                <th scope="col" class="text-nowrap">{% trans "Capacity" %}</th>
+                <th scope="col" class="text-nowrap">{% trans "Confirmed" %}</th>
+                <th scope="col" class="text-nowrap">{% trans "Waitlisted" %}</th>
+                <th scope="col" class="text-nowrap">{% trans "Remaining" %}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in type_rows %}
+                <tr>
+                  <td>
+                    <a href="{{ page.url }}type/{{ r.slug }}/">{{ r.name }}</a>
+                  </td>
+                  <td class="text-nowrap"><code>{{ r.slug }}</code></td>
+                  <td class="text-nowrap">
+                    {% if r.capacity is not None %}{{ r.capacity }}{% else %}—{% endif %}
+                  </td>
+                  <td class="text-nowrap">{{ r.confirmed }}</td>
+                  <td class="text-nowrap">{{ r.waitlisted }}</td>
+                  <td class="text-nowrap">
+                    {% if r.remaining is not None %}{{ r.remaining }}{% else %}—{% endif %}
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="6">{% trans "No registration types found for this event." %}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

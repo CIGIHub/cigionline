@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ event.title }} — {{ rtype.name }} — {% trans "Registration report" %}{% endblock %}
+
+{% block content %}
+<section class="py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12">
+        <style>
+          /* Keep the table readable when many dynamic answer columns exist */
+          .registration-report-table {
+            /* Let the table exceed container width so .table-responsive can scroll */
+            table-layout: fixed;
+            width: max-content;
+            min-width: 100%;
+          }
+
+          /* Default cell behavior: don't break words into letters; allow wrapping at spaces */
+          .registration-report-table th,
+          .registration-report-table td {
+            white-space: normal;
+            overflow-wrap: normal;
+            word-break: normal;
+            vertical-align: top;
+          }
+
+          /* Give every column a minimum width so content remains readable.
+             With 20+ question columns, this forces horizontal scroll (desired). */
+          .registration-report-table th,
+          .registration-report-table td {
+            min-width: 14rem;
+          }
+
+          /* First few columns can be narrower. */
+          .registration-report-table th:nth-child(1),
+          .registration-report-table td:nth-child(1) { min-width: 9.5rem; }
+          .registration-report-table th:nth-child(2),
+          .registration-report-table td:nth-child(2) { min-width: 12rem; }
+          .registration-report-table th:nth-child(3),
+          .registration-report-table td:nth-child(3) { min-width: 16rem; }
+          .registration-report-table th:nth-child(4),
+          .registration-report-table td:nth-child(4) { min-width: 7rem; }
+          .registration-report-table th:nth-child(5),
+          .registration-report-table td:nth-child(5) { min-width: 6rem; }
+
+          /* Sticky header inside the scroll container */
+          .registration-report-table thead th {
+            position: sticky;
+            top: 0;
+            z-index: 3;
+            background: var(--bs-table-bg, #fff);
+          }
+        </style>
+        <a href="{{ report_page.url }}" class="btn btn-link p-0 mb-3">&larr; {% trans "Back to report" %}</a>
+
+        <div class="d-flex align-items-start justify-content-between gap-3 flex-wrap mb-3">
+          <div>
+            <h1 class="h3 mb-1">{% trans "Registrants" %} — {{ rtype.name }}</h1>
+            <div class="text-muted">{{ event.title }}</div>
+          </div>
+
+          <div class="d-flex gap-2">
+            <a class="btn btn-outline-secondary" href="{{ report_page.url }}type/{{ rtype.slug }}/export">{% trans "Download CSV" %}</a>
+          </div>
+        </div>
+
+        <form method="get" class="row g-2 mb-3">
+          <div class="col-md-6">
+            <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="{% trans 'Search name or email' %}">
+          </div>
+          <div class="col-md-3">
+            <select name="status" class="form-select">
+              <option value="">{% trans "All statuses" %}</option>
+              <option value="confirmed" {% if status == 'confirmed' %}selected{% endif %}>{% trans "Confirmed" %}</option>
+              <option value="waitlisted" {% if status == 'waitlisted' %}selected{% endif %}>{% trans "Waitlisted" %}</option>
+              <option value="pending" {% if status == 'pending' %}selected{% endif %}>{% trans "Pending" %}</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-primary w-100" type="submit">{% trans "Filter" %}</button>
+          </div>
+        </form>
+
+        <div class="table-responsive">
+          <table class="table table-striped table-hover table-sm registration-report-table">
+            <thead>
+              <tr>
+                <th>{% trans "Created" %}</th>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Email" %}</th>
+                <th>{% trans "Status" %}</th>
+                <th>{% trans "Invited" %}</th>
+
+                {% for col in columns %}
+                  <th>{{ col.label }}</th>
+                {% endfor %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in page_obj %}
+                <tr>
+                  <td>{{ r.created_at|date:"Y-m-d H:i" }}</td>
+                  <td>{{ r.first_name }} {{ r.last_name }}</td>
+                  <td>{{ r.email }}</td>
+                  <td>{{ r.status }}</td>
+                  <td>{% if r.invited %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>
+
+                  {% for cell in r.answer_cells %}
+                    <td>
+                      {% if cell.url %}
+                        <a href="{{ cell.url }}" target="_blank" rel="noopener noreferrer">{{ cell.text }}</a>
+                      {% else %}
+                        {{ cell.text }}
+                      {% endif %}
+                    </td>
+                  {% endfor %}
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="{{ 5|add:columns|length }}">{% trans "No registrants found." %}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        {% if page_obj.paginator.num_pages > 1 %}
+          <nav class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div>
+              {% if page_obj.has_previous %}
+                <a class="btn btn-outline-secondary btn-sm" href="?p={{ page_obj.previous_page_number }}&q={{ q|urlencode }}&status={{ status|urlencode }}">{% trans "Previous" %}</a>
+              {% endif %}
+              {% if page_obj.has_next %}
+                <a class="btn btn-outline-secondary btn-sm" href="?p={{ page_obj.next_page_number }}&q={{ q|urlencode }}&status={{ status|urlencode }}">{% trans "Next" %}</a>
+              {% endif %}
+            </div>
+            <div class="text-muted small">
+              {% blocktrans with n=page_obj.number m=page_obj.paginator.num_pages %}Page {{ n }} of {{ m }}{% endblocktrans %}
+            </div>
+          </nav>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

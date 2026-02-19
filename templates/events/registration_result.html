@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load wagtailimages_tags webpack_loader %}
+{% block extra_css %}
+  {% render_bundle 'eventPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'eventPage' 'js' %}
+{% endblock %}
+{% block content %}
+{% include "includes/heroes/hero_event.html" with topics=event.topics_sorted title=event.title date=event.publishing_date end_date=event.event_end event_type=event.get_event_type_display event_access=event.get_event_access_display authors=event.authors.all author_count=event.author_count registration_url=event.registration_url time_zone=event.time_zone time_zone_label=event.time_zone_label is_past=event.is_past %}
+
+<section class="container event-registration-result-section">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <a href="{{ event.url }}" class="btn btn-link p-2 mb-3">&larr; Back to event</a>
+
+      <div class="registration-banner-image">
+        {% if event.registration_image_banner %}
+          {% image event.registration_image_banner width-1280 %}
+        {% endif %}
+      </div>
+
+      <h1>Registration submitted</h1>
+
+      <div id="registration-action-required" class="alert {% if status == 'pending' %}alert-warning{% else %}alert-success{% endif %}" role="alert">
+        {% if status == "pending" %}
+          <strong>Action required:</strong>
+          Please check your email and click the confirmation link to finalize your registration.
+          If you had already registered with this address, we’ll email you a link to manage your registration.
+        {% else %}
+          Thank you! If a new registration was submitted for this email address, you’ll receive an email shortly.
+          If you had already registered with this address, we’ll email you a link to manage your registration.
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

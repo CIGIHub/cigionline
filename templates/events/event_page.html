@@ -68,6 +68,22 @@
     </section>
   {% endif %}
 
+  {% if self.registration_open and not self.is_private_registration or self.registration_open and invite %}
+    <section>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <a href="{{ self.url }}register/">
+              <button class="register btn btn-primary btn-lg mb-4">
+                Register
+              </button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
   {% include "includes/body.html" with body=self.body %}
 
   {% if self.author_count > 0 %}

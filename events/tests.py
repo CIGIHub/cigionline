@@ -1,10 +1,93 @@
 from datetime import datetime
 from home.models import HomePage, Think7HomePage
 from wagtail.test.utils import WagtailPageTestCase
+from django.test import TestCase
 
 from .models import EventListPage, EventPage
+from .email_rendering import render_streamfield_email_html
 
 from unittest.mock import patch
+
+
+class DuplicateRegistrationTests(TestCase):
+    """Duplicate email registrations should not create multiple active rows."""
+
+    @patch("events.models.send_confirmation_email")
+    def test_duplicate_registration_does_not_create_second_registrant(self, send_mock):
+        from events.models import EventPage, RegistrationType, Registrant
+        from wagtail.models import Site
+
+        # Minimal Site/Page setup so the EventPage route can resolve.
+        root = Site.objects.get(is_default_site=True).root_page
+        event = EventPage(title="Dup Test Event")
+        root.add_child(instance=event)
+        event.save_revision().publish()
+
+        reg_type = RegistrationType(event=event, name="General", slug="general", sort_order=0, is_public=True)
+        reg_type.save()
+
+        # Pre-existing (active) registrant
+        Registrant.objects.create(
+            event=event,
+            registration_type=reg_type,
+            email="test@example.com",
+            first_name="A",
+            last_name="B",
+            status=Registrant.Status.CONFIRMED,
+        )
+
+        before = Registrant.objects.filter(event=event, email__iexact="test@example.com").count()
+
+        # Post again with same email
+        resp = self.client.post(
+            f"{event.url}register/type/{reg_type.slug}/",
+            data={
+                "first_name": "New",
+                "last_name": "User",
+                "email": "test@example.com",
+                "website": "",
+            },
+        )
+
+        self.assertEqual(resp.status_code, 302)
+        after = Registrant.objects.filter(event=event, email__iexact="test@example.com").count()
+        self.assertEqual(before, after)
+        self.assertTrue(send_mock.called)
+
+    @patch("events.models.send_confirmation_email")
+    def test_duplicate_registration_allows_if_cancelled(self, send_mock):
+        from events.models import EventPage, RegistrationType, Registrant
+        from wagtail.models import Site
+
+        root = Site.objects.get(is_default_site=True).root_page
+        event = EventPage(title="Dup Cancelled Event")
+        root.add_child(instance=event)
+        event.save_revision().publish()
+
+        reg_type = RegistrationType(event=event, name="General", slug="general", sort_order=0, is_public=True)
+        reg_type.save()
+
+        Registrant.objects.create(
+            event=event,
+            registration_type=reg_type,
+            email="test@example.com",
+            status=Registrant.Status.CANCELLED,
+        )
+
+        before = Registrant.objects.filter(event=event, email__iexact="test@example.com").count()
+
+        resp = self.client.post(
+            f"{event.url}register/type/{reg_type.slug}/",
+            data={
+                "first_name": "New",
+                "last_name": "User",
+                "email": "test@example.com",
+                "website": "",
+            },
+        )
+        self.assertEqual(resp.status_code, 302)
+        after = Registrant.objects.filter(event=event, email__iexact="test@example.com").count()
+        self.assertEqual(after, before + 1)
 
 
 class EventListPageTests(WagtailPageTestCase):
@@ -33,6 +116,109 @@ class EventPageTests(WagtailPageTestCase):
             EventPage,
             {},
         )
+
+
+class GuestRegistrationQuestionExclusionTests(TestCase):
+    def test_exclude_from_guest_forms_omits_field_for_guests(self):
+        from wagtail.models import Site
+        from events.models import EventPage, RegistrationType, RegistrationFormTemplate, RegistrationFormField
+        from events.guest_registration import build_primary_and_guest_forms
+
+        root = Site.objects.get(is_default_site=True).root_page
+        event = EventPage(title="Guest Exclusion Event")
+        root.add_child(instance=event)
+        event.save_revision().publish()
+
+        tmpl = RegistrationFormTemplate.objects.create(name="Guest Exclusion Template")
+        event.registration_form_template = tmpl
+        event.save(update_fields=["registration_form_template"])
+
+        # Create a question that should NOT appear for guest registrants.
+        RegistrationFormField.objects.create(
+            template=tmpl,
+            label="Primary-only question",
+            field_type="singleline",
+            required=False,
+            sort_order=0,
+            exclude_from_guest_forms=True,
+        )
+
+        reg_type = RegistrationType.objects.create(
+            event=event,
+            name="General",
+            slug="general",
+            sort_order=0,
+            is_public=True,
+            allow_group_registrations=True,
+            max_guest_registrations=2,
+        )
+
+        forms_obj = build_primary_and_guest_forms(event=event, reg_type=reg_type, invite=None)
+        self.assertIn(
+            "f_" + str(RegistrationFormField.objects.first().field_key),
+            forms_obj.primary_form.fields,
+        )
+
+        self.assertIsNotNone(forms_obj.guest_formset)
+        guest_form = forms_obj.guest_formset.forms[0]
+        self.assertNotIn(
+            "f_" + str(RegistrationFormField.objects.first().field_key),
+            guest_form.fields,
+        )
+
+
+class GroupDoubleOptInTests(TestCase):
+    @patch("events.models.send_group_registration_pending_confirm_email")
+    def test_group_registration_sends_single_pending_confirm_email_and_stays_pending(self, send_mock):
+        from wagtail.models import Site
+        from events.models import EventPage, RegistrationType, RegistrationFormTemplate
+
+        root = Site.objects.get(is_default_site=True).root_page
+        event = EventPage(title="Group Pending Confirm Event", registration_open=True)
+        root.add_child(instance=event)
+        event.save_revision().publish()
+
+        tmpl = RegistrationFormTemplate.objects.create(name="Group Pending Template")
+        event.registration_form_template = tmpl
+        event.save(update_fields=["registration_form_template"])
+
+        reg_type = RegistrationType.objects.create(
+            event=event,
+            name="General",
+            slug="general",
+            sort_order=0,
+            is_public=True,
+            allow_group_registrations=True,
+            max_guest_registrations=2,
+        )
+
+        resp = self.client.post(
+            f"{event.url}register/type/{reg_type.slug}/",
+            data={
+                "first_name": "Primary",
+                "last_name": "User",
+                "email": "primary@example.com",
+                "website": "",
+                # One guest
+                "guests-TOTAL_FORMS": "1",
+                "guests-INITIAL_FORMS": "0",
+                "guests-MIN_NUM_FORMS": "0",
+                "guests-MAX_NUM_FORMS": "2",
+                "guests-0-first_name": "Guest",
+                "guests-0-last_name": "One",
+            },
+        )
+
+        self.assertEqual(resp.status_code, 302)
+        self.assertIn("register/result/?s=pending", resp["Location"])
+        self.assertTrue(send_mock.called)
+
+        from events.models import Registrant
+
+        statuses = list(Registrant.objects.filter(event=event).values_list("status", flat=True))
+        # Primary + guest should remain pending until confirm-group is clicked.
+        self.assertTrue(statuses)
+        self.assertTrue(all(s == Registrant.Status.PENDING for s in statuses))
 
 
 class EventsAPITests(WagtailPageTestCase):
@@ -79,9 +265,138 @@ class EventsAPITests(WagtailPageTestCase):
         self.assertEqual(response_2['meta']['total_count'], 4)
         self.assertEqual(len(response_2['items']), 4)
 
-        response_3 = self.get_api_response(12, 2010)
-        self.assertEqual(response_3['meta']['total_count'], 0)
-        self.assertEqual(len(response_3['items']), 0)
+
+class EmailTemplateRenderingTests(WagtailPageTestCase):
+    def test_streamfield_email_rendering_outputs_email_safe_wrapper(self):
+        class DummyTemplate:
+            def __init__(self, body):
+                self.body = body
+
+        # Using StreamValue-like data: Wagtail StreamField will accept a list of dicts
+        # when assigning to the field on a real model. For this renderer, we just need
+        # something iterable with block_type/value attributes. We'll use the StreamField
+        # itself from the EmailTemplate model indirectly by building minimal objects.
+        class B:
+            def __init__(self, block_type, value):
+                self.block_type = block_type
+                self.value = value
+
+        dummy = DummyTemplate(
+            body=[
+                B("heading", {"text": "Hello", "level": "h2"}),
+                B("paragraph", "<p>Thanks for registering.</p>"),
+                B("button", {"text": "View details", "url": "https://example.com"}),
+                B("image", {"image": None, "image_url": "https://example.com/logo.png", "alt": "Logo", "alignment": "center", "max_width": 200, "link": ""}),
+                B("divider", None),
+            ]
+        )
+
+        html, text = render_streamfield_email_html(
+            template_obj=dummy,
+            ctx={
+                "event": type("E", (), {"title": "Test Event", "get_site": type("S", (), {"root_url": "https://example.com"})()})(),
+                "registrant": type("R", (), {"first_name": "Jane", "email": "jane@example.com"})(),
+                "registration_type": type("T", (), {"name": "General"})(),
+                "confirmed": True,
+            },
+        )
+
+        self.assertIn("<table", html)
+        self.assertIn("View details", html)
+        self.assertIn("https://example.com/logo.png", html)
+        self.assertIn("Test Event", html)
+        self.assertTrue(len(text) > 0)
+
+    def test_registrant_answers_merge_variable_renders(self):
+        from wagtail.models import Site
+        from events.models import EventPage, RegistrationType, Registrant, EmailTemplate
+        from events.email_rendering import render_streamfield_email_html
+
+        root = Site.objects.get(is_default_site=True).root_page
+        event = EventPage(title="Answers Event")
+        root.add_child(instance=event)
+        event.save_revision().publish()
+
+        reg_type = RegistrationType(event=event, name="General", slug="general", sort_order=0, is_public=True)
+        reg_type.save()
+
+        registrant = Registrant.objects.create(
+            event=event,
+            registration_type=reg_type,
+            email="a@example.com",
+            first_name="A",
+            last_name="B",
+            answers={"f_company": "CIGI", "f_role": "Researcher"},
+        )
+
+        tmpl = EmailTemplate(title="T", subject="S", body=[{"type": "answers", "value": None}])
+
+        from events.emailing import _render_registrant_answers
+
+        answers_html, answers_text = _render_registrant_answers(registrant)
+
+        html, _text = render_streamfield_email_html(
+            template_obj=tmpl,
+            ctx={
+                "event": event,
+                "registrant": registrant,
+                "registration_type": reg_type,
+                "confirmed": True,
+                "manage_url": "https://example.com/manage",
+                "registrant_answers_html": answers_html,
+                "registrant_answers_text": answers_text,
+            },
+        )
+
+        self.assertIn("Registration details", html)
+        self.assertIn("CIGI", html)
+
+    def test_registrant_answers_does_not_treat_f_uuid_as_builtin_email(self):
+        """If an answer label shows a UUID, it can't be the built-in Registrant.email.
+
+        Built-in identity fields are stored on the Registrant model and are excluded
+        from answers output when present under literal keys like 'email'. Dynamic
+        fields are stored under keys like f_<uuid>.
+        """
+
+        import uuid
+
+        from wagtail.models import Site
+        from events.models import EventPage, RegistrationType, Registrant
+        from events.emailing import _render_registrant_answers
+
+        root = Site.objects.get(is_default_site=True).root_page
+        event = EventPage(title="Answers UUID Event")
+        root.add_child(instance=event)
+        event.save_revision().publish()
+
+        reg_type = RegistrationType(event=event, name="General", slug="general", sort_order=0, is_public=True)
+        reg_type.save()
+
+        fake_field_key = uuid.uuid4()
+        registrant = Registrant.objects.create(
+            event=event,
+            registration_type=reg_type,
+            email="built-in@example.com",
+            first_name="A",
+            last_name="B",
+            answers={
+                "email": "should-not-appear@example.com",
+                f"f_{fake_field_key}": "dynamic@example.com",
+                "f_company": "CIGI",
+            },
+        )
+
+        _html, text = _render_registrant_answers(registrant)
+
+        # Literal 'email' is treated as identity field and excluded.
+        self.assertNotIn("should-not-appear@example.com", text)
+        # Unresolvable dynamic UUID-style key is rendered under a neutral fallback label.
+        self.assertIn("dynamic@example.com", text)
+        self.assertNotIn(str(fake_field_key), text)
+        self.assertIn("Additional question", text)
+        # Other non-uuid keys still render.
+        self.assertIn("CIGI", text)
 
 # class EventPageViewSetTests(WagtailPageTestCase):
 #     fixtures = ['events_search_table.json']
