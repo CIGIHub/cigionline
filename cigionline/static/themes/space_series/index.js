@@ -1,9 +1,8 @@
 import './css/space_series.scss';
 import Swiper from 'swiper';
-import { Navigation } from 'swiper/modules'; // eslint-disable-line import/no-unresolved
+import { Navigation } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
 
-Swiper.use([Navigation]);
 let pageType;
 if (document.querySelector('.space-series-article')) {
   pageType = 'article';
@@ -12,12 +11,13 @@ if (document.querySelector('.space-series-article')) {
 } else if (document.querySelector('.space-series-multimedia')) {
   pageType = 'multimedia';
 }
-const breakpoint = pageType === 'article series'
-  ? window.matchMedia('(max-width:992px)')
-  : window.matchMedia('(max-width:767px)');
+const breakpoint =
+  pageType === 'article series'
+    ? window.matchMedia('(max-width:992px)')
+    : window.matchMedia('(max-width:767px)');
 const swipers = {};
 
-const enableSwiper = function(articleType) {
+const enableSwiper = function (articleType) {
   const slidesPerViewMd = 4;
   const slidesPerViewLg = articleType === 'article series' ? 1 : 5;
   const slidesPerViewXl = articleType === 'article series' ? 1 : 6;
@@ -31,6 +31,7 @@ const enableSwiper = function(articleType) {
   }
   swiperIds.forEach((id) => {
     swipers[id] = new Swiper(id, {
+      modules: [Navigation],
       spaceBetween: 0,
       speed: 800,
       autoHeight: false,
@@ -67,7 +68,7 @@ const enableSwiper = function(articleType) {
   });
 };
 
-const breakpointChecker = function() {
+const breakpointChecker = function () {
   if (breakpoint.matches === true) {
     for (const swiper in swipers) {
       if (swipers[swiper] !== undefined) swipers[swiper].destroy(true, true);
@@ -85,8 +86,8 @@ breakpointChecker();
 
 if (pageType === 'article' || pageType === 'multimedia') {
   const heroInTheSeries = document.getElementById('hero-in-the-series');
-  const hero = document.querySelector('.space-series-article-hero')
-    || document.querySelector('.mm-hero');
+  const hero =
+    document.querySelector('.space-series-article-hero') || document.querySelector('.mm-hero');
   const heroHeight = hero.offsetHeight;
 
   const body = document.querySelector('body');
@@ -96,7 +97,7 @@ if (pageType === 'article' || pageType === 'multimedia') {
   const $expandButtons = $('.in-the-series-expand');
   const dropdown = document.getElementById('dropdown-in-the-series');
 
-  $expandButtons.on('click', function() {
+  $expandButtons.on('click', function () {
     $expandButtons.toggleClass('expanded');
     dropdown.classList.toggle('open');
     if (dropdown.classList.contains('open')) {
