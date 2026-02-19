@@ -181,6 +181,7 @@ class EventPage(
         COMMUNITY_EVENT = ('community_event', 'Community Event')
         CONFERENCE = ('conference', 'Conference')
         GLOBAL_POLICY_FORUM = ('global_policy_forum', 'Global Policy Forum')
+        INTERNAL_EVENT = ('internal_event', 'Internal Event')
         NOON_LECTURE_SERIES = ('noon_lecture_series', 'Noon Lecture Series')
         PANEL_DISCUSSION = ('panel_discussion', 'Panel Discussion')
         PUBLICATION_LAUNCH = ('publication_launch', 'Publication Launch')
