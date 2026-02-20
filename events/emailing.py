@@ -15,6 +15,22 @@ if TYPE_CHECKING:
     from .models import Registrant
 
 
+def _from_email() -> tuple[str, str]:
+    """Return a (address, display_name) tuple for the events from address.
+
+    Using a display name ("CIGI Events <events@cigionline.org>") improves
+    deliverability: spam filters treat a recognisable sender name as a positive
+    signal, and email clients show it in the inbox instead of the raw address.
+
+    Both values are configurable via environment variables:
+      SENDGRID_FROM_EMAIL_EVENTS  — the sending address (required)
+      SENDGRID_FROM_NAME_EVENTS   — display name (optional, defaults to "CIGI Events")
+    """
+    address = settings.SENDGRID_FROM_EMAIL_EVENTS
+    name = getattr(settings, "SENDGRID_FROM_NAME_EVENTS", "CIGI Events")
+    return (address, name)
+
+
 def _absolute_event_base(event) -> str:
     """Return an absolute base URL for the event, suitable for email links.
 
@@ -391,7 +407,7 @@ def send_event_campaign_email(campaign, registrant) -> None:
     html, text = render_streamfield_email_html(template_obj=template_obj, ctx=ctx)
 
     message = Mail(
-        from_email=settings.SENDGRID_FROM_EMAIL_EVENTS,
+        from_email=_from_email(),
         to_emails=registrant.email,
         subject=subject,
         plain_text_content=text,
@@ -479,7 +495,7 @@ def send_confirmation_email(registrant, confirmed: bool) -> None:
         html = "<br>".join(lines)
 
     message = Mail(
-        from_email=settings.SENDGRID_FROM_EMAIL_EVENTS,
+        from_email=_from_email(),
         to_emails=registrant.email,
         subject=subject,
         plain_text_content=text,
@@ -562,7 +578,7 @@ def send_duplicate_registration_manage_email(registrant) -> None:
     html_body, text = render_streamfield_email_html(template_obj=template_obj, ctx=ctx)
 
     message = Mail(
-        from_email=settings.SENDGRID_FROM_EMAIL_EVENTS,
+        from_email=_from_email(),
         to_emails=registrant.email,
         subject=subject,
         plain_text_content=text,
@@ -644,7 +660,7 @@ def send_registration_pending_confirm_email(registrant) -> None:
     html_body, text = render_streamfield_email_html(template_obj=template_obj, ctx=ctx)
 
     message = Mail(
-        from_email=settings.SENDGRID_FROM_EMAIL_EVENTS,
+        from_email=_from_email(),
         to_emails=registrant.email,
         subject=subject,
         plain_text_content=text,
@@ -739,7 +755,7 @@ def send_group_registration_pending_confirm_email(*, group) -> None:
     html_body, text = render_streamfield_email_html(template_obj=template_obj, ctx=ctx)
 
     message = Mail(
-        from_email=settings.SENDGRID_FROM_EMAIL_EVENTS,
+        from_email=_from_email(),
         to_emails=group.primary_email,
         subject=subject,
         plain_text_content=text,
@@ -804,7 +820,7 @@ def send_registration_cancelled_email(registrant) -> None:
     html_body, text = render_streamfield_email_html(template_obj=template_obj, ctx=ctx)
 
     message = Mail(
-        from_email=settings.SENDGRID_FROM_EMAIL_EVENTS,
+        from_email=_from_email(),
         to_emails=registrant.email,
         subject=subject,
         plain_text_content=text,
@@ -920,7 +936,7 @@ def send_group_confirmation_email(*, group, registrants: list, confirmed_flags: 
         html_body, _text2 = render_streamfield_email_html(template_obj=tmp, ctx=ctx)
 
     message = Mail(
-        from_email=settings.SENDGRID_FROM_EMAIL_EVENTS,
+        from_email=_from_email(),
         to_emails=group.primary_email,
         subject=subject,
         plain_text_content=text,
@@ -987,7 +1003,7 @@ def send_group_duplicate_manage_email(group) -> None:
     html_body, text = render_streamfield_email_html(template_obj=template_obj, ctx=ctx)
 
     message = Mail(
-        from_email=settings.SENDGRID_FROM_EMAIL_EVENTS,
+        from_email=_from_email(),
         to_emails=group.primary_email,
         subject=subject,
         plain_text_content=text,
