@@ -876,6 +876,7 @@ class EventPage(
 
                     return redirect(f"{base}register/result/?s=pending")
 
+                else:
                     with transaction.atomic():
                         # Reserve invite usage *inside the same transaction* so
                         # nothing persists if the invite is maxed out.
