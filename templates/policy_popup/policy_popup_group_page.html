@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% load webpack_loader wagtailcore_tags wagtailimages_tags %}
+
+{% block extra_css %}
+  {% render_bundle 'policyPopupGroupPage' 'css' %}
+{% endblock %}
+
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_banner %}
+    {% image self.image_banner fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% endif %}
+{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <div class="policy-popup-leaf-graphic">
+      {% include 'includes/policy-popup-leaf.svg' %}
+    </div>
+    <div class="container">
+      <div class="row d-block">
+        <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-1">
+          <div class="cigi-logo">
+            <a href="/">
+              {% include 'includes/cigi_logo_small_scalable.svg' %}
+            </a>
+          </div>
+          <h1>{{ self.title }}</h1>
+          {% if self.subtitle %}
+            <div class="subtitle">
+              {{ self.subtitle|richtext }}
+            </div>
+          {% endif %}
+          {% include 'includes/social_links.html' with no_circle=True %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="body body-content">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-1 body-blocks">
+          {% for block in self.body %}
+            {% if block.block_type == "files_block" %}
+              <div class="files-block">
+                <ul class="files-container">
+                  {% for file in block.value.files %}
+                    <li>
+                      <a href="{{ file.value.file.url }}" target="_blank">
+                        <i class="fa-light fa-file-pdf"></i>
+                        {% if file.value.title %}
+                          {{ file.value.title }}
+                        {% else %}
+                          {{ file.value.file.title }}
+                        {% endif %}
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% else %}
+              {% include_block block %}
+            {% endif %}
+          {% endfor %}
+        </div>
+        <div class="d-none d-lg-flex col-lg-3">
+          <nav class="section-nav">
+            <a class="section-nav-btn-docs" href="#">Documents and research</a>
+            <ul class="section-nav-list"></ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block extra_js %}
+  {% render_bundle 'policyPopupGroupPage' 'js' %}
+{% endblock %}
