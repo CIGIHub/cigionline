@@ -1,0 +1,199 @@
+{% extends "wagtailadmin/base.html" %}
+{% load i18n %}
+
+{% block titletag %}Edit answers – {{ registrant.email }}{% endblock %}
+
+{% block extra_css %}
+<style>
+  .ea-header-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.5rem;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  .ea-section {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 1.5rem;
+  }
+  .ea-section h2 {
+    margin: 0 0 1.25rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 0.75rem;
+  }
+  .ea-identity-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .ea-field {
+    margin-bottom: 1.25rem;
+  }
+  .ea-field label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.875rem;
+    margin-bottom: 0.35rem;
+    color: #333;
+  }
+  .ea-field input[type="text"],
+  .ea-field input[type="email"],
+  .ea-field input[type="number"],
+  .ea-field input[type="url"],
+  .ea-field input[type="date"],
+  .ea-field input[type="datetime-local"],
+  .ea-field textarea,
+  .ea-field select {
+    width: 100%;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    box-sizing: border-box;
+  }
+  .ea-field input[type="checkbox"] {
+    margin-right: 0.4rem;
+  }
+  .ea-field .help {
+    font-size: 0.8rem;
+    color: #777;
+    margin-top: 0.2rem;
+  }
+  .ea-field .errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 0.25rem 0 0;
+    color: #e00;
+    font-size: 0.85rem;
+  }
+  .ea-field-email-display {
+    padding: 0.4rem 0.6rem;
+    background: #f7f7f7;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    color: #555;
+  }
+  .ea-file-note {
+    font-size: 0.8rem;
+    color: #777;
+    margin-top: 0.25rem;
+  }
+  .ea-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin-top: 0.5rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<header class="nice-padding">
+  <div class="breadcrumb-nav">
+    <ul>
+      <li><a href="{% url 'registrants:index' %}">Registrants</a></li>
+      <li><a href="{{ edit_url }}">{{ registrant.email }}</a></li>
+      <li>Edit answers</li>
+    </ul>
+  </div>
+  <h1 class="w-header__title">Edit answers</h1>
+  <div class="ea-header-meta">
+    <span><strong>Registrant:</strong> {{ registrant.first_name }} {{ registrant.last_name }} ({{ registrant.email }})</span>
+    <span><strong>Event:</strong> {{ event.title }}</span>
+    <span><strong>Type:</strong> {{ reg_type.name }}</span>
+    <span><strong>Status:</strong> {{ registrant.get_status_display }}</span>
+  </div>
+</header>
+
+<div class="nice-padding">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="w-message-banner w-message-banner--{{ message.tags|default:'info' }}" style="margin-bottom:1rem;">
+        <p>{{ message }}</p>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {# Non-field errors #}
+    {% if form.non_field_errors %}
+      <div class="w-message-banner w-message-banner--error" style="margin-bottom:1rem;">
+        <ul style="margin:0; padding-left:1.2rem;">
+          {% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    {# --- Identity ---------------------------------------------------- #}
+    <div class="ea-section">
+      <h2>Identity</h2>
+
+      <div class="ea-identity-grid">
+        <div class="ea-field">
+          {{ form.first_name.label_tag }}
+          {{ form.first_name }}
+          {% for e in form.first_name.errors %}<ul class="errorlist"><li>{{ e }}</li></ul>{% endfor %}
+        </div>
+        <div class="ea-field">
+          {{ form.last_name.label_tag }}
+          {{ form.last_name }}
+          {% for e in form.last_name.errors %}<ul class="errorlist"><li>{{ e }}</li></ul>{% endfor %}
+        </div>
+      </div>
+
+      {# Email is read-only here — change it on the main Registrant edit page #}
+      <div class="ea-field">
+        <label>Email</label>
+        <div class="ea-field-email-display">{{ registrant.email }}</div>
+        <p class="help">Email can be changed on the <a href="{{ edit_url }}">main registrant edit page</a>.</p>
+      </div>
+    </div>
+
+    {# --- Dynamic answers ---------------------------------------------- #}
+    {% with has_dynamic=False %}
+    <div class="ea-section">
+      <h2>Registration answers</h2>
+
+      {% for field in form %}
+        {% if field.name != 'first_name' and field.name != 'last_name' and field.name != 'email' and field.name != 'website' %}
+          <div class="ea-field">
+            {{ field.label_tag }}
+            {% if field.field.widget.input_type == 'file' %}
+              {# Show existing stored value before the upload input #}
+              {% with existing=registrant.answers|default_if_none:"" %}
+                {% if existing %}
+                  <p class="ea-file-note">
+                    Currently stored: <em>{{ existing }}</em> — upload a new file to replace it, or leave blank to keep the existing one.
+                  </p>
+                {% endif %}
+              {% endwith %}
+            {% endif %}
+            {{ field }}
+            {% if field.help_text %}
+              <p class="help">{{ field.help_text }}</p>
+            {% endif %}
+            {% for e in field.errors %}<ul class="errorlist"><li>{{ e }}</li></ul>{% endfor %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+    {% endwith %}
+
+    <div class="ea-actions">
+      <button type="submit" class="button">Save answers</button>
+      <a href="{{ edit_url }}" class="button button-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

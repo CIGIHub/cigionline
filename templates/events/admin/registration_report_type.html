@@ -58,7 +58,8 @@
   
               <td class="actions">
                 <a class="button button-small" href="{{ r.edit_url }}">Edit</a>
-  
+                <a class="button button-small button-secondary" href="{{ r.edit_answers_url }}">Edit answers</a>
+
                 <form method="post" action="{% url unregister_url_name pk=event.pk registrant_id=r.pk %}" style="display:inline">
                   {% csrf_token %}
                   <button class="button button-small button-secondary"
