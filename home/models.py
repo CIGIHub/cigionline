@@ -323,6 +323,7 @@ class HomePage(Page):
         'publications.PublicationSeriesListPage',
         'research.ProjectListPage',
         'research.ResearchLandingPage',
+        'policy_popup.PolicyPopupGroupPage',
         'research.TopicListPage',
         'subscribe.SubscribePage',
     ]

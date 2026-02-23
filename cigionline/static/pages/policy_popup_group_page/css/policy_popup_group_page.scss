@@ -1,0 +1,309 @@
+@import '../../../css/global/mixins';
+
+section {
+  &.hero {
+    @include media-breakpoint-up(md) {
+      padding-top: 5rem;
+    }
+    background-color: #ebe4d4;
+    color: $black;
+    position: relative;
+    padding-top: 3rem;
+
+    .policy-popup-leaf-graphic {
+      @include media-breakpoint-up(md) {
+        right: 10%;
+        opacity: 1;
+      }
+      @include media-breakpoint-up(xl) {
+        right: 20%;
+      }
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      z-index: 0;
+      opacity: 0.5;
+
+      svg {
+        height: 100%;
+      }
+    }
+
+    .cigi-logo {
+      @include media-breakpoint-up(md) {
+        width: 4rem;
+      }
+      width: 3rem;
+      margin-bottom: 1rem;
+      margin-left: 0.1rem;
+    }
+
+    h1 {
+      @include media-breakpoint-up(sm) {
+        font-size: 2rem;
+      }
+      @include media-breakpoint-up(md) {
+        font-size: 2.5rem;
+      }
+      @include media-breakpoint-up(lg) {
+        font-size: 3.5rem;
+      }
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      @include media-breakpoint-up(sm) {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      @include media-breakpoint-up(md) {
+        font-size: 1.75rem;
+        margin-bottom: 2rem;
+      }
+      @include media-breakpoint-up(lg) {
+        font-size: 2rem;
+        margin-bottom: 2.5rem;
+      }
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .social-share-list {
+      justify-content: flex-start;
+      font-size: 1.25rem;
+
+      li {
+        a {
+          margin-right: 0;
+
+          &:hover {
+            i {
+              color: $cigi-primary-colour;
+            }
+          }
+
+          i {
+            transition: color 0.2s ease;
+          }
+        }
+      }
+    }
+  }
+
+  &.body {
+    padding: 3rem 0;
+
+    .body-blocks {
+      // Block templates each render their own .container/.row/.col — flatten them
+      // so the content fills the column without double-nesting offsets.
+      .container {
+        max-width: none;
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      .row {
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      [class*='col'] {
+        flex: none;
+        margin-left: 0;
+        max-width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+        width: 100%;
+      }
+
+      h2 {
+        margin-top: 0;
+        font-size: 1.75rem;
+        font-weight: 300;
+      }
+
+      ul {
+        padding-left: 2em;
+      }
+
+      counter-reset: collapsible-counter;
+
+      // Override the collapsible paragraph block: hide chevron button,
+      // use an inline span injected by JS at the end of the last paragraph.
+      .collapsible-paragraph-block {
+        counter-increment: collapsible-counter;
+        margin-bottom: 1rem;
+
+        .collapsible-header {
+          gap: 0.6rem;
+
+          &::before {
+            content: counter(collapsible-counter) '.';
+            flex-shrink: 0;
+            font-size: 1.5rem;
+            font-weight: 400;
+            line-height: 1.2;
+          }
+
+          .toggle-expand {
+            font-size: 1.5rem;
+            margin-top: 0;
+          }
+        }
+
+        .toggle-button {
+          display: none;
+        }
+
+        .collapsible-inline-toggle {
+          color: $cigi-primary-colour;
+          cursor: pointer;
+          font-weight: 400;
+          margin-left: 0.25em;
+          white-space: nowrap;
+        }
+
+        .collapsible-content {
+          padding-left: 2rem;
+        }
+      }
+
+      .files-block {
+        ul {
+          list-style: none;
+          font-size: 1.25rem;
+          padding: 0;
+
+          li {
+            @include link($color: $black, $hover-color: $cigi-primary-colour);
+            padding: 1rem 0;
+
+            &:not(:last-child) {
+              border-bottom: 1px solid $cigi-light-grey;
+            }
+
+            a {
+              i {
+                color: $cigi-primary-colour;
+                margin-right: 1rem;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.section-nav {
+  flex-direction: column;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: sticky;
+  top: 25%;
+  width: 100%;
+
+  .section-nav-btn-docs {
+    border: 2px solid #387f9c;
+    border-radius: 2rem;
+    background-color: #387f9c;
+    color: $white;
+    display: block;
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 0.75rem;
+    text-align: center;
+    text-decoration: none;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+
+    &:hover,
+    &.active {
+      background-color: $white;
+      color: #387f9c;
+    }
+  }
+
+  .section-nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 0.5rem;
+
+    li {
+      padding-bottom: 1.5rem;
+      padding-left: 2rem;
+      position: relative;
+      @include link($color: $cigi-primary-colour, $hover-color: $cigi-dark-pink);
+
+      &::before {
+        background-color: transparent;
+        border: 3px solid $cigi-primary-colour;
+        border-radius: 50%;
+        content: '';
+        height: 1rem;
+        left: 0;
+        position: absolute;
+        top: 0.2rem;
+        transition: background-color 0.2s ease;
+        width: 1rem;
+      }
+
+      &:not(:last-child)::after {
+        background-color: $cigi-primary-colour;
+        bottom: -0.25rem;
+        content: '';
+        left: 7px;
+        position: absolute;
+        top: 1.15rem;
+        width: 3px;
+      }
+
+      &.active {
+        &::before {
+          background-color: $cigi-primary-colour;
+        }
+      }
+
+      a {
+        line-height: 1.15rem;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.dot-divider-block {
+  .dot-divider-dots {
+    align-items: center;
+    display: flex;
+    gap: 7px;
+    margin: 3rem 0;
+
+    .dot {
+      border-radius: 50%;
+      display: block;
+      flex-shrink: 0;
+      height: 12px;
+      width: 12px;
+
+      &.dot-1 {
+        background-color: #d13328;
+      }
+      &.dot-2 {
+        background-color: #38809c;
+      }
+      &.dot-3 {
+        background-color: #f4ce74;
+      }
+      &.dot-4 {
+        background-color: #59b170;
+      }
+      &.dot-5 {
+        background-color: #ef859e;
+      }
+    }
+  }
+}

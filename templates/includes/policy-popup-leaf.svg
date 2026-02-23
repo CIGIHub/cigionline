@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="303px" height="603px" viewBox="0 0 303 603" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="V2-Copy" transform="translate(-892, 14)">
+            <g id="Group" transform="translate(892.9194, -13.4194)">
+                <line x1="287.080642" y1="299.419355" x2="255.887093" y2="276.774194" id="Path-3" stroke="#02819F" stroke-width="29" stroke-linecap="round"></line>
+                <polygon id="Path-3" fill="#E31316" fill-rule="nonzero" points="28.9999931 485.11902 29.0806382 601.909342 0.0806451613 601.929367 0 485.139045"></polygon>
+                <line x1="170.887093" y1="484.774194" x2="14.5806417" y2="484.919355" id="Path-3" stroke="#FF7E9D" stroke-width="29" stroke-linecap="round"></line>
+                <line x1="171.580642" y1="484.919355" x2="138.887093" y2="423.274194" id="Path-3" stroke="#FACB64" stroke-width="29" stroke-linecap="round"></line>
+                <line x1="287.580642" y1="299.919355" x2="138.580642" y2="422.919355" id="Path-3" stroke="#26B46A" stroke-width="29" stroke-linecap="round"></line>
+                <line x1="281.580642" y1="190.919355" x2="255.580642" y2="276.919355" id="Path-3" stroke="#E31316" stroke-width="29" stroke-linecap="round"></line>
+                <line x1="281.580642" y1="190.774194" x2="197.580642" y2="205.919355" id="Path-3" stroke="#02819F" stroke-width="29" stroke-linecap="round"></line>
+                <line x1="171.580642" y1="158.919355" x2="197.580642" y2="205.919355" id="Path-3" stroke="#FFCC03" stroke-width="29" stroke-linecap="round"></line>
+                <line x1="171.580642" y1="158.919355" x2="104.580642" y2="213.919355" id="Path-3" stroke="#FF9966" stroke-width="29" stroke-linecap="round"></line>
+                <line x1="119.580642" y1="51.9193548" x2="103.806448" y2="214.483871" id="Path-3" stroke="#FACB64" stroke-width="29" stroke-linecap="round"></line>
+                <line x1="119.580642" y1="51.9193548" x2="56.5806417" y2="73.9193548" id="Path-3" stroke="#26B46A" stroke-width="29" stroke-linecap="round"></line>
+                <line x1="31.5806417" y1="0.919354839" x2="56.2580611" y2="73.6129032" id="Path-3" stroke="#E31316" stroke-width="29" stroke-linecap="round"></line>
+                <circle id="Oval" fill="#E31316" cx="171.580642" cy="484.919355" r="14.5"></circle>
+                <circle id="Oval-Copy-3" fill="#02819F" cx="138.580642" cy="422.919355" r="14.5"></circle>
+                <circle id="Oval-Copy-4" fill="#46E693" cx="287.580642" cy="299.919355" r="14.5"></circle>
+                <circle id="Oval-Copy-6" fill="#46E693" cx="171.580642" cy="158.919355" r="14.5"></circle>
+                <circle id="Oval-Copy-5" fill="#FFCC03" cx="281.580642" cy="190.919355" r="14.5"></circle>
+                <circle id="Oval-Copy-17" fill="#FFCC03" cx="104.580642" cy="212.919355" r="14.5"></circle>
+                <circle id="Oval-Copy-2" fill="#FFCAD7" cx="14.5806417" cy="484.919355" r="14.5"></circle>
+                <circle id="Oval-Copy-7" fill="#FFCAD7" cx="119.580642" cy="51.9193548" r="14.5"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

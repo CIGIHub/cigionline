@@ -2064,3 +2064,27 @@ class NewsletterSubscriptionBlock(blocks.StructBlock):
         icon = 'mail'
         label = 'Newsletter Subscription'
         template = 'streams/newsletter_subscription_block.html'
+
+
+class DotDividerBlock(blocks.StaticBlock):
+    """A decorative row of five coloured dots."""
+
+    class Meta:
+        icon = 'horizontalrule'
+        label = 'Dot Divider'
+        template = 'streams/dot_divider_block.html'
+
+
+class SectionHeadingBlock(blocks.StructBlock):
+    """A section heading with an optional custom nav label."""
+
+    heading = blocks.CharBlock(required=True)
+    nav_label = blocks.CharBlock(
+        required=False,
+        help_text='Optional shorter label shown in the sidebar navigation. Defaults to the heading text if left blank.',
+    )
+
+    class Meta:
+        icon = 'title'
+        label = 'Section Heading'
+        template = 'streams/section_heading_block.html'
