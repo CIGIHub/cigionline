@@ -89,10 +89,6 @@
   overflow-x: auto;
 }
 
-.registration-registrants-report-section td.actions a {
-  margin-bottom: 0.5rem;
-}
-
 .registration-registrants-report-section table.listing.full-width {
   margin-bottom: 0;
 }

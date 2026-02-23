@@ -56,17 +56,19 @@
               <td>{{ r.status }}</td>
               <td>{{ r.invited }}</td>
   
-              <td class="actions">
-                <a class="button button-small" href="{{ r.edit_url }}">Edit</a>
-                <a class="button button-small button-secondary" href="{{ r.edit_answers_url }}">Edit answers</a>
-
-                <form method="post" action="{% url unregister_url_name pk=event.pk registrant_id=r.pk %}" style="display:inline">
-                  {% csrf_token %}
-                  <button class="button button-small button-secondary"
-                          onclick="return confirm('Unregister {{ r.email }}?');">
-                    Unregister
-                  </button>
-                </form>
+              <td class="actions" style="white-space:nowrap;">
+                <div style="display:flex; flex-wrap:nowrap; gap:0.35rem; align-items:center;">
+                  <a class="button button-small" href="{{ r.edit_url }}">Edit</a>
+                  <a class="button button-small button-secondary" href="{{ r.edit_answers_url }}">Edit answers</a>
+                  <form method="post" action="{% url unregister_url_name pk=event.pk registrant_id=r.pk %}" style="margin:0;">
+                    {% csrf_token %}
+                    <button class="button button-small button-secondary"
+                            style="background:#fff0f0; border-color:#e8b4b4; color:#a00;"
+                            onclick="return confirm('Unregister {{ r.email }}?');">
+                      Unregister
+                    </button>
+                  </form>
+                </div>
               </td>
   
               {% for cell in r.answer_cells %}
