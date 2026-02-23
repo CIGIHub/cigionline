@@ -155,6 +155,116 @@ class RegistrantViewSet(ModelViewSet):
         "invite",
     ]
 
+    def edit_answers_view(self, request, pk: int):
+        """Admin view to edit a registrant's dynamic form answers with labelled fields."""
+        from .forms import build_dynamic_form
+        from .utils import _jsonable
+        from wagtail.documents.models import Document
+
+        registrant = get_object_or_404(
+            Registrant.objects.select_related("event", "registration_type", "invite"),
+            pk=pk,
+        )
+        event = registrant.event
+        reg_type = registrant.registration_type
+
+        # Guard: if the event has no form template there's nothing to edit.
+        if not getattr(event, "registration_form_template", None):
+            messages.warning(request, "This event has no registration form template — nothing to edit.")
+            return redirect(reverse("registrants:edit", args=[pk]))
+
+        form_class = build_dynamic_form(
+            event,
+            reg_type,
+            registrant.invite,
+            require_email=False,
+            include_honeypot=False,
+        )
+
+        if request.method == "POST":
+            form = form_class(request.POST, request.FILES or None)
+            if form.is_valid():
+                cleaned = form.cleaned_data.copy()
+                cleaned.pop("website", None)  # honeypot (excluded but guard anyway)
+
+                # Core identity fields back onto the model.
+                registrant.first_name = cleaned.pop("first_name", registrant.first_name)
+                registrant.last_name = cleaned.pop("last_name", registrant.last_name)
+                cleaned.pop("email", None)  # email not changed here; keep existing
+
+                # Handle file fields: if no new file was uploaded for a key, preserve
+                # the existing stored value so we don't silently wipe document refs.
+                existing = registrant.answers if isinstance(registrant.answers, dict) else {}
+                uploaded_doc_ids = list(registrant.uploaded_document_ids or [])
+
+                for key, val in list(cleaned.items()):
+                    if hasattr(val, "read"):
+                        doc = Document.objects.create(
+                            title=getattr(val, "name", "upload"),
+                            file=val,
+                        )
+                        uploaded_doc_ids.append(doc.id)
+                        cleaned[key] = {"document_id": doc.id, "name": getattr(val, "name", "upload")}
+                    elif val in (None, ""):
+                        # Keep the existing stored value rather than overwriting with blank.
+                        if key in existing:
+                            cleaned[key] = existing[key]
+
+                registrant.answers = _jsonable(cleaned)
+                registrant.uploaded_document_ids = uploaded_doc_ids
+                registrant.save(update_fields=["first_name", "last_name", "answers", "uploaded_document_ids"])
+
+                messages.success(request, f"Answers updated for {registrant.email}.")
+                return redirect(reverse("registrants:edit", args=[pk]))
+        else:
+            # Pre-populate from stored answers + core identity.
+            initial = dict(registrant.answers) if isinstance(registrant.answers, dict) else {}
+
+            # Backfill conditional "Other" textbox values (same logic as manage page).
+            try:
+                tpl = getattr(event, "registration_form_template", None)
+                if tpl:
+                    for ff in tpl.fields.all().only("field_key", "field_type", "conditional_other_value"):
+                        if getattr(ff, "field_type", "") != "conditional_dropdown_other":
+                            continue
+                        base_key = f"f_{ff.field_key}"
+                        other_key = f"{base_key}__other"
+                        trigger = (getattr(ff, "conditional_other_value", "") or "").strip() or "Other"
+                        selected = (initial.get(base_key) or "").strip()
+                        if other_key not in initial:
+                            initial[other_key] = ""
+                        if selected == trigger:
+                            prev = (initial.get(other_key) or "").strip()
+                            if not prev and isinstance(registrant.answers, dict):
+                                initial[other_key] = (registrant.answers.get(other_key) or "").strip()
+            except Exception:
+                pass
+
+            initial.update({
+                "first_name": registrant.first_name,
+                "last_name": registrant.last_name,
+                "email": registrant.email,
+            })
+            form = form_class(initial=initial)
+
+        return TemplateResponse(
+            request,
+            "events/admin/registrant_edit_answers.html",
+            {
+                "view": self,
+                "registrant": registrant,
+                "event": event,
+                "reg_type": reg_type,
+                "form": form,
+                "edit_url": reverse("registrants:edit", args=[pk]),
+            },
+        )
+
+    def get_urlpatterns(self):
+        return super().get_urlpatterns() + [
+            path("<int:pk>/edit-answers/", self.edit_answers_view, name="edit_answers"),
+        ]
+
 
 class RegistrationReportViewSet(ViewSet):
     icon = "table"
@@ -277,6 +387,7 @@ class RegistrationReportViewSet(ViewSet):
         attach_answer_cells(page_obj, columns=columns)
         for r in page_obj.object_list:
             r.edit_url = reverse("registrants:edit", args=[r.pk])
+            r.edit_answers_url = reverse("registrants:edit_answers", args=[r.pk])
 
         return TemplateResponse(
             request,
