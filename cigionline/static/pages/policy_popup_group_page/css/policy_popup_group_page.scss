@@ -285,17 +285,22 @@ section {
   max-width: 320px;
   opacity: 0;
   padding: 0.5rem 0.75rem;
-  pointer-events: auto;
+  pointer-events: none;
   position: fixed;
   transition: opacity 0.15s ease;
   z-index: 9999;
 
   &.visible {
     opacity: 1;
+    pointer-events: auto;
   }
 
   &.no-close-btn .footnote-tooltip-close {
     display: none;
+  }
+
+  p {
+    margin: 0;
   }
 
   .footnote-tooltip-close {
