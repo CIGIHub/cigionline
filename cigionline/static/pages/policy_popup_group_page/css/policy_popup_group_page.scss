@@ -284,6 +284,8 @@ section {
   line-height: 1.5;
   max-width: 320px;
   opacity: 0;
+  overflow-wrap: break-word;
+  word-break: break-all;
   padding: 0.5rem 0.75rem;
   pointer-events: none;
   position: fixed;
