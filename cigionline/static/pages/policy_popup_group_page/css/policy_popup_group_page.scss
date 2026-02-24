@@ -275,6 +275,47 @@ section {
   }
 }
 
+.footnote-tooltip {
+  background-color: $white;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  max-width: 320px;
+  opacity: 0;
+  padding: 0.5rem 0.75rem;
+  pointer-events: auto;
+  position: fixed;
+  transition: opacity 0.15s ease;
+  z-index: 9999;
+
+  &.visible {
+    opacity: 1;
+  }
+
+  &.no-close-btn .footnote-tooltip-close {
+    display: none;
+  }
+
+  .footnote-tooltip-close {
+    background: none;
+    border: none;
+    color: $black;
+    cursor: pointer;
+    float: right;
+    font-size: 1.1rem;
+    line-height: 1;
+    margin: -0.1rem -0.25rem 0 0.5rem;
+    opacity: 0.5;
+    padding: 0;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
 .dot-divider-block {
   .dot-divider-dots {
     align-items: center;

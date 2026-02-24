@@ -110,4 +110,122 @@ document.addEventListener('DOMContentLoaded', () => {
 
     headerP.appendChild(span);
   });
+
+  // Footnote link tooltips — hover on pointer devices, tap-to-toggle on touch.
+  // Finds all anchor links in .body-blocks that point to an element inside
+  // .footnotes.
+  const footnotesEl = document.querySelector('.footnotes');
+  if (footnotesEl) {
+    const tooltip = document.createElement('div');
+    tooltip.className = 'footnote-tooltip';
+    tooltip.setAttribute('role', 'tooltip');
+    document.body.appendChild(tooltip);
+
+    const positionTooltip = (anchorEl) => {
+      const gap = 6;
+      const rect = anchorEl.getBoundingClientRect();
+      const tooltipWidth = tooltip.offsetWidth;
+      const viewportWidth = window.innerWidth;
+      let left = rect.left;
+      if (left + tooltipWidth + gap > viewportWidth) {
+        left = viewportWidth - tooltipWidth - gap;
+      }
+      tooltip.style.left = `${left}px`;
+      tooltip.style.top = `${rect.bottom + window.scrollY + gap}px`;
+    };
+
+    const showTooltip = (anchorEl, displayEl) => {
+      tooltip.innerHTML = '';
+      const closeBtn = document.createElement('button');
+      closeBtn.className = 'footnote-tooltip-close';
+      closeBtn.setAttribute('aria-label', 'Close');
+      closeBtn.textContent = '\u00d7';
+      closeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        hideTooltip();
+      });
+      tooltip.appendChild(closeBtn);
+      tooltip.appendChild(displayEl.cloneNode(true));
+      tooltip.classList.add('visible');
+      positionTooltip(anchorEl);
+    };
+
+    const hideTooltip = () => tooltip.classList.remove('visible');
+
+    const isTouch = window.matchMedia('(hover: none)').matches;
+
+    if (!isTouch) {
+      // --- Pointer/hover devices ---
+      let hideTimer = null;
+      const scheduleHide = () => {
+        hideTimer = setTimeout(hideTooltip, 150);
+      };
+      const cancelHide = () => {
+        if (hideTimer) {
+          clearTimeout(hideTimer);
+          hideTimer = null;
+        }
+      };
+      tooltip.addEventListener('mouseenter', cancelHide);
+      tooltip.addEventListener('mouseleave', scheduleHide);
+      // Hide close button on hover devices
+      tooltip.classList.add('no-close-btn');
+
+      const footnoteLinks = Array.from(bodyContent.querySelectorAll('a[href^="#"]'));
+      footnoteLinks.forEach((link) => {
+        const targetId = link.getAttribute('href').slice(1);
+        const target = footnotesEl.querySelector(`[name="${targetId}"]`);
+        if (!target) return;
+        let displayEl = target;
+        while (displayEl.parentElement && displayEl.parentElement !== footnotesEl) {
+          displayEl = displayEl.parentElement;
+        }
+        link.addEventListener('mouseenter', () => {
+          cancelHide();
+          showTooltip(link, displayEl);
+        });
+        link.addEventListener('mouseleave', scheduleHide);
+      });
+    } else {
+      // --- Touch devices ---
+      // Use position: absolute instead of fixed so positionTooltip can use scrollY offset.
+      tooltip.style.position = 'absolute';
+
+      let activeLink = null;
+
+      // Tap outside to dismiss
+      document.addEventListener('touchstart', (e) => {
+        if (
+          tooltip.classList.contains('visible') &&
+          !tooltip.contains(e.target) &&
+          e.target !== activeLink
+        ) {
+          hideTooltip();
+          activeLink = null;
+        }
+      });
+
+      const footnoteLinks = Array.from(bodyContent.querySelectorAll('a[href^="#"]'));
+      footnoteLinks.forEach((link) => {
+        const targetId = link.getAttribute('href').slice(1);
+        const target = footnotesEl.querySelector(`[name="${targetId}"]`);
+        if (!target) return;
+        let displayEl = target;
+        while (displayEl.parentElement && displayEl.parentElement !== footnotesEl) {
+          displayEl = displayEl.parentElement;
+        }
+        link.addEventListener('click', (e) => {
+          // If already open for this link, close it
+          if (activeLink === link && tooltip.classList.contains('visible')) {
+            hideTooltip();
+            activeLink = null;
+            return;
+          }
+          e.preventDefault();
+          activeLink = link;
+          showTooltip(link, displayEl);
+        });
+      });
+    }
+  }
 });
