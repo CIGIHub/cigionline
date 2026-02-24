@@ -131,7 +131,9 @@ document.addEventListener('DOMContentLoaded', () => {
         left = viewportWidth - tooltipWidth - gap;
       }
       tooltip.style.left = `${left}px`;
-      tooltip.style.top = `${rect.bottom + window.scrollY + gap}px`;
+      // fixed uses viewport coords; absolute needs scrollY offset
+      const scrollOffset = tooltip.style.position === 'absolute' ? window.scrollY : 0;
+      tooltip.style.top = `${rect.bottom + scrollOffset + gap}px`;
     };
 
     const showTooltip = (anchorEl, displayEl) => {
