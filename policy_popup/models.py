@@ -1,6 +1,6 @@
 from core.models import BasicPageAbstract
 from streams.blocks import DotDividerBlock, SectionHeadingBlock
-from wagtail.fields import StreamField
+from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.documents.blocks import DocumentChooserBlock
@@ -24,6 +24,22 @@ class PolicyPopupGroupPage(BasicPageAbstract, Page):
         blank=True,
         use_json_field=True,
     )
+    footnotes = RichTextField(
+        blank=True,
+        features=[
+            'bold',
+            'endofarticle',
+            'h3',
+            'h4',
+            'italic',
+            'link',
+            'ol',
+            'ul',
+            'subscript',
+            'superscript',
+            'anchor',
+        ],
+    )
 
     max_count = 1
     parent_page_types = ['home.HomePage']
@@ -34,6 +50,13 @@ class PolicyPopupGroupPage(BasicPageAbstract, Page):
         BasicPageAbstract.title_panel,
         BasicPageAbstract.body_panel,
         BasicPageAbstract.images_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('footnotes'),
+            ],
+            heading='Footnotes',
+            classname='collapsible collapsed',
+        ),
         MultiFieldPanel(
             [
                 FieldPanel('related_files'),

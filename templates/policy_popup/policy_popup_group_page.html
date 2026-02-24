@@ -80,6 +80,19 @@
       </div>
     </div>
   </section>
+  {% if self.footnotes %}
+    <section class="article-footnotes">
+      <div class="container">
+        <div class="row">
+          <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-1">
+            <div class="footnotes">
+              {{ self.footnotes|richtext }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
 {% endblock %}
 
 {% block extra_js %}
