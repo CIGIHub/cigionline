@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!bodyContent || !navList || !docsBtn) return;
 
-  const h2s = Array.from(bodyContent.querySelectorAll('h2'));
+  const h2s = Array.from(bodyContent.querySelectorAll('.section-heading-block h2'));
   if (!h2s.length) return;
 
   const slugify = (text) =>
