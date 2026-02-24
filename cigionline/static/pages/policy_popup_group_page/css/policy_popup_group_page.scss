@@ -212,8 +212,12 @@ section {
           }
         }
       }
+    }
 
-
+    .footnotes {
+      a {
+        word-break: break-word;
+      }
     }
   }
 }
