@@ -9,6 +9,8 @@ section {
     color: $black;
     position: relative;
     padding-top: 3rem;
+    padding-bottom: 4rem;
+    margin-bottom: 4rem;
 
     .policy-popup-leaf-graphic {
       @include media-breakpoint-up(md) {
@@ -73,6 +75,7 @@ section {
     .social-share-list {
       justify-content: flex-start;
       font-size: 1.25rem;
+      margin-bottom: 0;
 
       li {
         a {
@@ -93,7 +96,7 @@ section {
   }
 
   &.body {
-    padding: 3rem 0;
+    padding: 0;
 
     .body-blocks {
       // Block templates each render their own .container/.row/.col — flatten them
@@ -126,6 +129,16 @@ section {
 
       ul {
         padding-left: 2em;
+
+        li {
+          margin-bottom: 0.5rem;
+        }
+      }
+
+      p {
+        &:last-child {
+          margin-bottom: 0;
+        }
       }
 
       counter-reset: collapsible-counter;
@@ -166,7 +179,13 @@ section {
         }
 
         .collapsible-content {
-          padding-left: 2rem;
+          padding-left: 1.5rem;
+
+          p {
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
         }
       }
 
@@ -193,6 +212,8 @@ section {
           }
         }
       }
+
+
     }
   }
 }
@@ -285,7 +306,7 @@ section {
   max-width: 320px;
   opacity: 0;
   overflow-wrap: break-word;
-  word-break: break-all;
+  word-break: break-word;
   padding: 0.5rem 0.75rem;
   pointer-events: none;
   position: fixed;
