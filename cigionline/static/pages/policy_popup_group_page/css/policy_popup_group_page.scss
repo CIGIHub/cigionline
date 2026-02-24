@@ -187,6 +187,25 @@ section {
             }
           }
         }
+
+        .bordered-content-block {
+          h4 {
+            text-align: center;
+            text-transform: none;
+            margin: 0 0 1rem;
+            font-size: 1rem;
+            font-weight: 400;
+          }
+
+          ul {
+            padding-left: 0.75em;
+          }
+
+          .col {
+            border: 1px solid $black;
+            padding: 1rem 1.5rem;
+          }
+        }
       }
 
       .files-block {

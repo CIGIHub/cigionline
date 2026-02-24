@@ -2088,3 +2088,91 @@ class SectionHeadingBlock(blocks.StructBlock):
         icon = 'title'
         label = 'Section Heading'
         template = 'streams/section_heading_block.html'
+
+
+class BorderedContentBlock(blocks.StructBlock):
+    """A richtext section wrapped in a 1px black border box."""
+
+    content = blocks.RichTextBlock(
+        required=True,
+        features=[
+            'bold',
+            'h2',
+            'h3',
+            'h4',
+            'italic',
+            'underline',
+            'link',
+            'ol',
+            'ul',
+            'subscript',
+            'superscript',
+            'anchor',
+        ],
+    )
+
+    class Meta:
+        icon = 'form'
+        label = 'Bordered Content'
+        template = 'streams/bordered_content_block.html'
+
+
+class CollapsibleParagraphContentStreamBlock(blocks.StreamBlock):
+    """Content stream used inside CollapsibleParagraphBlockV2."""
+
+    richtext = blocks.RichTextBlock(
+        required=False,
+        features=[
+            'bold',
+            'dropcap',
+            'endofarticle',
+            'paragraph_heading',
+            'h2',
+            'h3',
+            'h4',
+            'hr',
+            'image',
+            'italic',
+            'underline',
+            'link',
+            'ol',
+            'subscript',
+            'superscript',
+            'ul',
+            'anchor',
+            'rtl',
+        ],
+        label='Rich Text',
+    )
+    bordered_content = BorderedContentBlock()
+
+    class Meta:
+        block_counts = {'richtext': {'min_num': 1}}
+
+
+class CollapsibleParagraphBlockV2(blocks.StructBlock):
+    """Collapsible paragraph block whose content is a stream of richtext and
+    bordered sections. Use this for new content; existing pages continue to
+    use CollapsibleParagraphBlock unchanged."""
+
+    collapsed = blocks.BooleanBlock(
+        required=False,
+        default=True,
+        help_text='If checked, the paragraph will be collapsed by default.',
+    )
+    title = blocks.RichTextBlock(
+        required=False,
+        features=['bold', 'italic', 'link'],
+        help_text='Optional title for the collapsible paragraph.',
+    )
+    title_type = blocks.ChoiceBlock(
+        choices=[('h2', 'H2'), ('h3', 'H3'), ('h4', 'H4')],
+        default='h2',
+        help_text='Select the heading type for the title.',
+    )
+    content = CollapsibleParagraphContentStreamBlock()
+
+    class Meta:
+        icon = 'edit'
+        label = 'Collapsible Paragraph V2'
+        template = 'streams/collapsible_paragraph_block_v2.html'

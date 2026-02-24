@@ -1,5 +1,5 @@
 from core.models import BasicPageAbstract
-from streams.blocks import DotDividerBlock, SectionHeadingBlock
+from streams.blocks import BorderedContentBlock, CollapsibleParagraphBlockV2, DotDividerBlock, SectionHeadingBlock
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
@@ -11,6 +11,8 @@ class PolicyPopupGroupPage(BasicPageAbstract, Page):
 
     body = StreamField(
         BasicPageAbstract.body_default_blocks + [
+            ('bordered_content', BorderedContentBlock()),
+            ('collapsible_paragraph_v2', CollapsibleParagraphBlockV2()),
             ('dot_divider', DotDividerBlock()),
             ('section_heading', SectionHeadingBlock()),
         ],
