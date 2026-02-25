@@ -53,7 +53,7 @@ class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
                 },
                 "content_types": {
                     "terms": {
-                        "field": "content_type",
+                        "field": "_django_content_type",
                         "size": 50,
                     }
                 },
@@ -271,7 +271,7 @@ class CIGIOnlineSearchQueryCompiler:
             },
         }, {
             "terms": {
-                "content_type": [self.content_type],
+                "_django_content_type": [self.content_type],
             },
         }, {
             "bool": {
@@ -677,7 +677,7 @@ class CIGIOnlineElevatedSearchQueryCompiler:
             },
         }, {
             "terms": {
-                "content_type": [self.content_type],
+                "_django_content_type": [self.content_type],
             },
         },
             {

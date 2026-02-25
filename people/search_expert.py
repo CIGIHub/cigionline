@@ -23,7 +23,7 @@ class CIGIOnlineExpertLatestActivitySearchQueryCompiler:
                             "bool": {
                                 "must": [{
                                     "term": {
-                                        "content_type": "articles.ArticlePage",
+                                        "_django_content_type": "articles.ArticlePage",
                                     },
                                 }, {
                                     "terms": {
@@ -35,7 +35,7 @@ class CIGIOnlineExpertLatestActivitySearchQueryCompiler:
                             "bool": {
                                 "must": [{
                                     "terms": {
-                                        "content_type": ["publications.PublicationPage", "multimedia.MultimediaPage"],
+                                        "_django_content_type": ["publications.PublicationPage", "multimedia.MultimediaPage"],
                                     }
                                 }]
                             }
@@ -85,7 +85,7 @@ class CIGIOnlineExpertLatestInTheNewsSearchQueryCompiler:
                     },
                 }, {
                     "terms": {
-                        "content_type": ["articles.ArticlePage"],
+                        "_django_content_type": ["articles.ArticlePage"],
                     },
                 }, {
                     "term": {

@@ -36,7 +36,7 @@ class CIGIOnlineExpertsSearchQueryCompiler:
             },
         }, {
             "terms": {
-                "content_type": ["people.PersonPage"],
+                "_django_content_type": ["people.PersonPage"],
             },
         }, {
             "term": {
