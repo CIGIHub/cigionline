@@ -54,7 +54,7 @@
         {% if registrant.status == "cancelled" %}
           <div class="alert alert-warning" role="alert">This registration is already cancelled.</div>
         {% else %}
-          <form method="post" action="{{ event.url }}register/manage/update/?rid={{ registrant.pk }}&t={{ token }}{% if request.GET.gid %}&gid={{ request.GET.gid }}{% endif %}" enctype="multipart/form-data">
+          <form method="post" action="{{ event.url }}register/manage/update/?rid={{ registrant.pk }}&t={{ token }}{% if request.GET.gid %}&gid={{ request.GET.gid }}{% endif %}" enctype="multipart/form-data" class="cigi-form">
             {% csrf_token %}
 
             {# Non-field errors (e.g., conditional validation) #}
