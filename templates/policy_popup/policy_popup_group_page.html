@@ -5,6 +5,9 @@
 {% block extra_css %}
   {% render_bundle 'policyPopupGroupPage' 'css' %}
 {% endblock %}
+{% block extra_js %}
+  {% render_bundle 'policyPopupGroupPage' 'js' %}
+{% endblock %}
 
 {% block og_image %}
   {% if self.image_social %}
@@ -27,11 +30,6 @@
     <div class="container">
       <div class="row d-block">
         <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-1">
-          <div class="cigi-logo">
-            <a href="/">
-              {% include 'includes/cigi_logo_small_scalable.svg' %}
-            </a>
-          </div>
           <h1>{{ self.title }}</h1>
           {% if self.subtitle %}
             <div class="subtitle">
@@ -86,9 +84,6 @@
       </div>
     </div>
   </section>
-
 {% endblock %}
 
-{% block extra_js %}
-  {% render_bundle 'policyPopupGroupPage' 'js' %}
-{% endblock %}
+{% block footer %}{% endblock%}

@@ -3,12 +3,12 @@
 section {
   &.hero {
     @include media-breakpoint-up(md) {
-      padding-top: 5rem;
+      padding-top: 7rem;
     }
     background-color: #ebe4d4;
     color: $black;
     position: relative;
-    padding-top: 3rem;
+    padding-top: 4rem;
     padding-bottom: 4rem;
     margin-bottom: 4rem;
 
@@ -97,6 +97,7 @@ section {
 
   &.body {
     padding: 0;
+    margin-bottom: 10rem;
 
     .body-blocks {
       // Block templates each render their own .container/.row/.col — flatten them
