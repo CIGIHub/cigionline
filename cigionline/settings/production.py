@@ -149,12 +149,12 @@ if 'PLATFORM_RELATIONSHIPS' in os.environ:
 STORAGES = {
     "default": {
         "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        "OPTIONS": {
+            "file_overwrite": False,  # Don't overwrite uploaded media files
+        },
     },
     "staticfiles": {
         "BACKEND": "storages.backends.s3boto3.S3ManifestStaticStorage",
-        "OPTIONS": {
-            "file_overwrite": True,  # Always overwrite static files during collectstatic
-        },
     },
 }
 if 'AWS_ACCESS_KEY_ID' in os.environ:
@@ -167,8 +167,6 @@ if 'AWS_S3_CUSTOM_DOMAIN' in os.environ:
     AWS_S3_CUSTOM_DOMAIN = os.environ['AWS_S3_CUSTOM_DOMAIN']
 AWS_DEFAULT_ACL = None
 AWS_QUERYSTRING_AUTH = False
-AWS_PRELOAD_METADATA = True
-AWS_S3_FILE_OVERWRITE = False
 AWS_LOCATION = 'static'
 if 'STATIC_URL' in os.environ:
     STATIC_URL = os.environ['STATIC_URL']
