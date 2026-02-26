@@ -4,6 +4,7 @@ section {
   &.hero {
     @include media-breakpoint-up(md) {
       padding-top: 7rem;
+      padding-bottom: 7rem;
     }
     background-color: #ebe4d4;
     color: $black;
@@ -58,18 +59,19 @@ section {
     .subtitle {
       @include media-breakpoint-up(sm) {
         font-size: 1.5rem;
-        margin-bottom: 1.5rem;
       }
       @include media-breakpoint-up(md) {
         font-size: 1.75rem;
-        margin-bottom: 2rem;
       }
       @include media-breakpoint-up(lg) {
         font-size: 2rem;
-        margin-bottom: 2.5rem;
       }
       font-size: 1.25rem;
-      margin-bottom: 2rem;
+      margin-bottom: 0;
+
+      p {
+        margin-bottom: 0;
+      }
     }
 
     .social-share-list {
