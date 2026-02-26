@@ -154,9 +154,7 @@ STORAGES = {
         },
     },
     "staticfiles": {
-        # Custom subclass that treats 403 from exists() as False, restoring
-        # pre-django-storages-1.12.3 behaviour for IAM policies without HeadObject.
-        "BACKEND": "cigionline.storage.StaticFilesS3Storage",
+        "BACKEND": "storages.backends.s3boto3.S3ManifestStaticStorage",
     },
 }
 if 'AWS_ACCESS_KEY_ID' in os.environ:
