@@ -152,6 +152,9 @@ STORAGES = {
     },
     "staticfiles": {
         "BACKEND": "storages.backends.s3boto3.S3ManifestStaticStorage",
+        "OPTIONS": {
+            "file_overwrite": True,  # Always overwrite static files during collectstatic
+        },
     },
 }
 if 'AWS_ACCESS_KEY_ID' in os.environ:
