@@ -7,8 +7,11 @@ from .models import (
     PublicationSeriesListPage
 )
 from wagtail.admin.viewsets.pages import PageListingViewSet
+from wagtail.admin.viewsets.model import ModelViewSet
 from wagtail.admin.viewsets.base import ViewSetGroup
+from wagtail.admin.views.generic.models import IndexView as ModelIndexView
 from wagtail.admin.ui.tables import Column
+from django.urls import reverse
 from utils.admin_utils import title_with_actions, live_icon
 
 
@@ -25,7 +28,17 @@ class PublicationListPageListingViewSet(PageListingViewSet):
     ordering = ['title']
 
 
-class PublicationsPageListingViewSet(PageListingViewSet):
+class PublicationsPageIndexView(ModelIndexView):
+    def get_add_url(self):
+        parent = PublicationListPage.objects.first()
+        if parent:
+            return reverse('wagtailadmin_pages:add', args=['publications', 'publicationpage', parent.pk])
+        return super().get_add_url()
+
+
+class PublicationsPageListingViewSet(ModelViewSet):
+    index_view_class = PublicationsPageIndexView
+    exclude_form_fields = []
     model = PublicationPage
     menu_label = 'Publications'
     menu_icon = 'doc-full'

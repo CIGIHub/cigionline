@@ -1,6 +1,7 @@
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
 from .models import (
     ArticleLandingPage,
+    ArticleListPage,
     ArticlePage,
     ArticleSeriesPage,
     MediaLandingPage,
@@ -9,7 +10,9 @@ from .models import (
 from .rich_text import AnchorEntityElementHandler, anchor_entity_decorator
 from utils.admin_utils import title_with_actions, live_icon
 from wagtail.admin.viewsets.pages import PageListingViewSet
+from wagtail.admin.viewsets.model import ModelViewSet
 from wagtail.admin.viewsets.base import ViewSetGroup
+from wagtail.admin.views.generic.models import IndexView as ModelIndexView
 from wagtail.admin.ui.tables import Column
 from wagtail.admin.rich_text.converters.html_to_contentstate import BlockElementHandler
 from wagtail import hooks
@@ -144,7 +147,17 @@ class OpinionSeriesPageListingViewSet(PageListingViewSet):
     ordering = ['-publishing_date']
 
 
-class ArticlePageListingViewSet(PageListingViewSet):
+class ArticlePageIndexView(ModelIndexView):
+    def get_add_url(self):
+        parent = ArticleListPage.objects.first()
+        if parent:
+            return reverse('wagtailadmin_pages:add', args=['articles', 'articlepage', parent.pk])
+        return super().get_add_url()
+
+
+class ArticlePageListingViewSet(ModelViewSet):
+    index_view_class = ArticlePageIndexView
+    exclude_form_fields = []
     model = ArticlePage
     menu_label = 'Articles'
     menu_icon = 'copy'

@@ -7,10 +7,23 @@ from .models import (
     MultimediaSeriesPage,
 )
 from wagtail.admin.viewsets.pages import PageListingViewSet
+from wagtail.admin.viewsets.model import ModelViewSet
 from wagtail.admin.viewsets.base import ViewSetGroup
+from wagtail.admin.views.generic.models import IndexView as ModelIndexView
+from django.urls import reverse
 
 
-class MultimediaPageListingViewSet(PageListingViewSet):
+class MultimediaPageIndexView(ModelIndexView):
+    def get_add_url(self):
+        parent = MultimediaListPage.objects.first()
+        if parent:
+            return reverse('wagtailadmin_pages:add', args=['multimedia', 'multimediapage', parent.pk])
+        return super().get_add_url()
+
+
+class MultimediaPageListingViewSet(ModelViewSet):
+    index_view_class = MultimediaPageIndexView
+    exclude_form_fields = []
     model = MultimediaPage
     menu_label = 'Multimedia'
     menu_icon = 'media'

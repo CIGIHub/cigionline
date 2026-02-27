@@ -29,6 +29,8 @@ import logging
 
 from wagtail import hooks
 from wagtail.admin.viewsets.model import ModelViewSet
+from wagtail.admin.viewsets.pages import PageListingViewSet
+from wagtail.admin.views.generic.models import IndexView as ModelIndexView
 
 
 logger = logging.getLogger(__name__)
@@ -43,7 +45,17 @@ from .reporting import (
 )
 
 
+class EventPageIndexView(ModelIndexView):
+    def get_add_url(self):
+        parent = EventListPage.objects.first()
+        if parent:
+            return reverse('wagtailadmin_pages:add', args=['events', 'eventpage', parent.pk])
+        return super().get_add_url()
+
+
 class EventPageListingViewSet(ModelViewSet):
+    index_view_class = EventPageIndexView
+    exclude_form_fields = []
     model = EventPage
     menu_label = 'Events'
     menu_icon = 'date'

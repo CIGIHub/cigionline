@@ -7,9 +7,12 @@ from .models import (
     CountryPage,
 )
 from utils.admin_utils import title_with_actions, live_icon
-from wagtail.admin.viewsets.pages import PageListingViewSet
+from wagtail.admin.viewsets.pages import Page, PageListingViewSet
+from wagtail.admin.viewsets.model import ModelViewSet
 from wagtail.admin.viewsets.base import ViewSetGroup
+from wagtail.admin.views.generic.models import IndexView as ModelIndexView
 from wagtail.admin.ui.tables import Column
+from django.urls import reverse
 
 
 class ResearchLandingPageListingViewSet(PageListingViewSet):
@@ -51,7 +54,17 @@ class TopicPageListingViewSet(PageListingViewSet):
     ordering = ['title']
 
 
-class ProjectPageListingViewSet(PageListingViewSet):
+class ProjectPageIndexView(ModelIndexView):
+    def get_add_url(self):
+        parent = Page.objects.filter(title='Programs').first()
+        if parent:
+            return reverse('wagtailadmin_pages:add', args=['research', 'projectpage', parent.pk])
+        return super().get_add_url()
+
+
+class ProjectPageListingViewSet(ModelViewSet):
+    index_view_class = ProjectPageIndexView
+    exclude_form_fields = []
     model = ProjectPage
     menu_label = 'Projects'
     menu_icon = 'folder'
