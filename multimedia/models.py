@@ -198,6 +198,7 @@ class MultimediaPage(
         default=MultimediaTypes.VIDEO,
     )
     multimedia_url = models.URLField(
+        max_length=500,
         blank=True,
         verbose_name='Multimedia URL',
         help_text='The URL of the multimedia source from YouTube or Simplecast.',
