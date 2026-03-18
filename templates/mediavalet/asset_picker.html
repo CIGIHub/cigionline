@@ -1,0 +1,173 @@
+{% extends "wagtailadmin/base.html" %}
+{% load i18n %}
+
+{% block titletag %}MediaValet{% endblock %}
+
+{% block content %}
+<div class="nice-padding">
+  <header class="w-header">
+    <div class="w-header__wrapper">
+      <div class="w-header__title-wrapper">
+        <h1 class="w-header__title">
+          <svg class="icon icon-image w-header__glyph" aria-hidden="true" focusable="false">
+            <use href="#icon-image"></use>
+          </svg>
+          MediaValet
+        </h1>
+        <p class="w-header__subtitle">{% trans "Browse and import assets from MediaValet into the Wagtail image library." %}</p>
+      </div>
+    </div>
+  </header>
+
+  <div id="mediavalet-notifications" style="margin-bottom:1rem;" aria-live="polite"></div>
+
+  <div id="mediavalet-progress" style="display:none;margin-bottom:1rem;" aria-live="polite">
+    <p>{% trans "Importing selected images, please wait…" %}</p>
+  </div>
+
+  <iframe
+    id="mediavalet-picker-frame"
+    src="{{ picker_url }}"
+    style="width:100%;height:78vh;border:1px solid #e0e0e0;border-radius:4px;"
+    title="{% trans "MediaValet Asset Picker" %}"
+    sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms"
+    referrerpolicy="strict-origin-when-cross-origin"
+  ></iframe>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  'use strict';
+
+  var MEDIAVALET_ORIGIN = 'https://assetpicker.mediavalet.com';
+  var importUrl = '{% url "mediavalet_import_asset" %}';
+  var pendingCount = 0;
+
+  function notificationsEl() { return document.getElementById('mediavalet-notifications'); }
+  function progressEl() { return document.getElementById('mediavalet-progress'); }
+
+  function getCsrfToken() {
+    var match = document.cookie.match(/(?:^|;\s*)csrftoken=([^;]+)/);
+    return match ? decodeURIComponent(match[1]) : '';
+  }
+
+  function showMessage(text, type) {
+    /* type: 'success' | 'error' | 'info' */
+    var div = document.createElement('div');
+    div.className = 'help-block help-' + (type === 'success' ? 'block' : 'block--' + type);
+
+    /* Wagtail uses these classes for its notices */
+    div.classList.add('w-field__help');
+    if (type === 'error') {
+      div.style.color = '#cd4444';
+    } else if (type === 'success') {
+      div.style.color = '#1a7a1a';
+    }
+    div.textContent = text;
+    notificationsEl().appendChild(div);
+  }
+
+  function clearMessages() {
+    notificationsEl().innerHTML = '';
+  }
+
+  function importAsset(fileUrl, fileName, title) {
+    console.log('Importing asset:', { fileUrl, fileName, title });
+    pendingCount++;
+    if (pendingCount === 1) {
+      progressEl().style.display = '';
+    }
+
+    return fetch(importUrl, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCsrfToken(),
+      },
+      body: JSON.stringify({
+        file_url: fileUrl,
+        file_name: fileName,
+        title: title,
+      }),
+    })
+    .then(function (resp) { return resp.json(); })
+    .then(function (data) {
+      if (data.success) {
+        showMessage('✓ Imported "' + data.title + '" (ID ' + data.image_id + ')', 'success');
+      } else {
+        showMessage('✗ Import failed: ' + (data.error || 'unknown error'), 'error');
+      }
+    })
+    .catch(function (err) {
+      showMessage('✗ Request error: ' + err, 'error');
+    })
+    .finally(function () {
+      pendingCount--;
+      if (pendingCount === 0) {
+        progressEl().style.display = 'none';
+      }
+    });
+  }
+
+  window.addEventListener('message', function (event) {
+    /* 1) Validate origin – critical security check */
+    if (event.origin !== MEDIAVALET_ORIGIN) return;
+
+    var type = event.data && event.data.type;
+    var payload = event.data && event.data.payload;
+
+    console.log('Received message from MediaValet picker:', { type, payload });
+
+    if (type !== 'insertedAssets' || !payload) return;
+
+    clearMessages();
+
+    var assets = payload.assets || [];
+    if (!assets.length) {
+      showMessage('No assets were returned by the picker.', 'info');
+      return;
+    }
+
+    var promises = assets.map(function (assetItem) {
+      var asset = assetItem.asset || {};
+      var file  = asset.file  || {};
+      var media = asset.media || {};
+
+      /* Prefer the top-level cdnLink (present for CdnLink insertion type),
+         then assetLink, then media.download (on the mediavalet CDN). */
+      var fileUrl = assetItem.cdnLink
+        || assetItem.link
+        || media.download
+        || '';
+
+      var fileName = file.fileName
+        || (fileUrl && fileUrl.split('/').pop().split('?')[0])
+        || 'mediavalet-image.jpg';
+
+      var title = asset.title
+        || file.title
+        || fileName;
+
+      if (!fileUrl) {
+        showMessage(
+          '✗ Could not find a download URL for asset: ' + title,
+          'error'
+        );
+        return Promise.resolve();
+      }
+
+      return importAsset(fileUrl, fileName, title);
+    });
+
+    Promise.all(promises).then(function () {
+      if (!pendingCount) {
+        progressEl().style.display = 'none';
+      }
+    });
+  });
+}());
+</script>
+{% endblock %}

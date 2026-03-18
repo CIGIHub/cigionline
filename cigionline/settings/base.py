@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'search',
     'streams',
     'subscribe',
+    'mediavalet',
     'wagtailschedules',
     'signals',
     'uploads',
@@ -187,6 +188,17 @@ WAGTAILEMBEDS_FINDERS = [
 ]
 
 WAGTAILIMAGES_IMAGE_MODEL = 'images.CigionlineImage'
+
+# MediaValet Asset Picker integration
+# Override MEDIAVALET_ASSET_PICKER_URL in environment-specific settings if needed.
+MEDIAVALET_ASSET_PICKER_URL = 'https://assetpicker.mediavalet.com'
+# Restrict image downloads to these hostnames (SSRF protection).
+MEDIAVALET_ALLOWED_HOSTNAMES = [
+    'mediavalet.com',
+    '.mediavalet.com',
+    'mediavaletcdn.com',
+    '.mediavaletcdn.com',
+]
 
 
 # Database
