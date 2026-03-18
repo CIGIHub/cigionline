@@ -8,7 +8,8 @@ import requests
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 from PIL import Image as PILImage
 
 from images.models import CigionlineImage
@@ -160,3 +161,43 @@ def import_asset_view(request):
         'image_id': image.pk,
         'title': image.title,
     })
+
+
+def image_data_view(request, image_id):
+    """
+    Returns the chooser-widget state JSON for an already-saved image.
+    Called by the MediaValet chooser JS after a successful import so it can
+    update the Wagtail image chooser widget without a page reload.
+    """
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return JsonResponse({'error': 'Forbidden'}, status=403)
+
+    image = get_object_or_404(CigionlineImage, pk=image_id)
+
+    try:
+        rendition = image.get_rendition('max-165x165')
+        preview = {
+            'url': rendition.url,
+            'width': rendition.width,
+            'height': rendition.height,
+        }
+    except Exception:
+        preview = None
+
+    try:
+        edit_link = reverse('wagtailimages:edit', args=[image.pk])
+    except Exception:
+        edit_link = ''
+
+    data = {
+        'id': image.pk,
+        # 'string' is what Wagtail's ChooserWidget uses as the display title;
+        # 'title' is the older key some versions of setState expect.
+        'string': image.title,
+        'title': image.title,
+        'edit_link': edit_link,
+    }
+    if preview:
+        data['preview'] = preview
+
+    return JsonResponse(data)

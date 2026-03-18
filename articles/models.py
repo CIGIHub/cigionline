@@ -9,6 +9,7 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey
+from mediavalet.panels import MediaValetImageChooserPanel
 from publications.models import PublicationPage
 from streams.blocks import SeriesItemImageBlock
 from wagtail.admin.panels import (
@@ -483,7 +484,7 @@ class ArticlePage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('image_hero'),
+                MediaValetImageChooserPanel('image_hero'),
                 FieldPanel('image_poster'),
                 FieldPanel('image_banner'),
                 FieldPanel('image_banner_small'),
