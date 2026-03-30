@@ -11,6 +11,7 @@ from wagtail import blocks
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.models import Page
+from wagtail.snippets.blocks import SnippetChooserBlock
 from wagtailmedia.blocks import AbstractMediaChooserBlock
 import pytz
 from django.core.exceptions import ValidationError
@@ -2176,3 +2177,12 @@ class CollapsibleParagraphBlockV2(blocks.StructBlock):
         icon = 'edit'
         label = 'Collapsible Paragraph V2'
         template = 'streams/collapsible_paragraph_block_v2.html'
+
+
+class PromotionBlockStreamBlock(blocks.StructBlock):
+    block = SnippetChooserBlock('promotions.PromotionBlock')
+
+    class Meta:
+        icon = 'pick'
+        label = 'Promotion Block'
+        template = 'streams/promotion_block_stream_block.html'
