@@ -52,7 +52,8 @@ from streams.blocks import (
     SovereignCanadaRationaleBlock,
     SovereignCanadaDashboardBlock,
     CollapsibleParagraphBlock,
-    NewsletterSubscriptionBlock
+    NewsletterSubscriptionBlock,
+    PromotionBlockStreamBlock,
 )
 from uploads.models import DocumentUpload
 from utils.email_utils import send_email, extract_errors_as_string
@@ -261,6 +262,7 @@ class BasicPageAbstract(models.Model):
         ('additional_pages_block', AddtionalPagesBlock()),
         ('files_block', FilesBlock()),
         ('collapsible_paragraph_block', CollapsibleParagraphBlock()),
+        ('promotion_block_stream_block', PromotionBlockStreamBlock()),
     ]
 
     body_accordion_block = ('accordion', AccordionBlock())
