@@ -181,6 +181,7 @@ simplecast_provider = {
 }
 
 WAGTAILEMBEDS_FINDERS = [
+    {'class': 'embeds.finders.oembed.IssuuEmbedFinder'},
     {'class': 'embeds.finders.oembed.YouTubeOEmbedFinder'},
     {'class': 'wagtail.embeds.finders.oembed', 'providers': [simplecast_provider], },
     {'class': 'wagtail.embeds.finders.oembed', },
