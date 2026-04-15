@@ -1,11 +1,38 @@
 import requests
-from django.shortcuts import redirect
+from django.db.models import F
+from django.shortcuts import get_object_or_404, redirect
 from django.conf import settings
-from core.models import ContentPage
+from django.views.decorators.cache import never_cache
+from core.models import ContentPage, QRCodeScan
 from datetime import date
 from django.http import JsonResponse
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
+from django.utils import timezone
+from urllib.parse import urlencode, urlparse, urlunparse, parse_qs
+from wagtail.models import Page
+
+
+@never_cache
+def qr_redirect(request, page_id):
+    page = get_object_or_404(Page, id=page_id, live=True)
+    scan, _ = QRCodeScan.objects.get_or_create(page=page)
+    QRCodeScan.objects.filter(pk=scan.pk).update(
+        scan_count=F('scan_count') + 1,
+        last_scanned=timezone.now(),
+    )
+    base_url = page.specific.full_url
+    utm_params = urlencode({
+        'utm_source': 'qr_code',
+        'utm_medium': 'qr',
+        'utm_campaign': 'qr_scan',
+    })
+    parsed = urlparse(base_url)
+    # Preserve any existing query params on the destination URL
+    existing_qs = parsed.query
+    full_qs = f'{existing_qs}&{utm_params}' if existing_qs else utm_params
+    destination = urlunparse(parsed._replace(query=full_qs))
+    return redirect(destination)
 
 
 def ar_timeline_pages(request):

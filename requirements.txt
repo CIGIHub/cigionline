@@ -53,6 +53,7 @@ openpyxl==3.0.10
 Pillow==10.4.0
 psycopg2==2.9.9
 pycodestyle==2.11.0
+qrcode==8.0
 pydub==0.25.1
 pyflakes==3.1.0
 python-dateutil==2.8.2

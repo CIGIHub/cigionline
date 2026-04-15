@@ -26,6 +26,7 @@ if settings.ADMIN_ENABLED:
         re_path(r'^admin/', include(wagtailadmin_urls)),
     ]
 urlpatterns = urlpatterns + [
+    path('qr/<int:page_id>/', core_views.qr_redirect, name='qr_redirect'),
     path('api/annual-report/<int:page_id>/slides/', annual_report_views.get_ordered_slides_annual_report, name='ordered_slides_api'),
     path('api/strategic_plan/<int:page_id>/slides/', annual_report_views.get_ordered_slides_strategic_plan, name='ordered_slides_api'),
     path('oauth/callback/', core_views.oauth_callback, name='auth0_callback'),
