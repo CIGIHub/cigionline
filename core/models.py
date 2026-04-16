@@ -1631,3 +1631,16 @@ class QRCodeScan(models.Model):
 
     def __str__(self):
         return f'QR scans for "{self.page.title}": {self.scan_count}'
+
+
+class QRCodeDocumentScan(models.Model):
+    document = models.OneToOneField(
+        'wagtaildocs.Document',
+        on_delete=models.CASCADE,
+        related_name='qr_code_scan',
+    )
+    scan_count = models.PositiveIntegerField(default=0)
+    last_scanned = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f'QR scans for document "{self.document.title}": {self.scan_count}'

@@ -3,7 +3,7 @@ from django.db.models import F
 from django.shortcuts import get_object_or_404, redirect
 from django.conf import settings
 from django.views.decorators.cache import never_cache
-from core.models import ContentPage, QRCodeScan
+from core.models import ContentPage, QRCodeScan, QRCodeDocumentScan
 from datetime import date
 from django.http import JsonResponse
 from django.http import HttpResponse
@@ -33,6 +33,18 @@ def qr_redirect(request, page_id):
     full_qs = f'{existing_qs}&{utm_params}' if existing_qs else utm_params
     destination = urlunparse(parsed._replace(query=full_qs))
     return redirect(destination)
+
+
+@never_cache
+def qr_document_redirect(request, doc_id):
+    from wagtail.documents.models import Document
+    doc = get_object_or_404(Document, id=doc_id)
+    scan, _ = QRCodeDocumentScan.objects.get_or_create(document=doc)
+    QRCodeDocumentScan.objects.filter(pk=scan.pk).update(
+        scan_count=F('scan_count') + 1,
+        last_scanned=timezone.now(),
+    )
+    return redirect(doc.url)
 
 
 def ar_timeline_pages(request):

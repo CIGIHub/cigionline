@@ -482,7 +482,7 @@ class PublicationPage(
         ShareablePageAbstract.social_panel,
         SearchablePageAbstract.search_panel,
     ]
-    settings_panels = Page.settings_panels + [
+    settings_panels = ContentPage.settings_panels + [
         ThemeablePageAbstract.theme_panel,
     ]
 
