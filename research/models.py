@@ -250,7 +250,7 @@ class ProjectPage(
         SearchablePageAbstract.search_panel,
     ]
 
-    settings_panels = Page.settings_panels + [
+    settings_panels = ContentPage.settings_panels + [
         ArchiveablePageAbstract.archive_panel,
         BasicPageAbstract.submenu_panel,
         ThemeablePageAbstract.theme_panel,
