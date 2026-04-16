@@ -65,6 +65,7 @@ from wagtail.admin.panels import (
     PageChooserPanel,
     TitleFieldPanel,
 )
+from .panels import QRCodePanel
 from wagtail import blocks
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page, Collection
@@ -418,6 +419,7 @@ class BasicPageAbstract(models.Model):
         heading='Submenu',
         classname='collapsible collapsed',
     )
+    qr_code_panel = QRCodePanel(heading='QR Code')
 
     search_fields = [
         index.SearchField('body'),
@@ -783,6 +785,9 @@ class ContentPage(Page, SearchablePageAbstract):
         FieldPanel('topics'),
         FieldPanel('countries'),
     ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.qr_code_panel,
+    ]
 
     base_form_class = ContentPageForm
 
@@ -953,6 +958,7 @@ class BasicPage(
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
         ThemeablePageAbstract.theme_panel,
+        BasicPageAbstract.qr_code_panel,
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
@@ -1045,6 +1051,7 @@ class FundingPage(BasicPageAbstract, Page):
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
+        BasicPageAbstract.qr_code_panel,
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields
@@ -1119,6 +1126,7 @@ class FacilityRentalsPage(
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
+        BasicPageAbstract.qr_code_panel,
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
@@ -1263,6 +1271,7 @@ class TwentiethPage(
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
+        BasicPageAbstract.qr_code_panel,
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
@@ -1408,6 +1417,7 @@ class TwentiethPageSingleton(
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
+        BasicPageAbstract.qr_code_panel,
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
@@ -1533,6 +1543,7 @@ class Think7AbstractPage(BasicPageAbstract, Page):
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
+        BasicPageAbstract.qr_code_panel,
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields
@@ -1607,3 +1618,29 @@ class Auth0ProtectedPageAbstract(models.Model):
 
     class Meta:
         abstract = True
+
+
+class QRCodeScan(models.Model):
+    page = models.OneToOneField(
+        'wagtailcore.Page',
+        on_delete=models.CASCADE,
+        related_name='qr_code_scan',
+    )
+    scan_count = models.PositiveIntegerField(default=0)
+    last_scanned = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f'QR scans for "{self.page.title}": {self.scan_count}'
+
+
+class QRCodeDocumentScan(models.Model):
+    document = models.OneToOneField(
+        'wagtaildocs.Document',
+        on_delete=models.CASCADE,
+        related_name='qr_code_scan',
+    )
+    scan_count = models.PositiveIntegerField(default=0)
+    last_scanned = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f'QR scans for document "{self.document.title}": {self.scan_count}'

@@ -1,9 +1,57 @@
+import base64
+import io
 from datetime import datetime
 from pathlib import Path
 from django import template
 from django.template.defaultfilters import stringfilter
+from django.urls import reverse
 
 register = template.Library()
+
+
+@register.simple_tag(takes_context=True)
+def document_qr(context, document):
+    """
+    Returns a dict with 'qr_image_data' (base64 PNG data URI) and 'scan_count'
+    for the given Wagtail Document, encoding the /qr/doc/<id>/ redirect URL.
+    Usage: {% document_qr document as qr %}
+    """
+    if not document or not document.pk:
+        return {'qr_image_data': None, 'scan_count': 0}
+
+    request = context.get('request')
+    try:
+        path = reverse('qr_document_redirect', args=[document.pk])
+        redirect_url = request.build_absolute_uri(path) if request else path
+    except Exception:
+        redirect_url = None
+
+    qr_image_data = None
+    if redirect_url:
+        try:
+            import qrcode
+            qr = qrcode.QRCode(
+                error_correction=qrcode.constants.ERROR_CORRECT_M,
+                box_size=6,
+                border=4,
+            )
+            qr.add_data(redirect_url)
+            qr.make(fit=True)
+            img = qr.make_image(fill_color='black', back_color='white')
+            buf = io.BytesIO()
+            img.save(buf, format='PNG')
+            encoded = base64.b64encode(buf.getvalue()).decode('ascii')
+            qr_image_data = f'data:image/png;base64,{encoded}'
+        except ImportError:
+            pass
+
+    try:
+        from core.models import QRCodeDocumentScan
+        scan_count = QRCodeDocumentScan.objects.get(document_id=document.pk).scan_count
+    except Exception:
+        scan_count = 0
+
+    return {'qr_image_data': qr_image_data, 'scan_count': scan_count}
 
 
 @register.filter
