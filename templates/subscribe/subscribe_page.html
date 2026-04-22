@@ -10,13 +10,6 @@
   {% include "includes/heroes/hero_plain.html" with title=self.title %}
   <section class="body">
     {{self.body}}
-    <div class="container">
-      <div class="row d-block">
-        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-          <p>Read the latest newsletter, here: <a href="{{self.latest_newsletter.url}}">{{self.latest_newsletter.title}}</a>.</p>
-        </div>
-      </div>
-    </div>
   </section>
   <section>
     <div class="container">
