@@ -8,9 +8,11 @@ from wagtail.models import Page
 from streams.blocks import ParagraphBlock
 from newsletters.models import NewsletterPage
 
+import hashlib
 from mailchimp_marketing.api_client import ApiClientError
 import mailchimp_marketing as MailchimpMarketing
 import logging
+
 
 api_key = None
 server = None
@@ -119,3 +121,12 @@ class SubscribeForm(forms.Form):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Email'}))
     organization = forms.CharField(required=False, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Organization*'}))
     country = forms.CharField(required=False, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Country*'}))
+
+
+class TFGBVSubscribePage(SubscribePage):
+    template = '/themes/ogbv/subscribe_page.html'
+    landing_page_template = '/themes/ogbv/subscribe_page_landing.html'
+
+
+class TFGBVSubscribeForm(SubscribeForm):
+    pass
