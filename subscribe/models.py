@@ -195,6 +195,8 @@ class TFGBVSubscribePage(SubscribePage):
 
 
 class TFGBVSubscribeForm(SubscribeForm):
+    affiliation = forms.CharField(required=False, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Affiliation*'}))
+
     # help_text wording change from base
     consent = forms.BooleanField(
         required=True,
@@ -202,3 +204,7 @@ class TFGBVSubscribeForm(SubscribeForm):
         widget=forms.CheckboxInput(),
         help_text='I consent to receiving electronic communications from The Center for International Governance Innovation (CIGI). I understand that I may withdraw my consent at any time by clicking the unsubscribe link in any email.',
     )
+
+    class Meta(SubscribeForm.Meta):
+        # remove unnecessary fields from base form model
+        fields = ['first_name', 'last_name', 'email', 'affiliation', 'consent']
