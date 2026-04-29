@@ -108,18 +108,21 @@ class SubscribePage(
             },
         )
 
+    def get_mailchimp_merge_fields(self, form):
+        return {
+            "FNAME": form.cleaned_data["first_name"],
+            "LNAME": form.cleaned_data["last_name"],
+            "ORG": form.cleaned_data.get("organization", ""),
+            "COUNTRY": form.cleaned_data.get("location", ""),
+        }
+
     def subscribe_to_mailchimp(self, form):
         email = form.cleaned_data["email"].strip().lower()
 
         member_info = {
             "email_address": email,
-            "merge_fields": {
-                "FNAME": form.cleaned_data["first_name"],
-                "LNAME": form.cleaned_data["last_name"],
-                "ORG": form.cleaned_data["organization"],
-                "COUNTRY": form.cleaned_data["location"],
-            },
-            "status_if_new": "pending",  # double opt-in safe
+            "merge_fields": self.get_mailchimp_merge_fields(form),
+            "status_if_new": "pending",
         }
 
         if not (api_key and server and list_id):
@@ -187,6 +190,13 @@ class SubscribeForm(forms.Form):
 class TFGBVSubscribePage(SubscribePage):
     def get_subscribe_form_class(self):
         return TFGBVSubscribeForm
+
+    def get_mailchimp_merge_fields(self, form):
+        return {
+            "FNAME": form.cleaned_data["first_name"],
+            "LNAME": form.cleaned_data["last_name"],
+            "ORG": form.cleaned_data.get("affiliation", ""),
+        }
 
     mailchimp_tags = ['TFGBV Updates']
 
