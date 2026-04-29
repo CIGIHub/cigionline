@@ -178,7 +178,8 @@ class SubscribeForm(forms.Form):
     organization = forms.CharField(required=False, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Organization*'}))
     location = CountryField(blank=True).formfield(
         required=False,
-        widget=forms.Select(attrs={'placeholder': 'Country*'})
+        empty_label="Country*",
+        widget=forms.Select()
     )
     consent = forms.BooleanField(
         required=True,
