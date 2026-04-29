@@ -1,4 +1,5 @@
 from django import forms
+from django.db import models
 from django.conf import settings
 from django.shortcuts import render
 from core.models import BasicPageAbstract, SearchablePageAbstract
@@ -201,7 +202,6 @@ class TFGBVSubscribePage(SubscribePage):
         }
 
     mailchimp_tags = ['TFGBV Updates']
-
     parent_page_types = ['research.ProjectPage']
     template = 'themes/ogbv/subscribe_page.html'
     landing_page_template = 'themes/ogbv/subscribe_page_landing.html'

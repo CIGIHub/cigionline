@@ -31,6 +31,12 @@ body {
             }
             font-weight: 500;
           }
+
+          h1 {
+            a {
+              color: $black;
+            }
+          }
         }
       }
     }
