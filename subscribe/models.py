@@ -1,5 +1,4 @@
 from django import forms
-from django.db import models
 from django.conf import settings
 from django.shortcuts import render
 from core.models import BasicPageAbstract, SearchablePageAbstract
