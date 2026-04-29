@@ -190,8 +190,9 @@ class TFGBVSubscribePage(SubscribePage):
 
     mailchimp_tags = ['TFGBV Updates']
 
-    template = '/themes/ogbv/subscribe_page.html'
-    landing_page_template = '/themes/ogbv/subscribe_page_landing.html'
+    parent_page_types = ['research.ProjectPage']
+    template = 'themes/ogbv/subscribe_page.html'
+    landing_page_template = 'themes/ogbv/subscribe_page_landing.html'
 
 
 class TFGBVSubscribeForm(SubscribeForm):
@@ -205,6 +206,19 @@ class TFGBVSubscribeForm(SubscribeForm):
         help_text='I consent to receiving electronic communications from The Center for International Governance Innovation (CIGI). I understand that I may withdraw my consent at any time by clicking the unsubscribe link in any email.',
     )
 
-    class Meta(SubscribeForm.Meta):
-        # remove unnecessary fields from base form model
-        fields = ['first_name', 'last_name', 'email', 'affiliation', 'consent']
+    allowed_fields = [
+        'first_name',
+        'last_name',
+        'email',
+        'affiliation',
+        'consent',
+    ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields = {
+            name: self.fields[name]
+            for name in self.allowed_fields
+            if name in self.fields
+        }
