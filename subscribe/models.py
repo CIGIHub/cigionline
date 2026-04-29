@@ -14,7 +14,6 @@ import mailchimp_marketing as MailchimpMarketing
 import logging
 
 from django_countries.fields import CountryField
-from django_countries.widgets import CountrySelectWidget
 
 
 api_key = None
@@ -109,11 +108,13 @@ class SubscribePage(
         )
 
     def get_mailchimp_merge_fields(self, form):
+        country = form.cleaned_data.get("location")
+
         return {
             "FNAME": form.cleaned_data["first_name"],
             "LNAME": form.cleaned_data["last_name"],
             "ORG": form.cleaned_data.get("organization", ""),
-            "COUNTRY": form.cleaned_data.get("location", ""),
+            "COUNTRY": country.name if country else "",
         }
 
     def subscribe_to_mailchimp(self, form):
@@ -177,7 +178,7 @@ class SubscribeForm(forms.Form):
     organization = forms.CharField(required=False, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Organization*'}))
     location = CountryField(blank=True).formfield(
         required=False,
-        widget=CountrySelectWidget(attrs={'placeholder': 'Country*'})
+        widget=forms.Select(attrs={'placeholder': 'Country*'})
     )
     consent = forms.BooleanField(
         required=True,
