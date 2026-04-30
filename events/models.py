@@ -473,7 +473,17 @@ class EventPage(
 
     @property
     def registration_report_url(self):
-        return self.url + "registration-report/"
+        base = self.url
+        if base and not base.endswith("/"):
+            base += "/"
+        return f"{base}registration-report/" if base else ""
+
+    @property
+    def registration_report_full_url(self):
+        base = self.full_url or self.url
+        if base and not base.endswith("/"):
+            base += "/"
+        return f"{base}registration-report/" if base else ""
 
     def _registration_report_base_url(self, request):
         base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
@@ -1720,6 +1730,10 @@ class EventPage(
                 [
                     FieldPanel('registration_report_password'),
                     FieldPanel('clear_registration_report_password'),
+                    HelpPanel(
+                        template="events/includes/registration_report_url_help_panel.html",
+                        heading="Report URL",
+                    ),
                 ],
                 heading='Registration Report',
                 classname='collapsible collapsed',
