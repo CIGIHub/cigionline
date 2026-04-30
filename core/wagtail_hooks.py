@@ -8,8 +8,9 @@ from wagtail.admin.rich_text.converters.html_to_contentstate import (
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
 from wagtail import hooks
 from wagtail.models import Page
-from .models import Theme
+from .models import Theme, QRCodeScan, QRCodeDocumentScan
 from wagtail.admin.viewsets.model import ModelViewSet
+from wagtail.admin.viewsets.base import ViewSetGroup
 from wagtail.admin.ui.tables import Column
 from utils.admin_utils import title_with_actions
 
@@ -309,3 +310,72 @@ def register_theme_viewset():
 @hooks.register("register_admin_viewset")
 def register_about_viewset():
     return AboutListingViewSet()
+
+
+def qr_page_title_link(obj):
+    return format_html(
+        '<a href="/admin/pages/{}/edit/">{}</a>',
+        obj.page_id,
+        obj.page.title,
+    )
+
+
+def qr_document_title_link(obj):
+    return format_html(
+        '<a href="/admin/documents/{}/edit/">{}</a>',
+        obj.document_id,
+        obj.document.title,
+    )
+
+
+class QRCodePageScanViewSet(ModelViewSet):
+    model = QRCodeScan
+    menu_label = 'Page QR Scans'
+    menu_icon = 'link'
+    name = 'qrcodescan'
+    exclude_form_fields = []
+    list_display = [
+        Column(qr_page_title_link, label='Page'),
+        Column('scan_count', label='Scan Count', sort_key='scan_count'),
+        Column('last_scanned', label='Last Scanned', sort_key='last_scanned'),
+    ]
+    ordering = ['-scan_count']
+
+    def get_index_view_kwargs(self):
+        kwargs = super().get_index_view_kwargs()
+        kwargs['queryset'] = QRCodeScan.objects.select_related('page').all()
+        return kwargs
+
+
+class QRCodeDocumentScanViewSet(ModelViewSet):
+    model = QRCodeDocumentScan
+    menu_label = 'Document QR Scans'
+    menu_icon = 'doc-full'
+    name = 'qrcodedocumentscan'
+    exclude_form_fields = []
+    list_display = [
+        Column(qr_document_title_link, label='Document'),
+        Column('scan_count', label='Scan Count', sort_key='scan_count'),
+        Column('last_scanned', label='Last Scanned', sort_key='last_scanned'),
+    ]
+    ordering = ['-scan_count']
+
+    def get_index_view_kwargs(self):
+        kwargs = super().get_index_view_kwargs()
+        kwargs['queryset'] = QRCodeDocumentScan.objects.select_related('document').all()
+        return kwargs
+
+
+class QRCodeViewSetGroup(ViewSetGroup):
+    menu_label = 'QR Codes'
+    menu_icon = 'link'
+    menu_order = 250
+    items = (
+        QRCodePageScanViewSet,
+        QRCodeDocumentScanViewSet,
+    )
+
+
+@hooks.register('register_admin_viewset')
+def register_qr_code_viewsets():
+    return QRCodeViewSetGroup()
