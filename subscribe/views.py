@@ -2,6 +2,7 @@ import hashlib
 import json
 import mailchimp_marketing as MailchimpMarketing
 import logging
+from fnmatch import fnmatch
 from django import forms
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
@@ -46,6 +47,7 @@ class SecondCenturyCommissionSubscribeForm(forms.Form):
 def _add_second_century_commission_cors_headers(request, response):
     allowed_origins = getattr(settings, 'SECOND_CENTURY_COMMISSION_ALLOWED_ORIGINS', None)
     origin = request.headers.get('Origin')
+    requested_headers = request.headers.get('Access-Control-Request-Headers')
 
     if isinstance(allowed_origins, str):
         allowed_origins = [item.strip() for item in allowed_origins.split(',') if item.strip()]
@@ -53,14 +55,15 @@ def _add_second_century_commission_cors_headers(request, response):
     if allowed_origins:
         if '*' in allowed_origins:
             response['Access-Control-Allow-Origin'] = '*'
-        elif origin in allowed_origins:
+        elif origin and any(fnmatch(origin, allowed_origin) for allowed_origin in allowed_origins):
             response['Access-Control-Allow-Origin'] = origin
             response['Vary'] = 'Origin'
     else:
         response['Access-Control-Allow-Origin'] = '*'
 
     response['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
-    response['Access-Control-Allow-Headers'] = 'Content-Type, X-Requested-With'
+    response['Access-Control-Allow-Headers'] = requested_headers or 'Content-Type, X-Requested-With'
+    response['Access-Control-Max-Age'] = '86400'
     return response
 
 

@@ -65,6 +65,11 @@ urlpatterns = urlpatterns + [
         subscribe_second_century_commission,
         name='subscribe_second_century_commission',
     ),
+    path(
+        'api/subscribe/second-century-commission',
+        subscribe_second_century_commission,
+        name='subscribe_second_century_commission_no_slash',
+    ),
     re_path(r'^events/feed.ics$', EventFeed()),
     re_path(r'^favicon\.ico$', favicon_view),
     re_path(r'^robots\.txt$', robots_views.RobotsView.as_view(), name='robots'),
