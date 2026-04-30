@@ -21,8 +21,6 @@ SECOND_CENTURY_COMMISSION_FIELD_ALIASES = {
     'FNAME': ('FNAME', 'first_name', 'fname'),
     'LNAME': ('LNAME', 'last_name', 'lname'),
     'CONSENT': ('CONSENT', 'consent'),
-    'ORG': ('ORG', 'organization', 'org'),
-    'COUNTRY': ('COUNTRY', 'country'),
 }
 
 if hasattr(settings, 'MAILCHIMP_API_KEY_DPH'):
@@ -43,9 +41,7 @@ class SecondCenturyCommissionSubscribeForm(forms.Form):
     EMAIL = forms.EmailField(max_length=254, required=True)
     FNAME = forms.CharField(max_length=128, required=True)
     LNAME = forms.CharField(max_length=128, required=True)
-    CONSENT = forms.IntegerField(min_value=0, max_value=1, required=True)
-    ORG = forms.CharField(max_length=128, required=False)
-    COUNTRY = forms.CharField(max_length=128, required=False)
+    CONSENT = forms.CharField(max_length=3, required=True)
 
 
 def _add_second_century_commission_cors_headers(request, response):
@@ -88,10 +84,7 @@ def _get_second_century_commission_request_data(request):
 
 
 def _normalize_second_century_commission_data(data):
-    normalized = {
-        'ORG': 'N/A',
-        'COUNTRY': 'N/A',
-    }
+    normalized = {}
     for field_name, aliases in SECOND_CENTURY_COMMISSION_FIELD_ALIASES.items():
         for alias in aliases:
             value = data.get(alias)
@@ -144,8 +137,6 @@ def subscribe_second_century_commission(request):
             'FNAME': form.cleaned_data['FNAME'],
             'LNAME': form.cleaned_data['LNAME'],
             'CONSENT': form.cleaned_data['CONSENT'],
-            'ORG': form.cleaned_data['ORG'] or 'N/A',
-            'COUNTRY': form.cleaned_data['COUNTRY'] or 'N/A',
         },
     }
     tag_info = {
