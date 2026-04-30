@@ -4,6 +4,7 @@
 {% block title %}{{ event.title }} — {% trans "Registration report" %}{% endblock %}
 
 {% block content %}
+{% firstof report_base_url page.url as report_url %}
 <section class="py-5">
   <div class="container">
     <div class="row justify-content-center">
@@ -33,7 +34,7 @@
               {% for r in type_rows %}
                 <tr>
                   <td>
-                    <a href="{{ page.url }}type/{{ r.slug }}/">{{ r.name }}</a>
+                    <a href="{{ report_url }}type/{{ r.slug }}/">{{ r.name }}</a>
                   </td>
                   <td class="text-nowrap"><code>{{ r.slug }}</code></td>
                   <td class="text-nowrap">

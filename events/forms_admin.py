@@ -1,10 +1,35 @@
-from wagtail.admin.forms import WagtailAdminPageForm
+from django import forms
 from django.apps import apps
+from django.contrib.auth.hashers import make_password
+from django.utils.translation import gettext_lazy as _
+from wagtail.admin.forms import WagtailAdminPageForm
 
 
 class EventPageAdminForm(WagtailAdminPageForm):
+    registration_report_password = forms.CharField(
+        label=_("Registration report password"),
+        required=False,
+        strip=False,
+        widget=forms.PasswordInput(render_value=False),
+        help_text=_(
+            "Set or replace the password for the public registration report. "
+            "Leave blank to keep the existing password."
+        ),
+    )
+    clear_registration_report_password = forms.BooleanField(
+        label=_("Clear registration report password"),
+        required=False,
+        help_text=_("Disable the public registration report for this event."),
+    )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        if not getattr(self.instance, "registration_report_password_hash", ""):
+            self.fields["registration_report_password"].help_text = _(
+                "Set a password to enable the public registration report at "
+                "this event's /registration-report/ URL."
+            )
 
         RegistrationType = apps.get_model('events', 'RegistrationType')
         event = getattr(self.instance, 'specific', self.instance)
@@ -52,3 +77,32 @@ class EventPageAdminForm(WagtailAdminPageForm):
                     f.label_from_instance = lambda rt: rt.name
                     if not form.is_bound:  # GET render after save / first load
                         f.initial = sel
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("registration_report_password")
+        clear_password = cleaned_data.get("clear_registration_report_password")
+
+        if password and clear_password:
+            self.add_error(
+                "clear_registration_report_password",
+                _("Choose either a new report password or clear the existing one."),
+            )
+
+        return cleaned_data
+
+    def save(self, commit=True):
+        page = super().save(commit=False)
+
+        if self.cleaned_data.get("clear_registration_report_password"):
+            page.registration_report_password_hash = ""
+        elif self.cleaned_data.get("registration_report_password"):
+            page.registration_report_password_hash = make_password(
+                self.cleaned_data["registration_report_password"]
+            )
+
+        if commit:
+            page.save()
+            self.save_m2m()
+
+        return page

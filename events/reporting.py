@@ -62,7 +62,11 @@ class AnswerColumn:
 def build_answer_columns(event) -> list[AnswerColumn]:
     """Return table columns for answers; matches admin type registrants view."""
 
-    form_fields = list(event.registration_form_template.fields.all().order_by("sort_order"))
+    form_template = getattr(event, "registration_form_template", None)
+    if not form_template:
+        return []
+
+    form_fields = list(form_template.fields.all().order_by("sort_order"))
     columns: list[AnswerColumn] = []
 
     for ff in form_fields:
@@ -218,7 +222,8 @@ def registrants_csv_response(
             return "; ".join(f"{k}={v}" for k, v in val.items())
         return str(val)
 
-    form_fields = list(event.registration_form_template.fields.all().order_by("sort_order"))
+    form_template = getattr(event, "registration_form_template", None)
+    form_fields = list(form_template.fields.all().order_by("sort_order")) if form_template else []
     file_fields = [ff for ff in form_fields if ff.field_type == "file"]
 
     header = [

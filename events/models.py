@@ -8,11 +8,12 @@ from core.models import (
     ThemeablePageAbstract
 )
 from django.contrib import messages
+from django.contrib.auth.hashers import check_password
 from django.db import models, transaction
 from django.utils import timezone
 import logging
 from django.utils.translation import gettext_lazy as _
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import redirect
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
@@ -315,6 +316,11 @@ class EventPage(
 
     # Registration related fields
     registration_open = models.BooleanField(default=False)
+    registration_report_password_hash = models.CharField(
+        blank=True,
+        editable=False,
+        max_length=128,
+    )
     is_private_registration = models.BooleanField(
         default=False, help_text="Require invite token or private link to register."
     )
@@ -465,7 +471,170 @@ class EventPage(
     def register_url(self):
         return self.url + "register/"
 
+    @property
+    def registration_report_url(self):
+        return self.url + "registration-report/"
+
+    def _registration_report_base_url(self, request):
+        base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+        if not base.endswith("/"):
+            base += "/"
+        return f"{base}registration-report/"
+
+    def _registration_report_session_key(self):
+        return f"events.registration_report:{self.pk}"
+
+    def _has_registration_report_access(self, request):
+        return (
+            bool(self.registration_report_password_hash)
+            and request.session.get(self._registration_report_session_key())
+            == self.registration_report_password_hash
+        )
+
+    def _registration_report_password_gate(self, request):
+        if not self.registration_report_password_hash:
+            raise Http404
+
+        if self._has_registration_report_access(request):
+            return None
+
+        from django import forms
+        from django.template.response import TemplateResponse
+
+        class RegistrationReportPasswordForm(forms.Form):
+            password = forms.CharField(
+                label=_("Password"),
+                strip=False,
+                widget=forms.PasswordInput(
+                    attrs={
+                        "autocomplete": "current-password",
+                        "class": "form-control",
+                    }
+                ),
+            )
+
+        if request.method == "POST":
+            form = RegistrationReportPasswordForm(request.POST)
+            if form.is_valid():
+                if check_password(
+                    form.cleaned_data["password"],
+                    self.registration_report_password_hash,
+                ):
+                    request.session[
+                        self._registration_report_session_key()
+                    ] = self.registration_report_password_hash
+                    return redirect(request.get_full_path())
+
+                form.add_error("password", _("The password you entered was incorrect."))
+        else:
+            form = RegistrationReportPasswordForm()
+
+        return TemplateResponse(
+            request,
+            "events/registration_report_password.html",
+            {
+                "page": self,
+                "event": self,
+                "form": form,
+                "report_base_url": self._registration_report_base_url(request),
+            },
+        )
+
     # ---------- ROUTES ----------
+
+    @route(r"^registration-report/$")
+    def registration_report(self, request, *args, **kwargs):
+        gate_response = self._registration_report_password_gate(request)
+        if gate_response:
+            return gate_response
+
+        from .reporting import build_type_rows
+
+        return self.render(
+            request,
+            template="events/registration_report_public.html",
+            context_overrides={
+                "event": self,
+                "report_base_url": self._registration_report_base_url(request),
+                "type_rows": build_type_rows(self),
+            },
+        )
+
+    @route(r"^registration-report/type/(?P<type_slug>[-\w]+)/$")
+    def registration_report_type(self, request, type_slug: str, *args, **kwargs):
+        gate_response = self._registration_report_password_gate(request)
+        if gate_response:
+            return gate_response
+
+        from django.shortcuts import get_object_or_404
+        from django.template.response import TemplateResponse
+
+        from .reporting import (
+            attach_answer_cells,
+            build_answer_columns,
+            filter_registrants_queryset,
+            paginate_queryset,
+        )
+
+        rtype = get_object_or_404(self.registration_types, slug=type_slug)
+        q = (request.GET.get("q") or "").strip()
+        status = (request.GET.get("status") or "").strip().lower()
+
+        registrants = filter_registrants_queryset(event=self, rtype=rtype, q=q, status=status)
+        columns = build_answer_columns(self)
+        page_obj = paginate_queryset(registrants, request=request, per_page=50)
+        attach_answer_cells(page_obj, columns=columns)
+
+        return TemplateResponse(
+            request,
+            "events/registration_report_type_public.html",
+            {
+                "page": self,
+                "event": self,
+                "rtype": rtype,
+                "page_obj": page_obj,
+                "q": q,
+                "status": status,
+                "columns": [c.__dict__ for c in columns],
+                "report_base_url": self._registration_report_base_url(request),
+            },
+        )
+
+    @route(r"^registration-report/type/(?P<type_slug>[-\w]+)/export/?$")
+    def registration_report_type_csv(self, request, type_slug: str, *args, **kwargs):
+        gate_response = self._registration_report_password_gate(request)
+        if gate_response:
+            return gate_response
+
+        from django.shortcuts import get_object_or_404
+
+        from .reporting import registrants_csv_response
+
+        rtype = get_object_or_404(self.registration_types, slug=type_slug)
+        registrants = (
+            Registrant.objects.filter(event=self, registration_type=rtype)
+            .select_related("registration_type", "invite")
+            .only(
+                "id",
+                "created_at",
+                "status",
+                "first_name",
+                "last_name",
+                "email",
+                "registration_type__name",
+                "registration_type__slug",
+                "answers",
+                "invite_id",
+                "invite__email",
+            )
+            .order_by("created_at")
+        )
+        return registrants_csv_response(
+            request=request,
+            event=self,
+            registrants_qs=registrants,
+            filename_prefix=f"{self.title}-{rtype.slug}",
+        )
 
     @route(r"^register/$")
     def register_entry(self, request, *args, **kwargs):
@@ -1549,6 +1718,14 @@ class EventPage(
             ),
             MultiFieldPanel(
                 [
+                    FieldPanel('registration_report_password'),
+                    FieldPanel('clear_registration_report_password'),
+                ],
+                heading='Registration Report',
+                classname='collapsible collapsed',
+            ),
+            MultiFieldPanel(
+                [
                     FieldPanel('confirmation_template'),
                     FieldPanel('waitlist_template'),
                 ],
@@ -1661,6 +1838,7 @@ class EventRegistrationReportPage(RoutablePageMixin, Page):
                 "q": q,
                 "status": status,
                 "columns": [c.__dict__ for c in columns],
+                "report_base_url": self.url,
             },
         )
 
@@ -1706,6 +1884,7 @@ class EventRegistrationReportPage(RoutablePageMixin, Page):
         event = self._get_event()
         context["event"] = event
         context["type_rows"] = build_type_rows(event)
+        context["report_base_url"] = self.url
         return context
 
     class Meta:
