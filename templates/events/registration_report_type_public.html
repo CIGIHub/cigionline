@@ -4,6 +4,7 @@
 {% block title %}{{ event.title }} — {{ rtype.name }} — {% trans "Registration report" %}{% endblock %}
 
 {% block content %}
+{% firstof report_base_url report_page.url as report_url %}
 <section class="py-5">
   <div class="container">
     <div class="row justify-content-center">
@@ -53,7 +54,7 @@
             background: var(--bs-table-bg, #fff);
           }
         </style>
-        <a href="{{ report_page.url }}" class="btn btn-link p-0 mb-3">&larr; {% trans "Back to report" %}</a>
+        <a href="{{ report_url }}" class="btn btn-link p-0 mb-3">&larr; {% trans "Back to report" %}</a>
 
         <div class="d-flex align-items-start justify-content-between gap-3 flex-wrap mb-3">
           <div>
@@ -62,7 +63,7 @@
           </div>
 
           <div class="d-flex gap-2">
-            <a class="btn btn-outline-secondary" href="{{ report_page.url }}type/{{ rtype.slug }}/export">{% trans "Download CSV" %}</a>
+            <a class="btn btn-outline-secondary" href="{{ report_url }}type/{{ rtype.slug }}/export">{% trans "Download CSV" %}</a>
           </div>
         </div>
 
