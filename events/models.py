@@ -1,4 +1,5 @@
 from .forms_admin import EventPageAdminForm
+from .panels import EmailCampaignPreviewPanel, EmailCampaignTestSendPanel
 from core.models import (
     BasicPageAbstract,
     ContentPage,
@@ -2483,6 +2484,14 @@ class EmailCampaign(models.Model):
         default="",
         help_text='Comma-separated registration type slugs (e.g. "general,student"). Leave blank for all.',
     )
+    test_recipient_emails = models.TextField(
+        blank=True,
+        default="",
+        help_text=(
+            "Comma-, semicolon-, or newline-separated email addresses for test sends. "
+            "These addresses are never included in scheduled campaign sends."
+        ),
+    )
     # Optional single attachment via Wagtail Documents
     attachment = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -2490,11 +2499,14 @@ class EmailCampaign(models.Model):
     panels = [
         FieldPanel('event'),
         FieldPanel('template'),
+        EmailCampaignPreviewPanel(),
         FieldPanel('scheduled_for'),
         FieldPanel('sent_at'),
         FieldPanel('completed_at'),
         FieldPanel('include_type_slugs'),
         FieldPanel('include_statuses'),
+        FieldPanel('test_recipient_emails'),
+        EmailCampaignTestSendPanel(),
         FieldPanel('attachment'),
     ]
 

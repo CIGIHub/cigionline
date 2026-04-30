@@ -21,6 +21,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.http import HttpResponse
 from django.contrib import messages
+from django.core.exceptions import ValidationError
 from django.views.decorators.http import require_POST
 from django.utils.decorators import method_decorator
 from django.utils.html import format_html
@@ -581,10 +582,140 @@ class EmailCampaignViewSet(ModelViewSet):
         "scheduled_for",
         "include_statuses",
         "include_type_slugs",
+        "test_recipient_emails",
         "attachment",
         "sent_at",
         "completed_at",
     ]
+
+    def preview_selected_view(self, request):
+        if not (
+            request.user.has_perm("events.add_emailcampaign")
+            or request.user.has_perm("events.change_emailcampaign")
+        ):
+            return HttpResponse("Forbidden", status=403)
+
+        template_id = request.GET.get("template_id")
+        if not template_id:
+            return TemplateResponse(
+                request,
+                "events/admin/email_campaign_preview.html",
+                {"message": "Select an email template to preview it."},
+            )
+
+        try:
+            template = EmailTemplate.objects.filter(pk=template_id).first()
+        except (TypeError, ValueError):
+            template = None
+
+        if not template:
+            return TemplateResponse(
+                request,
+                "events/admin/email_campaign_preview.html",
+                {"message": "The selected email template could not be found."},
+            )
+
+        event = None
+        event_id = request.GET.get("event_id")
+        if event_id:
+            try:
+                event = EventPage.objects.specific().filter(pk=event_id).first()
+            except (TypeError, ValueError):
+                event = None
+
+        from .email_preview import build_email_campaign_preview
+
+        preview = build_email_campaign_preview(
+            request=request,
+            template_obj=template,
+            event=event,
+            include_statuses=request.GET.get("include_statuses", ""),
+            include_type_slugs=request.GET.get("include_type_slugs", ""),
+        )
+
+        return TemplateResponse(
+            request,
+            "events/admin/email_campaign_preview.html",
+            {
+                "subject": preview.subject,
+                "email_html": preview.html,
+                "email_body_html": preview.body_html,
+                "event_title": preview.event_title,
+                "registrant_label": preview.registrant_label,
+                "using_real_registrant": preview.using_real_registrant,
+            },
+        )
+
+    def send_test_view(self, request, pk: int):
+        if request.method != "POST":
+            return HttpResponse("Method not allowed", status=405)
+
+        if not request.user.has_perm("events.change_emailcampaign"):
+            return HttpResponse("Forbidden", status=403)
+
+        campaign = get_object_or_404(
+            EmailCampaign.objects.select_related("event", "template"),
+            pk=pk,
+        )
+        self._apply_test_send_post_values(campaign, request.POST)
+
+        try:
+            from .email_preview import send_email_campaign_test
+
+            recipients = send_email_campaign_test(request=request, campaign=campaign)
+        except ValidationError as exc:
+            messages.error(request, "; ".join(exc.messages))
+        except Exception as exc:
+            logger.exception(
+                "Failed to send test email campaign_id=%s",
+                campaign.pk,
+            )
+            messages.error(request, f"Could not send test email: {exc}")
+        else:
+            messages.success(
+                request,
+                f"Test email sent to {', '.join(recipients)}.",
+            )
+
+        return redirect(reverse(self.get_url_name("edit"), args=[campaign.pk]))
+
+    def _apply_test_send_post_values(self, campaign, post_data):
+        campaign.test_recipient_emails = post_data.get(
+            "test_recipient_emails",
+            campaign.test_recipient_emails,
+        )
+        campaign.include_statuses = post_data.get(
+            "include_statuses",
+            campaign.include_statuses,
+        )
+        campaign.include_type_slugs = post_data.get(
+            "include_type_slugs",
+            campaign.include_type_slugs,
+        )
+
+        template_id = post_data.get("template")
+        if template_id:
+            try:
+                template = EmailTemplate.objects.get(pk=template_id)
+            except (EmailTemplate.DoesNotExist, TypeError, ValueError):
+                pass
+            else:
+                campaign.template = template
+
+        event_id = post_data.get("event")
+        if event_id:
+            try:
+                event = EventPage.objects.specific().get(pk=event_id)
+            except (EventPage.DoesNotExist, TypeError, ValueError):
+                pass
+            else:
+                campaign.event = event
+
+    def get_urlpatterns(self):
+        return super().get_urlpatterns() + [
+            path("preview-selected/", self.preview_selected_view, name="preview_selected"),
+            path("send-test/<int:pk>/", self.send_test_view, name="send_test"),
+        ]
 
 
 class EventViewSetGroup(ViewSetGroup):
