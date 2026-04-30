@@ -22,6 +22,7 @@ SECOND_CENTURY_COMMISSION_FIELD_ALIASES = {
     'LNAME': ('LNAME', 'last_name', 'lname'),
     'CONSENT': ('CONSENT', 'consent'),
 }
+SECOND_CENTURY_COMMISSION_HONEYPOT_FIELDS = ('website',)
 
 if hasattr(settings, 'MAILCHIMP_API_KEY_DPH'):
     api_key = settings.MAILCHIMP_API_KEY_DPH
@@ -94,6 +95,16 @@ def _normalize_second_century_commission_data(data):
     return normalized
 
 
+def _second_century_commission_has_honeypot_value(data):
+    for field_name in SECOND_CENTURY_COMMISSION_HONEYPOT_FIELDS:
+        value = data.get(field_name)
+        if isinstance(value, str) and value.strip():
+            return True
+        if value and not isinstance(value, str):
+            return True
+    return False
+
+
 @csrf_exempt
 @require_http_methods(['POST', 'OPTIONS'])
 def subscribe_second_century_commission(request):
@@ -107,6 +118,16 @@ def subscribe_second_century_commission(request):
             request,
             {'success': False, 'error': 'Invalid request data'},
             status=400,
+        )
+
+    if _second_century_commission_has_honeypot_value(data):
+        logger.info('Second Century Commission honeypot submission ignored')
+        return _second_century_commission_json_response(
+            request,
+            {
+                'success': True,
+                'status': 'pending',
+            },
         )
 
     form = SecondCenturyCommissionSubscribeForm(_normalize_second_century_commission_data(data))
