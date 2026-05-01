@@ -783,7 +783,6 @@ class ContentPage(Page, SearchablePageAbstract):
     content_panels = [
         FieldPanel('publishing_date'),
         FieldPanel('topics'),
-        FieldPanel('countries'),
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.qr_code_panel,

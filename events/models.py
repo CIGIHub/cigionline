@@ -1690,7 +1690,6 @@ class EventPage(
             [
                 FieldPanel('topics'),
                 FieldPanel('projects'),
-                FieldPanel('countries'),
                 PageChooserPanel(
                     'multimedia_page',
                     ['multimedia.MultimediaPage'],
