@@ -220,7 +220,6 @@ class ProjectPage(
                 FieldPanel('primary_themes'),
                 FieldPanel('secondary_themes'),
                 FieldPanel('topics'),
-                FieldPanel('countries'),
                 FieldPanel('related_files'),
                 FieldPanel('subscribe_page'),
             ],

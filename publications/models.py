@@ -466,7 +466,6 @@ class PublicationPage(
             [
                 FieldPanel('topics'),
                 FieldPanel('projects'),
-                FieldPanel('countries'),
                 PageChooserPanel(
                     'publication_series',
                     ['publications.PublicationSeriesPage'],
@@ -599,7 +598,6 @@ class PublicationSeriesPage(
             [
                 FieldPanel('topics'),
                 FieldPanel('projects'),
-                FieldPanel('countries'),
             ],
             heading='Related',
             classname='collapsible collapsed',
