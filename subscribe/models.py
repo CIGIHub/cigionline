@@ -1,6 +1,7 @@
 from django import forms
 from django.conf import settings
 from django.shortcuts import render
+from django.utils import timezone
 from core.models import BasicPageAbstract, SearchablePageAbstract
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.fields import RichTextField, StreamField
@@ -8,9 +9,13 @@ from wagtail.models import Page
 from streams.blocks import ParagraphBlock
 from newsletters.models import NewsletterPage
 
+import hashlib
 from mailchimp_marketing.api_client import ApiClientError
 import mailchimp_marketing as MailchimpMarketing
 import logging
+
+from django_countries.fields import CountryField, Country
+
 
 api_key = None
 server = None
@@ -68,45 +73,128 @@ class SubscribePage(
     template = 'subscribe/subscribe_page.html'
     landing_page_template = 'subscribe/subscribe_page_landing.html'
 
+    mailchimp_tag = 'CIGI Weekly Newsletter'
+    mailchimp_merge_field_suffix = 'WEEKLY'
+
+    def get_mailchimp_tag(self):
+        return self.mailchimp_tag
+
+    def get_mailchimp_suffix(self):
+        return self.mailchimp_merge_field_suffix
+
+    def get_subscribe_form_class(self):
+        return SubscribeForm
+
+    def get_organization(self, form):
+        return form.cleaned_data.get("organization", "")
+
+    def get_country(self, form):
+        country = form.cleaned_data.get("location")
+        return Country(country).name if country else ""
+
+    def subscribe_member(self, client, list_id, email, member_info):
+        subscriber_hash = hashlib.md5(email.encode("utf-8")).hexdigest()
+
+        response = client.lists.set_list_member(
+            list_id,
+            subscriber_hash,
+            member_info,
+        )
+
+        return subscriber_hash, response
+
+    def apply_tag(self, client, list_id, subscriber_hash):
+        tag = self.get_mailchimp_tag()
+        if not tag:
+            return
+
+        client.lists.update_list_member_tags(
+            list_id,
+            subscriber_hash,
+            {
+                "tags": [
+                    {"name": tag, "status": "active"}
+                ]
+            },
+        )
+
+    def get_mailchimp_merge_fields(self, form):
+        fields = {
+            "FNAME": form.cleaned_data["first_name"],
+            "LNAME": form.cleaned_data["last_name"],
+            "ORG": self.get_organization(form),
+        }
+
+        consent = form.cleaned_data.get("consent", False)
+        consent_timestamp = timezone.now().strftime("%m/%d/%Y")
+        suffix = self.get_mailchimp_suffix()
+        if suffix:
+            fields[f"C_{suffix}"] = "Yes" if consent else "No"
+            fields[f"C_T_{suffix}"] = consent_timestamp if consent else ""
+
+        country = self.get_country(form)
+        if country:
+            fields["COUNTRY"] = country
+
+        return fields
+
+    def subscribe_to_mailchimp(self, form):
+        if not form.cleaned_data.get("consent", False):
+            return
+
+        email = form.cleaned_data["email"].strip().lower()
+
+        member_info = {
+            "email_address": email,
+            "merge_fields": self.get_mailchimp_merge_fields(form),
+            "status_if_new": "subscribed",
+        }
+
+        if not (api_key and server and list_id):
+            return
+
+        client = MailchimpMarketing.Client()
+        client.set_config({
+            "api_key": api_key,
+            "server": server,
+        })
+
+        subscriber_hash, response = self.subscribe_member(
+            client, list_id, email, member_info
+        )
+
+        self.apply_tag(client, list_id, subscriber_hash)
+
+        logger.info(f'Successful signup: {response["email_address"]}')
+
     def serve(self, request):
-        form = SubscribeForm()
+        form_class = self.get_subscribe_form_class()
+        form = form_class()
+
         context = super().get_context(request)
-        context['self'] = self
-        member_info = {}
+        context["self"] = self
 
         if request.GET:
-            form = SubscribeForm(initial={'email': request.GET.get('email', None)})
+            form = form_class(initial={"email": request.GET.get("email")})
 
-        if request.method == 'POST':
-            form = SubscribeForm(request.POST)
+        if request.method == "POST":
+            form = form_class(request.POST)
+
             if form.is_valid():
-                member_info['email_address'] = form.cleaned_data['email']
-                member_info['merge_fields'] = {
-                    'FNAME': form.cleaned_data['first_name'],
-                    'LNAME': form.cleaned_data['last_name'],
-                    'ORG': form.cleaned_data['organization'],
-                    'COUNTRY': form.cleaned_data['country'],
-                }
+                consent = form.cleaned_data.get("consent", False)
 
-            try:
-                if api_key and server and list_id:
-                    client = MailchimpMarketing.Client()
-                    client.set_config({
-                        'api_key': api_key,
-                        'server': server,
-                    })
+                if consent:
+                    try:
+                        self.subscribe_to_mailchimp(form)
+                    except ApiClientError as error:
+                        logger.error(f"An error occurred with Mailchimp: {error.text}")
+                else:
+                    logger.info("User did not consent; skipping Mailchimp subscription.")
 
-                    member_info['status'] = 'pending'
+                context["form"] = form
+                return render(request, self.landing_page_template, context)
 
-                    response = client.lists.add_list_member(list_id, member_info)
-                    logger.info(f'Successful newsletter sign up: {response["email_address"]}')
-
-            except ApiClientError as error:
-                logger.error('An error occurred with Mailchimp: {}'.format(error.text))
-
-            return render(request, self.landing_page_template, context)
-
-        context['form'] = form
+        context["form"] = form
         return render(request, self.template, context)
 
     class Meta:
@@ -118,4 +206,60 @@ class SubscribeForm(forms.Form):
     last_name = forms.CharField(max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Last Name'}))
     email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Email'}))
     organization = forms.CharField(required=False, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Organization*'}))
-    country = forms.CharField(required=False, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Country*'}))
+    location = CountryField(blank=True).formfield(
+        required=False,
+        empty_label="Country*",
+        widget=forms.Select()
+    )
+    consent = forms.BooleanField(
+        required=True,
+        label='',
+        widget=forms.CheckboxInput(),
+        help_text='I consent to receiving electronic communications from The Center for International Governance Innovation (CIGI), including updates, newsletters and event invitations. I understand that I may withdraw my consent at any time by clicking the unsubscribe link in any email.',
+    )
+
+
+class TFGBVSubscribePage(SubscribePage):
+    def get_subscribe_form_class(self):
+        return TFGBVSubscribeForm
+
+    def get_organization(self, form):
+        return form.cleaned_data.get("affiliation", "")
+
+    def get_country(self, form):
+        return None
+
+    mailchimp_tag = 'TFGBV Updates'
+    mailchimp_merge_field_suffix = 'TFGBV'
+    parent_page_types = ['research.ProjectPage']
+    template = 'themes/ogbv/subscribe_page.html'
+    landing_page_template = 'themes/ogbv/subscribe_page_landing.html'
+
+
+class TFGBVSubscribeForm(SubscribeForm):
+    affiliation = forms.CharField(required=False, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Affiliation*'}))
+
+    # help_text wording change from base
+    consent = forms.BooleanField(
+        required=True,
+        label='',
+        widget=forms.CheckboxInput(),
+        help_text='I consent to receiving electronic communications from The Center for International Governance Innovation (CIGI). I understand that I may withdraw my consent at any time by clicking the unsubscribe link in any email.',
+    )
+
+    allowed_fields = [
+        'first_name',
+        'last_name',
+        'email',
+        'affiliation',
+        'consent',
+    ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields = {
+            name: self.fields[name]
+            for name in self.allowed_fields
+            if name in self.fields
+        }

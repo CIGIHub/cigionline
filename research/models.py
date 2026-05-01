@@ -174,6 +174,11 @@ class ProjectPage(
         default='standard',
         help_text='Select how featured content is displayed on the project page. Medium Only displays medium cards in rows of three. Large Only displays a large card in a single column.',
     )
+    subscribe_page = models.URLField(
+        blank=True,
+        null=True,
+        help_text='The newsletter subscription landing page for this project.',
+    )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
@@ -216,6 +221,7 @@ class ProjectPage(
                 FieldPanel('secondary_themes'),
                 FieldPanel('topics'),
                 FieldPanel('related_files'),
+                FieldPanel('subscribe_page'),
             ],
             heading='Related',
             classname='collapsible collapsed',
@@ -261,7 +267,7 @@ class ProjectPage(
         + ContentPage.search_fields
 
     parent_page_types = ['core.BasicPage', 'research.ProjectListPage']
-    subpage_types = []
+    subpage_types = ['subscribe.TFGBVSubscribePage']
     templates = 'research/project_page.html'
 
     @property

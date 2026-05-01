@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load webpack_loader wagtailimages_tags wagtailcore_tags %}
+
+{% block extra_css %}
+  {% render_bundle 'themeOGBV' 'css' %}
+  {% render_bundle 'subscribePage' 'css' %}
+{% endblock %}
+
+{% block extra_js %}
+  <script type="text/javascript">
+    var projectId= {{ self.id }};
+  </script>
+  {% render_bundle 'themeOGBV' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block content %}
+  {% with parent=page.get_parent %}
+    <section class="hero" style="background-image:url('{{parent.image_banner.file.url}}')">
+      <div class="container">
+        <div class="row align-items-center hero-container">
+          <div class="hero-main col-8">
+            <h1><a href="{% pageurl parent %}">{{parent.title}}</a></h1>
+            <h2>{{parent.subtitle|safe}}</h2>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endwith %}
+  <section class="title">
+    <div class="container">
+      <div class="row d-block">
+        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+          <h1>Thank you for signing up!</h1>
+        </div>
+      </div>
+    </div>
+  </section>
+  {{ self.landing_page_body }}
+  <section class="social-links">
+    <div class="container">
+      <div class="row d-block">
+        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+          <h2>Follow Us:</h2>
+          <p>Stay connected with us on LinkedIn and X for daily news, events and updates.</p>
+          <a href="https://www.linkedin.com/company/cigionline/" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="https://x.com/cigionline" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-x-twitter"></i></a>
+        </div> 
+      </div>
+    </div>
+  </section>
+{% endblock %}
