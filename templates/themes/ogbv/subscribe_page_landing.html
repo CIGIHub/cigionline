@@ -1,35 +1,34 @@
 {% extends "base.html" %}
-
-{% load webpack_loader wagtailcore_tags %}
+{% load webpack_loader wagtailimages_tags wagtailcore_tags %}
 
 {% block extra_css %}
+  {% render_bundle 'themeOGBV' 'css' %}
   {% render_bundle 'subscribePage' 'css' %}
 {% endblock %}
 
+{% block extra_js %}
+  <script type="text/javascript">
+    var projectId= {{ self.id }};
+  </script>
+  {% render_bundle 'themeOGBV' 'js' attrs='defer' %}
+{% endblock %}
+
 {% block content %}
-  {% if subscription_type == 'dph' and status != 'subscribed_success' %}
-    {% include "includes/heroes/hero_plain.html" with title="There was an error with the subscription." %}
-    <section class="body">
+  {% with parent=page.get_parent %}
+    <section class="hero" style="background-image:url('{{parent.image_banner.file.url}}')">
       <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-12{% if full_heading is not True %} col-md-10 col-lg-8{% endif %}">
-            {% if status == 'pending' %}
-              <p>In order to complete your subscription, please check your inbox for a confirmation email. If it does not appear in your inbox, please check your spam or junk folder. If you did not receive a confirmation email please <a href="https://www.cigionline.org/contact">contact us</a>.</p>
-            {% elif status == 'subscribed' %}
-              <p>Your email is already subscribed. Please check your inbox for any updates.</p>
-            {% elif status == 'unsubscribed' %}
-              <p>Your email has been unsubscribed. If you would like to resubscribe,please use the links in the unsubscribe confirmation email, or <a href="https://www.cigionline.org/contact">contact us</a>.</p>
-            {% elif status == 'error' %}
-              <p>There was an error with your subscription. Please <a href="https://www.cigionline.org/contact">contact us</a> for assistance.</p>
-            {% endif %}
+        <div class="row align-items-center hero-container">
+          <div class="hero-main col-8">
+            <h1><a href="{% pageurl parent %}">{{parent.title}}</a></h1>
+            <h2>{{parent.subtitle|safe}}</h2>
           </div>
         </div>
       </div>
     </section>
-  {% else %}
-    {% include "includes/heroes/hero_plain.html" with title="Thank you for signing up!" %}
-    {{ self.landing_page_body }}
-  {% endif %}
+  {% endwith %}
+
+  {{ self.landing_page_body }}
+  
   <section class="social-links">
     <div class="container">
       <div class="row d-block">

@@ -191,6 +191,7 @@ class SubscribePage(
                 else:
                     logger.info("User did not consent; skipping Mailchimp subscription.")
 
+                context["form"] = form
                 return render(request, self.landing_page_template, context)
 
         context["form"] = form
