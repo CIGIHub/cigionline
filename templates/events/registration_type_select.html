@@ -25,8 +25,10 @@
         <ul class="types-list">
           {% for t in types %}
           <li>
-            <a class="btn btn-primary" href="{{ event.url }}register/type/{{ t.slug }}/{% if invite %}?invite={{ invite.token }}{% endif %}">
-              {{ t.name }}
+            <a href="{{ event.url }}register/type/{{ t.slug }}/{% if invite %}?invite={{ invite.token }}{% endif %}">
+              <button class="button-action event-registration-button">
+                {{ t.name }}
+              </button>
             </a>
           </li>
           {% endfor %}
