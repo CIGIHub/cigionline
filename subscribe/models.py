@@ -81,6 +81,13 @@ class SubscribePage(
     def get_subscribe_form_class(self):
         return SubscribeForm
 
+    def get_organization(self, form):
+        return form.cleaned_data.get("organization", "")
+
+    def get_country(self, form):
+        country = form.cleaned_data.get("location")
+        return Country(country).name if country else ""
+
     def subscribe_member(self, client, list_id, email, member_info):
         subscriber_hash = hashlib.md5(email.encode("utf-8")).hexdigest()
 
@@ -109,19 +116,23 @@ class SubscribePage(
         )
 
     def get_mailchimp_merge_fields(self, form):
-        country = Country(form.cleaned_data.get("location"))
         consent = form.cleaned_data.get("consent", False)
         consent_timestamp = timezone.now().isoformat()
         tags = self.get_mailchimp_tags()
 
-        return {
+        fields = {
             "FNAME": form.cleaned_data["first_name"],
             "LNAME": form.cleaned_data["last_name"],
-            "ORG": form.cleaned_data.get("organization", ""),
-            "COUNTRY": country.name if country else "",
+            "ORG": self.get_organization(form),
             f"{tags[0]}_CONSENT": consent,
             f"{tags[0]}_CONSENT_AT": consent_timestamp if consent else "",
         }
+
+        country = self.get_country(form)
+        if country:
+            fields["COUNTRY"] = country
+
+        return fields
 
     def subscribe_to_mailchimp(self, form):
         email = form.cleaned_data["email"].strip().lower()
@@ -129,7 +140,6 @@ class SubscribePage(
         member_info = {
             "email_address": email,
             "merge_fields": self.get_mailchimp_merge_fields(form),
-            "status_if_new": "pending",
         }
 
         if not (api_key and server and list_id):
@@ -199,12 +209,11 @@ class TFGBVSubscribePage(SubscribePage):
     def get_subscribe_form_class(self):
         return TFGBVSubscribeForm
 
-    def get_mailchimp_merge_fields(self, form):
-        return {
-            "FNAME": form.cleaned_data["first_name"],
-            "LNAME": form.cleaned_data["last_name"],
-            "ORG": form.cleaned_data.get("affiliation", ""),
-        }
+    def get_organization(self, form):
+        return form.cleaned_data.get("affiliation", "")
+
+    def get_country(self, form):
+        return None
 
     mailchimp_tags = ['TFGBV Updates']
     parent_page_types = ['research.ProjectPage']

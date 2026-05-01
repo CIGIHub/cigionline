@@ -43,7 +43,7 @@
       <div class="row d-block">
         <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
           <hr>
-          <form class="cigi-subscribe-form" action="/subscribe/" method="POST" id="subscribe-form" accept-charset="UTF-8">
+          <form class="cigi-subscribe-form" method="POST" id="subscribe-form" accept-charset="UTF-8">
             {% csrf_token %}
             {{form.as_p}}
             <div class="legends"><p>*Optional fields</p></div>
