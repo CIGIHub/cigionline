@@ -229,8 +229,8 @@ class TFGBVSubscribePage(SubscribePage):
     def get_country(self, form):
         return None
 
-    mailchimp_tags = 'TFGBV Updates'
-    mailchimp_merge_field_suffix = 'WEEKLY'
+    mailchimp_tag = 'TFGBV Updates'
+    mailchimp_merge_field_suffix = 'TFGBV'
     parent_page_types = ['research.ProjectPage']
     template = 'themes/ogbv/subscribe_page.html'
     landing_page_template = 'themes/ogbv/subscribe_page_landing.html'
