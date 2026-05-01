@@ -605,26 +605,26 @@ class ContentPageForm(WagtailAdminPageForm):
         # filter out archived topics
         self.fields['topics'].queryset = TopicPage.objects.filter(archive=0)
 
-        # order commonly used country tags first
-        common_countries = [
-            'Canada',
-            'United States of America',
-            'Russian Federation',
-            'China',
-            'India',
-            'Brazil',
-        ]
+        # # order commonly used country tags first
+        # common_countries = [
+        #     'Canada',
+        #     'United States of America',
+        #     'Russian Federation',
+        #     'China',
+        #     'India',
+        #     'Brazil',
+        # ]
 
-        _whens = []
-        for sort_index, value in enumerate(common_countries):
-            _whens.append(models.When(title=value, then=sort_index))
+        # _whens = []
+        # for sort_index, value in enumerate(common_countries):
+        #     _whens.append(models.When(title=value, then=sort_index))
 
-        self.fields['countries'].queryset = CountryPage.objects.filter(archive=0).annotate(
-            _sort_index=models.Case(
-                *_whens,
-                output_field=models.IntegerField()
-            )
-        ).order_by('_sort_index', 'title')
+        # self.fields['countries'].queryset = CountryPage.objects.filter(archive=0).annotate(
+        #     _sort_index=models.Case(
+        #         *_whens,
+        #         output_field=models.IntegerField()
+        #     )
+        # ).order_by('_sort_index', 'title')
 
 
 class ContentPage(Page, SearchablePageAbstract):
