@@ -140,6 +140,7 @@ class SubscribePage(
         member_info = {
             "email_address": email,
             "merge_fields": self.get_mailchimp_merge_fields(form),
+            "status_if_new": "subscribed",
         }
 
         if not (api_key and server and list_id):
