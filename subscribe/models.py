@@ -1,6 +1,7 @@
 from django import forms
 from django.conf import settings
 from django.shortcuts import render
+from django.utils import timezone
 from core.models import BasicPageAbstract, SearchablePageAbstract
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.fields import RichTextField, StreamField
@@ -13,7 +14,7 @@ from mailchimp_marketing.api_client import ApiClientError
 import mailchimp_marketing as MailchimpMarketing
 import logging
 
-from django_countries.fields import CountryField
+from django_countries.fields import CountryField, Country
 
 
 api_key = None
@@ -72,7 +73,7 @@ class SubscribePage(
     template = 'subscribe/subscribe_page.html'
     landing_page_template = 'subscribe/subscribe_page_landing.html'
 
-    mailchimp_tags = []
+    mailchimp_tags = ['CIGI Weekly Newsletter']
 
     def get_mailchimp_tags(self):
         return self.mailchimp_tags
@@ -108,13 +109,18 @@ class SubscribePage(
         )
 
     def get_mailchimp_merge_fields(self, form):
-        country = form.cleaned_data.get("location")
+        country = Country(form.cleaned_data.get("location"))
+        consent = form.cleaned_data.get("consent", False)
+        consent_timestamp = timezone.now().isoformat()
+        tags = self.get_mailchimp_tags()
 
         return {
             "FNAME": form.cleaned_data["first_name"],
             "LNAME": form.cleaned_data["last_name"],
             "ORG": form.cleaned_data.get("organization", ""),
             "COUNTRY": country.name if country else "",
+            f"{tags[0]}_CONSENT": consent,
+            f"{tags[0]}_CONSENT_AT": consent_timestamp if consent else "",
         }
 
     def subscribe_to_mailchimp(self, form):
