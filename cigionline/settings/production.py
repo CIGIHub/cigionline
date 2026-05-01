@@ -185,6 +185,12 @@ if 'MAILCHIMP_DATA_CENTER' in os.environ:
     MAILCHIMP_DATA_CENTER = os.environ['MAILCHIMP_DATA_CENTER']
 if 'MAILCHIMP_NEWSLETTER_LIST_ID' in os.environ:
     MAILCHIMP_NEWSLETTER_LIST_ID = os.environ['MAILCHIMP_NEWSLETTER_LIST_ID']
+if 'SECOND_CENTURY_COMMISSION_ALLOWED_ORIGINS' in os.environ:
+    SECOND_CENTURY_COMMISSION_ALLOWED_ORIGINS = [
+        origin.strip()
+        for origin in os.environ['SECOND_CENTURY_COMMISSION_ALLOWED_ORIGINS'].split(',')
+        if origin.strip()
+    ]
 
 if 'MAILCHIMP_API_KEY_DPH' in os.environ:
     MAILCHIMP_API_KEY_DPH = os.environ['MAILCHIMP_API_KEY_DPH']
