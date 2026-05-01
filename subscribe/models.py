@@ -126,10 +126,10 @@ class SubscribePage(
         }
 
         consent = form.cleaned_data.get("consent", False)
-        consent_timestamp = timezone.now().isoformat()
+        consent_timestamp = timezone.now().strftime("%Y-%m-%d")
         suffix = self.get_mailchimp_suffix()
         if suffix:
-            fields[f"C_{suffix}"] = consent
+            fields[f"C_{suffix}"] = "Yes" if consent else "No"
             fields[f"C_T_{suffix}"] = consent_timestamp if consent else ""
 
         country = self.get_country(form)
