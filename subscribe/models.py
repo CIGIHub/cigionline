@@ -73,10 +73,14 @@ class SubscribePage(
     template = 'subscribe/subscribe_page.html'
     landing_page_template = 'subscribe/subscribe_page_landing.html'
 
-    mailchimp_tags = ['CIGI Weekly Newsletter']
+    mailchimp_tag = 'CIGI Weekly Newsletter'
+    mailchimp_merge_field_suffix = 'WEEKLY'
 
-    def get_mailchimp_tags(self):
-        return self.mailchimp_tags
+    def get_mailchimp_tag(self):
+        return self.mailchimp_tag
+
+    def get_mailchimp_suffix(self):
+        return self.mailchimp_merge_field_suffix
 
     def get_subscribe_form_class(self):
         return SubscribeForm
@@ -99,9 +103,9 @@ class SubscribePage(
 
         return subscriber_hash, response
 
-    def apply_tags(self, client, list_id, subscriber_hash):
-        tags = self.get_mailchimp_tags()
-        if not tags:
+    def apply_tag(self, client, list_id, subscriber_hash):
+        tag = self.get_mailchimp_tag()
+        if not tag:
             return
 
         client.lists.update_list_member_tags(
@@ -110,23 +114,23 @@ class SubscribePage(
             {
                 "tags": [
                     {"name": tag, "status": "active"}
-                    for tag in tags
                 ]
             },
         )
 
     def get_mailchimp_merge_fields(self, form):
-        consent = form.cleaned_data.get("consent", False)
-        consent_timestamp = timezone.now().isoformat()
-        tags = self.get_mailchimp_tags()
-
         fields = {
             "FNAME": form.cleaned_data["first_name"],
             "LNAME": form.cleaned_data["last_name"],
             "ORG": self.get_organization(form),
-            f"{tags[0]}_CONSENT": consent,
-            f"{tags[0]}_CONSENT_AT": consent_timestamp if consent else "",
         }
+
+        consent = form.cleaned_data.get("consent", False)
+        consent_timestamp = timezone.now().isoformat()
+        suffix = self.get_mailchimp_suffix()
+        if suffix:
+            fields[f"C_{suffix}"] = consent
+            fields[f"C_T_{suffix}"] = consent_timestamp if consent else ""
 
         country = self.get_country(form)
         if country:
@@ -135,6 +139,9 @@ class SubscribePage(
         return fields
 
     def subscribe_to_mailchimp(self, form):
+        if not form.cleaned_data.get("consent", False):
+            return
+
         email = form.cleaned_data["email"].strip().lower()
 
         member_info = {
@@ -156,7 +163,7 @@ class SubscribePage(
             client, list_id, email, member_info
         )
 
-        self.apply_tags(client, list_id, subscriber_hash)
+        self.apply_tag(client, list_id, subscriber_hash)
 
         logger.info(f'Successful signup: {response["email_address"]}')
 
@@ -174,10 +181,15 @@ class SubscribePage(
             form = form_class(request.POST)
 
             if form.is_valid():
-                try:
-                    self.subscribe_to_mailchimp(form)
-                except ApiClientError as error:
-                    logger.error(f"An error occurred with Mailchimp: {error.text}")
+                consent = form.cleaned_data.get("consent", False)
+
+                if consent:
+                    try:
+                        self.subscribe_to_mailchimp(form)
+                    except ApiClientError as error:
+                        logger.error(f"An error occurred with Mailchimp: {error.text}")
+                else:
+                    logger.info("User did not consent; skipping Mailchimp subscription.")
 
                 return render(request, self.landing_page_template, context)
 
@@ -216,7 +228,8 @@ class TFGBVSubscribePage(SubscribePage):
     def get_country(self, form):
         return None
 
-    mailchimp_tags = ['TFGBV Updates']
+    mailchimp_tags = 'TFGBV Updates'
+    mailchimp_merge_field_suffix = 'WEEKLY'
     parent_page_types = ['research.ProjectPage']
     template = 'themes/ogbv/subscribe_page.html'
     landing_page_template = 'themes/ogbv/subscribe_page_landing.html'
