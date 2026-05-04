@@ -205,10 +205,10 @@ class SubscribeForm(forms.Form):
     first_name = forms.CharField(max_length=128, widget=forms.TextInput(attrs={'placeholder': 'First Name'}))
     last_name = forms.CharField(max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Last Name'}))
     email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Email'}))
-    organization = forms.CharField(required=False, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Organization*'}))
+    organization = forms.CharField(required=True, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Organization'}))
     location = CountryField(blank=True).formfield(
-        required=False,
-        empty_label="Country*",
+        required=True,
+        empty_label="Country",
         widget=forms.Select()
     )
     consent = forms.BooleanField(
