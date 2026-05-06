@@ -215,7 +215,7 @@ class SubscribeForm(forms.Form):
         required=True,
         label='',
         widget=forms.CheckboxInput(),
-        help_text='I consent to receiving electronic communications from The Center for International Governance Innovation (CIGI), including updates, newsletters and event invitations. I understand that I may withdraw my consent at any time by clicking the unsubscribe link in any email.',
+        help_text='I consent to receiving electronic communications from the Centre for International Governance Innovation (CIGI), including updates, newsletters and event invitations. I understand that I may withdraw my consent at any time by clicking the unsubscribe link in any email.',
     )
 
 
@@ -244,7 +244,7 @@ class TFGBVSubscribeForm(SubscribeForm):
         required=True,
         label='',
         widget=forms.CheckboxInput(),
-        help_text='I consent to receiving electronic communications from The Center for International Governance Innovation (CIGI). I understand that I may withdraw my consent at any time by clicking the unsubscribe link in any email.',
+        help_text='I consent to receiving electronic communications from the Centre for International Governance Innovation (CIGI), including updates, newsletters and event invitations. I understand that I may withdraw my consent at any time by clicking the unsubscribe link in any email.',
     )
 
     allowed_fields = [
