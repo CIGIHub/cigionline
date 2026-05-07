@@ -174,10 +174,13 @@ class ProjectPage(
         default='standard',
         help_text='Select how featured content is displayed on the project page. Medium Only displays medium cards in rows of three. Large Only displays a large card in a single column.',
     )
-    subscribe_page = models.URLField(
+    subscribe_page = models.ForeignKey(
+        "wagtailcore.Page",
+        on_delete=models.SET_NULL,
         blank=True,
         null=True,
-        help_text='The newsletter subscription landing page for this project.',
+        related_name="+",
+        help_text="The newsletter subscription landing page for this project.",
     )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
@@ -273,6 +276,18 @@ class ProjectPage(
     @property
     def has_tagged_pages(self):
         return ContentPage.objects.live().filter(projects=self).exists()
+
+    @property
+    def subscribe_button_text(self):
+        if self.subscribe_page:
+            return self.subscribe_page.specific.button_text or "Sign Up"
+        return "Sign Up"
+
+    @property
+    def subscribe_help_text(self):
+        if self.subscribe_page:
+            return self.subscribe_page.specific.button_help_text or ""
+        return ""
 
     def get_featured_pages(self):
         featured_page_ids = self.featured_pages.order_by('sort_order').values_list('featured_page', flat=True)
