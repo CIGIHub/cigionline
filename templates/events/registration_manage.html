@@ -18,13 +18,13 @@
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-lg-8">
-        <a href="{{ event.url }}" class="btn btn-link p-2 mb-3">&larr; Back to event</a>
+        <a href="{{ event.url }}" class="btn mb-3"><i class="far fa-arrow-left"></i> Back to event</a>
 
         {% if request.GET.gid %}
           <a
             href="{{ event.url }}register/manage/group/?gid={{ request.GET.gid }}&t={{ token }}"
-            class="btn btn-link p-2 mb-3">
-            &larr; Back to registrants
+            class="btn mb-3">
+            <i class="far fa-arrow-left"></i> Back to registrants
           </a>
         {% endif %}
 
@@ -93,7 +93,7 @@
             <div class="cigi-actions">
               <button type="submit" class="btn btn-primary">Save changes</button>
               <a class="btn" href="{{ event.url }}">
-                <i class="fal fa-long-arrow-left"></i>
+                <i class="far fa-arrow-left"></i>
                 Back to event
               </a>
             </div>

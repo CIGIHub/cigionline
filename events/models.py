@@ -904,7 +904,7 @@ class EventPage(
                         )
 
                     base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
-                    return redirect(f"{base}register/result/?s=ok")
+                    return redirect(f"{base}register/result/?s=dup")
 
                 # If there are guests, create a group and one Registrant per attendee.
                 # Don't treat an empty extra form as a guest submission.
@@ -2304,13 +2304,13 @@ class Registrant(models.Model):
             return True
 
         with transaction.atomic():
-            RegistrationType.objects.select_for_update().get(pk=self.registration_type_id)
+            rt = RegistrationType.objects.select_for_update().get(pk=self.registration_type_id)
             confirmed_count = Registrant.objects.filter(
                 registration_type_id=self.registration_type_id,
                 status=Registrant.Status.CONFIRMED
             ).count()
 
-            if confirmed_count < (self.registration_type.capacity or 0):
+            if confirmed_count < (rt.capacity or 0):
                 self.status = Registrant.Status.CONFIRMED
                 self.save(update_fields=["status"])
                 return True
