@@ -97,7 +97,10 @@ function toggleConditionalSettingsForItem(item) {
 
   // ---- Conditional groups
   const isConditionalText = val === 'conditional_text';
-  const isConditionalOther = val === 'conditional_dropdown_other';
+  const isConditionalOther = new Set([
+    'conditional_dropdown_other',
+    'conditional_multiselect_other',
+  ]).has(val);
 
   // Show/hide the "group" wrappers if present
   showGroupHeading('Conditional form settings', isConditionalText);
@@ -131,6 +134,7 @@ function toggleConditionalSettingsForItem(item) {
     'checkboxes',
     'multiselect',
     'conditional_dropdown_other',
+    'conditional_multiselect_other',
   ]).has(val);
 
   showFields(['choices'], needsChoices);
@@ -187,4 +191,87 @@ document.addEventListener('click', (e) => {
   setTimeout(() => {
     initConditionalAdminUI();
   }, 150);
+});
+
+function findTargetInput(scope, rawName) {
+  if (!rawName) return null;
+  const expectedId = `id_${rawName}`;
+  return Array.from(scope.querySelectorAll('input, select, textarea')).find(
+    (el) => el.name === rawName
+      || el.id === expectedId
+      || (el.id && el.id.endsWith(`-${rawName}`)),
+  );
+}
+
+function getFieldWrapper(input) {
+  if (!input) return null;
+  return (
+    input.closest('.ea-field')
+    || input.closest('.cigi-field')
+    || input.closest('.w-field__wrapper')
+    || input.closest('.w-field')
+    || input.closest('.field')
+    || input.parentElement
+  );
+}
+
+function selectedContainsTrigger(selectEl, triggerValue) {
+  if (selectEl.multiple) {
+    return Array.from(selectEl.selectedOptions).some(
+      (option) => (option.value || '').trim() === triggerValue,
+    );
+  }
+  return (selectEl.value || '').trim() === triggerValue;
+}
+
+function syncConditionalToggle(toggleEl, opts = {}) {
+  const { clearOnHide = false } = opts;
+  const detailsName = toggleEl.getAttribute('data-conditional-target');
+  const scope = toggleEl.closest('form') || document;
+  const detailsInput = findTargetInput(scope, detailsName);
+  if (!detailsInput) return;
+
+  const wrapper = getFieldWrapper(detailsInput);
+  const show = !!toggleEl.checked;
+  if (wrapper) wrapper.style.display = show ? '' : 'none';
+  if (!show && clearOnHide) detailsInput.value = '';
+}
+
+function syncConditionalSelectOther(selectEl, opts = {}) {
+  const { clearOnHide = false } = opts;
+  const targetName = selectEl.getAttribute('data-conditional-target');
+  const triggerValue = selectEl.getAttribute('data-conditional-trigger-value') || 'Other';
+  const scope = selectEl.closest('form') || document;
+  const otherInput = findTargetInput(scope, targetName);
+  if (!otherInput) return;
+
+  const wrapper = getFieldWrapper(otherInput);
+  const show = selectedContainsTrigger(selectEl, triggerValue);
+  if (wrapper) wrapper.style.display = show ? '' : 'none';
+  if (!show && clearOnHide) otherInput.value = '';
+}
+
+function initConditionalAnswerUI(root = document) {
+  root
+    .querySelectorAll("[data-conditional-toggle='1']")
+    .forEach((toggleEl) => syncConditionalToggle(toggleEl));
+  root
+    .querySelectorAll("[data-conditional-select='1']")
+    .forEach((selectEl) => syncConditionalSelectOther(selectEl));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initConditionalAnswerUI();
+});
+
+document.addEventListener('change', (e) => {
+  const target = e.target;
+  if (!target) return;
+
+  if (target.matches("[data-conditional-toggle='1']")) {
+    syncConditionalToggle(target, { clearOnHide: true });
+  }
+  if (target.matches("[data-conditional-select='1']")) {
+    syncConditionalSelectOther(target, { clearOnHide: true });
+  }
 });
