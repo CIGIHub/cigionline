@@ -88,6 +88,24 @@
   }
 }
 
+.event-add-to-calendar {
+  margin: 1.5rem 0;
+  padding: 0;
+
+  .dropdown-button-list {
+    position: relative;
+
+    a {
+      display: block;
+      color: $white;
+
+      &:hover {
+        color: $white;
+      }
+    }
+  }
+}
+
 .event-registration-form-section {
   .form-group {
     &.form-website {
