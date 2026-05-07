@@ -61,6 +61,11 @@ def _split_tokens(s: str):
     return [x.strip().lower() for x in (s or "").split(",") if x.strip()]
 
 
+def _registration_type_open_filter(now=None):
+    now = now or timezone.now()
+    return models.Q(close_date__isnull=True) | models.Q(close_date__gt=now)
+
+
 def _match(rule: str, slugs: list[str], current_slug: str) -> bool:
     S = set(slugs)
     if rule == "all":
@@ -685,7 +690,9 @@ class EventPage(
             if allowed:
                 types_qs = types_qs.filter(slug__in=allowed)
 
-        types = list(types_qs.order_by("sort_order"))
+        types = list(
+            types_qs.filter(_registration_type_open_filter()).order_by("sort_order")
+        )
         if not types:
             return self.render(
                 request,
@@ -773,6 +780,13 @@ class EventPage(
                     template="events/registration_no_types.html",
                     context_overrides={"event": self},
                 )
+
+        if not reg_type.is_open_for_registration():
+            return self.render(
+                request,
+                template="events/registration_no_types.html",
+                context_overrides={"event": self},
+            )
 
         # Primary form + optional guest formset (if enabled on the event)
         forms_obj = None
@@ -890,7 +904,7 @@ class EventPage(
                         )
 
                     base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
-                    return redirect(f"{base}register/result/?s=ok")
+                    return redirect(f"{base}register/result/?s=dup")
 
                 # If there are guests, create a group and one Registrant per attendee.
                 # Don't treat an empty extra form as a guest submission.
@@ -1899,6 +1913,14 @@ class RegistrationType(Orderable):
     slug = models.SlugField(max_length=140)
     capacity = models.PositiveIntegerField(null=True, blank=True)
     is_public = models.BooleanField(default=True)
+    close_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text=(
+            "After this date and time, this registration type is hidden and no longer accepts "
+            "new registrations. Leave blank to keep it open while event registration is open."
+        ),
+    )
     custom_confirmation_text = RichTextField(blank=True)
 
     allow_group_registrations = models.BooleanField(
@@ -1941,6 +1963,7 @@ class RegistrationType(Orderable):
         FieldPanel("slug"),
         FieldPanel("capacity"),
         FieldPanel("is_public"),
+        FieldPanel("close_date"),
         MultiFieldPanel(
             [
                 FieldPanel("allow_group_registrations"),
@@ -1962,6 +1985,10 @@ class RegistrationType(Orderable):
 
     def __str__(self) -> str:
         return f"{self.name}" + (f" (cap {self.capacity})" if self.capacity is not None else "")
+
+    def is_open_for_registration(self, now=None) -> bool:
+        now = now or timezone.now()
+        return self.close_date is None or self.close_date > now
 
 
 class RegistrationFormField(AbstractFormField):
@@ -2277,13 +2304,13 @@ class Registrant(models.Model):
             return True
 
         with transaction.atomic():
-            RegistrationType.objects.select_for_update().get(pk=self.registration_type_id)
+            rt = RegistrationType.objects.select_for_update().get(pk=self.registration_type_id)
             confirmed_count = Registrant.objects.filter(
                 registration_type_id=self.registration_type_id,
                 status=Registrant.Status.CONFIRMED
             ).count()
 
-            if confirmed_count < (self.registration_type.capacity or 0):
+            if confirmed_count < (rt.capacity or 0):
                 self.status = Registrant.Status.CONFIRMED
                 self.save(update_fields=["status"])
                 return True
