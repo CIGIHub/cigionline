@@ -1,0 +1,20 @@
+<ul class="event-add-to-calendar inline-list">
+  <li class="dropdown-button-list">
+    <button class="button" type="button" aria-haspopup="true">
+      Add to Calendar <i class="fas fa-chevron-down"></i>
+    </button>
+    <ul>
+      <li>
+        <a
+          href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ event.title|urlencode }}&amp;dates={{ event.publishing_date|date:'Ymd His' }}/{{ event.event_end|date:'Ymd His' }}&amp;ctz={{ event.time_zone|urlencode }}&amp;details=More%20Event%20Information%3A%20{{ event.full_url|default:event.url|urlencode }}&amp;location=&amp;trp=false&amp;sprop=www.cigionline.org&amp;pli=1&amp;sf=true&amp;output=xml"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="cal_google">
+          Google
+        </a>
+      </li>
+      <li><a href="/events/feed.ics?id={{ event.id }}">Outlook</a></li>
+      <li><a href="/events/feed.ics?id={{ event.id }}">iCal</a></li>
+    </ul>
+  </li>
+</ul>

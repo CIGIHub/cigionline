@@ -49,7 +49,8 @@
   .button {
     background: $color--blue;
     text-align: left;
-    width: 150px;
+    width: 10rem;
+    border-radius: 0;
 
     &:hover {
       color: $white;
@@ -66,16 +67,17 @@
     list-style: none;
     margin-top: -0.8em;
     text-align: left;
-    width: 150px;
+    width: 10rem;
   }
 
   li {
     margin: 0;
 
     a {
-      font-size: 0.75em;
+      font-size: 1rem;
       padding: 7px 10px;
       text-align: center;
+      color: $white;
 
       &:hover {
         background: $color-dark-blue;
@@ -84,7 +86,8 @@
     }
   }
 
-  &:hover {
+  &:hover,
+  &:focus-within {
     ul {
       display: block;
       position: absolute;
