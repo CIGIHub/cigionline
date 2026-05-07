@@ -51,20 +51,32 @@ class SubscribePage(
     )
     consent_text = models.CharField(
         max_length=500,
-        default="I consent to receiving electronic communications from the Centre for International Governance Innovation (CIGI), including updates, newsletters and event invitations. I understand that I may withdraw my consent at any time by clicking the unsubscribe link in any email."
+        default="I consent to receiving electronic communications from the Centre for International Governance Innovation (CIGI), including updates, newsletters and event invitations. I understand that I may withdraw my consent at any time by clicking the unsubscribe link in any email.",
+        help_text='The text that will appear next to the consent checkbox on the subscribe form.',
     )
     button_text = models.CharField(
         blank=True,
         max_length=50,
+        help_text='Subscribe CTA button text (e.g. "Sign Up")',
     )
     button_help_text = models.CharField(
         blank=True,
         max_length=50,
+        help_text='The text that will appear next to the subscribe CTA button.',
     )
 
     content_panels = [
         BasicPageAbstract.title_panel,
         BasicPageAbstract.body_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('consent_text'),
+                FieldPanel('button_text'),
+                FieldPanel('button_help_text'),
+            ],
+            heading='Messaging',
+            classname='collapsible',
+        ),
         FieldPanel('privacy_note'),
         MultiFieldPanel(
             [
