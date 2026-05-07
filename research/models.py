@@ -279,9 +279,15 @@ class ProjectPage(
 
     @property
     def subscribe_button_text(self):
-        if self.subscribe_page and self.subscribe_page.button_text:
-            return self.subscribe_page.button_text
+        if self.subscribe_page:
+            return self.subscribe_page.specific.button_text or "Sign Up"
         return "Sign Up"
+
+    @property
+    def subscribe_help_text(self):
+        if self.subscribe_page:
+            return self.subscribe_page.specific.button_help_text or ""
+        return ""
 
     def get_featured_pages(self):
         featured_page_ids = self.featured_pages.order_by('sort_order').values_list('featured_page', flat=True)

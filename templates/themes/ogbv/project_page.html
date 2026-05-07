@@ -54,10 +54,15 @@
           <h1>{{self.title}}</h1>
           <h2>{{self.subtitle|safe}}</h2>
           {% if self.subscribe_page %}
-            <a href="{% pageurl self.subscribe_page %}" class="button-action">
-              <i class="fal fa-envelope"></i>
-              {{ self.subscribe_button_text }}
-            </a>
+            <div class="subscribe-text">
+              {{ self.subscribe_help_text }}
+            </div>
+            <div>
+              <a href="{% pageurl self.subscribe_page %}" class="button-action">
+                <i class="fal fa-envelope"></i>
+                {{ self.subscribe_button_text }}
+              </a>
+            </div>
           {% endif %}
         </div>
       </div>
