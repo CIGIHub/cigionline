@@ -8,6 +8,7 @@ from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Page
 from streams.blocks import ParagraphBlock
 from newsletters.models import NewsletterPage
+from django.db import models
 
 import hashlib
 from mailchimp_marketing.api_client import ApiClientError
@@ -47,6 +48,18 @@ class SubscribePage(
         blank=True,
         help_text='The contents of this stream field will be displayed after sign up.',
         use_json_field=True,
+    )
+    consent_text = models.CharField(
+        max_length=500,
+        default="I consent to receiving electronic communications from the Centre for International Governance Innovation (CIGI), including updates, newsletters and event invitations. I understand that I may withdraw my consent at any time by clicking the unsubscribe link in any email."
+    )
+    button_text = models.CharField(
+        blank=True,
+        max_length=50,
+    )
+    button_help_text = models.CharField(
+        blank=True,
+        max_length=50,
     )
 
     content_panels = [
@@ -169,7 +182,10 @@ class SubscribePage(
 
     def serve(self, request):
         form_class = self.get_subscribe_form_class()
-        form = form_class()
+        form = form_class(
+            request.POST or None,
+            consent_text=self.consent_text,
+        )
 
         context = super().get_context(request)
         context["self"] = self
@@ -215,8 +231,11 @@ class SubscribeForm(forms.Form):
         required=True,
         label='',
         widget=forms.CheckboxInput(),
-        help_text='I consent to receiving electronic communications from the Centre for International Governance Innovation (CIGI), including updates, newsletters and event invitations. I understand that I may withdraw my consent at any time by clicking the unsubscribe link in any email.',
     )
+
+    def __init__(self, *args, consent_text='', **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['consent'].help_text = consent_text
 
 
 class TFGBVSubscribePage(SubscribePage):
@@ -244,7 +263,6 @@ class TFGBVSubscribeForm(SubscribeForm):
         required=True,
         label='',
         widget=forms.CheckboxInput(),
-        help_text='I consent to receiving electronic communications from the Centre for International Governance Innovation (CIGI), including updates, newsletters and event invitations. I understand that I may withdraw my consent at any time by clicking the unsubscribe link in any email.',
     )
 
     allowed_fields = [
@@ -257,7 +275,6 @@ class TFGBVSubscribeForm(SubscribeForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         self.fields = {
             name: self.fields[name]
             for name in self.allowed_fields
