@@ -61,7 +61,7 @@ class SubscribePage(
     )
     button_help_text = models.CharField(
         blank=True,
-        max_length=50,
+        max_length=500,
         help_text='The text that will appear next to the subscribe CTA button.',
     )
 
