@@ -1099,25 +1099,6 @@ class EventPage(
                 # New result state for double opt-in.
                 return redirect(f"{base}register/result/?s=pending")
             else:
-                # Primary form errors
-                for field, errs in form.errors.items():
-                    label = form.fields.get(field).label if field in form.fields else field
-                    for e in errs:
-                        messages.error(request, f"{label}: {e}" if label else str(e))
-
-                # Guest errors (if any)
-                if forms_obj and forms_obj.guest_formset is not None:
-                    for idx, gf in enumerate(forms_obj.guest_formset.forms, start=1):
-                        if not gf.errors:
-                            continue
-                        for field, errs in gf.errors.items():
-                            label = gf.fields.get(field).label if field in gf.fields else field
-                            for e in errs:
-                                messages.error(
-                                    request,
-                                    f"Guest {idx} — {label}: {e}" if label else f"Guest {idx}: {e}",
-                                )
-
                 base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
                 return self.render(
                     request,
@@ -1180,8 +1161,8 @@ class EventPage(
             initial.update(registrant.answers)
 
         # Backfill conditional 'Other' textbox initial values.
-        # conditional_dropdown_other uses two fields:
-        #   - f_<uuid> (select)
+        # Conditional "Other" field types use two fields:
+        #   - f_<uuid> (select value or selected values list)
         #   - f_<uuid>__other (textbox)
         # If the textbox key is absent from stored answers, the select can still
         # show "Other" but the textbox will render blank.
@@ -1193,21 +1174,28 @@ class EventPage(
                     "field_type",
                     "conditional_other_value",
                 ):
-                    if getattr(ff, "field_type", "") != "conditional_dropdown_other":
+                    if getattr(ff, "field_type", "") not in (
+                        "conditional_dropdown_other",
+                        "conditional_multiselect_other",
+                    ):
                         continue
 
                     base_key = f"f_{ff.field_key}"
                     other_key = f"{base_key}__other"
 
                     trigger = (getattr(ff, "conditional_other_value", "") or "").strip() or "Other"
-                    selected = (initial.get(base_key) or "").strip()
+                    selected = initial.get(base_key)
+                    if isinstance(selected, (list, tuple, set)):
+                        has_trigger = trigger in {str(value).strip() for value in selected}
+                    else:
+                        has_trigger = (selected or "").strip() == trigger
 
                     # Ensure the key exists in initial so the form binds it.
                     if other_key not in initial:
                         initial[other_key] = ""
 
                     # If they previously chose the trigger value, restore the typed text.
-                    if selected == trigger and registrant.answers and isinstance(registrant.answers, dict):
+                    if has_trigger and registrant.answers and isinstance(registrant.answers, dict):
                         prev_other = (registrant.answers.get(other_key) or "").strip()
                         if prev_other and not (initial.get(other_key) or "").strip():
                             initial[other_key] = prev_other
@@ -1263,16 +1251,6 @@ class EventPage(
         form = form_class(request.POST, request.FILES or None)
 
         if not form.is_valid():
-            # Bubble up exactly what's invalid (including __all__ errors like honeypot/conditional rules)
-            for field, errs in form.errors.items():
-                if field == "__all__":
-                    for e in errs:
-                        messages.error(request, str(e))
-                    continue
-                label = form.fields.get(field).label if field in form.fields else field
-                for e in errs:
-                    messages.error(request, f"{label}: {e}" if label else str(e))
-
             return self.render(
                 request,
                 template="events/registration_manage.html",
@@ -1996,6 +1974,7 @@ class RegistrationFormField(AbstractFormField):
         ("file", _("File upload")),
         ("conditional_text", _("Conditional text (checkbox + details)")),
         ("conditional_dropdown_other", _("Conditional dropdown (Other + textbox)")),
+        ("conditional_multiselect_other", _("Conditional multiselect (Other + textbox)")),
     )
     field_key = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     template = ParentalKey(

@@ -72,12 +72,12 @@ def build_answer_columns(event) -> list[AnswerColumn]:
     for ff in form_fields:
         base = f"f_{ff.field_key}"
 
-        if ff.field_type == "conditional_dropdown_other":
+        if ff.field_type in {"conditional_dropdown_other", "conditional_multiselect_other"}:
             trigger = (getattr(ff, "conditional_other_value", "") or "").strip() or "Other"
             columns.append(
                 AnswerColumn(
                     label=ff.label,
-                    type="conditional_dropdown_other",
+                    type=ff.field_type,
                     key_select=base,
                     key_other=f"{base}__other",
                     trigger_value=trigger,
@@ -132,6 +132,30 @@ def _fmt_answer(val: Any, field_type: str) -> str:
     return str(val)
 
 
+def _fmt_conditional_other_answer(selected: Any, other: Any, trigger: str) -> str:
+    other_text = (other or "").strip()
+    trigger = (trigger or "Other").strip()
+
+    if isinstance(selected, (list, tuple)):
+        parts = []
+        for value in selected:
+            text = str(value).strip()
+            if not text:
+                continue
+            if text == trigger and other_text:
+                parts.append(f"{trigger} — {other_text}")
+            else:
+                parts.append(text)
+        return "; ".join(parts)
+
+    selected_text = (selected or "").strip()
+    if not selected_text:
+        return ""
+    if selected_text == trigger and other_text:
+        return f"{trigger} — {other_text}"
+    return selected_text
+
+
 def attach_answer_cells(page_obj, *, columns: list[AnswerColumn]):
     """Mutates registrants in page_obj: adds answer_cells, invited, edit_url."""
 
@@ -160,18 +184,12 @@ def attach_answer_cells(page_obj, *, columns: list[AnswerColumn]):
                 cells.append({"text": (details or "Yes") if enabled else "", "url": ""})
                 continue
 
-            if col.type == "conditional_dropdown_other":
-                selected = (ans.get(col.key_select or "") or "").strip()
-                other = (ans.get(col.key_other or "") or "").strip()
-                trigger = (col.trigger_value or "Other").strip()
-
-                if not selected:
-                    text = ""
-                elif selected == trigger:
-                    text = f"{trigger} — {other}" if other else trigger
-                else:
-                    text = selected
-
+            if col.type in {"conditional_dropdown_other", "conditional_multiselect_other"}:
+                text = _fmt_conditional_other_answer(
+                    ans.get(col.key_select or ""),
+                    ans.get(col.key_other or ""),
+                    col.trigger_value or "Other",
+                )
                 cells.append({"text": text, "url": ""})
                 continue
 
@@ -246,7 +264,7 @@ def registrants_csv_response(
             header.append(f"{ff.label} (enabled)")
             header.append(f"{ff.label} (details)")
             continue
-        if ff.field_type == "conditional_dropdown_other":
+        if ff.field_type in {"conditional_dropdown_other", "conditional_multiselect_other"}:
             header.append(f"{ff.label} (selection)")
             header.append(f"{ff.label} (other)")
             continue
@@ -301,7 +319,7 @@ def registrants_csv_response(
                 non_file_cells.append(_fmt(answers.get(f"{base_key}__enabled")))
                 non_file_cells.append(_fmt(answers.get(f"{base_key}__details")))
                 continue
-            if ff.field_type == "conditional_dropdown_other":
+            if ff.field_type in {"conditional_dropdown_other", "conditional_multiselect_other"}:
                 non_file_cells.append(_fmt(answers.get(base_key)))
                 non_file_cells.append(_fmt(answers.get(f"{base_key}__other")))
                 continue

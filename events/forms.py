@@ -63,11 +63,24 @@ WAGTAIL_FIELD_MAP = {
     'checkboxes': forms.MultipleChoiceField,
     'dropdown': forms.ChoiceField,
     'multiselect': forms.MultipleChoiceField,
+    'conditional_multiselect_other': forms.MultipleChoiceField,
     'radio': forms.ChoiceField,
     'date': forms.DateField,
     'datetime': forms.DateTimeField,
     'file': forms.FileField,
 }
+
+
+CONDITIONAL_OTHER_FIELD_TYPES = (
+    "conditional_dropdown_other",
+    "conditional_multiselect_other",
+)
+
+
+def _selected_contains_trigger(selected, trigger_value: str) -> bool:
+    if isinstance(selected, (list, tuple, set)):
+        return trigger_value in {str(value).strip() for value in selected}
+    return (selected or "").strip() == trigger_value
 
 
 def build_dynamic_form(
@@ -190,26 +203,35 @@ def build_dynamic_form(
                 "error": f"{details_label}: this field is required.",
             })
             continue
-        if ff.field_type == "conditional_dropdown_other":
+        if ff.field_type in CONDITIONAL_OTHER_FIELD_TYPES:
             base_key = f"f_{ff.field_key}"
             select_key = base_key
             other_key = f"{base_key}__other"
+            is_multiselect = ff.field_type == "conditional_multiselect_other"
 
             choices = [(x.strip(), x.strip()) for x in ff.choices.splitlines() if x.strip()]
-            choices = [("", "Select an option…")] + choices
+            if not is_multiselect:
+                choices = [("", "Select an option…")] + choices
 
             other_value = (getattr(ff, "conditional_other_value", "") or "").strip() or "Other"
             other_label = (getattr(ff, "conditional_other_label", "") or "").strip() or "Please specify"
             other_help = getattr(ff, "conditional_other_help_text", "") or ""
             other_required = bool(getattr(ff, "conditional_other_required", True))
 
-            select_field = forms.ChoiceField(
-                label=ff.label,
-                required=is_required,
-                help_text=ff.help_text,
-                choices=choices,
-            )
-            select_field.widget.attrs["class"] = f"{BASE_SELECT_CLASS}".strip()
+            select_field_class = forms.MultipleChoiceField if is_multiselect else forms.ChoiceField
+            select_kwargs = {
+                "label": ff.label,
+                "required": is_required,
+                "help_text": ff.help_text,
+                "choices": choices,
+            }
+            if is_multiselect:
+                select_kwargs["widget"] = forms.SelectMultiple()
+            select_field = select_field_class(**select_kwargs)
+            if is_multiselect:
+                select_field.widget.attrs["class"] = f"{BASE_SELECT_CLASS} {BASE_SELECT_CLASS}--multiple".strip()
+            else:
+                select_field.widget.attrs["class"] = f"{BASE_SELECT_CLASS}".strip()
 
             select_field.widget.attrs["data-conditional-select"] = "1"
             select_field.widget.attrs["data-conditional-target"] = other_key
@@ -283,10 +305,10 @@ def build_dynamic_form(
 
         for rule in conditional_rules:
             if rule.get("kind") == "select_other":
-                selected = (cleaned.get(rule["select_key"]) or "").strip()
+                selected = cleaned.get(rule["select_key"])
                 other = (cleaned.get(rule["other_key"]) or "").strip()
 
-                if selected == rule["trigger_value"]:
+                if _selected_contains_trigger(selected, rule["trigger_value"]):
                     if rule["other_required"] and not other:
                         self.add_error(rule["other_key"], rule["error"])
                 else:

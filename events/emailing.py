@@ -182,7 +182,7 @@ def _render_registrant_answers(registrant) -> tuple[str, str]:
     def _label_for_key(answer_key: str) -> str:
         # Dynamic fields are stored as f_<uuid> plus optional suffixes like:
         #   __details (conditional_text)
-        #   __other   (conditional_dropdown_other)
+        #   __other   (conditional_*_other fields)
         if not answer_key.startswith("f_"):
             return answer_key
 

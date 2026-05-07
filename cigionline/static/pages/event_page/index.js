@@ -218,13 +218,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const otherInput = findTargetInput(scope, targetName);
     if (!otherInput) return;
     const wrapper = getFieldWrapper(otherInput);
-    const show = (selectEl.value || '').trim() === triggerValue;
+    const show = selectEl.multiple
+      ? Array.from(selectEl.selectedOptions).some(
+        (option) => (option.value || '').trim() === triggerValue,
+      )
+      : (selectEl.value || '').trim() === triggerValue;
     if (wrapper) wrapper.style.display = show ? '' : 'none';
     if (!show && clearOnHide) otherInput.value = '';
   };
 
   const initConditionalsIn = (root) => {
-    root.querySelectorAll('[data-conditional-target]').forEach((t) => syncConditionalToggle(t));
+    root.querySelectorAll("[data-conditional-toggle='1']").forEach((t) => syncConditionalToggle(t));
     root.querySelectorAll("[data-conditional-select='1']").forEach((s) => syncConditionalSelectOther(s));
   };
 
@@ -292,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
     formEl.addEventListener('change', (e) => {
       const t = e.target;
       if (!t) return;
-      if (t.matches('[data-conditional-target]')) {
+      if (t.matches("[data-conditional-toggle='1']")) {
         syncConditionalToggle(t, { clearOnHide: true });
       }
       if (t.matches("[data-conditional-select='1']")) {
