@@ -12,7 +12,7 @@
 <section class="container event-registration-result-section">
   <div class="row justify-content-center">
     <div class="col-lg-8">
-      <a href="{{ event.url }}" class="btn btn-link p-2 mb-3">&larr; Back to event</a>
+      <a href="{{ event.url }}" class="btn mb-3"><i class="far fa-arrow-left"></i> Back to event</a>
 
       <div class="registration-banner-image">
         {% if event.registration_image_banner %}
@@ -54,7 +54,7 @@
         </div>
       {% endif %}
 
-      <p><a class="btn btn-primary" href="{{ event.url }}">Back to event</a></p>
+      <p><a class="btn btn-primary" href="{{ event.url }}"><i class="far fa-arrow-left"></i> Back to event</a></p>
     </div>
   </div>
 </section>

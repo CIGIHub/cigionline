@@ -1,9 +1,10 @@
-from datetime import datetime, timezone as datetime_timezone
-from types import SimpleNamespace
-from home.models import HomePage, Think7HomePage
-from wagtail.test.utils import WagtailPageTestCase
+from datetime import datetime, timedelta, timezone as datetime_timezone
 from django.template.loader import render_to_string
 from django.test import SimpleTestCase, TestCase
+from django.utils import timezone
+from home.models import HomePage, Think7HomePage
+from types import SimpleNamespace
+from wagtail.test.utils import WagtailPageTestCase
 
 from .models import EventListPage, EventPage
 from .email_rendering import render_streamfield_email_html
@@ -268,6 +269,71 @@ class GroupRegistrationConfirmTests(TestCase):
         # Primary + guest should be immediately confirmed or waitlisted (not pending).
         self.assertTrue(statuses)
         self.assertTrue(all(s in (Registrant.Status.CONFIRMED, Registrant.Status.WAITLISTED) for s in statuses))
+
+
+class RegistrationTypeCloseDateTests(TestCase):
+    def test_expired_registration_type_is_hidden_from_entry_flow(self):
+        from wagtail.models import Site
+        from events.models import EventPage, RegistrationType
+
+        root = Site.objects.get(is_default_site=True).root_page
+        event = EventPage(title="Close Date Event", registration_open=True)
+        root.add_child(instance=event)
+        event.save_revision().publish()
+
+        RegistrationType.objects.create(
+            event=event,
+            name="Closed",
+            slug="closed",
+            sort_order=0,
+            is_public=True,
+            close_date=timezone.now() - timedelta(days=1),
+        )
+        open_type = RegistrationType.objects.create(
+            event=event,
+            name="Open",
+            slug="open",
+            sort_order=1,
+            is_public=True,
+            close_date=timezone.now() + timedelta(days=1),
+        )
+
+        resp = self.client.get(f"{event.url}register/")
+
+        self.assertEqual(resp.status_code, 302)
+        self.assertTrue(resp["Location"].endswith(f"register/type/{open_type.slug}/"))
+
+    def test_expired_registration_type_direct_url_is_unavailable(self):
+        from wagtail.models import Site
+        from events.models import EventPage, RegistrationType, Registrant
+
+        root = Site.objects.get(is_default_site=True).root_page
+        event = EventPage(title="Closed Direct Event", registration_open=True)
+        root.add_child(instance=event)
+        event.save_revision().publish()
+
+        reg_type = RegistrationType.objects.create(
+            event=event,
+            name="Closed",
+            slug="closed",
+            sort_order=0,
+            is_public=True,
+            close_date=timezone.now() - timedelta(days=1),
+        )
+
+        resp = self.client.post(
+            f"{event.url}register/type/{reg_type.slug}/",
+            data={
+                "first_name": "Closed",
+                "last_name": "Registrant",
+                "email": "closed@example.com",
+                "website": "",
+            },
+        )
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, "events/registration_no_types.html")
+        self.assertFalse(Registrant.objects.filter(event=event).exists())
 
 
 class EventsAPITests(WagtailPageTestCase):
