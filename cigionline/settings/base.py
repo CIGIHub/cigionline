@@ -92,6 +92,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.sitemaps',
     'django.contrib.staticfiles',
+
+    'django_countries',
 ]
 
 MIDDLEWARE = [

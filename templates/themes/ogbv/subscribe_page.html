@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load webpack_loader wagtailimages_tags wagtailcore_tags %}
+
+{% block extra_css %}
+  {% render_bundle 'themeOGBV' 'css' %}
+  {% render_bundle 'subscribePage' 'css' %}
+{% endblock %}
+
+{% block extra_js %}
+  <script type="text/javascript">
+    var projectId= {{ self.id }};
+  </script>
+  {% render_bundle 'themeOGBV' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block content %}
+  {% with parent=page.get_parent %}
+    <section class="hero" style="background-image:url('{{parent.image_banner.file.url}}')">
+      <div class="container">
+        <div class="row align-items-center hero-container">
+          <div class="hero-main col-8">
+            <h1><a href="{% pageurl parent %}">{{parent.title}}</a></h1>
+            <h2>{{parent.subtitle|safe}}</h2>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endwith %}
+  <section class="title">
+    <div class="container">
+      <div class="row d-block">
+        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+          <h1>{{ self.title }}</h1>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="body">
+    {{self.body}}
+  </section>
+  <section>
+    <div class="container">
+      <div class="row d-block">
+        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+          <hr>
+          <form class="cigi-subscribe-form" method="POST" id="subscribe-form" accept-charset="UTF-8">
+            {% csrf_token %}
+            {{form.as_p}}
+            <div class="legends"><p>*Optional fields</p></div>
+            <button class="button-action" type="submit">Sign Up</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="privacy-note">
+    <div class="container">
+      <div class="row d-block">
+        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+          {{self.privacy_note|richtext}}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

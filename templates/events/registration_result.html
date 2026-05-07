@@ -20,18 +20,41 @@
         {% endif %}
       </div>
 
-      <h1>Registration submitted</h1>
+      {% if status == "ok" %}
+        <h1>Registration confirmed</h1>
+      {% elif status == "wait" %}
+        <h1>Added to waitlist</h1>
+      {% else %}
+        <h1>Registration submitted</h1>
+      {% endif %}
 
-      <div id="registration-action-required" class="alert {% if status == 'pending' %}alert-warning{% else %}alert-success{% endif %}" role="alert">
-        {% if status == "pending" %}
-          <strong>Action required:</strong>
-          Please check your email and click the confirmation link to finalize your registration.
-          If you had already registered with this address, we’ll email you a link to manage your registration.
+      {% if status == "ok" or status == "wait" %}
+        {% if status == "ok" %}
+          <p class="lead">Thanks, {{ registrant.first_name|default:registrant.email }}. Your registration is confirmed.</p>
         {% else %}
-          Thank you! If a new registration was submitted for this email address, you’ll receive an email shortly.
-          If you had already registered with this address, we’ll email you a link to manage your registration.
+          <p class="lead">Thanks, {{ registrant.first_name|default:registrant.email }}. You've been added to the waitlist.</p>
         {% endif %}
-      </div>
+
+        {% if registrant.registration_type %}
+          <p>
+            <strong>Event:</strong> {{ event.title }}<br>
+            <strong>Registration type:</strong> {{ registrant.registration_type.name }}
+          </p>
+        {% endif %}
+
+        {% if status == "ok" and not event.is_past %}
+          {% include "events/includes/add_to_calendar.html" with event=event %}
+        {% endif %}
+
+        <p>You'll receive a confirmation email shortly with your registration details.</p>
+      {% else %}
+        <div class="alert alert-success" role="alert">
+          Thank you! If a new registration was submitted for this email address, you'll receive an email shortly.
+          If you had already registered with this address, we'll email you a link to manage your registration.
+        </div>
+      {% endif %}
+
+      <p><a class="btn btn-primary" href="{{ event.url }}">Back to event</a></p>
     </div>
   </div>
 </section>

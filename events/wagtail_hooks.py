@@ -209,6 +209,14 @@ class RegistrantViewSet(ModelViewSet):
                 # the existing stored value so we don't silently wipe document refs.
                 existing = registrant.answers if isinstance(registrant.answers, dict) else {}
                 uploaded_doc_ids = list(registrant.uploaded_document_ids or [])
+                file_answer_keys = set()
+                tpl = getattr(event, "registration_form_template", None)
+                if tpl:
+                    file_answer_keys = {
+                        f"f_{ff.field_key}"
+                        for ff in tpl.fields.all().only("field_key", "field_type")
+                        if getattr(ff, "field_type", "") == "file"
+                    }
 
                 for key, val in list(cleaned.items()):
                     if hasattr(val, "read"):
@@ -218,7 +226,7 @@ class RegistrantViewSet(ModelViewSet):
                         )
                         uploaded_doc_ids.append(doc.id)
                         cleaned[key] = {"document_id": doc.id, "name": getattr(val, "name", "upload")}
-                    elif val in (None, ""):
+                    elif key in file_answer_keys and val in (None, ""):
                         # Keep the existing stored value rather than overwriting with blank.
                         if key in existing:
                             cleaned[key] = existing[key]
@@ -238,15 +246,22 @@ class RegistrantViewSet(ModelViewSet):
                 tpl = getattr(event, "registration_form_template", None)
                 if tpl:
                     for ff in tpl.fields.all().only("field_key", "field_type", "conditional_other_value"):
-                        if getattr(ff, "field_type", "") != "conditional_dropdown_other":
+                        if getattr(ff, "field_type", "") not in (
+                            "conditional_dropdown_other",
+                            "conditional_multiselect_other",
+                        ):
                             continue
                         base_key = f"f_{ff.field_key}"
                         other_key = f"{base_key}__other"
                         trigger = (getattr(ff, "conditional_other_value", "") or "").strip() or "Other"
-                        selected = (initial.get(base_key) or "").strip()
+                        selected = initial.get(base_key)
+                        if isinstance(selected, (list, tuple, set)):
+                            has_trigger = trigger in {str(value).strip() for value in selected}
+                        else:
+                            has_trigger = (selected or "").strip() == trigger
                         if other_key not in initial:
                             initial[other_key] = ""
-                        if selected == trigger:
+                        if has_trigger:
                             prev = (initial.get(other_key) or "").strip()
                             if not prev and isinstance(registrant.answers, dict):
                                 initial[other_key] = (registrant.answers.get(other_key) or "").strip()

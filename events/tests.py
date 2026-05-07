@@ -1,13 +1,61 @@
-from datetime import datetime, timedelta
-from home.models import HomePage, Think7HomePage
-from wagtail.test.utils import WagtailPageTestCase
-from django.test import TestCase
+from datetime import datetime, timedelta, timezone as datetime_timezone
+from django.template.loader import render_to_string
+from django.test import SimpleTestCase, TestCase
 from django.utils import timezone
+from home.models import HomePage, Think7HomePage
+from types import SimpleNamespace
+from wagtail.test.utils import WagtailPageTestCase
 
 from .models import EventListPage, EventPage
 from .email_rendering import render_streamfield_email_html
 
 from unittest.mock import patch
+
+
+class EventCalendarTemplateTests(SimpleTestCase):
+    def test_event_hero_does_not_render_add_to_calendar(self):
+        class EmptyTopics:
+            def all(self):
+                return []
+
+        html = render_to_string(
+            "includes/heroes/hero_event.html",
+            {
+                "topics": EmptyTopics(),
+                "title": "Template Event",
+                "date": datetime(2030, 1, 1, 13, 0, tzinfo=datetime_timezone.utc),
+                "end_date": datetime(2030, 1, 1, 14, 0, tzinfo=datetime_timezone.utc),
+                "event_type": "Panel Discussion",
+                "event_access": "Public",
+                "authors": [],
+                "author_count": 0,
+                "registration_url": "https://example.com/register",
+                "time_zone": "America/Toronto",
+                "time_zone_label": "EST (UTC-05:00)",
+                "is_past": False,
+            },
+        )
+
+        self.assertIn("Register Now", html)
+        self.assertNotIn("Add to Calendar", html)
+        self.assertNotIn("/events/feed.ics", html)
+
+    def test_add_to_calendar_include_renders_calendar_links(self):
+        event = SimpleNamespace(
+            id=123,
+            title="Template Event",
+            publishing_date=datetime(2030, 1, 1, 13, 0, tzinfo=datetime_timezone.utc),
+            event_end=datetime(2030, 1, 1, 14, 0, tzinfo=datetime_timezone.utc),
+            time_zone="America/Toronto",
+            full_url="https://www.cigionline.org/events/template-event/",
+            url="/events/template-event/",
+        )
+
+        html = render_to_string("events/includes/add_to_calendar.html", {"event": event})
+
+        self.assertIn("Add to Calendar", html)
+        self.assertIn("calendar/render", html)
+        self.assertIn("/events/feed.ics?id=123", html)
 
 
 class DuplicateRegistrationTests(TestCase):
@@ -168,18 +216,18 @@ class GuestRegistrationQuestionExclusionTests(TestCase):
         )
 
 
-class GroupDoubleOptInTests(TestCase):
-    @patch("events.models.send_group_registration_pending_confirm_email")
-    def test_group_registration_sends_single_pending_confirm_email_and_stays_pending(self, send_mock):
+class GroupRegistrationConfirmTests(TestCase):
+    @patch("events.models.send_group_confirmation_email")
+    def test_group_registration_immediately_confirms_and_sends_confirmation_email(self, send_mock):
         from wagtail.models import Site
         from events.models import EventPage, RegistrationType, RegistrationFormTemplate
 
         root = Site.objects.get(is_default_site=True).root_page
-        event = EventPage(title="Group Pending Confirm Event", registration_open=True)
+        event = EventPage(title="Group Confirm Event", registration_open=True)
         root.add_child(instance=event)
         event.save_revision().publish()
 
-        tmpl = RegistrationFormTemplate.objects.create(name="Group Pending Template")
+        tmpl = RegistrationFormTemplate.objects.create(name="Group Template")
         event.registration_form_template = tmpl
         event.save(update_fields=["registration_form_template"])
 
@@ -211,15 +259,16 @@ class GroupDoubleOptInTests(TestCase):
         )
 
         self.assertEqual(resp.status_code, 302)
-        self.assertIn("register/result/?s=pending", resp["Location"])
+        self.assertIn("register/result/?s=", resp["Location"])
+        self.assertNotIn("s=pending", resp["Location"])
         self.assertTrue(send_mock.called)
 
         from events.models import Registrant
 
         statuses = list(Registrant.objects.filter(event=event).values_list("status", flat=True))
-        # Primary + guest should remain pending until confirm-group is clicked.
+        # Primary + guest should be immediately confirmed or waitlisted (not pending).
         self.assertTrue(statuses)
-        self.assertTrue(all(s == Registrant.Status.PENDING for s in statuses))
+        self.assertTrue(all(s in (Registrant.Status.CONFIRMED, Registrant.Status.WAITLISTED) for s in statuses))
 
 
 class RegistrationTypeCloseDateTests(TestCase):
