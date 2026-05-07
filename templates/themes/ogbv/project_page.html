@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load webpack_loader wagtailimages_tags wagtailcore_tags %}
+{% load webpack_loader wagtailimages_tags wagtailcore_tags core_tags static %}
 
 {% block meta_description %}
   {% if self.social_description %}
@@ -64,22 +64,53 @@
   {% if featured_pages|length > 0 %}
     <section class="featured">
       <div class="container">
-        <div class="row">
+        <div class="row align-items-stretch">
           <div class="col-12 col-md-8 feature-border-right">
             {% if featured_pages|length > 0 %}
               {% include "includes/features/feature_content_large.html" with content=featured_pages.0 additional_classes="poster" poster=True cta=True cta_pdf=featured_pages.0.pdf_download %}
             {% endif %}
           </div>
           <hr class="separator-large">
-          <div class="col-12 col-md-4 featured-small">
-          {% with featured_pages|slice:"1:4" as featured_small %}
-            {% for item in featured_small %}
-              {% if forloop.counter > 1 %}
-                <hr>
-              {% endif %}
-              {% include "includes/features/feature_content_small.html" with content=item cta=True %}
-            {% endfor %}
-          {% endwith %}
+          <div class="col-12 col-md-4 featured-medium">
+            {% if featured_pages|length > 1 %}
+            {% with content=featured_pages.1 %}
+              <article class="feature-content feature-content-medium{% if dark_mode %} dark-mode{% endif %}">
+                <a href="{% if content.feature_url %}{{ content.feature_url }}{% else %}{% pageurl content %}{% endif %}" class="feature-content-image">
+                  <div class="img-wrapper">
+                    {% if content.image_feature and not content.expired_image %}
+                      {% define content.image_feature as feature_image %}
+                    {% elif content.image_hero and not content.expired_image %}
+                      {% define content.image_hero as feature_image %}
+                    {% else %}
+                      <img src="{% static 'assets/CIGI-default-recommended-thumb.png' %}" alt="CIGI Logo">
+                    {% endif %}
+                    {% if feature_image.file.url|file_extension == '.gif' %}
+                      <img src="{{feature_image.file.url}}" alt="{{feature_image.caption}}" />
+                    {% else %}
+                      {% image feature_image fill-520x390 %}
+                    {% endif %}
+                  </div>
+                </a>
+                <div class="feature-content-text center-text">
+                  <div>
+                    {% include 'includes/topics.html' with topics=content.topics_sorted %}
+                    {% include 'includes/features/feature_content_title.html' %}
+                  </div>
+                  <div>
+                    {% include 'includes/features/feature_content_people.html' with authors=content.authors.all %}
+                    <div class="feature-content-date meta">{{ content.publishing_date|date:"F j, Y" }}</div>
+                    {% if content.specific.pdf_downloads %}
+                      <a href="{{ content.specific.pdf_downloads.0.value.file.url }}" aria-label="Download PDF">
+                        <button class="button-action button-square">
+                          <i class="fa fas fa-download track-cta" data-cta="publication-pdf"></i>
+                        </button>
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
+              </article>
+            {% endwith %}
+            {% endif %}
           </div>
         </div>
         <div class="row">
@@ -88,9 +119,21 @@
           </div>
         </div>
         <div class="row highlights">
-          {% for block in additional_files %}
-            {% include_block block %}
-          {% endfor %}
+          <div class="col-12 col-md-8 feature-border-right">
+            {% for block in additional_files %}
+              {% include_block block with half_split=True %}
+            {% endfor %}
+          </div>
+          <div class="col-12 col-md-4 featured-small">
+            {% with featured_pages|slice:"2:4" as featured_small %}
+              {% for item in featured_small %}
+                {% if forloop.counter > 1 %}
+                  <hr>
+                {% endif %}
+                {% include "includes/features/feature_content_small.html" with content=item cta=True %}
+              {% endfor %}
+            {% endwith %}
+          </div>
         </div>
       </div>
     </section>

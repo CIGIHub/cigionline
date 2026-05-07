@@ -25,6 +25,10 @@
             <strong>Registration type:</strong> {{ registrant.registration_type.name }}
           </p>
 
+          {% if confirmed and not event.is_past %}
+            {% include "events/includes/add_to_calendar.html" with event=event %}
+          {% endif %}
+
           <p><a class="btn btn-primary" href="{{ event.url }}">Back to event</a></p>
         </div>
       </div>

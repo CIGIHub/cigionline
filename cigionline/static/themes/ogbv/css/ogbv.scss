@@ -90,10 +90,33 @@ body {
         }
       }
 
+      .featured-medium {
+        display: flex;
+      }
+
+      .feature-content-medium {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .feature-content-medium .feature-content-text {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
       .separator-large {
         @include media-breakpoint-down(sm) {
           margin-left: 15px;
           margin-right: 15px;
+        }
+      }
+
+      .stream-block-additional-file-block {
+        .img-container {
+          padding-left: 0;
         }
       }
     }
