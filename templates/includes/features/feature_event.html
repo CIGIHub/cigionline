@@ -14,10 +14,16 @@
         <div class="button-action button-private-event">
           PRIVATE
         </div>
-      {% elif not event.is_past and event.registration_url %}
-        <a href="{{ event.registration_url }}" class="button-action track-cta" data-cta="event-rsvp">
-          <i class="fas fa-calendar-alt"></i>&nbsp;&nbsp;RSVP
-        </a>
+      {% elif not event.is_past %}
+        {% if event.registration_open and not event.is_private_registration %}
+          <a href="{{ event.url }}" class="button-action track-cta" data-cta="event-rsvp">
+            <i class="fas fa-calendar-alt"></i>&nbsp;&nbsp;RSVP
+          </a>
+        {% elif event.registration_url %}
+          <a href="{{ event.registration_url }}" class="button-action track-cta" data-cta="event-rsvp">
+            <i class="fas fa-calendar-alt"></i>&nbsp;&nbsp;RSVP
+          </a>
+        {% endif %}
       {% endif %}
     {% endif %}
     {% if description %}
