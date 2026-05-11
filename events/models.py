@@ -322,6 +322,11 @@ class EventPage(
 
     # Registration related fields
     registration_open = models.BooleanField(default=False)
+    mailchimp_tag = models.CharField(
+        blank=True,
+        max_length=128,
+        help_text='Mailchimp tag to apply to subscribers who opt in via the registration form.',
+    )
     registration_report_password_hash = models.CharField(
         blank=True,
         editable=False,
@@ -1249,7 +1254,7 @@ class EventPage(
             get_registrant_for_group_manage_link,
         )
         from .forms import build_dynamic_form
-        from .utils import _jsonable
+        from .utils import _jsonable, _try_mailchimp_optin
 
         if request.method != "POST":
             return HttpResponse("Method not allowed", status=405)
@@ -1302,6 +1307,15 @@ class EventPage(
         # Persist answers (basic JSON-ability). File handling isn't supported in update yet.
         registrant.answers = _jsonable(cleaned)
         registrant.save(update_fields=["first_name", "last_name", "answers"])
+
+        _try_mailchimp_optin(
+            email=registrant.email,
+            first_name=registrant.first_name,
+            last_name=registrant.last_name,
+            answers=registrant.answers,
+            form_template=getattr(self, "registration_form_template", None),
+            mailchimp_tag=getattr(self, "mailchimp_tag", ""),
+        )
 
         base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
         if gid:
@@ -1722,6 +1736,7 @@ class EventPage(
                     FieldPanel('registration_open'),
                     FieldPanel('is_private_registration'),
                     FieldPanel('registration_image_banner'),
+                    FieldPanel('mailchimp_tag'),
                 ],
                 heading='General Settings',
                 classname='collapsible collapsed',
@@ -2010,6 +2025,7 @@ class RegistrationFormField(AbstractFormField):
         ("conditional_text", _("Conditional text (checkbox + details)")),
         ("conditional_dropdown_other", _("Conditional dropdown (Other + textbox)")),
         ("conditional_multiselect_other", _("Conditional multiselect (Other + textbox)")),
+        ("mailchimp_optin", _("Opt-in mailing list (Yes/No)")),
     )
     field_key = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     template = ParentalKey(
