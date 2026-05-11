@@ -65,6 +65,7 @@ WAGTAIL_FIELD_MAP = {
     'multiselect': forms.MultipleChoiceField,
     'conditional_multiselect_other': forms.MultipleChoiceField,
     'radio': forms.ChoiceField,
+    'mailchimp_optin': forms.ChoiceField,
     'date': forms.DateField,
     'datetime': forms.DateTimeField,
     'file': forms.FileField,
@@ -126,6 +127,17 @@ def build_dynamic_form(
         key = f"f_{ff.field_key}"
         FieldClass = WAGTAIL_FIELD_MAP.get(ff.field_type, forms.CharField)
         kwargs = {"label": ff.label, "help_text": ff.help_text, "required": is_required}
+
+        if ff.field_type == "mailchimp_optin":
+            field_obj = forms.ChoiceField(
+                label=ff.label,
+                help_text=ff.help_text,
+                required=is_required,
+                choices=[("Yes", "Yes"), ("No", "No")],
+                widget=forms.RadioSelect(attrs={"class": BASE_GROUP_CLASS}),
+            )
+            fields.append((key, field_obj))
+            continue
 
         if ff.field_type in ("dropdown", "radio", "checkboxes", "multiselect", "date", "datetime", "file"):
             choices = [(x.strip(), x.strip()) for x in ff.choices.splitlines() if x.strip()]
