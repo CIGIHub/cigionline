@@ -1,22 +1,19 @@
 {% extends "base.html" %}
 {% load wagtailimages_tags webpack_loader %}
-{% block extra_js %}
-  {{ block.super }}
-  {% if status == "ok" or status == "wait" %}
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
-      'event': '{% if status == "ok" %}event_registration{% else %}event_waitlist{% endif %}',
-      'event_title': '{{ event.title|escapejs }}',
-    });
-  </script>
-  {% endif %}
-{% endblock %}
 {% block extra_css %}
   {% render_bundle 'eventPage' 'css' %}
 {% endblock %}
 {% block extra_js %}
   {% render_bundle 'eventPage' 'js' %}
+  {% if status == "ok" or status == "wait" %}
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        'event': '{% if status == "ok" %}event_registration{% else %}event_waitlist{% endif %}',
+        'event_title': '{{ event.title|escapejs }}',
+      });
+    </script>
+  {% endif %}
 {% endblock %}
 {% block content %}
 {% include "includes/heroes/hero_event.html" with topics=event.topics_sorted title=event.title date=event.publishing_date end_date=event.event_end event_type=event.get_event_type_display event_access=event.get_event_access_display authors=event.authors.all author_count=event.author_count registration_url=event.registration_url time_zone=event.time_zone time_zone_label=event.time_zone_label is_past=event.is_past %}
