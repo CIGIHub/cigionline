@@ -1,5 +1,17 @@
 {% extends "base.html" %}
 {% load wagtailimages_tags webpack_loader %}
+{% block extra_js %}
+  {{ block.super }}
+  {% if status == "ok" or status == "wait" %}
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      'event': '{% if status == "ok" %}event_registration{% else %}event_waitlist{% endif %}',
+      'event_title': '{{ event.title|escapejs }}',
+    });
+  </script>
+  {% endif %}
+{% endblock %}
 {% block extra_css %}
   {% render_bundle 'eventPage' 'css' %}
 {% endblock %}
