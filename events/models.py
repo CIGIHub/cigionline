@@ -324,8 +324,8 @@ class EventPage(
     registration_open = models.BooleanField(default=False)
     mailchimp_tag = models.CharField(
         blank=True,
-        max_length=128,
-        help_text='Mailchimp tag to apply to subscribers who opt in via the registration form.',
+        max_length=255,
+        help_text='Mailchimp tag(s) to apply to subscribers who opt in via the registration form. Separate multiple tags with commas.',
     )
     registration_report_password_hash = models.CharField(
         blank=True,

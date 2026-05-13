@@ -95,14 +95,14 @@ def _try_mailchimp_optin(email, first_name, last_name, answers, form_template, m
             response.get("status"),
             response.get("id"),
         )
-        tag = (mailchimp_tag or "").strip()
-        if tag:
+        tags = [t.strip() for t in (mailchimp_tag or "").split(",") if t.strip()]
+        if tags:
             client.lists.update_list_member_tags(
                 list_id,
                 subscriber_hash,
-                {"tags": [{"name": tag, "status": "active"}]},
+                {"tags": [{"name": t, "status": "active"} for t in tags]},
             )
-            logger.info("Mailchimp opt-in tag applied: email=%s tag=%s", masked_email, tag)
+            logger.info("Mailchimp opt-in tags applied: email=%s tags=%s", masked_email, tags)
     except Exception as exc:
         local, _, domain = (email or "").lower().partition("@")
         masked_email = f"{local[:2]}***@{domain}" if len(local) > 2 else f"***@{domain}"
