@@ -203,10 +203,16 @@ class SubscribePage(
         context["self"] = self
 
         if request.GET:
-            form = form_class(initial={"email": request.GET.get("email")})
+            form = form_class(
+                initial={"email": request.GET.get("email")},
+                consent_text=self.consent_text,
+            )
 
         if request.method == "POST":
-            form = form_class(request.POST)
+            form = form_class(
+                request.POST,
+                consent_text=self.consent_text,
+            )
 
             if form.is_valid():
                 consent = form.cleaned_data.get("consent", False)
