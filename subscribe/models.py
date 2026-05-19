@@ -9,13 +9,12 @@ from wagtail.models import Page
 from streams.blocks import ParagraphBlock
 from newsletters.models import NewsletterPage
 from django.db import models
-
 import hashlib
 from mailchimp_marketing.api_client import ApiClientError
 import mailchimp_marketing as MailchimpMarketing
 import logging
-
 from django_countries.fields import CountryField, Country
+import requests
 
 
 api_key = None
@@ -192,6 +191,28 @@ class SubscribePage(
 
         logger.info(f'Successful signup: {response["email_address"]}')
 
+    def verify_recaptcha(self, request):
+        token = request.POST.get("g-recaptcha-response")
+
+        if not token:
+            return False
+
+        response = requests.post(
+            "https://www.google.com/recaptcha/api/siteverify",
+            data={
+                "secret": settings.RECAPTCHA_SECRET_KEY,
+                "response": token,
+                "remoteip": request.META.get("REMOTE_ADDR"),
+            },
+            timeout=5,
+        )
+
+        if response.status_code != 200:
+            return False
+
+        result = response.json()
+        return result.get("success") is True
+
     def serve(self, request):
         form_class = self.get_subscribe_form_class()
         form = form_class(
@@ -201,6 +222,7 @@ class SubscribePage(
 
         context = super().get_context(request)
         context["self"] = self
+        context["RECAPTCHA_SITE_KEY"] = settings.RECAPTCHA_SITE_KEY
 
         if request.GET:
             form = form_class(
@@ -215,6 +237,11 @@ class SubscribePage(
             )
 
             if form.is_valid():
+                if not self.verify_recaptcha(request):
+                    form.add_error(None, "Please complete the reCAPTCHA.")
+                    context["form"] = form
+                    return render(request, self.template, context)
+
                 consent = form.cleaned_data.get("consent", False)
 
                 if consent:

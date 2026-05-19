@@ -2,6 +2,10 @@
 
 {% load webpack_loader wagtailcore_tags %}
 
+{% block extra_js %}
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% endblock %}
+
 {% block extra_css %}
   {% render_bundle 'subscribePage' 'css' %}
 {% endblock %}
@@ -20,6 +24,10 @@
             {% csrf_token %}
             {{form.as_p}}
             {% comment %} <div class="legends"><p>*Optional fields</p></div> {% endcomment %}
+            <div
+              class="g-recaptcha"
+              data-sitekey="{{ RECAPTCHA_SITE_KEY }}">
+            </div>
             <button class="button-action" type="submit">Sign Up</button>
           </form>
         </div>
