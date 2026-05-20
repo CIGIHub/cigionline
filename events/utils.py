@@ -96,6 +96,9 @@ def _try_mailchimp_optin(email, first_name, last_name, answers, form_template, m
             response.get("id"),
         )
         tags = [t.strip() for t in (mailchimp_tag or "").split(",") if t.strip()]
+        default_tag = getattr(settings, 'MAILCHIMP_DEFAULT_TAG', '')
+        if default_tag and default_tag not in tags:
+            tags.append(default_tag)
         if tags:
             client.lists.update_list_member_tags(
                 list_id,
