@@ -6,6 +6,12 @@
   {% render_bundle 'subscribePage' 'css' %}
 {% endblock %}
 
+{% block extra_js %}
+  {% if turnstile_site_key %}
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  {% endif %}
+{% endblock %}
+
 {% block content %}
   {% include "includes/heroes/hero_plain.html" with title=self.title %}
   <section class="body">
@@ -21,6 +27,9 @@
             {{form.as_p}}
             {% comment %} <div class="legends"><p>*Optional fields</p></div> {% endcomment %}
             <button class="button-action" type="submit">Sign Up</button>
+            {% if turnstile_site_key %}
+              <div class="cf-turnstile mt-3 mb-3" data-sitekey="{{ turnstile_site_key }}" data-appearance="invisible"></div>
+            {% endif %}
           </form>
         </div>
       </div>

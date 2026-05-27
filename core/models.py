@@ -1133,10 +1133,20 @@ class FacilityRentalsPage(
     def get_context(self, request, *args, **kwargs):
         ctx = super().get_context(request, *args, **kwargs)
         ctx["form"] = FacilityRentalInquiryForm()
+        ctx["turnstile_site_key"] = getattr(settings, "CLOUDFLARE_TURNSTILE_SITE_KEY", "")
         return ctx
 
     def serve(self, request, *args, **kwargs):
         if request.method == "POST":
+            from utils.security import verify_turnstile_token
+            turnstile_token = request.POST.get("cf-turnstile-response", "")
+            if not verify_turnstile_token(turnstile_token, request.META.get("REMOTE_ADDR")):
+                logger.warning("Turnstile verification failed for facility rentals form")
+                messages.error(request, "Security verification failed. Please try again.")
+                context = self.get_context(request)
+                context["form"] = FacilityRentalInquiryForm(request.POST)
+                return render(request, self.template, context)
+
             form = FacilityRentalInquiryForm(request.POST)
             if form.is_valid():
                 recipients = EmailFormSettings.for_request(request).recipients

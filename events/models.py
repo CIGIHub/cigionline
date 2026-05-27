@@ -756,6 +756,7 @@ class EventPage(
             send_group_duplicate_manage_email,
         )
         from .guest_registration import build_primary_and_guest_forms
+        from .utils import verify_turnstile_token
 
         if not self.registration_open:
             return self.render(
@@ -804,6 +805,12 @@ class EventPage(
                 getattr(reg_type, "allow_group_registrations", False),
             )
             if request.POST.get("website"):
+                base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+                return redirect(f"{base}register/result/?s=bot")
+
+            turnstile_token = request.POST.get("cf-turnstile-response", "")
+            if not verify_turnstile_token(turnstile_token, request.META.get("REMOTE_ADDR")):
+                self.logger.warning("Turnstile verification failed event_id=%s", self.pk)
                 base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
                 return redirect(f"{base}register/result/?s=bot")
 
@@ -1136,6 +1143,7 @@ class EventPage(
                         "form": form,
                         "guest_formset": (forms_obj.guest_formset if forms_obj else None),
                         "invite": invite,
+                        "turnstile_site_key": getattr(settings, "CLOUDFLARE_TURNSTILE_SITE_KEY", ""),
                     },
                 )
         else:
@@ -1151,6 +1159,7 @@ class EventPage(
                 "form": form,
                 "guest_formset": (forms_obj.guest_formset if forms_obj else None),
                 "invite": invite,
+                "turnstile_site_key": getattr(settings, "CLOUDFLARE_TURNSTILE_SITE_KEY", ""),
             },
         )
 

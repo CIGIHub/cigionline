@@ -6,6 +6,9 @@
 {% endblock %}
 {% block extra_js %}
   {% render_bundle 'eventPage' 'js' %}
+  {% if turnstile_site_key %}
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -141,6 +144,10 @@
               Back to event
             </a>
           </div>
+
+          {% if turnstile_site_key %}
+            <div class="cf-turnstile mt-3 mb-3" data-sitekey="{{ turnstile_site_key }}" data-appearance="invisible"></div>
+          {% endif %}
         </form>
       </div>
     </div>
