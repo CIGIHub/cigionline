@@ -193,6 +193,8 @@ class SubscribePage(
         logger.info(f'Successful signup: {response["email_address"]}')
 
     def serve(self, request):
+        from utils.security import verify_turnstile_token
+
         form_class = self.get_subscribe_form_class()
         form = form_class(
             request.POST or None,
@@ -201,6 +203,7 @@ class SubscribePage(
 
         context = super().get_context(request)
         context["self"] = self
+        context["turnstile_site_key"] = getattr(settings, "CLOUDFLARE_TURNSTILE_SITE_KEY", "")
 
         if request.GET:
             form = form_class(
@@ -209,6 +212,13 @@ class SubscribePage(
             )
 
         if request.method == "POST":
+            turnstile_token = request.POST.get("cf-turnstile-response", "")
+            if not verify_turnstile_token(turnstile_token, request.META.get("REMOTE_ADDR")):
+                logger.warning("Turnstile verification failed for subscribe form")
+                # Silently succeed without subscribing — don't leak bot detection
+                context["form"] = form_class(consent_text=self.consent_text)
+                return render(request, self.landing_page_template, context)
+
             form = form_class(
                 request.POST,
                 consent_text=self.consent_text,
