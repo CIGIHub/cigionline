@@ -1,0 +1,532 @@
+@import '../../../css/global/mixins';
+@import '../../../css/global/animations/bounce';
+
+.twenty-fifth-page-singleton {
+  .anniversary-splash {
+    align-items: center;
+    background-color: $black;
+    color: $white;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    min-height: 560px;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+
+  .anniversary-splash-video,
+  .anniversary-splash-overlay {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  .anniversary-splash-video {
+    object-fit: cover;
+  }
+
+  .anniversary-splash-overlay {
+    background: linear-gradient(
+      to bottom,
+      rgba($black, 0.1) 0%,
+      rgba($black, 0.25) 58%,
+      $black 100%
+    );
+  }
+
+  .anniversary-splash-content {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 50vh;
+    justify-content: space-between;
+    max-height: 620px;
+    max-width: 90vw;
+    min-height: 380px;
+    position: relative;
+    text-align: center;
+    z-index: 2;
+
+    p {
+      @include media-breakpoint-up(lg) {
+        font-size: 2rem;
+        max-width: 60vw;
+      }
+      @include media-breakpoint-up(xl) {
+        font-size: 2.5rem;
+      }
+      color: $white;
+      font-family: 'big-caslon-fb', serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      line-height: 1.05;
+      margin: 0;
+      text-wrap: balance;
+    }
+  }
+
+  .anniversary-splash-logo {
+    @include media-breakpoint-up(md) {
+      width: 33vw;
+    }
+    @include media-breakpoint-up(lg) {
+      width: 25vw;
+    }
+    max-width: 520px;
+    min-width: 220px;
+    width: 70vw;
+
+    svg {
+      display: block;
+      height: auto;
+      width: 100%;
+
+      path {
+        fill: $white;
+      }
+    }
+  }
+
+  .anniversary-splash-scroll {
+    animation: bounce 2s infinite;
+    background: transparent;
+    border: 0;
+    color: $white;
+    cursor: pointer;
+    display: block;
+    font-size: 4rem;
+    line-height: 1;
+    padding: 0;
+
+    &:hover {
+      color: $cigi-primary-colour;
+    }
+
+    &:focus {
+      outline: 2px solid $white;
+      outline-offset: 0.15em;
+    }
+  }
+
+  .anniversary-content {
+    background-color: $white;
+    position: relative;
+    z-index: 3;
+  }
+
+  .anniversary-sticky-header {
+    height: 72px;
+    position: relative;
+    top: 0;
+    z-index: 200;
+
+    &.fixed {
+      .anniversary-site-header {
+        left: 0;
+        position: fixed;
+        top: 0;
+        width: 100%;
+      }
+    }
+  }
+
+  .anniversary-site-header {
+    background-color: $black;
+    border-bottom: 1px solid $black;
+    color: $white;
+    z-index: 200;
+  }
+
+  .anniversary-visually-hidden {
+    clip: rect(0 0 0 0);
+    border: 0;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+
+  .anniversary-site-nav {
+    align-items: center;
+    display: grid;
+    grid-template-columns: minmax(70px, 1fr) minmax(180px, 2fr) minmax(70px, 1fr);
+    min-height: 72px;
+    padding: 0 1.25rem;
+  }
+
+  .anniversary-site-logo {
+    display: inline-flex;
+    justify-self: start;
+
+    &:hover {
+      .anniversary-site-logo-mark {
+        fill: $cigi-primary-colour;
+      }
+    }
+  }
+
+  .anniversary-site-logo-mark {
+    display: block;
+    fill: $white;
+    height: auto;
+    transition: fill 0.2s ease;
+    width: 46px;
+  }
+
+  .anniversary-site-links {
+    align-items: center;
+    display: flex;
+    justify-content: space-evenly;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    a {
+      color: $white;
+      display: inline-block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      line-height: 1;
+      padding: 0.75rem;
+      position: relative;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s ease;
+
+      &::after {
+        background-color: $cigi-primary-colour;
+        bottom: 0.35rem;
+        content: '';
+        height: 3px;
+        left: calc(0.75rem - 5px);
+        position: absolute;
+        right: calc(0.75rem - 5px);
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: transform 0.2s ease;
+      }
+
+      &:hover,
+      &:focus {
+        color: $cigi-primary-colour;
+      }
+
+      &.active {
+        &::after {
+          transform: scaleX(1);
+        }
+      }
+    }
+  }
+
+  .anniversary-site-actions {
+    align-items: center;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+  }
+
+  .anniversary-site-action {
+    align-items: center;
+    background: transparent;
+    border: 1px solid transparent;
+    color: $white;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 1.25rem;
+    height: 44px;
+    justify-content: center;
+    padding: 0;
+    transition:
+      color 0.2s ease,
+      border-color 0.2s ease;
+    width: 44px;
+
+    &:hover,
+    &:focus,
+    &[aria-expanded='true'] {
+      border-color: $cigi-primary-colour;
+      color: $cigi-primary-colour;
+      outline: 0;
+    }
+  }
+
+  .anniversary-site-placeholder {
+    background-color: $black;
+    border-bottom: 1px solid $black;
+    min-height: 96px;
+  }
+
+  .anniversary-section-anchor {
+    scroll-margin-top: 88px;
+  }
+
+  .hero {
+    h1 {
+      max-width: 10em;
+    }
+
+    h2 {
+      max-width: 36em;
+    }
+  }
+
+  .anniversary-hero-image {
+    margin-bottom: 2em;
+
+    figure {
+      margin-bottom: 0;
+    }
+  }
+
+  .body {
+    @include media-breakpoint-up(md) {
+      margin: 3em 0;
+    }
+    margin: 2em 0;
+  }
+
+  hr {
+    @include media-breakpoint-up(md) {
+      margin: 2em auto;
+    }
+    @include media-breakpoint-up(lg) {
+      margin: 3em auto;
+    }
+    margin: 1em auto;
+    width: 50%;
+  }
+
+  .anniversary-timeline-gallery {
+    overflow: hidden;
+
+    .anniversary-timeline-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 0 0 1em;
+      padding-left: 0;
+
+      li {
+        font-size: 0.9em;
+        list-style: none;
+
+        &:not(:last-child) {
+          &::after {
+            color: $cigi-primary-colour;
+            content: '/';
+            padding: 0 0.5em;
+          }
+        }
+
+        button {
+          color: $cigi-medium-grey;
+          position: relative;
+          transition: color 0.3s ease;
+
+          &::before {
+            background-color: $cigi-primary-colour;
+            bottom: 0;
+            content: '';
+            height: 0.2em;
+            position: absolute;
+            transition: width 300ms ease;
+            width: 0;
+          }
+
+          &:hover {
+            &::before {
+              width: 100%;
+            }
+          }
+
+          &.active {
+            color: $black;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+
+    .anniversary-timeline-stage {
+      position: relative;
+    }
+
+    .anniversary-timeline-swiper {
+      cursor: grab;
+      overflow: visible;
+
+      .swiper-wrapper {
+        align-items: center;
+      }
+
+      .swiper-slide {
+        @include media-breakpoint-up(lg) {
+          img {
+            transform: scale(0.7);
+          }
+        }
+        opacity: 0;
+        transition:
+          opacity 1s ease,
+          // transform 1s ease,
+          filter 1s ease;
+
+        .img-wrapper {
+          aspect-ratio: 4 / 3;
+          overflow: hidden;
+
+          @include media-breakpoint-up(lg) {
+            aspect-ratio: 16 / 9;
+          }
+
+          img {
+            display: block;
+            height: 100%;
+            object-fit: cover;
+            width: 100%;
+            transition: transform 1s ease;
+
+            @include media-breakpoint-up(lg) {
+              border-radius: 15px;
+            }
+          }
+        }
+
+        .gallery-text {
+          display: flex;
+          margin-right: 18px;
+          margin-top: 1em;
+          opacity: 0;
+          transition: opacity 1s ease;
+          visibility: hidden;
+
+          .year {
+            @include media-breakpoint-up(md) {
+              font-size: 1.25em;
+            }
+            @include media-breakpoint-up(lg) {
+              font-size: 1.5em;
+            }
+            font-size: 1em;
+            font-weight: 400;
+            margin: 0 0.75em;
+            position: relative;
+          }
+
+          .caption {
+            flex-basis: 90%;
+            font-size: 0.75em;
+            line-height: 1.3;
+
+            p {
+              &:last-child {
+                margin-bottom: 0;
+              }
+            }
+          }
+        }
+
+        &.swiper-slide-next,
+        &.swiper-slide-prev {
+          filter: grayscale(100%);
+          opacity: 0.7;
+        }
+
+        &.swiper-slide-next {
+          @include media-breakpoint-up(lg) {
+            transform: translateX(-10%);
+            img {
+              transform: scale(0.7);
+            }
+          }
+        }
+
+        &.swiper-slide-prev {
+          @include media-breakpoint-up(lg) {
+            transform: translateX(10%);
+            img {
+              transform: scale(0.7);
+            }
+          }
+        }
+
+        &.swiper-slide-active {
+          @include media-breakpoint-up(lg) {
+            img {
+              transform: scale(1);
+            }
+          }
+          opacity: 1;
+
+          .gallery-text {
+            opacity: 1;
+            visibility: visible;
+          }
+        }
+      }
+    }
+
+    .anniversary-timeline-button {
+      align-items: center;
+      background-color: rgba($white, 0.78);
+      border: 0;
+      border-radius: 50%;
+      color: $cigi-primary-colour;
+      cursor: pointer;
+      display: flex;
+      font-size: 2em;
+      height: 54px;
+      justify-content: center;
+      margin-top: 0;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+      width: 54px;
+      z-index: 10;
+
+      &::after {
+        content: '';
+      }
+
+      &:hover,
+      &:focus {
+        background-color: rgba($white, 0.95);
+        color: $black;
+      }
+    }
+
+    .anniversary-timeline-button-next {
+      @include media-breakpoint-up(xl) {
+        right: 25%;
+      }
+      @include media-breakpoint-up(lg) {
+        right: 15%;
+      }
+      right: 0.5em;
+    }
+
+    .anniversary-timeline-button-prev {
+      @include media-breakpoint-up(xl) {
+        left: 25%;
+      }
+      @include media-breakpoint-up(lg) {
+        left: 15%;
+      }
+      left: 0.5em;
+    }
+
+    .swiper-button-disabled {
+      display: none;
+    }
+  }
+}

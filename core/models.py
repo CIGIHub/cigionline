@@ -969,6 +969,7 @@ class BasicPage(
         'core.FundingPage',
         'core.TwentiethPage',
         'core.TwentiethPageSingleton',
+        'core.TwentyFifthPageSingleton',
         'core.FacilityRentalsPage',
         'people.PersonListPage',
         'research.ProjectPage',
@@ -1437,6 +1438,93 @@ class TwentiethPageSingleton(
 
     class Meta:
         verbose_name = 'Twentieth Page Singleton'
+
+
+class TwentyFifthPageSingleton(
+    ContentPage,
+    BasicPageAbstract,
+    FeatureablePageAbstract,
+    SearchablePageAbstract,
+    ShareablePageAbstract,
+    ThemeablePageAbstract,
+):
+    body = StreamField(BasicPageAbstract.body_default_blocks, use_json_field=True)
+    history_timeline = StreamField(
+        [
+            ('gallery', TimelineGalleryBlock()),
+        ],
+        blank=True,
+        help_text='Timeline gallery shown in the History section.',
+        use_json_field=True,
+    )
+    splash_video = models.ForeignKey(
+        'wagtailmedia.Media',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Splash Video',
+        help_text='Full-screen background video shown before the page content.',
+    )
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('splash_video'),
+            ],
+            heading='Splash',
+            classname='collapsible',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('body'),
+            ]
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('history_timeline'),
+            ],
+            heading='History',
+            classname='collapsible',
+        ),
+        BasicPageAbstract.images_panel,
+        BasicPageAbstract.hero_link_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('publishing_date'),
+            ],
+            heading='General Information',
+            classname='collapsible collapsed'
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('topics'),
+            ],
+            heading='Related',
+            classname='collapsible collapsed',
+        )
+    ]
+
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+        BasicPageAbstract.qr_code_panel,
+    ]
+
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
+
+    max_count = 1
+    parent_page_types = ['core.BasicPage']
+    subpage_types = []
+    template = 'core/twenty_fifth_page_singleton.html'
+
+    class Meta:
+        verbose_name = 'Twenty-Fifth Anniversary Page'
 
 
 class Theme(models.Model):

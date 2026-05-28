@@ -1,0 +1,43 @@
+{% load wagtailimages_tags %}
+
+<div class="anniversary-timeline-gallery" data-anniversary-timeline-gallery>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col col-md-10 col-lg-8 col-xl-7">
+        <ul class="anniversary-timeline-nav">
+          {% for block in gallery.timeline %}
+            <li>
+              <button data-year="{{ block.value.year }}" {% if forloop.counter == 1 %}class="active"{% endif %}>
+                {{ block.value.year }}
+              </button>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="anniversary-timeline-stage">
+    <div class="swiper-container anniversary-timeline-swiper">
+      <div class="swiper-wrapper">
+        {% for block in gallery.timeline %}
+          <div class="swiper-slide">
+            <div class="img-wrapper">
+              {% image block.value.image original %}
+            </div>
+            <div class="gallery-text">
+              <div class="year">{{ block.value.year }}</div>
+              <div class="caption">{{ block.value.text }}</div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <button class="anniversary-timeline-button anniversary-timeline-button-prev swiper-button-prev" type="button" aria-label="Previous timeline slide">
+      <i class="fal fa-angle-left"></i>
+    </button>
+    <button class="anniversary-timeline-button anniversary-timeline-button-next swiper-button-next" type="button" aria-label="Next timeline slide">
+      <i class="fal fa-angle-right"></i>
+    </button>
+  </div>
+</div>

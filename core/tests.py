@@ -9,8 +9,10 @@ from wagtail.test.utils import WagtailPageTestCase
 
 from .models import (
     BasicPage,
+    FacilityRentalsPage,
     FundingPage,
     PrivacyNoticePage,
+    TwentyFifthPageSingleton,
     TwentiethPage,
     TwentiethPageSingleton,
 )
@@ -32,7 +34,31 @@ class BasicPageTests(WagtailPageTestCase):
         """
         self.assertAllowedSubpageTypes(
             BasicPage,
-            {AnnualReportListPage, BasicPage, FundingPage, PersonListPage, ProjectPage, TwentiethPage, TwentiethPageSingleton}
+            {
+                AnnualReportListPage,
+                BasicPage,
+                FacilityRentalsPage,
+                FundingPage,
+                PersonListPage,
+                ProjectPage,
+                TwentyFifthPageSingleton,
+                TwentiethPage,
+                TwentiethPageSingleton,
+            }
+        )
+
+
+class TwentyFifthPageSingletonTests(WagtailPageTestCase):
+    def test_twentyfifthpagesingleton_parent_page_types(self):
+        self.assertAllowedParentPageTypes(
+            TwentyFifthPageSingleton,
+            {BasicPage},
+        )
+
+    def test_twentyfifthpagesingleton_child_page_types(self):
+        self.assertAllowedSubpageTypes(
+            TwentyFifthPageSingleton,
+            {},
         )
 
 

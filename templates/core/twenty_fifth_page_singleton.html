@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags webpack_loader wagtailimages_tags %}
+
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" %}
+  {% endif %}
+{% endblock%}
+
+{% block extra_css %}
+  {% render_bundle 'twentyFifthPageSingleton' 'css' %}
+{% endblock %}
+
+{% block extra_js %}
+  {% render_bundle 'twentyFifthPageSingleton' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block body_class %}twenty-fifth-page-singleton{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+  <section class="anniversary-splash" aria-label="25th anniversary introduction">
+    {% if self.splash_video %}
+      <video class="anniversary-splash-video" autoplay muted loop playsinline>
+        <source src="{{ self.splash_video.url }}" type="video/mp4">
+      </video>
+    {% endif %}
+    <div class="anniversary-splash-overlay"></div>
+    <div class="anniversary-splash-content">
+      <p>25 years of influencial research and trusted analysis</p>
+      <div class="anniversary-splash-logo" aria-label="CIGI">
+        {% include "includes/header_cigi_logo_large.svg" %}
+      </div>
+      <button class="anniversary-splash-scroll" type="button" aria-label="Scroll to anniversary content">
+        <i class="fal fa-angle-down"></i>
+      </button>
+    </div>
+  </section>
+
+  <section id="anniversary-content" class="anniversary-content">
+    <div class="anniversary-sticky-header">
+      <div class="anniversary-site-header" role="banner">
+        <nav class="anniversary-site-nav" aria-label="25th anniversary">
+          <a class="anniversary-site-logo" href="/" aria-label="CIGI home">
+            {% include "core/includes/twenty_fifth_cigi_logo.svg" %}
+          </a>
+          <ul class="anniversary-site-links">
+            <li><a href="#anniversary-about" data-anniversary-nav-link>about</a></li>
+            <li><a href="#anniversary-events" data-anniversary-nav-link>Events</a></li>
+            <li><a href="#anniversary-history" data-anniversary-nav-link>History</a></li>
+          </ul>
+          <div class="anniversary-site-actions">
+            <button class="anniversary-site-action" type="button" aria-expanded="false" aria-controls="anniversary-share-placeholder" data-anniversary-toggle="anniversary-share-placeholder">
+              <i class="fas fa-share-alt"></i>
+              <span class="anniversary-visually-hidden">Share</span>
+            </button>
+            <button class="anniversary-site-action" type="button" aria-expanded="false" aria-controls="anniversary-menu-placeholder" data-anniversary-toggle="anniversary-menu-placeholder">
+              <i class="far fa-bars"></i>
+              <span class="anniversary-visually-hidden">Menu</span>
+            </button>
+          </div>
+        </nav>
+        <div class="anniversary-site-placeholder" id="anniversary-share-placeholder" hidden></div>
+        <div class="anniversary-site-placeholder" id="anniversary-menu-placeholder" hidden></div>
+      </div>
+    </div>
+    <div id="anniversary-about" class="anniversary-section-anchor">
+      {% include "includes/body.html" with body=self.body %}
+    </div>
+    <div id="anniversary-events" class="anniversary-section-anchor"></div>
+    <section id="anniversary-history" class="anniversary-section-anchor anniversary-history-section">
+      {% for block in self.history_timeline %}
+        {% if block.block_type == 'gallery' %}
+          {% include "core/includes/twenty_fifth_timeline_gallery.html" with gallery=block.value %}
+        {% endif %}
+      {% endfor %}
+    </section>
+  </section>
+{% endblock content %}
