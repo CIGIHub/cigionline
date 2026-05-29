@@ -1483,6 +1483,13 @@ class TwentyFifthPageSingleton(
         ),
         MultiFieldPanel(
             [
+                InlinePanel('anniversary_events', label='Event'),
+            ],
+            heading='Events',
+            classname='collapsible',
+        ),
+        MultiFieldPanel(
+            [
                 FieldPanel('history_timeline'),
             ],
             heading='History',
@@ -1525,6 +1532,28 @@ class TwentyFifthPageSingleton(
 
     class Meta:
         verbose_name = 'Twenty-Fifth Anniversary Page'
+
+
+class TwentyFifthPageEvent(Orderable):
+    page = ParentalKey(
+        'core.TwentyFifthPageSingleton',
+        related_name='anniversary_events',
+    )
+    event_page = models.ForeignKey(
+        'events.EventPage',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Event',
+    )
+
+    panels = [
+        PageChooserPanel(
+            'event_page',
+            ['events.EventPage'],
+        ),
+    ]
 
 
 class Theme(models.Model):

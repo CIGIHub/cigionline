@@ -41,11 +41,11 @@
     align-items: center;
     display: flex;
     flex-direction: column;
-    height: 50vh;
+    height: 40vh;
     justify-content: space-between;
-    max-height: 620px;
+    max-height: 50vh;
     max-width: 90vw;
-    min-height: 380px;
+    min-height: 30vh;
     position: relative;
     text-align: center;
     z-index: 2;
@@ -59,9 +59,8 @@
         font-size: 2.5rem;
       }
       color: $white;
-      font-family: 'big-caslon-fb', serif;
       font-size: 1.5rem;
-      font-weight: 800;
+      font-weight: 300;
       line-height: 1.05;
       margin: 0;
       text-wrap: balance;
@@ -97,7 +96,7 @@
     color: $white;
     cursor: pointer;
     display: block;
-    font-size: 4rem;
+    font-size: 2.5rem;
     line-height: 1;
     padding: 0;
 
@@ -114,21 +113,34 @@
   .anniversary-content {
     background-color: $white;
     position: relative;
-    z-index: 3;
+    z-index: 20;
   }
 
   .anniversary-sticky-header {
-    height: 72px;
+    height: 112px;
     position: relative;
     top: 0;
     z-index: 200;
 
-    &.fixed {
+    @include media-breakpoint-up(md) {
+      height: 72px;
+    }
+
+    &.fixed,
+    &.menu-open {
       .anniversary-site-header {
         left: 0;
         position: fixed;
         top: 0;
         width: 100%;
+      }
+    }
+
+    &.menu-open {
+      .anniversary-site-links {
+        opacity: 0;
+        pointer-events: none;
+        visibility: hidden;
       }
     }
   }
@@ -155,13 +167,26 @@
   .anniversary-site-nav {
     align-items: center;
     display: grid;
-    grid-template-columns: minmax(70px, 1fr) minmax(180px, 2fr) minmax(70px, 1fr);
-    min-height: 72px;
-    padding: 0 1.25rem;
+    grid-template-areas:
+      'logo actions'
+      'links links';
+    grid-template-columns: 1fr auto;
+    grid-template-rows: 72px 40px;
+    min-height: 112px;
+    row-gap: 0;
+
+    @include media-breakpoint-up(md) {
+      column-gap: 0.75rem;
+      grid-template-areas: 'logo links actions';
+      grid-template-columns: minmax(70px, 1fr) minmax(0, 2fr) minmax(70px, 1fr);
+      grid-template-rows: 72px;
+      min-height: 72px;
+    }
   }
 
   .anniversary-site-logo {
     display: inline-flex;
+    grid-area: logo;
     justify-self: start;
 
     &:hover {
@@ -180,20 +205,33 @@
   }
 
   .anniversary-site-links {
+    --anniversary-nav-link-padding-x: 0.75rem;
+
     align-items: center;
     display: flex;
-    justify-content: space-evenly;
+    grid-area: links;
+    justify-content: flex-start;
     list-style: none;
     margin: 0;
-    padding: 0;
+    min-width: 0;
+    padding: 0 0 0.5rem;
+    transition:
+      opacity 0.2s ease,
+      visibility 0.2s ease;
+
+    @include media-breakpoint-up(md) {
+      justify-content: space-evenly;
+      padding: 0;
+      white-space: nowrap;
+    }
 
     a {
       color: $white;
       display: inline-block;
       font-size: 0.9rem;
-      font-weight: 600;
+      font-weight: 400;
       line-height: 1;
-      padding: 0.75rem;
+      padding: 0.75rem var(--anniversary-nav-link-padding-x);
       position: relative;
       text-decoration: none;
       text-transform: uppercase;
@@ -204,9 +242,9 @@
         bottom: 0.35rem;
         content: '';
         height: 3px;
-        left: calc(0.75rem - 5px);
+        left: calc(var(--anniversary-nav-link-padding-x) - 5px);
         position: absolute;
-        right: calc(0.75rem - 5px);
+        right: calc(var(--anniversary-nav-link-padding-x) - 5px);
         transform: scaleX(0);
         transform-origin: center;
         transition: transform 0.2s ease;
@@ -223,13 +261,35 @@
         }
       }
     }
+
+    li {
+      &:first-child {
+        a {
+          padding-left: 0;
+
+          @include media-breakpoint-up(md) {
+            padding-left: var(--anniversary-nav-link-padding-x);
+          }
+
+          &::after {
+            left: -5px;
+
+            @include media-breakpoint-up(md) {
+              left: calc(var(--anniversary-nav-link-padding-x) - 5px);
+            }
+          }
+        }
+      }
+    }
   }
 
   .anniversary-site-actions {
     align-items: center;
     display: flex;
     gap: 0.75rem;
+    grid-area: actions;
     justify-content: flex-end;
+    min-width: max-content;
   }
 
   .anniversary-site-action {
@@ -243,6 +303,7 @@
     height: 44px;
     justify-content: center;
     padding: 0;
+    position: relative;
     transition:
       color 0.2s ease,
       border-color 0.2s ease;
@@ -257,14 +318,233 @@
     }
   }
 
+  .anniversary-menu-icon {
+    left: 0;
+    position: absolute;
+    right: 0;
+    transition: transform 0.3s ease;
+  }
+
+  .anniversary-menu-icon-opened {
+    transform: scale(0);
+  }
+
+  .anniversary-menu-icon-closed {
+    transform: scale(1);
+  }
+
+  .anniversary-site-action.open {
+    .anniversary-menu-icon-opened {
+      transform: scale(1);
+    }
+
+    .anniversary-menu-icon-closed {
+      transform: scale(0);
+    }
+  }
+
   .anniversary-site-placeholder {
     background-color: $black;
     border-bottom: 1px solid $black;
     min-height: 96px;
   }
 
+  .anniversary-share-menu {
+    position: relative;
+  }
+
+  .anniversary-share-panel {
+    background-color: $black;
+    border: 1px solid rgba($white, 0.22);
+    min-width: 11rem;
+    padding: 0.5rem 0;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 15px);
+    z-index: 250;
+  }
+
+  .anniversary-share-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    a {
+      align-items: center;
+      color: $white;
+      display: flex;
+      font-size: 0.9rem;
+      gap: 0.75rem;
+      padding: 0.65rem 1rem;
+      text-decoration: none;
+      transition: color 0.2s ease;
+
+      i {
+        flex: 0 0 1.25rem;
+        font-size: 1.1rem;
+        text-align: center;
+      }
+
+      &:hover,
+      &:focus {
+        color: $cigi-primary-colour;
+        outline: 0;
+      }
+    }
+  }
+
+  .anniversary-menu-overlay {
+    background-color: rgba($black, 0.98);
+    height: calc(100vh - 72px);
+    left: 0;
+    overflow-y: auto;
+    position: fixed;
+    top: 72px;
+    width: 100%;
+    z-index: 190;
+
+    @include media-breakpoint-up(md) {
+      height: calc(100vh - 72px);
+      top: 72px;
+    }
+  }
+
+  .anniversary-menu-inner {
+    background-color: $black;
+    min-height: 100%;
+  }
+
+  .anniversary-menu-content {
+    color: $white;
+  }
+
+  .anniversary-menu-submenu {
+    border-bottom: 1px solid $divider-grey;
+    font-size: 1.1rem;
+    padding: 1rem 15px;
+    position: relative;
+
+    @include media-breakpoint-up(md) {
+      border-bottom: 0;
+      border-right: 1px solid $cigi-darkest-grey;
+      font-size: 1.3rem;
+      margin-bottom: 2rem;
+      min-height: 250px;
+      padding: 0 1.3rem;
+    }
+
+    &:last-child {
+      border-bottom: 0;
+      border-right: 0;
+    }
+
+    &:nth-child(4) {
+      @include media-breakpoint-up(md) {
+        border-right: 0;
+      }
+    }
+
+    &:nth-child(1),
+    &:nth-child(5) {
+      @include media-breakpoint-up(md) {
+        padding-left: 15px;
+      }
+    }
+
+    a {
+      color: $white;
+      text-decoration: none;
+      transition: color 0.2s ease;
+
+      &:hover,
+      &:focus {
+        color: $cigi-primary-colour;
+      }
+    }
+
+    ul {
+      font-size: 0.75em;
+      list-style: none;
+      margin: 0;
+      max-height: 0;
+      overflow: hidden;
+      padding: 0;
+      transition: max-height 0.2s ease-out;
+
+      @include media-breakpoint-up(md) {
+        max-height: 100%;
+      }
+
+      a {
+        color: $cigi-medium-grey;
+
+        &:hover,
+        &:focus {
+          color: $cigi-primary-colour;
+        }
+      }
+    }
+  }
+
+  .anniversary-menu-submenu-link {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+  }
+
+  .anniversary-menu-accordion {
+    color: $white;
+    float: right;
+    padding: 0;
+
+    @include media-breakpoint-up(md) {
+      display: none;
+    }
+
+    i {
+      font-size: 0.8em;
+    }
+  }
+
+  .anniversary-menu-footer-menu {
+    margin-bottom: 1rem;
+    max-height: 100% !important;
+
+    li {
+      display: inline-block;
+      margin: 0 0.8rem 0.5rem 0;
+
+      @include media-breakpoint-up(md) {
+        display: block;
+      }
+    }
+  }
+
+  .anniversary-menu-social-links {
+    max-height: 100% !important;
+
+    li {
+      display: inline-block;
+      margin-right: 0.7rem;
+    }
+
+    a {
+      color: $white;
+      font-size: 1.1rem;
+
+      svg {
+        fill: currentColor;
+        height: 1em;
+        width: 1em;
+      }
+    }
+  }
+
   .anniversary-section-anchor {
-    scroll-margin-top: 88px;
+    scroll-margin-top: 112px;
+
+    @include media-breakpoint-up(md) {
+      scroll-margin-top: 72px;
+    }
   }
 
   .hero {
@@ -303,230 +583,500 @@
     width: 50%;
   }
 
-  .anniversary-timeline-gallery {
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1;
+    margin: 0;
+    text-align: center;
+
+    @include media-breakpoint-up(md) {
+      font-size: 1.75rem;
+    }
+  }
+
+  .anniversary-about-section {
+    padding: 3rem 0;
+
+    .body {
+      margin: 2rem 0 0;
+    }
+  }
+
+  .anniversary-events-section {
+    background-color: $black;
+    color: $white;
+    overflow: hidden;
+    padding: 3rem 0;
+
+    @include media-breakpoint-up(md) {
+      padding: 4rem 0;
+    }
+  }
+
+  .anniversary-events-swiper-wrap {
+    margin-top: 2rem;
+    padding: 0 1.25rem;
+
+    @include media-breakpoint-up(lg) {
+      padding: 0 4rem;
+    }
+  }
+
+  .anniversary-events-swiper {
     overflow: hidden;
 
-    .anniversary-timeline-nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin: 0 0 1em;
-      padding-left: 0;
+    .swiper-wrapper {
+      align-items: stretch;
+    }
+  }
 
-      li {
-        font-size: 0.9em;
-        list-style: none;
+  .anniversary-event-slide {
+    border-left: 1px solid rgba($white, 0.75);
+    height: auto;
 
-        &:not(:last-child) {
-          &::after {
-            color: $cigi-primary-colour;
-            content: '/';
-            padding: 0 0.5em;
-          }
-        }
-
-        button {
-          color: $cigi-medium-grey;
-          position: relative;
-          transition: color 0.3s ease;
-
-          &::before {
-            background-color: $cigi-primary-colour;
-            bottom: 0;
-            content: '';
-            height: 0.2em;
-            position: absolute;
-            transition: width 300ms ease;
-            width: 0;
-          }
-
-          &:hover {
-            &::before {
-              width: 100%;
-            }
-          }
-
-          &.active {
-            color: $black;
-            font-weight: 600;
-          }
-        }
-      }
+    &:first-child {
+      border-left: 0;
     }
 
-    .anniversary-timeline-stage {
-      position: relative;
+    &.swiper-slide-active {
+      border-left: 0;
+    }
+  }
+
+  .anniversary-event-card {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0 1.5rem;
+
+    @include media-breakpoint-up(lg) {
+      padding: 0 2.25rem;
     }
 
-    .anniversary-timeline-swiper {
-      cursor: grab;
-      overflow: visible;
+    h3 {
+      color: $white;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.1;
+      margin: 1rem 0 1rem;
 
-      .swiper-wrapper {
-        align-items: center;
+      @include media-breakpoint-up(lg) {
+        font-size: 1.2rem;
       }
 
-      .swiper-slide {
-        @include media-breakpoint-up(lg) {
-          img {
-            transform: scale(0.7);
-          }
-        }
-        opacity: 0;
+      a {
+        -webkit-box-decoration-break: clone;
+        background-image: linear-gradient($cigi-primary-colour, $cigi-primary-colour);
+        background-position: center 100%;
+        background-repeat: no-repeat;
+        background-size: 0 2px;
+        box-decoration-break: clone;
+        color: $white;
+        display: inline;
+        line-height: 1.2;
+        padding: 0 0.2rem;
+        text-decoration: none;
         transition:
-          opacity 1s ease,
-          // transform 1s ease,
-          filter 1s ease;
+          background-size 0.25s ease,
+          color 0.2s ease;
 
-        .img-wrapper {
-          aspect-ratio: 4 / 3;
-          overflow: hidden;
-
-          @include media-breakpoint-up(lg) {
-            aspect-ratio: 16 / 9;
-          }
-
-          img {
-            display: block;
-            height: 100%;
-            object-fit: cover;
-            width: 100%;
-            transition: transform 1s ease;
-
-            @include media-breakpoint-up(lg) {
-              border-radius: 15px;
-            }
-          }
-        }
-
-        .gallery-text {
-          display: flex;
-          margin-right: 18px;
-          margin-top: 1em;
-          opacity: 0;
-          transition: opacity 1s ease;
-          visibility: hidden;
-
-          .year {
-            @include media-breakpoint-up(md) {
-              font-size: 1.25em;
-            }
-            @include media-breakpoint-up(lg) {
-              font-size: 1.5em;
-            }
-            font-size: 1em;
-            font-weight: 400;
-            margin: 0 0.75em;
-            position: relative;
-          }
-
-          .caption {
-            flex-basis: 90%;
-            font-size: 0.75em;
-            line-height: 1.3;
-
-            p {
-              &:last-child {
-                margin-bottom: 0;
-              }
-            }
-          }
-        }
-
-        &.swiper-slide-next,
-        &.swiper-slide-prev {
-          filter: grayscale(100%);
-          opacity: 0.7;
-        }
-
-        &.swiper-slide-next {
-          @include media-breakpoint-up(lg) {
-            transform: translateX(-10%);
-            img {
-              transform: scale(0.7);
-            }
-          }
-        }
-
-        &.swiper-slide-prev {
-          @include media-breakpoint-up(lg) {
-            transform: translateX(10%);
-            img {
-              transform: scale(0.7);
-            }
-          }
-        }
-
-        &.swiper-slide-active {
-          @include media-breakpoint-up(lg) {
-            img {
-              transform: scale(1);
-            }
-          }
-          opacity: 1;
-
-          .gallery-text {
-            opacity: 1;
-            visibility: visible;
-          }
+        &:hover,
+        &:focus {
+          background-size: 100% 2px;
+          color: $cigi-primary-colour;
         }
       }
     }
+  }
 
-    .anniversary-timeline-button {
-      align-items: center;
-      background-color: rgba($white, 0.78);
-      border: 0;
-      border-radius: 50%;
-      color: $cigi-primary-colour;
-      cursor: pointer;
-      display: flex;
-      font-size: 2em;
-      height: 54px;
-      justify-content: center;
-      margin-top: 0;
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      transition:
-        background-color 0.2s ease,
-        color 0.2s ease;
-      width: 54px;
-      z-index: 10;
+  .anniversary-event-date {
+    color: $cigi-primary-colour;
+    font-size: 0.8rem;
+    font-weight: 400;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+  }
+
+  .anniversary-event-description {
+    color: rgba($white, 0.86);
+    font-size: 0.95rem;
+    line-height: 1.5;
+
+    p {
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .anniversary-event-rsvp,
+  .anniversary-event-private {
+    margin-top: auto;
+  }
+
+  .anniversary-event-rsvp {
+    a {
+      color: $white;
+      display: inline-block;
+      line-height: 1.2;
+      padding: 0 0.2rem;
+      position: relative;
+      text-decoration: none;
+      transition: color 0.2s ease;
 
       &::after {
+        background-color: $cigi-primary-colour;
+        bottom: -0.15rem;
         content: '';
+        height: 2px;
+        left: 0;
+        position: absolute;
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: transform 0.25s ease;
+        width: 100%;
       }
 
       &:hover,
       &:focus {
-        background-color: rgba($white, 0.95);
-        color: $black;
+        color: $cigi-primary-colour;
+
+        &::after {
+          transform: scaleX(1.25);
+        }
+      }
+    }
+  }
+
+  .anniversary-event-private {
+    color: rgba($white, 0.72);
+    font-size: 0.8rem;
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .anniversary-events-controls {
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-top: 2.5rem;
+    padding: 0 1.5rem;
+    @include media-breakpoint-up(lg) {
+      padding: 0 2.25rem;
+    }
+  }
+
+  .anniversary-events-pagination {
+    align-items: baseline;
+    display: flex;
+    gap: 0.4rem;
+
+    .swiper-pagination-bullet {
+      align-items: center;
+      appearance: none;
+      background-color: $white;
+      border: 0;
+      border-radius: 50%;
+      cursor: pointer;
+      display: inline-flex;
+      height: 0.625rem;
+      justify-content: center;
+      margin: 0;
+      opacity: 1;
+      padding: 0;
+      width: 0.625rem;
+
+      span {
+        display: none;
       }
     }
 
-    .anniversary-timeline-button-next {
-      @include media-breakpoint-up(xl) {
-        right: 25%;
+    .swiper-pagination-bullet-active {
+      background-color: transparent;
+      color: $cigi-primary-colour;
+      font-size: 1.25rem;
+      font-weight: 700;
+      height: 1.25rem;
+      line-height: 1;
+
+      span {
+        display: block;
       }
-      @include media-breakpoint-up(lg) {
-        right: 15%;
-      }
-      right: 0.5em;
+    }
+  }
+
+  .anniversary-events-navigation {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .anniversary-events-button {
+    align-items: center;
+    background-color: transparent;
+    border: 1px solid $white;
+    border-radius: 50%;
+    color: $white;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 1.75rem;
+    height: 2.5rem;
+    justify-content: center;
+    padding: 0;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease,
+      opacity 0.2s ease;
+    width: 2.5rem;
+
+    &:hover,
+    &:focus {
+      background-color: $white;
+      color: $black;
     }
 
-    .anniversary-timeline-button-prev {
-      @include media-breakpoint-up(xl) {
-        left: 25%;
-      }
-      @include media-breakpoint-up(lg) {
-        left: 15%;
-      }
-      left: 0.5em;
+    &.swiper-button-disabled {
+      cursor: default;
+      opacity: 0.35;
     }
+  }
 
-    .swiper-button-disabled {
-      display: none;
+  .anniversary-history-section {
+    @include media-breakpoint-up(lg) {
+      margin-bottom: 4rem;
+      padding-top: 4rem;
+    }
+    margin-bottom: 3rem;
+    padding-top: 3rem;
+
+    .anniversary-timeline-gallery {
+      margin-top: 2em;
+      overflow: hidden;
+
+      .anniversary-timeline-nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 0 0 1em;
+        padding-left: 0;
+
+        li {
+          font-size: 0.9em;
+          list-style: none;
+
+          &:not(:last-child) {
+            &::after {
+              color: $cigi-primary-colour;
+              content: '/';
+              padding: 0 0.5em;
+            }
+          }
+
+          button {
+            color: $cigi-medium-grey;
+            position: relative;
+            transition: color 0.3s ease;
+
+            &::before {
+              background-color: $cigi-primary-colour;
+              bottom: 0;
+              content: '';
+              height: 0.2em;
+              position: absolute;
+              transition: width 300ms ease;
+              width: 0;
+            }
+
+            &:hover {
+              &::before {
+                width: 100%;
+              }
+            }
+
+            &.active {
+              color: $black;
+              font-weight: 600;
+            }
+          }
+        }
+      }
+
+      .anniversary-timeline-stage {
+        position: relative;
+      }
+
+      .anniversary-timeline-swiper {
+        cursor: grab;
+        overflow: visible;
+
+        .swiper-wrapper {
+          align-items: center;
+        }
+
+        .swiper-slide {
+          @include media-breakpoint-up(lg) {
+            img {
+              transform: scale(0.7);
+            }
+          }
+          opacity: 0;
+          transition:
+            opacity 1s ease,
+            // transform 1s ease,
+            filter 1s ease;
+
+          .img-wrapper {
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+
+            @include media-breakpoint-up(lg) {
+              aspect-ratio: 16 / 9;
+            }
+
+            img {
+              display: block;
+              height: 100%;
+              object-fit: cover;
+              width: 100%;
+              transition: transform 1s ease;
+
+              @include media-breakpoint-up(lg) {
+                border-radius: 15px;
+              }
+            }
+          }
+
+          .gallery-text {
+            display: flex;
+            margin-right: 18px;
+            margin-top: 1em;
+            opacity: 0;
+            transition: opacity 1s ease;
+            visibility: hidden;
+
+            .year {
+              @include media-breakpoint-up(md) {
+                font-size: 1.25em;
+              }
+              @include media-breakpoint-up(lg) {
+                font-size: 1.5em;
+              }
+              font-size: 1em;
+              font-weight: 400;
+              margin: 0 0.75em;
+              position: relative;
+            }
+
+            .caption {
+              flex-basis: 90%;
+              font-size: 0.75em;
+              line-height: 1.3;
+
+              p {
+                &:last-child {
+                  margin-bottom: 0;
+                }
+              }
+            }
+          }
+
+          &.swiper-slide-next,
+          &.swiper-slide-prev {
+            filter: grayscale(100%);
+            opacity: 0.7;
+          }
+
+          &.swiper-slide-next {
+            @include media-breakpoint-up(lg) {
+              transform: translateX(-10%);
+              img {
+                transform: scale(0.7);
+              }
+            }
+          }
+
+          &.swiper-slide-prev {
+            @include media-breakpoint-up(lg) {
+              transform: translateX(10%);
+              img {
+                transform: scale(0.7);
+              }
+            }
+          }
+
+          &.swiper-slide-active {
+            @include media-breakpoint-up(lg) {
+              img {
+                transform: scale(1);
+              }
+            }
+            opacity: 1;
+
+            .gallery-text {
+              opacity: 1;
+              visibility: visible;
+            }
+          }
+        }
+      }
+
+      .anniversary-timeline-button {
+        align-items: center;
+        background-color: rgba($white, 0.78);
+        border: 0;
+        border-radius: 50%;
+        color: $cigi-primary-colour;
+        cursor: pointer;
+        display: flex;
+        font-size: 2em;
+        height: 54px;
+        justify-content: center;
+        margin-top: 0;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        transition:
+          background-color 0.2s ease,
+          color 0.2s ease;
+        width: 54px;
+        z-index: 10;
+
+        &::after {
+          content: '';
+        }
+
+        &:hover,
+        &:focus {
+          background-color: rgba($white, 0.95);
+          color: $black;
+        }
+      }
+
+      .anniversary-timeline-button-next {
+        @include media-breakpoint-up(xl) {
+          right: 25%;
+        }
+        @include media-breakpoint-up(lg) {
+          right: 15%;
+        }
+        right: 0.5em;
+      }
+
+      .anniversary-timeline-button-prev {
+        @include media-breakpoint-up(xl) {
+          left: 25%;
+        }
+        @include media-breakpoint-up(lg) {
+          left: 15%;
+        }
+        left: 0.5em;
+      }
+
+      .swiper-button-disabled {
+        display: none;
+      }
     }
   }
 }

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags webpack_loader wagtailimages_tags %}
+{% load wagtailcore_tags webpack_loader wagtailimages_tags menu_tags %}
 
 {% block og_image %}
   {% if self.image_social %}
@@ -33,48 +33,163 @@
     {% endif %}
     <div class="anniversary-splash-overlay"></div>
     <div class="anniversary-splash-content">
-      <p>25 years of influencial research and trusted analysis</p>
+      <p>25 years of influencial research and trusted analysis.</p>
       <div class="anniversary-splash-logo" aria-label="CIGI">
         {% include "includes/header_cigi_logo_large.svg" %}
       </div>
       <button class="anniversary-splash-scroll" type="button" aria-label="Scroll to anniversary content">
-        <i class="fal fa-angle-down"></i>
+        <i class="fal fa-arrow-down"></i>
       </button>
     </div>
   </section>
 
   <section id="anniversary-content" class="anniversary-content">
+    {% get_menu_items 'main' as main_menu_items %}
+    {% get_menu_items 'footer' as footer_menu_items %}
     <div class="anniversary-sticky-header">
       <div class="anniversary-site-header" role="banner">
-        <nav class="anniversary-site-nav" aria-label="25th anniversary">
-          <a class="anniversary-site-logo" href="/" aria-label="CIGI home">
-            {% include "core/includes/twenty_fifth_cigi_logo.svg" %}
-          </a>
-          <ul class="anniversary-site-links">
-            <li><a href="#anniversary-about" data-anniversary-nav-link>about</a></li>
-            <li><a href="#anniversary-events" data-anniversary-nav-link>Events</a></li>
-            <li><a href="#anniversary-history" data-anniversary-nav-link>History</a></li>
-          </ul>
-          <div class="anniversary-site-actions">
-            <button class="anniversary-site-action" type="button" aria-expanded="false" aria-controls="anniversary-share-placeholder" data-anniversary-toggle="anniversary-share-placeholder">
-              <i class="fas fa-share-alt"></i>
-              <span class="anniversary-visually-hidden">Share</span>
-            </button>
-            <button class="anniversary-site-action" type="button" aria-expanded="false" aria-controls="anniversary-menu-placeholder" data-anniversary-toggle="anniversary-menu-placeholder">
-              <i class="far fa-bars"></i>
-              <span class="anniversary-visually-hidden">Menu</span>
-            </button>
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <nav class="anniversary-site-nav" aria-label="25th anniversary">
+                <a class="anniversary-site-logo" href="/" aria-label="CIGI home">
+                  {% include "core/includes/twenty_fifth_cigi_logo.svg" %}
+                </a>
+                <ul class="anniversary-site-links">
+                  <li><a href="#anniversary-about" data-anniversary-nav-link>about</a></li>
+                  <li><a href="#anniversary-events" data-anniversary-nav-link>Events</a></li>
+                  <li><a href="#anniversary-history" data-anniversary-nav-link>History</a></li>
+                </ul>
+                <div class="anniversary-site-actions">
+                  <div class="anniversary-share-menu">
+                    <button class="anniversary-site-action" type="button" aria-expanded="false" aria-controls="anniversary-share-placeholder" data-anniversary-toggle="anniversary-share-placeholder">
+                      <i class="fas fa-share-alt"></i>
+                      <span class="anniversary-visually-hidden">Share</span>
+                    </button>
+                    <div class="anniversary-share-panel" id="anniversary-share-placeholder" hidden>
+                      <ul class="anniversary-share-list" aria-label="Share this page">
+                        <li>
+                          <a href="https://x.com/share?text={{ self.title|urlencode }}&amp;url={{ request.build_absolute_uri|slice:':-1' }}" target="_blank" rel="noopener noreferrer">
+                            <i class="fa-brands fa-x-twitter" aria-hidden="true"></i>
+                            <span>X</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri|slice:':-1' }}" target="_blank" rel="noopener noreferrer">
+                            <i class="fa-brands fa-linkedin-in" aria-hidden="true"></i>
+                            <span>LinkedIn</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <button class="anniversary-site-action" type="button" aria-expanded="false" aria-controls="anniversary-menu-overlay" data-anniversary-menu-toggle>
+                    <span class="anniversary-menu-icon anniversary-menu-icon-opened"><i class="far fa-times"></i></span>
+                    <span class="anniversary-menu-icon anniversary-menu-icon-closed"><i class="far fa-bars"></i></span>
+                    <span class="anniversary-visually-hidden">Menu</span>
+                  </button>
+                </div>
+              </nav>
+            </div>
           </div>
-        </nav>
-        <div class="anniversary-site-placeholder" id="anniversary-share-placeholder" hidden></div>
-        <div class="anniversary-site-placeholder" id="anniversary-menu-placeholder" hidden></div>
+        </div>
+        <div class="anniversary-menu-overlay" id="anniversary-menu-overlay" hidden>
+          <div class="anniversary-menu-inner">
+            <div class="container">
+              <div class="anniversary-menu-content row row-cols-1 row-cols-md-4 row-eq-height">
+                {% for sub_menu in main_menu_items %}
+                  <div class="anniversary-menu-submenu col">
+                    {% if sub_menu.link_page %}
+                      <a href="{% pageurl sub_menu.link_page %}" class="anniversary-menu-submenu-link">
+                        {{ sub_menu.title }}
+                      </a>
+                    {% elif sub_menu.link_url %}
+                      <a href="{{ sub_menu.link_url }}" class="anniversary-menu-submenu-link">
+                        {{ sub_menu.title }}
+                      </a>
+                    {% endif %}
+                    {% with sub_menu.submenu.menu_items.all as submenu_items %}
+                      {% if submenu_items %}
+                        <button class="anniversary-menu-accordion" type="button" aria-expanded="false" aria-label="Toggle {{ sub_menu.title }} submenu">
+                          <i class="fas fa-plus"></i>
+                        </button>
+                        <ul>
+                          {% for menu_item in submenu_items %}
+                            {% if menu_item.link_page %}
+                              <li>
+                                <a href="{% pageurl menu_item.link_page %}" class="anniversary-menu-submenu-item-link">
+                                  {{ menu_item.title }}
+                                </a>
+                              </li>
+                            {% elif menu_item.link_url %}
+                              <li>
+                                <a href="{{ menu_item.link_url }}" class="anniversary-menu-submenu-item-link">
+                                  {{ menu_item.title }}
+                                </a>
+                              </li>
+                            {% endif %}
+                          {% endfor %}
+                        </ul>
+                      {% endif %}
+                    {% endwith %}
+                  </div>
+                {% endfor %}
+                <div class="anniversary-menu-submenu col">
+                  <ul class="anniversary-menu-footer-menu">
+                    {% for menu_item in footer_menu_items %}
+                      {% if menu_item.link_page %}
+                        <li>
+                          <a href="{% pageurl menu_item.link_page %}">
+                            {{ menu_item.title }}
+                          </a>
+                        </li>
+                      {% elif menu_item.link_url %}
+                        <li>
+                          <a href="{{ menu_item.link_url }}">
+                            {{ menu_item.title }}
+                          </a>
+                        </li>
+                      {% endif %}
+                    {% endfor %}
+                  </ul>
+                  <ul class="anniversary-menu-social-links">
+                    <li>
+                      <a href="https://x.com/cigionline" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's X profile"><i class="fa-brands fa-x-twitter"></i></a>
+                    </li>
+                    <li>
+                      <a href="https://www.linkedin.com/company/cigionline/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's LinkedIn profile"><i class="fa-brands fa-linkedin-in"></i></a>
+                    </li>
+                    <li>
+                      <a href="https://www.youtube.com/user/cigivideos" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Youtube channel"><i class="fa-brands fa-youtube"></i></a>
+                    </li>
+                    <li>
+                      <a href="https://www.instagram.com/cigionline/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Instagram Profile"><i class="fa-brands fa-instagram"></i></a>
+                    </li>
+                    <li>
+                      <a href="https://cigionlineorg.substack.com/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Substack page">{% include 'includes/substack-logo.svg' %}</a>
+                    </li>
+                    <li>
+                      <a href="https://medium.com/centre-for-international-governance-innovation" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Medium page">{% include 'includes/medium-logo.svg' %}</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div id="anniversary-about" class="anniversary-section-anchor">
+    <section id="anniversary-about" class="anniversary-about-section anniversary-section-anchor">
+        <div class="container">
+        <h2>About</h2>
+      </div>
       {% include "includes/body.html" with body=self.body %}
-    </div>
-    <div id="anniversary-events" class="anniversary-section-anchor"></div>
+    </section>
+    {% include "core/includes/twenty_fifth_events.html" with events=self.anniversary_events.all %}
     <section id="anniversary-history" class="anniversary-section-anchor anniversary-history-section">
+      <div class="container">
+        <h2>History</h2>
+      </div>
       {% for block in self.history_timeline %}
         {% if block.block_type == 'gallery' %}
           {% include "core/includes/twenty_fifth_timeline_gallery.html" with gallery=block.value %}
