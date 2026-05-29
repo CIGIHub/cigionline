@@ -1,3 +1,4 @@
+from django.db.models import F
 from django.templatetags.static import static
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
@@ -13,6 +14,24 @@ from wagtail.admin.viewsets.model import ModelViewSet
 from wagtail.admin.viewsets.base import ViewSetGroup
 from wagtail.admin.ui.tables import Column
 from utils.admin_utils import title_with_actions
+
+
+@hooks.register('construct_page_chooser_queryset')
+def sort_event_page_chooser_queryset(queryset, request):
+    page_types = {
+        page_type.strip().lower()
+        for page_type in (request.GET.get('page_type') or '').split(',')
+        if page_type.strip()
+    }
+
+    if 'events.eventpage' in page_types:
+        return queryset.order_by(
+            F('contentpage__publishing_date').desc(nulls_last=True),
+            '-latest_revision_created_at',
+            '-id',
+        )
+
+    return queryset
 
 
 @hooks.register('insert_global_admin_css')

@@ -65,6 +65,7 @@ from wagtail.admin.panels import (
     PageChooserPanel,
     TitleFieldPanel,
 )
+from wagtail.admin.widgets import AdminPageChooser
 from .panels import QRCodePanel
 from wagtail import blocks
 from wagtail.fields import RichTextField, StreamField
@@ -1534,6 +1535,31 @@ class TwentyFifthPageSingleton(
         verbose_name = 'Twenty-Fifth Anniversary Page'
 
 
+class EventPageAdminChooser(AdminPageChooser):
+    def __init__(self, **kwargs):
+        super().__init__(target_models=['events.EventPage'], **kwargs)
+
+    def get_js_init_options(self, id_, name, value_data):
+        opts = super().get_js_init_options(id_, name, value_data)
+
+        if 'parentId' not in opts:
+            from events.models import EventListPage
+
+            event_list_page = EventListPage.objects.order_by('path').first()
+
+            if event_list_page:
+                opts['parentId'] = event_list_page.pk
+
+        return opts
+
+
+class EventPageChooserPanel(FieldPanel):
+    def get_form_options(self):
+        opts = super().get_form_options()
+        opts.setdefault('widgets', {})[self.field_name] = EventPageAdminChooser()
+        return opts
+
+
 class TwentyFifthPageEvent(Orderable):
     page = ParentalKey(
         'core.TwentyFifthPageSingleton',
@@ -1549,10 +1575,7 @@ class TwentyFifthPageEvent(Orderable):
     )
 
     panels = [
-        PageChooserPanel(
-            'event_page',
-            ['events.EventPage'],
-        ),
+        FieldPanel('event_page'),
     ]
 
 

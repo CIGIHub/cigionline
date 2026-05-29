@@ -3,50 +3,50 @@
 <section id="anniversary-events" class="anniversary-section-anchor anniversary-events-section" data-anniversary-events>
   <div class="container">
     <h2>Events</h2>
-  </div>
-  {% if events %}
-    <div class="anniversary-events-swiper-wrap">
-      <div class="swiper-container anniversary-events-swiper">
-        <div class="swiper-wrapper">
-          {% for event_relation in events %}
-            {% with event=event_relation.event_page %}
-              <article class="swiper-slide anniversary-event-slide">
-                <div class="anniversary-event-card">
-                  <h3>
-                    <a href="{{ event.url }}">{{ event.title }}</a>
-                  </h3>
-                  <div class="anniversary-event-date">
-                    {{ event.publishing_date|date:"F j, Y - g:i A" }} {{ event.time_zone_label }}
+    {% if events %}
+      <div class="anniversary-events-swiper-wrap">
+        <div class="swiper-container anniversary-events-swiper">
+          <div class="swiper-wrapper">
+            {% for event_relation in events %}
+              {% with event=event_relation.event_page %}
+                <article class="swiper-slide anniversary-event-slide">
+                  <div class="anniversary-event-card">
+                    <h3>
+                      <a href="{{ event.url }}">{{ event.title }}</a>
+                    </h3>
+                    <div class="anniversary-event-date">
+                      {{ event.publishing_date|date:"F j, Y - g:i A" }} {{ event.time_zone_label }}
+                    </div>
+                    {% if event.short_description %}
+                      <div class="anniversary-event-description">
+                        {{ event.short_description|richtext }}
+                      </div>
+                    {% endif %}
+                    {% if event.registration_open and not event.is_private_registration %}
+                      <div class="anniversary-event-rsvp">  
+                        <a href="{{ event.url }}register/">RSVP ></a>
+                      </div>
+                    {% else %}
+                      <div class="anniversary-event-private">Private Event</div>
+                    {% endif %}
                   </div>
-                  {% if event.short_description %}
-                    <div class="anniversary-event-description">
-                      {{ event.short_description|richtext }}
-                    </div>
-                  {% endif %}
-                  {% if event.registration_open and not event.is_private_registration %}
-                    <div class="anniversary-event-rsvp">  
-                      <a href="{{ event.url }}register/">RSVP ></a>
-                    </div>
-                  {% else %}
-                    <div class="anniversary-event-private">Private Event</div>
-                  {% endif %}
-                </div>
-              </article>
-            {% endwith %}
-          {% endfor %}
+                </article>
+              {% endwith %}
+            {% endfor %}
+          </div>
+        </div>
+        <div class="anniversary-events-controls">
+          <div class="anniversary-events-pagination"></div>
+          <div class="anniversary-events-navigation">
+            <button class="anniversary-events-button anniversary-events-button-prev" type="button" aria-label="Previous event">
+              <i class="fal fa-angle-left"></i>
+            </button>
+            <button class="anniversary-events-button anniversary-events-button-next" type="button" aria-label="Next event">
+              <i class="fal fa-angle-right"></i>
+            </button>
+          </div>
         </div>
       </div>
-      <div class="anniversary-events-controls">
-        <div class="anniversary-events-pagination"></div>
-        <div class="anniversary-events-navigation">
-          <button class="anniversary-events-button anniversary-events-button-prev" type="button" aria-label="Previous event">
-            <i class="fal fa-angle-left"></i>
-          </button>
-          <button class="anniversary-events-button anniversary-events-button-next" type="button" aria-label="Next event">
-            <i class="fal fa-angle-right"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-  {% endif %}
+    {% endif %}
+  </div>
 </section>
