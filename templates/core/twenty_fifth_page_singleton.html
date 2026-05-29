@@ -198,3 +198,93 @@
     </section>
   </section>
 {% endblock content %}
+
+{% block footer %}
+  <footer class="anniversary-footer">
+    <div class="container">
+      <div class="anniversary-footer-layout">
+        <div class="anniversary-footer-contact">
+          <a class="anniversary-footer-logo" href="/" aria-label="CIGI home">
+            {% include "core/includes/twenty_fifth_cigi_logo.svg" %}
+          </a>
+          <address>
+            67 Erb Street West, Waterloo, ON<br>
+            Canada<br>
+            N2L 6C2
+          </address>
+        </div>
+        <div class="anniversary-footer-newsletter">
+          <h2>Subscribe to our newsletter</h2>
+          <button class="anniversary-footer-subscribe-button" type="button" aria-haspopup="dialog" data-anniversary-newsletter-open>
+            SUBSCRIBE <span>&gt;</span>
+          </button>
+          <p>
+            By subscribing you agree to with our <a href="/privacy-policy/">Privacy Policy</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <div class="anniversary-newsletter-modal-backdrop" data-anniversary-newsletter-modal hidden>
+    <div class="anniversary-newsletter-modal" role="dialog" aria-modal="true" aria-labelledby="anniversary-newsletter-modal-title">
+      <div class="anniversary-newsletter-modal-header">
+        <h2 id="anniversary-newsletter-modal-title">Subscribe to our newsletter</h2>
+        <button class="anniversary-newsletter-modal-close" type="button" aria-label="Close newsletter form" data-anniversary-newsletter-close>
+          <i class="far fa-times"></i>
+        </button>
+      </div>
+      <form class="anniversary-newsletter-modal-form" title="Newsletter Sign Up" action="/subscribe/" method="GET">
+        <div class="anniversary-newsletter-modal-grid">
+          <div class="anniversary-newsletter-field">
+            <label for="anniversary-newsletter-first-name">First name</label>
+            <input id="anniversary-newsletter-first-name" type="text" name="first_name" autocomplete="given-name">
+          </div>
+          <div class="anniversary-newsletter-field">
+            <label for="anniversary-newsletter-last-name">Last name</label>
+            <input id="anniversary-newsletter-last-name" type="text" name="last_name" autocomplete="family-name">
+          </div>
+          <div class="anniversary-newsletter-field anniversary-newsletter-field-full">
+            <label for="anniversary-newsletter-email">Email</label>
+            <input id="anniversary-newsletter-email" type="email" name="email" autocomplete="email" required aria-required="true">
+          </div>
+          <div class="anniversary-newsletter-field">
+            <label for="anniversary-newsletter-organization">Organization</label>
+            <input id="anniversary-newsletter-organization" type="text" name="organization">
+          </div>
+          <div class="anniversary-newsletter-field">
+            <label for="anniversary-newsletter-role">Role</label>
+            <input id="anniversary-newsletter-role" type="text" name="role">
+          </div>
+          <div class="anniversary-newsletter-field">
+            <label for="anniversary-newsletter-country">Country</label>
+            <input id="anniversary-newsletter-country" type="text" name="country">
+          </div>
+          <div class="anniversary-newsletter-field">
+            <label for="anniversary-newsletter-frequency">Email frequency</label>
+            <select id="anniversary-newsletter-frequency" name="frequency">
+              <option value="">Select one</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="major-updates">Major updates only</option>
+            </select>
+          </div>
+          <fieldset class="anniversary-newsletter-field anniversary-newsletter-field-full">
+            <legend>Topics of interest</legend>
+            <label><input type="checkbox" name="topics" value="global-economy"> Global economy</label>
+            <label><input type="checkbox" name="topics" value="digital-governance"> Digital governance</label>
+            <label><input type="checkbox" name="topics" value="security"> Security</label>
+            <label><input type="checkbox" name="topics" value="environment"> Environment</label>
+          </fieldset>
+          <div class="anniversary-newsletter-field anniversary-newsletter-field-full">
+            <label for="anniversary-newsletter-comments">Comments</label>
+            <textarea id="anniversary-newsletter-comments" name="comments" rows="4"></textarea>
+          </div>
+        </div>
+        <p>
+          By subscribing you agree to with our <a href="/privacy-policy/">Privacy Policy</a>.
+        </p>
+        <button class="anniversary-newsletter-submit" type="submit">SUBSCRIBE <span>&gt;</span></button>
+      </form>
+    </div>
+  </div>
+{% endblock footer %}

@@ -175,6 +175,86 @@ anniversaryMenuAccordions.forEach((accordion) => {
   });
 });
 
+const newsletterOpenButton = document.querySelector('[data-anniversary-newsletter-open]');
+const newsletterModal = document.querySelector('[data-anniversary-newsletter-modal]');
+const newsletterCloseButton = document.querySelector('[data-anniversary-newsletter-close]');
+const newsletterFirstField = document.getElementById('anniversary-newsletter-first-name');
+let newsletterReturnFocus = null;
+let newsletterCloseTimer = null;
+
+const lockBodyScroll = () => {
+  const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+  if (scrollbarWidth > 0) {
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
+    if (anniversaryStickyHeader) {
+      anniversaryStickyHeader.style.setProperty('--anniversary-scrollbar-offset', `${scrollbarWidth}px`);
+    }
+  }
+  document.body.classList.add('disable-scroll');
+};
+
+const unlockBodyScroll = () => {
+  document.body.classList.remove('disable-scroll');
+  document.body.style.paddingRight = '';
+  if (anniversaryStickyHeader) {
+    anniversaryStickyHeader.style.removeProperty('--anniversary-scrollbar-offset');
+  }
+};
+
+const closeNewsletterModal = () => {
+  if (!newsletterModal || newsletterModal.hidden) return;
+
+  newsletterModal.classList.remove('is-open');
+  window.clearTimeout(newsletterCloseTimer);
+  newsletterCloseTimer = window.setTimeout(() => {
+    newsletterModal.hidden = true;
+    unlockBodyScroll();
+
+    if (newsletterReturnFocus) {
+      newsletterReturnFocus.focus();
+      newsletterReturnFocus = null;
+    }
+  }, 220);
+};
+
+const openNewsletterModal = () => {
+  if (!newsletterModal) return;
+
+  window.clearTimeout(newsletterCloseTimer);
+  closeAnniversaryToggles();
+  closeAnniversaryMenu();
+  newsletterReturnFocus = document.activeElement;
+  newsletterModal.hidden = false;
+  lockBodyScroll();
+  window.requestAnimationFrame(() => {
+    newsletterModal.classList.add('is-open');
+  });
+
+  if (newsletterFirstField) {
+    newsletterFirstField.focus();
+  }
+};
+
+if (newsletterOpenButton && newsletterModal) {
+  newsletterOpenButton.addEventListener('click', openNewsletterModal);
+
+  newsletterModal.addEventListener('click', (event) => {
+    if (event.target === newsletterModal) {
+      closeNewsletterModal();
+    }
+  });
+}
+
+if (newsletterCloseButton) {
+  newsletterCloseButton.addEventListener('click', closeNewsletterModal);
+}
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && newsletterModal && !newsletterModal.hidden) {
+    closeNewsletterModal();
+  }
+});
+
 const anniversaryNavLinks = [...document.querySelectorAll('[data-anniversary-nav-link]')];
 const anniversarySections = anniversaryNavLinks
   .map((link) => ({
