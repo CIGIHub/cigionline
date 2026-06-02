@@ -1,0 +1,19 @@
+{% extends "research/project_page.html" %}
+{% load webpack_loader %}
+
+{% block extra_css %}
+  {% render_bundle 'projectPage' 'css' %}
+  {% render_bundle 'themeResponsibleTechnology' 'css' %}
+{% endblock %}
+
+{% block extra_js %}
+  <script type="text/javascript">
+    var projectId= {{ self.id }};
+    var hasTaggedPages = {{ self.has_tagged_pages|lower }};
+  </script>
+  {% render_bundle 'projectPage' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block page_hero %}
+  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu image_banner=self.image_banner hero_link_heading="Emerging Scholars Program" %}
+{% endblock %}
