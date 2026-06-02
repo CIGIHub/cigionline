@@ -1229,6 +1229,11 @@
     color: $white;
     margin-top: 0.5rem;
 
+    &:disabled {
+      cursor: wait;
+      opacity: 0.7;
+    }
+
     &:hover,
     &:focus {
       background-color: $black;
@@ -1323,6 +1328,36 @@
   }
 
   .anniversary-newsletter-modal-form {
+    &.is-loading {
+      cursor: wait;
+    }
+
+    &.is-submitted {
+      .anniversary-newsletter-form-body {
+        display: none;
+      }
+    }
+
+    .anniversary-newsletter-form-message {
+      color: $black;
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 1rem;
+
+      &[hidden] {
+        display: none;
+      }
+
+      &.is-error {
+        color: $cigi-primary-colour;
+      }
+
+      &.is-info {
+        color: $cigi-dark-grey;
+      }
+    }
+
     .anniversary-newsletter-errors,
     .anniversary-newsletter-messages {
       margin-bottom: 1rem;

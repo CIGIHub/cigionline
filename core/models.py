@@ -1575,15 +1575,26 @@ class TwentyFifthPageSingleton(
     def serve(self, request, *args, **kwargs):
         if request.method == 'POST' and request.POST.get('anniversary_newsletter_form'):
             from mailchimp_marketing.api_client import ApiClientError
+            from subscribe.models import MailchimpSubscriptionError
             from utils.security import verify_turnstile_token
 
+            is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest'
             context = self.get_context(request, *args, **kwargs)
             form = self.get_anniversary_subscribe_form(request.POST)
             context['anniversary_subscribe_form'] = form
             context['anniversary_subscribe_modal_open'] = True
 
             turnstile_token = request.POST.get('cf-turnstile-response', '')
-            if not verify_turnstile_token(turnstile_token, request.META.get('REMOTE_ADDR')):
+            if not settings.DEBUG and not verify_turnstile_token(turnstile_token, request.META.get('REMOTE_ADDR')):
+                if is_ajax:
+                    return JsonResponse(
+                        {
+                            'success': False,
+                            'message': 'Security verification failed. Please try again.',
+                        },
+                        status=400,
+                    )
+
                 messages.error(request, 'Security verification failed. Please try again.')
                 return render(request, self.template, context)
 
@@ -1593,15 +1604,42 @@ class TwentyFifthPageSingleton(
                         form,
                         extra_tags=[self.anniversary_mailchimp_tag],
                     )
-                except ApiClientError as error:
+                except (ApiClientError, MailchimpSubscriptionError) as error:
                     import logging
 
+                    error_text = getattr(error, 'text', str(error))
+                    logging.getLogger('cigionline').error(f'An error occurred with Mailchimp: {error_text}')
+                    if is_ajax:
+                        return JsonResponse(
+                            {
+                                'success': False,
+                                'message': 'There was a problem subscribing you. Please try again.',
+                            },
+                            status=502,
+                        )
+
                     messages.error(request, 'There was a problem subscribing you. Please try again.')
-                    logging.getLogger('cigionline').error(f'An error occurred with Mailchimp: {error.text}')
                 else:
+                    if is_ajax:
+                        return JsonResponse(
+                            {
+                                'success': True,
+                                'message': 'Thanks for subscribing.',
+                            }
+                        )
+
                     messages.success(request, 'Thanks for subscribing.')
                     context['anniversary_subscribe_form'] = self.get_anniversary_subscribe_form()
                     context['anniversary_subscribe_modal_open'] = True
+            elif is_ajax:
+                return JsonResponse(
+                    {
+                        'success': False,
+                        'message': 'Please correct the highlighted fields and try again.',
+                        'errors': form.errors.get_json_data(),
+                    },
+                    status=400,
+                )
 
             return render(request, self.template, context)
 

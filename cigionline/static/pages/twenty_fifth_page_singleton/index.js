@@ -210,6 +210,9 @@ const newsletterOpenButton = document.querySelector('[data-anniversary-newslette
 const newsletterModal = document.querySelector('[data-anniversary-newsletter-modal]');
 const newsletterCloseButton = document.querySelector('[data-anniversary-newsletter-close]');
 const newsletterFirstField = newsletterModal ? newsletterModal.querySelector('[name="first_name"]') : null;
+const newsletterForm = newsletterModal ? newsletterModal.querySelector('.anniversary-newsletter-modal-form') : null;
+const newsletterFormMessage = newsletterModal ? newsletterModal.querySelector('.anniversary-newsletter-form-message') : null;
+const newsletterSubmitButton = newsletterForm ? newsletterForm.querySelector('.anniversary-newsletter-submit') : null;
 let newsletterReturnFocus = null;
 let newsletterCloseTimer = null;
 
@@ -256,6 +259,13 @@ const openNewsletterModal = () => {
   closeAnniversaryMenu();
   newsletterReturnFocus = document.activeElement;
   newsletterModal.hidden = false;
+  if (newsletterForm && newsletterForm.classList.contains('is-submitted')) {
+    newsletterForm.classList.remove('is-submitted');
+    if (newsletterFormMessage) {
+      newsletterFormMessage.hidden = true;
+      newsletterFormMessage.textContent = '';
+    }
+  }
   lockBodyScroll();
   window.requestAnimationFrame(() => {
     newsletterModal.classList.add('is-open');
@@ -282,6 +292,68 @@ if (newsletterModal && !newsletterModal.hidden) {
 
 if (newsletterCloseButton) {
   newsletterCloseButton.addEventListener('click', closeNewsletterModal);
+}
+
+const setNewsletterMessage = (message, type = 'info') => {
+  if (!newsletterFormMessage) return;
+
+  newsletterFormMessage.hidden = false;
+  newsletterFormMessage.textContent = message;
+  newsletterFormMessage.classList.remove('is-error', 'is-info', 'is-success');
+  newsletterFormMessage.classList.add(`is-${type}`);
+};
+
+const resetNewsletterTurnstile = () => {
+  if (!window.turnstile) return;
+
+  try {
+    window.turnstile.reset();
+  } catch {
+    // Turnstile may not be fully ready yet; the next submission will render a fresh token.
+  }
+};
+
+if (newsletterForm && newsletterSubmitButton && window.fetch) {
+  const submitButtonContent = newsletterSubmitButton.innerHTML;
+
+  newsletterForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    newsletterForm.classList.remove('is-submitted');
+    newsletterForm.classList.add('is-loading');
+    newsletterSubmitButton.disabled = true;
+    newsletterSubmitButton.innerHTML = 'SUBSCRIBING...';
+    setNewsletterMessage('Subscribing...', 'info');
+
+    try {
+      const response = await fetch(newsletterForm.action, {
+        method: 'POST',
+        body: new FormData(newsletterForm),
+        credentials: 'same-origin',
+        headers: {
+          Accept: 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+      });
+      const contentType = response.headers.get('content-type') || '';
+      const payload = contentType.includes('application/json') ? await response.json() : {};
+
+      if (!response.ok || !payload.success) {
+        throw payload;
+      }
+
+      newsletterForm.reset();
+      newsletterForm.classList.add('is-submitted');
+      setNewsletterMessage(payload.message || 'Thanks for subscribing.', 'success');
+    } catch (error) {
+      setNewsletterMessage(error.message || 'There was a problem subscribing you. Please try again.', 'error');
+      resetNewsletterTurnstile();
+    } finally {
+      newsletterForm.classList.remove('is-loading');
+      newsletterSubmitButton.disabled = false;
+      newsletterSubmitButton.innerHTML = submitButtonContent;
+    }
+  });
 }
 
 document.addEventListener('keydown', (event) => {

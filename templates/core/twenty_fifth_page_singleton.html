@@ -245,6 +245,7 @@
       <form class="anniversary-newsletter-modal-form" title="Newsletter Sign Up" action="{% pageurl self %}" method="POST">
         {% csrf_token %}
         <input type="hidden" name="anniversary_newsletter_form" value="1">
+        <div class="anniversary-newsletter-form-message" role="status" aria-live="polite" hidden></div>
 
         {% if messages %}
           <div class="anniversary-newsletter-messages">
@@ -260,48 +261,50 @@
           </div>
         {% endif %}
 
-        <div class="anniversary-newsletter-modal-grid">
-          <div class="anniversary-newsletter-field">
-            <label for="{{ anniversary_subscribe_form.first_name.id_for_label }}">First name</label>
-            {{ anniversary_subscribe_form.first_name }}
-            {{ anniversary_subscribe_form.first_name.errors }}
+        <div class="anniversary-newsletter-form-body">
+          <div class="anniversary-newsletter-modal-grid">
+            <div class="anniversary-newsletter-field">
+              <label for="{{ anniversary_subscribe_form.first_name.id_for_label }}">First name</label>
+              {{ anniversary_subscribe_form.first_name }}
+              {{ anniversary_subscribe_form.first_name.errors }}
+            </div>
+            <div class="anniversary-newsletter-field">
+              <label for="{{ anniversary_subscribe_form.last_name.id_for_label }}">Last name</label>
+              {{ anniversary_subscribe_form.last_name }}
+              {{ anniversary_subscribe_form.last_name.errors }}
+            </div>
+            <div class="anniversary-newsletter-field anniversary-newsletter-field-full">
+              <label for="{{ anniversary_subscribe_form.email.id_for_label }}">Email</label>
+              {{ anniversary_subscribe_form.email }}
+              {{ anniversary_subscribe_form.email.errors }}
+            </div>
+            <div class="anniversary-newsletter-field">
+              <label for="{{ anniversary_subscribe_form.organization.id_for_label }}">Organization</label>
+              {{ anniversary_subscribe_form.organization }}
+              {{ anniversary_subscribe_form.organization.errors }}
+            </div>
+            <div class="anniversary-newsletter-field">
+              <label for="{{ anniversary_subscribe_form.location.id_for_label }}">Country</label>
+              {{ anniversary_subscribe_form.location }}
+              {{ anniversary_subscribe_form.location.errors }}
+            </div>
+            <fieldset class="anniversary-newsletter-field anniversary-newsletter-field-full anniversary-newsletter-consent">
+              <legend>Consent</legend>
+              <label for="{{ anniversary_subscribe_form.consent.id_for_label }}">
+                {{ anniversary_subscribe_form.consent }}
+                <span>{{ anniversary_subscribe_form.consent.help_text }}</span>
+              </label>
+              {{ anniversary_subscribe_form.consent.errors }}
+            </fieldset>
           </div>
-          <div class="anniversary-newsletter-field">
-            <label for="{{ anniversary_subscribe_form.last_name.id_for_label }}">Last name</label>
-            {{ anniversary_subscribe_form.last_name }}
-            {{ anniversary_subscribe_form.last_name.errors }}
-          </div>
-          <div class="anniversary-newsletter-field anniversary-newsletter-field-full">
-            <label for="{{ anniversary_subscribe_form.email.id_for_label }}">Email</label>
-            {{ anniversary_subscribe_form.email }}
-            {{ anniversary_subscribe_form.email.errors }}
-          </div>
-          <div class="anniversary-newsletter-field">
-            <label for="{{ anniversary_subscribe_form.organization.id_for_label }}">Organization</label>
-            {{ anniversary_subscribe_form.organization }}
-            {{ anniversary_subscribe_form.organization.errors }}
-          </div>
-          <div class="anniversary-newsletter-field">
-            <label for="{{ anniversary_subscribe_form.location.id_for_label }}">Country</label>
-            {{ anniversary_subscribe_form.location }}
-            {{ anniversary_subscribe_form.location.errors }}
-          </div>
-          <fieldset class="anniversary-newsletter-field anniversary-newsletter-field-full anniversary-newsletter-consent">
-            <legend>Consent</legend>
-            <label for="{{ anniversary_subscribe_form.consent.id_for_label }}">
-              {{ anniversary_subscribe_form.consent }}
-              <span>{{ anniversary_subscribe_form.consent.help_text }}</span>
-            </label>
-            {{ anniversary_subscribe_form.consent.errors }}
-          </fieldset>
+          <p>
+            By subscribing you agree to with our <a href="/privacy-policy/">Privacy Policy</a>.
+          </p>
+          {% if turnstile_site_key %}
+            <div class="cf-turnstile mt-3 mb-3" data-sitekey="{{ turnstile_site_key }}" data-appearance="invisible"></div>
+          {% endif %}
+          <button class="anniversary-newsletter-submit" type="submit">SUBSCRIBE <span>&gt;</span></button>
         </div>
-        <p>
-          By subscribing you agree to with our <a href="/privacy-policy/">Privacy Policy</a>.
-        </p>
-        {% if turnstile_site_key %}
-          <div class="cf-turnstile mt-3 mb-3" data-sitekey="{{ turnstile_site_key }}" data-appearance="invisible"></div>
-        {% endif %}
-        <button class="anniversary-newsletter-submit" type="submit">SUBSCRIBE <span>&gt;</span></button>
       </form>
     </div>
   </div>

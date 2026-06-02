@@ -31,6 +31,10 @@ if hasattr(settings, 'MAILCHIMP_NEWSLETTER_LIST_ID'):
 logger = logging.getLogger('cigionline')
 
 
+class MailchimpSubscriptionError(Exception):
+    pass
+
+
 class SubscribePage(
     Page,
     BasicPageAbstract,
@@ -192,6 +196,23 @@ class SubscribePage(
             client, list_id, email, member_info
         )
 
+        response_status = response.get("status")
+        response_tags = [tag.get("name") for tag in response.get("tags", [])]
+        logger.info(
+            'Mailchimp signup response: email=%s status=%s tags=%s',
+            response.get("email_address"),
+            response_status,
+            response_tags,
+        )
+
+        if response_status != "subscribed":
+            logger.warning(
+                'Mailchimp signup did not subscribe member: email=%s status=%s',
+                response.get("email_address"),
+                response_status,
+            )
+            raise MailchimpSubscriptionError(f'Mailchimp returned status "{response_status}"')
+
         self.apply_tag(client, list_id, subscriber_hash, extra_tags=extra_tags)
 
         logger.info(f'Successful signup: {response["email_address"]}')
@@ -236,6 +257,8 @@ class SubscribePage(
                         self.subscribe_to_mailchimp(form)
                     except ApiClientError as error:
                         logger.error(f"An error occurred with Mailchimp: {error.text}")
+                    except MailchimpSubscriptionError as error:
+                        logger.error(f"An error occurred with Mailchimp: {error}")
                 else:
                     logger.info("User did not consent; skipping Mailchimp subscription.")
 
