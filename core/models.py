@@ -66,6 +66,7 @@ from wagtail.admin.panels import (
     TitleFieldPanel,
 )
 from wagtail.admin.widgets import AdminPageChooser
+from wagtailmedia.edit_handlers import MediaChooserPanel
 from .panels import QRCodePanel
 from wagtail import blocks
 from wagtail.fields import RichTextField, StreamField
@@ -1482,7 +1483,7 @@ class TwentyFifthPageSingleton(
         MultiFieldPanel(
             [
                 FieldPanel('splash_image'),
-                FieldPanel('splash_video'),
+                MediaChooserPanel('splash_video', media_type='video'),
             ],
             heading='Splash',
             classname='collapsible',
