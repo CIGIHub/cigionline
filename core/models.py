@@ -1467,11 +1467,21 @@ class TwentyFifthPageSingleton(
         verbose_name='Splash Video',
         help_text='Full-screen background video shown before the page content.',
     )
+    splash_image = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Splash Still Image',
+        help_text='Still image shown before the splash video loads, and used instead of video on mobile.',
+    )
 
     content_panels = [
         BasicPageAbstract.title_panel,
         MultiFieldPanel(
             [
+                FieldPanel('splash_image'),
                 FieldPanel('splash_video'),
             ],
             heading='Splash',
@@ -1530,6 +1540,71 @@ class TwentyFifthPageSingleton(
     parent_page_types = ['core.BasicPage']
     subpage_types = []
     template = 'core/twenty_fifth_page_singleton.html'
+    anniversary_mailchimp_tag = '25 Anniversary'
+
+    def get_subscribe_page(self):
+        from subscribe.models import SubscribePage
+
+        subscribe_page = SubscribePage.objects.live().first()
+
+        if subscribe_page:
+            return subscribe_page
+
+        subscribe_page = object.__new__(SubscribePage)
+        subscribe_page.consent_text = SubscribePage._meta.get_field('consent_text').default
+        return subscribe_page
+
+    def get_anniversary_subscribe_form(self, data=None):
+        from subscribe.models import SubscribeForm
+
+        return SubscribeForm(
+            data,
+            consent_text=self.get_subscribe_page().consent_text,
+        )
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        context.setdefault(
+            'anniversary_subscribe_form',
+            self.get_anniversary_subscribe_form(),
+        )
+        context['turnstile_site_key'] = getattr(settings, 'CLOUDFLARE_TURNSTILE_SITE_KEY', '')
+        return context
+
+    def serve(self, request, *args, **kwargs):
+        if request.method == 'POST' and request.POST.get('anniversary_newsletter_form'):
+            from mailchimp_marketing.api_client import ApiClientError
+            from utils.security import verify_turnstile_token
+
+            context = self.get_context(request, *args, **kwargs)
+            form = self.get_anniversary_subscribe_form(request.POST)
+            context['anniversary_subscribe_form'] = form
+            context['anniversary_subscribe_modal_open'] = True
+
+            turnstile_token = request.POST.get('cf-turnstile-response', '')
+            if not verify_turnstile_token(turnstile_token, request.META.get('REMOTE_ADDR')):
+                messages.error(request, 'Security verification failed. Please try again.')
+                return render(request, self.template, context)
+
+            if form.is_valid():
+                try:
+                    self.get_subscribe_page().subscribe_to_mailchimp(
+                        form,
+                        extra_tags=[self.anniversary_mailchimp_tag],
+                    )
+                except ApiClientError as error:
+                    import logging
+
+                    messages.error(request, 'There was a problem subscribing you. Please try again.')
+                    logging.getLogger('cigionline').error(f'An error occurred with Mailchimp: {error.text}')
+                else:
+                    messages.success(request, 'Thanks for subscribing.')
+                    context['anniversary_subscribe_form'] = self.get_anniversary_subscribe_form()
+                    context['anniversary_subscribe_modal_open'] = True
+
+            return render(request, self.template, context)
+
+        return super().serve(request, *args, **kwargs)
 
     class Meta:
         verbose_name = 'Twenty-Fifth Anniversary Page'

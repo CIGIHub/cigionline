@@ -128,9 +128,12 @@ class SubscribePage(
 
         return subscriber_hash, response
 
-    def apply_tag(self, client, list_id, subscriber_hash):
-        tag = self.get_mailchimp_tag()
-        if not tag:
+    def apply_tag(self, client, list_id, subscriber_hash, extra_tags=None):
+        tags = [self.get_mailchimp_tag()]
+        tags.extend(extra_tags or [])
+        tags = [tag for tag in tags if tag]
+
+        if not tags:
             return
 
         client.lists.update_list_member_tags(
@@ -139,6 +142,7 @@ class SubscribePage(
             {
                 "tags": [
                     {"name": tag, "status": "active"}
+                    for tag in tags
                 ]
             },
         )
@@ -163,7 +167,7 @@ class SubscribePage(
 
         return fields
 
-    def subscribe_to_mailchimp(self, form):
+    def subscribe_to_mailchimp(self, form, extra_tags=None):
         if not form.cleaned_data.get("consent", False):
             return
 
@@ -188,7 +192,7 @@ class SubscribePage(
             client, list_id, email, member_info
         )
 
-        self.apply_tag(client, list_id, subscriber_hash)
+        self.apply_tag(client, list_id, subscriber_hash, extra_tags=extra_tags)
 
         logger.info(f'Successful signup: {response["email_address"]}')
 

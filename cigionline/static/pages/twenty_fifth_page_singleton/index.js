@@ -6,8 +6,39 @@ import { Navigation, Pagination } from 'swiper/modules'; // eslint-disable-line 
 Swiper.use([Navigation, Pagination]);
 
 const splashScrollButton = document.querySelector('.anniversary-splash-scroll');
+const splashVideo = document.querySelector('.anniversary-splash-video');
 const anniversaryContent = document.getElementById('anniversary-content');
 const anniversaryStickyHeader = document.querySelector('.anniversary-sticky-header');
+
+if (splashVideo) {
+  const desktopSplashMedia = window.matchMedia('(min-width: 768px)');
+  const reducedMotionMedia = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  const loadSplashVideo = () => {
+    if (
+      splashVideo.dataset.loaded
+      || !desktopSplashMedia.matches
+      || reducedMotionMedia.matches
+      || !splashVideo.dataset.src
+    ) {
+      return;
+    }
+
+    splashVideo.dataset.loaded = 'true';
+    splashVideo.src = splashVideo.dataset.src;
+    splashVideo.load();
+
+    splashVideo.addEventListener('canplay', () => {
+      splashVideo.classList.add('is-loaded');
+      splashVideo.play().catch(() => {});
+    }, { once: true });
+  };
+
+  loadSplashVideo();
+  desktopSplashMedia.addEventListener('change', loadSplashVideo);
+  reducedMotionMedia.addEventListener('change', loadSplashVideo);
+}
+
 if (splashScrollButton && anniversaryContent) {
   splashScrollButton.addEventListener('click', () => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -178,7 +209,7 @@ anniversaryMenuAccordions.forEach((accordion) => {
 const newsletterOpenButton = document.querySelector('[data-anniversary-newsletter-open]');
 const newsletterModal = document.querySelector('[data-anniversary-newsletter-modal]');
 const newsletterCloseButton = document.querySelector('[data-anniversary-newsletter-close]');
-const newsletterFirstField = document.getElementById('anniversary-newsletter-first-name');
+const newsletterFirstField = newsletterModal ? newsletterModal.querySelector('[name="first_name"]') : null;
 let newsletterReturnFocus = null;
 let newsletterCloseTimer = null;
 
@@ -243,6 +274,10 @@ if (newsletterOpenButton && newsletterModal) {
       closeNewsletterModal();
     }
   });
+}
+
+if (newsletterModal && !newsletterModal.hidden) {
+  lockBodyScroll();
 }
 
 if (newsletterCloseButton) {

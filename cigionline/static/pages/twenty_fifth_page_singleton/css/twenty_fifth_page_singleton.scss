@@ -15,6 +15,8 @@
     width: 100%;
   }
 
+  .anniversary-splash-poster,
+  .anniversary-splash-poster img,
   .anniversary-splash-video,
   .anniversary-splash-overlay {
     height: 100%;
@@ -24,42 +26,66 @@
     width: 100%;
   }
 
+  .anniversary-splash-poster {
+    z-index: 0;
+
+    img {
+      object-fit: cover;
+    }
+  }
+
   .anniversary-splash-video {
     object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.45s ease;
+    z-index: 1;
+
+    &.is-loaded {
+      opacity: 1;
+    }
+
+    @include media-breakpoint-down(sm) {
+      display: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      display: none;
+    }
   }
 
   .anniversary-splash-overlay {
     background: linear-gradient(
       to bottom,
-      rgba($black, 0.1) 0%,
-      rgba($black, 0.25) 58%,
+      rgba($black, 0.7) 0%,
+      rgba($black, 0.7) 70%,
       $black 100%
     );
+    z-index: 2;
   }
 
   .anniversary-splash-content {
     align-items: center;
     display: flex;
     flex-direction: column;
-    height: 40vh;
+    height: 30vh;
     justify-content: space-between;
     max-height: 50vh;
     max-width: 90vw;
     min-height: 30vh;
     position: relative;
     text-align: center;
-    z-index: 2;
+    z-index: 3;
 
     p {
       @include media-breakpoint-up(lg) {
-        font-size: 2rem;
+        font-size: 2.5rem;
         max-width: 60vw;
       }
       @include media-breakpoint-up(xl) {
-        font-size: 2.5rem;
+        font-size: 3rem;
       }
       color: $white;
-      font-size: 1.5rem;
+      font-size: 3rem;
       font-weight: 300;
       line-height: 1.05;
       margin: 0;
@@ -96,7 +122,7 @@
     color: $white;
     cursor: pointer;
     display: block;
-    font-size: 2.5rem;
+    font-size: 3rem;
     line-height: 1;
     padding: 0;
 
@@ -1289,6 +1315,35 @@
   }
 
   .anniversary-newsletter-modal-form {
+    .anniversary-newsletter-errors,
+    .anniversary-newsletter-messages {
+      margin-bottom: 1rem;
+    }
+
+    .anniversary-newsletter-errors,
+    .errorlist {
+      color: $cigi-primary-colour;
+      font-size: 0.8rem;
+    }
+
+    .errorlist {
+      list-style: none;
+      margin: 0.35rem 0 0;
+      padding: 0;
+    }
+
+    .anniversary-newsletter-messages {
+      p {
+        color: $black;
+        font-weight: 700;
+        margin: 0;
+
+        &.error {
+          color: $cigi-primary-colour;
+        }
+      }
+    }
+
     p {
       color: $cigi-dark-grey;
       font-size: 0.8rem;
@@ -1365,13 +1420,22 @@
 
   fieldset.anniversary-newsletter-field {
     border: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem 1rem;
     padding: 0;
 
     legend {
-      flex-basis: 100%;
+      margin-bottom: 0.5rem;
+    }
+
+    label {
+      align-items: flex-start;
+      display: flex;
+      gap: 0.65rem;
+      line-height: 1.45;
+    }
+
+    input[type='checkbox'] {
+      flex: 0 0 auto;
+      margin-top: 0.2rem;
     }
   }
 }

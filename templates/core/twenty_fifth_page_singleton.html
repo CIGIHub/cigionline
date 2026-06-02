@@ -17,6 +17,9 @@
 {% endblock %}
 
 {% block extra_js %}
+  {% if turnstile_site_key %}
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  {% endif %}
   {% render_bundle 'twentyFifthPageSingleton' 'js' attrs='defer' %}
 {% endblock %}
 
@@ -26,10 +29,16 @@
 
 {% block content %}
   <section class="anniversary-splash" aria-label="25th anniversary introduction">
+    {% if self.splash_image %}
+      {% image self.splash_image width-900 as splash_image_mobile %}
+      {% image self.splash_image width-2000 as splash_image_desktop %}
+      <picture class="anniversary-splash-poster" aria-hidden="true">
+        <source media="(max-width: 767px)" srcset="{{ splash_image_mobile.url }}">
+        <img src="{{ splash_image_desktop.url }}" alt="" loading="eager" fetchpriority="high">
+      </picture>
+    {% endif %}
     {% if self.splash_video %}
-      <video class="anniversary-splash-video" autoplay muted loop playsinline>
-        <source src="{{ self.splash_video.url }}" type="video/mp4">
-      </video>
+      <video class="anniversary-splash-video" autoplay muted loop playsinline preload="none" data-src="{{ self.splash_video.url }}"></video>
     {% endif %}
     <div class="anniversary-splash-overlay"></div>
     <div class="anniversary-splash-content">
@@ -225,7 +234,7 @@
       </div>
     </div>
   </footer>
-  <div class="anniversary-newsletter-modal-backdrop" data-anniversary-newsletter-modal hidden>
+  <div class="anniversary-newsletter-modal-backdrop{% if anniversary_subscribe_modal_open %} is-open{% endif %}" data-anniversary-newsletter-modal{% if not anniversary_subscribe_modal_open %} hidden{% endif %}>
     <div class="anniversary-newsletter-modal" role="dialog" aria-modal="true" aria-labelledby="anniversary-newsletter-modal-title">
       <div class="anniversary-newsletter-modal-header">
         <h2 id="anniversary-newsletter-modal-title">Subscribe to our newsletter</h2>
@@ -233,56 +242,65 @@
           <i class="far fa-times"></i>
         </button>
       </div>
-      <form class="anniversary-newsletter-modal-form" title="Newsletter Sign Up" action="/subscribe/" method="GET">
+      <form class="anniversary-newsletter-modal-form" title="Newsletter Sign Up" action="{% pageurl self %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="anniversary_newsletter_form" value="1">
+
+        {% if messages %}
+          <div class="anniversary-newsletter-messages">
+            {% for message in messages %}
+              <p class="{{ message.tags }}">{{ message }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% if anniversary_subscribe_form.non_field_errors %}
+          <div class="anniversary-newsletter-errors">
+            {{ anniversary_subscribe_form.non_field_errors }}
+          </div>
+        {% endif %}
+
         <div class="anniversary-newsletter-modal-grid">
           <div class="anniversary-newsletter-field">
-            <label for="anniversary-newsletter-first-name">First name</label>
-            <input id="anniversary-newsletter-first-name" type="text" name="first_name" autocomplete="given-name">
+            <label for="{{ anniversary_subscribe_form.first_name.id_for_label }}">First name</label>
+            {{ anniversary_subscribe_form.first_name }}
+            {{ anniversary_subscribe_form.first_name.errors }}
           </div>
           <div class="anniversary-newsletter-field">
-            <label for="anniversary-newsletter-last-name">Last name</label>
-            <input id="anniversary-newsletter-last-name" type="text" name="last_name" autocomplete="family-name">
+            <label for="{{ anniversary_subscribe_form.last_name.id_for_label }}">Last name</label>
+            {{ anniversary_subscribe_form.last_name }}
+            {{ anniversary_subscribe_form.last_name.errors }}
           </div>
           <div class="anniversary-newsletter-field anniversary-newsletter-field-full">
-            <label for="anniversary-newsletter-email">Email</label>
-            <input id="anniversary-newsletter-email" type="email" name="email" autocomplete="email" required aria-required="true">
+            <label for="{{ anniversary_subscribe_form.email.id_for_label }}">Email</label>
+            {{ anniversary_subscribe_form.email }}
+            {{ anniversary_subscribe_form.email.errors }}
           </div>
           <div class="anniversary-newsletter-field">
-            <label for="anniversary-newsletter-organization">Organization</label>
-            <input id="anniversary-newsletter-organization" type="text" name="organization">
+            <label for="{{ anniversary_subscribe_form.organization.id_for_label }}">Organization</label>
+            {{ anniversary_subscribe_form.organization }}
+            {{ anniversary_subscribe_form.organization.errors }}
           </div>
           <div class="anniversary-newsletter-field">
-            <label for="anniversary-newsletter-role">Role</label>
-            <input id="anniversary-newsletter-role" type="text" name="role">
+            <label for="{{ anniversary_subscribe_form.location.id_for_label }}">Country</label>
+            {{ anniversary_subscribe_form.location }}
+            {{ anniversary_subscribe_form.location.errors }}
           </div>
-          <div class="anniversary-newsletter-field">
-            <label for="anniversary-newsletter-country">Country</label>
-            <input id="anniversary-newsletter-country" type="text" name="country">
-          </div>
-          <div class="anniversary-newsletter-field">
-            <label for="anniversary-newsletter-frequency">Email frequency</label>
-            <select id="anniversary-newsletter-frequency" name="frequency">
-              <option value="">Select one</option>
-              <option value="weekly">Weekly</option>
-              <option value="monthly">Monthly</option>
-              <option value="major-updates">Major updates only</option>
-            </select>
-          </div>
-          <fieldset class="anniversary-newsletter-field anniversary-newsletter-field-full">
-            <legend>Topics of interest</legend>
-            <label><input type="checkbox" name="topics" value="global-economy"> Global economy</label>
-            <label><input type="checkbox" name="topics" value="digital-governance"> Digital governance</label>
-            <label><input type="checkbox" name="topics" value="security"> Security</label>
-            <label><input type="checkbox" name="topics" value="environment"> Environment</label>
+          <fieldset class="anniversary-newsletter-field anniversary-newsletter-field-full anniversary-newsletter-consent">
+            <legend>Consent</legend>
+            <label for="{{ anniversary_subscribe_form.consent.id_for_label }}">
+              {{ anniversary_subscribe_form.consent }}
+              <span>{{ anniversary_subscribe_form.consent.help_text }}</span>
+            </label>
+            {{ anniversary_subscribe_form.consent.errors }}
           </fieldset>
-          <div class="anniversary-newsletter-field anniversary-newsletter-field-full">
-            <label for="anniversary-newsletter-comments">Comments</label>
-            <textarea id="anniversary-newsletter-comments" name="comments" rows="4"></textarea>
-          </div>
         </div>
         <p>
           By subscribing you agree to with our <a href="/privacy-policy/">Privacy Policy</a>.
         </p>
+        {% if turnstile_site_key %}
+          <div class="cf-turnstile mt-3 mb-3" data-sitekey="{{ turnstile_site_key }}" data-appearance="invisible"></div>
+        {% endif %}
         <button class="anniversary-newsletter-submit" type="submit">SUBSCRIBE <span>&gt;</span></button>
       </form>
     </div>
