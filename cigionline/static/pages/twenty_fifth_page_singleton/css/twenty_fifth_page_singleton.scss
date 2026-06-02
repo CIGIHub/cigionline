@@ -67,9 +67,9 @@
     align-items: center;
     display: flex;
     flex-direction: column;
-    height: 30vh;
+    height: 35vh;
     justify-content: space-between;
-    max-height: 50vh;
+    max-height: 60vh;
     max-width: 90vw;
     min-height: 30vh;
     position: relative;
@@ -77,15 +77,20 @@
     z-index: 3;
 
     p {
+      @include media-breakpoint-up(md) {
+        font-size: 1.5rem;
+        max-width: 60vw;
+        max-height: 60vh;
+      }
       @include media-breakpoint-up(lg) {
-        font-size: 2.5rem;
+        font-size: 2rem;
         max-width: 60vw;
       }
       @include media-breakpoint-up(xl) {
-        font-size: 3rem;
+        font-size: 3vw;
       }
       color: $white;
-      font-size: 3rem;
+      font-size: 1.5rem;
       font-weight: 300;
       line-height: 1.05;
       margin: 0;
@@ -95,14 +100,11 @@
 
   .anniversary-splash-logo {
     @include media-breakpoint-up(md) {
-      width: 33vw;
-    }
-    @include media-breakpoint-up(lg) {
-      width: 25vw;
+      width: 20vw;
     }
     max-width: 520px;
     min-width: 220px;
-    width: 70vw;
+    width: 30vw;
 
     svg {
       display: block;
@@ -116,13 +118,19 @@
   }
 
   .anniversary-splash-scroll {
+    @include media-breakpoint-up(md) {
+      font-size: 3rem;
+    }
+    @include media-breakpoint-up(xl) {
+      font-size: 3vw;
+    }
     animation: bounce 2s infinite;
     background: transparent;
     border: 0;
     color: $white;
     cursor: pointer;
     display: block;
-    font-size: 3rem;
+    font-size: 2rem;
     line-height: 1;
     padding: 0;
 
