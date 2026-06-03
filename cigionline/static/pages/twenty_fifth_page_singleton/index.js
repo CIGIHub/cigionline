@@ -6,9 +6,24 @@ import { Navigation, Pagination } from 'swiper/modules'; // eslint-disable-line 
 Swiper.use([Navigation, Pagination]);
 
 const splashScrollButton = document.querySelector('.anniversary-splash-scroll');
+const anniversarySplash = document.querySelector('.anniversary-splash');
+const splashPoster = document.querySelector('.anniversary-splash-poster');
 const splashVideo = document.querySelector('.anniversary-splash-video');
 const anniversaryContent = document.getElementById('anniversary-content');
 const anniversaryStickyHeader = document.querySelector('.anniversary-sticky-header');
+
+if (splashPoster) {
+  const splashPosterImage = splashPoster.querySelector('img');
+  const markSplashPosterLoaded = () => {
+    splashPoster.classList.add('is-loaded');
+  };
+
+  if (!splashPosterImage || splashPosterImage.complete) {
+    markSplashPosterLoaded();
+  } else {
+    splashPosterImage.addEventListener('load', markSplashPosterLoaded, { once: true });
+  }
+}
 
 if (splashVideo) {
   const desktopSplashMedia = window.matchMedia('(min-width: 768px)');
@@ -49,13 +64,16 @@ if (splashScrollButton && anniversaryContent) {
   });
 }
 
-if (anniversaryContent && anniversaryStickyHeader) {
+if (anniversarySplash && anniversaryStickyHeader) {
   let headerQueued = false;
 
   const updateAnniversaryHeader = () => {
     headerQueued = false;
-    const contentTop = anniversaryContent.getBoundingClientRect().top + window.scrollY;
-    anniversaryStickyHeader.classList.toggle('fixed', window.scrollY >= contentTop);
+    const headerHeight = anniversaryStickyHeader.querySelector('.anniversary-site-header')?.offsetHeight || 72;
+    anniversaryStickyHeader.classList.toggle(
+      'is-visible',
+      anniversarySplash.getBoundingClientRect().bottom <= headerHeight,
+    );
   };
 
   const queueHeaderUpdate = () => {
@@ -206,7 +224,7 @@ anniversaryMenuAccordions.forEach((accordion) => {
   });
 });
 
-const newsletterOpenButton = document.querySelector('[data-anniversary-newsletter-open]');
+const newsletterOpenButtons = document.querySelectorAll('[data-anniversary-newsletter-open]');
 const newsletterModal = document.querySelector('[data-anniversary-newsletter-modal]');
 const newsletterCloseButton = document.querySelector('[data-anniversary-newsletter-close]');
 const newsletterFirstField = newsletterModal ? newsletterModal.querySelector('[name="first_name"]') : null;
@@ -276,8 +294,10 @@ const openNewsletterModal = () => {
   }
 };
 
-if (newsletterOpenButton && newsletterModal) {
-  newsletterOpenButton.addEventListener('click', openNewsletterModal);
+if (newsletterOpenButtons.length && newsletterModal) {
+  newsletterOpenButtons.forEach((button) => {
+    button.addEventListener('click', openNewsletterModal);
+  });
 
   newsletterModal.addEventListener('click', (event) => {
     if (event.target === newsletterModal) {
@@ -362,6 +382,51 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
+const splitEventTitleLines = (scope = document) => {
+  const eventTitleLinks = scope.querySelectorAll('.anniversary-event-card h3 a');
+
+  eventTitleLinks.forEach((link) => {
+    const title = link.dataset.anniversaryEventTitle || link.textContent.trim();
+    if (!title) return;
+
+    link.dataset.anniversaryEventTitle = title;
+    link.classList.remove('is-line-split');
+    link.textContent = '';
+
+    title.split(/\s+/).forEach((word, index, words) => {
+      const wordSpan = document.createElement('span');
+      wordSpan.className = 'anniversary-event-title-word';
+      wordSpan.textContent = `${word}${index < words.length - 1 ? ' ' : ''}`;
+      link.appendChild(wordSpan);
+    });
+
+    const lines = [];
+    link.querySelectorAll('.anniversary-event-title-word').forEach((wordSpan) => {
+      const wordTop = Math.round(wordSpan.offsetTop);
+      let line = lines.find((item) => Math.abs(item.top - wordTop) <= 1);
+
+      if (!line) {
+        line = { text: '', top: wordTop };
+        lines.push(line);
+      }
+
+      line.text += wordSpan.textContent;
+    });
+
+    link.textContent = '';
+
+    lines.forEach((line, index) => {
+      const lineSpan = document.createElement('span');
+      lineSpan.className = 'anniversary-event-title-line';
+      lineSpan.style.setProperty('--line-index', index);
+      lineSpan.textContent = line.text.trimEnd();
+      link.appendChild(lineSpan);
+    });
+
+    link.classList.add('is-line-split');
+  });
+};
+
 const anniversaryNavLinks = [...document.querySelectorAll('[data-anniversary-nav-link]')];
 const anniversarySections = anniversaryNavLinks
   .map((link) => ({
@@ -425,15 +490,17 @@ if (eventsBlock) {
   ) {
     swiperContainer.classList.add('swiper');
 
-    new Swiper(swiperContainer, {
+    const eventSwiper = new Swiper(swiperContainer, {
       slidesPerView: 1,
-      spaceBetween: 0,
+      spaceBetween: 16,
       breakpoints: {
         768: {
           slidesPerView: 2,
+          spaceBetween: 20,
         },
         992: {
           slidesPerView: 3,
+          spaceBetween: 24,
         },
       },
       navigation: {
@@ -452,6 +519,23 @@ if (eventsBlock) {
         },
       },
     });
+
+    let eventTitleSplitTimer = null;
+    const queueEventTitleSplit = () => {
+      window.clearTimeout(eventTitleSplitTimer);
+      eventTitleSplitTimer = window.setTimeout(() => {
+        splitEventTitleLines(eventsBlock);
+      }, 80);
+    };
+
+    splitEventTitleLines(eventsBlock);
+    eventSwiper.on('resize', queueEventTitleSplit);
+    eventSwiper.on('breakpoint', queueEventTitleSplit);
+    window.addEventListener('load', queueEventTitleSplit);
+
+    if (document.fonts) {
+      document.fonts.ready.then(queueEventTitleSplit);
+    }
   }
 }
 

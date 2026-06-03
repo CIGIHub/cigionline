@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags webpack_loader wagtailimages_tags menu_tags %}
+{% load static wagtailcore_tags webpack_loader wagtailimages_tags menu_tags %}
 
 {% block og_image %}
   {% if self.image_social %}
@@ -13,6 +13,11 @@
 {% endblock%}
 
 {% block extra_css %}
+  {% if self.splash_image %}
+    {% image self.splash_image width-900 as splash_image_mobile_preload %}
+    {% image self.splash_image width-2000 as splash_image_desktop_preload %}
+    <link rel="preload" as="image" href="{{ splash_image_desktop_preload.url }}" imagesrcset="{{ splash_image_mobile_preload.url }} 900w, {{ splash_image_desktop_preload.url }} 2000w" imagesizes="100vw">
+  {% endif %}
   {% render_bundle 'twentyFifthPageSingleton' 'css' %}
 {% endblock %}
 
@@ -42,9 +47,9 @@
     {% endif %}
     <div class="anniversary-splash-overlay"></div>
     <div class="anniversary-splash-content">
-      <p>25 years of influencial research and trusted analysis.</p>
-      <div class="anniversary-splash-logo" aria-label="CIGI">
-        {% include "includes/header_cigi_logo_large.svg" %}
+      <p>Trusted Analysis. Global Impact</p>
+      <div class="anniversary-splash-logo">
+        <img src="{% static 'pages/twenty_fifth_page_singleton/assets/CIGI_25_logo_full.png' %}" alt="CIGI 25">
       </div>
       <button class="anniversary-splash-scroll" type="button" aria-label="Scroll to anniversary content">
         <i class="fal fa-arrow-down"></i>
@@ -62,13 +67,8 @@
             <div class="col">
               <nav class="anniversary-site-nav" aria-label="25th anniversary">
                 <a class="anniversary-site-logo" href="/" aria-label="CIGI home">
-                  {% include "core/includes/twenty_fifth_cigi_logo.svg" %}
+                  <img src="{% static 'pages/twenty_fifth_page_singleton/assets/CIGI_25_logo_small.png' %}" alt="CIGI 25">
                 </a>
-                <ul class="anniversary-site-links">
-                  <li><a href="#anniversary-about" data-anniversary-nav-link>about</a></li>
-                  <li><a href="#anniversary-events" data-anniversary-nav-link>Events</a></li>
-                  <li><a href="#anniversary-history" data-anniversary-nav-link>History</a></li>
-                </ul>
                 <div class="anniversary-site-actions">
                   <div class="anniversary-share-menu">
                     <button class="anniversary-site-action" type="button" aria-expanded="false" aria-controls="anniversary-share-placeholder" data-anniversary-toggle="anniversary-share-placeholder">
@@ -189,10 +189,12 @@
       </div>
     </div>
     <section id="anniversary-about" class="anniversary-about-section anniversary-section-anchor">
-        <div class="container">
-        <h2>About</h2>
-      </div>
       {% include "includes/body.html" with body=self.body %}
+      <div class="anniversary-about-subscribe">
+        <button class="anniversary-about-subscribe-button" type="button" aria-haspopup="dialog" data-anniversary-newsletter-open>
+          SUBSCRIBE <span>&gt;</span>
+        </button>
+      </div>
     </section>
     {% include "core/includes/twenty_fifth_events.html" with events=self.anniversary_events.all %}
     <section id="anniversary-history" class="anniversary-section-anchor anniversary-history-section">

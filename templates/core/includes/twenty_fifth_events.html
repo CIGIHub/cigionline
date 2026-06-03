@@ -11,24 +11,23 @@
               {% with event=event_relation.event_page %}
                 <article class="swiper-slide anniversary-event-slide">
                   <div class="anniversary-event-card">
-                    <h3>
-                      <a href="{{ event.url }}">{{ event.title }}</a>
-                    </h3>
-                    <div class="anniversary-event-date">
-                      {{ event.publishing_date|date:"F j, Y - g:i A" }} {{ event.time_zone_label }}
+                    <time class="anniversary-event-date-badge" datetime="{{ event.publishing_date|date:'c' }}">
+                      <span>{{ event.publishing_date|date:"M" }}</span>
+                      <p>{{ event.publishing_date|date:"j" }}</p>
+                    </time>
+                    <div class="anniversary-event-details">
+                      <div class="anniversary-event-date">
+                        {{ event.publishing_date|date:"F j, Y - g:i A" }} {{ event.time_zone_label }}
+                      </div>
+                      <h3>
+                        <a href="{{ event.url }}">{{ event.title }}</a>
+                      </h3>
+                      {% if event.short_description %}
+                        <div class="anniversary-event-description">
+                          {{ event.short_description|richtext }}
+                        </div>
+                      {% endif %}
                     </div>
-                    {% if event.short_description %}
-                      <div class="anniversary-event-description">
-                        {{ event.short_description|richtext }}
-                      </div>
-                    {% endif %}
-                    {% if event.registration_open and not event.is_private_registration %}
-                      <div class="anniversary-event-rsvp">  
-                        <a href="{{ event.url }}register/">RSVP ></a>
-                      </div>
-                    {% else %}
-                      <div class="anniversary-event-private">Private Event</div>
-                    {% endif %}
                   </div>
                 </article>
               {% endwith %}
