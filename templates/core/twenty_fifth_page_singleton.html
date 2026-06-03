@@ -192,7 +192,7 @@
       {% include "includes/body.html" with body=self.body %}
       <div class="anniversary-about-subscribe">
         <button class="anniversary-about-subscribe-button" type="button" aria-haspopup="dialog" data-anniversary-newsletter-open>
-          SUBSCRIBE <span>&gt;</span>
+          Stay Connected <span>&gt;</span>
         </button>
       </div>
     </section>
@@ -225,7 +225,8 @@
           </address>
         </div>
         <div class="anniversary-footer-newsletter">
-          <h2>Subscribe to our newsletter</h2>
+          <h2>Subscribe to CIGI's newsletter</h2>
+          <p>Be the first to know what’s shaping the future of global policy.</p>
           <button class="anniversary-footer-subscribe-button" type="button" aria-haspopup="dialog" data-anniversary-newsletter-open>
             SUBSCRIBE <span>&gt;</span>
           </button>
@@ -239,7 +240,7 @@
   <div class="anniversary-newsletter-modal-backdrop{% if anniversary_subscribe_modal_open %} is-open{% endif %}" data-anniversary-newsletter-modal{% if not anniversary_subscribe_modal_open %} hidden{% endif %}>
     <div class="anniversary-newsletter-modal" role="dialog" aria-modal="true" aria-labelledby="anniversary-newsletter-modal-title">
       <div class="anniversary-newsletter-modal-header">
-        <h2 id="anniversary-newsletter-modal-title">Subscribe to our newsletter</h2>
+        <h2 id="anniversary-newsletter-modal-title">Subscribe to CIGI's newsletter</h2>
         <button class="anniversary-newsletter-modal-close" type="button" aria-label="Close newsletter form" data-anniversary-newsletter-close>
           <i class="far fa-times"></i>
         </button>
@@ -284,6 +285,11 @@
               <label for="{{ anniversary_subscribe_form.organization.id_for_label }}">Organization</label>
               {{ anniversary_subscribe_form.organization }}
               {{ anniversary_subscribe_form.organization.errors }}
+            </div>
+            <div class="anniversary-newsletter-field">
+              <label for="{{ anniversary_subscribe_form.job_title.id_for_label }}">Job title</label>
+              {{ anniversary_subscribe_form.job_title }}
+              {{ anniversary_subscribe_form.job_title.errors }}
             </div>
             <div class="anniversary-newsletter-field">
               <label for="{{ anniversary_subscribe_form.location.id_for_label }}">Country</label>

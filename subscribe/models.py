@@ -158,6 +158,10 @@ class SubscribePage(
             "ORG": self.get_organization(form),
         }
 
+        job_title = form.cleaned_data.get("job_title")
+        if job_title:
+            fields["JOBTITLE"] = job_title
+
         consent = form.cleaned_data.get("consent", False)
         consent_timestamp = timezone.now().strftime("%m/%d/%Y")
         suffix = self.get_mailchimp_suffix()
@@ -277,6 +281,7 @@ class SubscribeForm(forms.Form):
     last_name = forms.CharField(max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Last Name'}))
     email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Email'}))
     organization = forms.CharField(required=True, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Organization'}))
+    job_title = forms.CharField(required=True, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Job Title'}))
     location = CountryField(blank=True).formfield(
         required=True,
         empty_label="Country",
