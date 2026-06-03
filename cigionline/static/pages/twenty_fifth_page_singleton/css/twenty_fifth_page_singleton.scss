@@ -1,0 +1,1501 @@
+@import '../../../css/global/mixins';
+@import '../../../css/global/animations/bounce';
+
+.twenty-fifth-page-singleton {
+  .anniversary-splash {
+    align-items: center;
+    background-color: $black;
+    color: $white;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    min-height: 560px;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+
+  .anniversary-splash-poster,
+  .anniversary-splash-poster img,
+  .anniversary-splash-video,
+  .anniversary-splash-overlay {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  .anniversary-splash-poster {
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    z-index: 0;
+
+    &.is-loaded {
+      opacity: 1;
+    }
+
+    img {
+      object-fit: cover;
+    }
+  }
+
+  .anniversary-splash-video {
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.45s ease;
+    z-index: 1;
+
+    &.is-loaded {
+      opacity: 1;
+    }
+
+    @include media-breakpoint-down(sm) {
+      display: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      display: none;
+    }
+  }
+
+  .anniversary-splash-overlay {
+    background-color: rgba($black, 0.5);
+    z-index: 2;
+  }
+
+  .anniversary-splash-content {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-height: 60vh;
+    max-width: 90vw;
+    position: relative;
+    text-align: center;
+    z-index: 3;
+
+    p {
+      @include media-breakpoint-up(md) {
+        font-size: 1.5rem;
+        max-width: 60vw;
+      }
+      @include media-breakpoint-up(lg) {
+        font-size: 2rem;
+        max-width: 60vw;
+      }
+      @include media-breakpoint-up(xl) {
+        font-size: 2.5vw;
+      }
+      color: $white;
+      font-size: 1.5rem;
+      font-weight: 300;
+      line-height: 1.05;
+      margin: 0;
+      text-wrap: balance;
+    }
+  }
+
+  .anniversary-splash-logo {
+    @include media-breakpoint-up(md) {
+      width: 18rem;
+    }
+    @include media-breakpoint-up(xl) {
+      width: 23vw;
+    }
+    max-width: 520px;
+    min-width: 220px;
+    width: 40vw;
+
+    img {
+      display: block;
+      height: auto;
+      width: 100%;
+    }
+  }
+
+  .anniversary-splash-scroll {
+    @include media-breakpoint-up(md) {
+      font-size: 3rem;
+    }
+    @include media-breakpoint-up(xl) {
+      font-size: 3vw;
+    }
+    animation: bounce 2s infinite;
+    background: transparent;
+    border: 0;
+    color: $white;
+    cursor: pointer;
+    display: block;
+    font-size: 2rem;
+    line-height: 1;
+    padding: 0;
+
+    &:hover {
+      color: $cigi-primary-colour;
+    }
+
+    &:focus {
+      outline: 2px solid $white;
+      outline-offset: 0.15em;
+    }
+  }
+
+  .anniversary-content {
+    background-color: $white;
+    position: relative;
+    z-index: 20;
+  }
+
+  .anniversary-sticky-header {
+    height: 0;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 200;
+
+    &.is-visible,
+    &.menu-open {
+      .anniversary-site-header {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+        visibility: visible;
+      }
+    }
+
+    &.menu-open {
+      .anniversary-site-links {
+        opacity: 0;
+        pointer-events: none;
+        visibility: hidden;
+      }
+    }
+  }
+
+  .anniversary-site-header {
+    background-color: $black;
+    border-bottom: 1px solid $black;
+    color: $white;
+    opacity: 0;
+    padding-right: var(--anniversary-scrollbar-offset, 0);
+    pointer-events: none;
+    transform: translateY(-0.75rem);
+    transition:
+      opacity 0.45s ease,
+      transform 0.45s ease,
+      visibility 0.3s ease;
+    visibility: hidden;
+    z-index: 200;
+  }
+
+  .anniversary-visually-hidden {
+    clip: rect(0 0 0 0);
+    border: 0;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+
+  .anniversary-site-nav {
+    align-items: center;
+    display: grid;
+    grid-template-areas: 'logo actions';
+    grid-template-columns: 1fr auto;
+    grid-template-rows: 50px;
+    min-height: 50px;
+
+    @include media-breakpoint-up(md) {
+      column-gap: 0.75rem;
+      grid-template-columns: minmax(50px, 1fr) auto;
+    }
+  }
+
+  .anniversary-site-logo {
+    display: inline-flex;
+    grid-area: logo;
+    justify-self: start;
+
+    img {
+      display: block;
+      height: auto;
+      width: 100px;
+    }
+  }
+
+  .anniversary-site-links {
+    --anniversary-nav-link-padding-x: 0.75rem;
+
+    align-items: center;
+    display: flex;
+    grid-area: links;
+    justify-content: flex-start;
+    list-style: none;
+    margin: 0;
+    min-width: 0;
+    padding: 0 0 0.5rem;
+    transition:
+      opacity 0.2s ease,
+      visibility 0.2s ease;
+
+    @include media-breakpoint-up(md) {
+      justify-content: space-evenly;
+      padding: 0;
+      white-space: nowrap;
+    }
+
+    a {
+      color: $white;
+      display: inline-block;
+      font-size: 0.9rem;
+      font-weight: 400;
+      line-height: 1;
+      padding: 0.75rem var(--anniversary-nav-link-padding-x);
+      position: relative;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s ease;
+
+      &::after {
+        background-color: $cigi-primary-colour;
+        bottom: 0.35rem;
+        content: '';
+        height: 3px;
+        left: calc(var(--anniversary-nav-link-padding-x) - 5px);
+        position: absolute;
+        right: calc(var(--anniversary-nav-link-padding-x) - 5px);
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: transform 0.2s ease;
+      }
+
+      &:hover,
+      &:focus {
+        color: $cigi-primary-colour;
+      }
+
+      &.active {
+        &::after {
+          transform: scaleX(1);
+        }
+      }
+    }
+
+    li {
+      &:first-child {
+        a {
+          padding-left: 0;
+
+          @include media-breakpoint-up(md) {
+            padding-left: var(--anniversary-nav-link-padding-x);
+          }
+
+          &::after {
+            left: -5px;
+
+            @include media-breakpoint-up(md) {
+              left: calc(var(--anniversary-nav-link-padding-x) - 5px);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .anniversary-site-actions {
+    align-items: center;
+    display: flex;
+    margin-right: -8px;
+    grid-area: actions;
+    justify-content: flex-end;
+    min-width: max-content;
+  }
+
+  .anniversary-site-action {
+    align-items: center;
+    background: transparent;
+    border: 1px solid transparent;
+    color: $white;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 0.875rem;
+    height: 25px;
+    justify-content: center;
+    padding: 0;
+    position: relative;
+    transition:
+      color 0.2s ease,
+      border-color 0.2s ease;
+    width: 25px;
+
+    &:hover,
+    &:focus,
+    &[aria-expanded='true'] {
+      border-color: $cigi-primary-colour;
+      color: $cigi-primary-colour;
+      outline: 0;
+    }
+  }
+
+  .anniversary-menu-icon {
+    left: 0;
+    position: absolute;
+    right: 0;
+    transition: transform 0.3s ease;
+  }
+
+  .anniversary-menu-icon-opened {
+    transform: scale(0);
+  }
+
+  .anniversary-menu-icon-closed {
+    transform: scale(1);
+  }
+
+  .anniversary-site-action.open {
+    .anniversary-menu-icon-opened {
+      transform: scale(1);
+    }
+
+    .anniversary-menu-icon-closed {
+      transform: scale(0);
+    }
+  }
+
+  .anniversary-site-placeholder {
+    background-color: $black;
+    border-bottom: 1px solid $black;
+    min-height: 96px;
+  }
+
+  .anniversary-share-menu {
+    position: relative;
+  }
+
+  .anniversary-share-panel {
+    background-color: $black;
+    border: 1px solid rgba($white, 0.22);
+    min-width: 11rem;
+    padding: 0.5rem 0;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 15px);
+    z-index: 250;
+  }
+
+  .anniversary-share-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    a {
+      align-items: center;
+      color: $white;
+      display: flex;
+      font-size: 0.9rem;
+      gap: 0.75rem;
+      padding: 0.65rem 1rem;
+      text-decoration: none;
+      transition: color 0.2s ease;
+
+      i {
+        flex: 0 0 1.25rem;
+        font-size: 1.1rem;
+        text-align: center;
+      }
+
+      &:hover,
+      &:focus {
+        color: $cigi-primary-colour;
+        outline: 0;
+      }
+    }
+  }
+
+  .anniversary-menu-overlay {
+    background-color: rgba($black, 0.98);
+    height: calc(100vh - 50px);
+    left: 0;
+    overflow-y: auto;
+    position: fixed;
+    top: 50px;
+    width: 100%;
+    z-index: 190;
+    padding-top: 2rem;
+  }
+
+  .anniversary-menu-inner {
+    background-color: $black;
+    min-height: 100%;
+  }
+
+  .anniversary-menu-content {
+    color: $white;
+  }
+
+  .anniversary-menu-submenu {
+    border-bottom: 1px solid $divider-grey;
+    font-size: 1.1rem;
+    padding: 1rem 15px;
+    position: relative;
+
+    @include media-breakpoint-up(md) {
+      border-bottom: 0;
+      border-right: 1px solid $cigi-darkest-grey;
+      font-size: 1.3rem;
+      margin-bottom: 2rem;
+      min-height: 250px;
+      padding: 0 1.3rem;
+    }
+
+    &:last-child {
+      border-bottom: 0;
+      border-right: 0;
+    }
+
+    &:nth-child(4) {
+      @include media-breakpoint-up(md) {
+        border-right: 0;
+      }
+    }
+
+    &:nth-child(1),
+    &:nth-child(5) {
+      @include media-breakpoint-up(md) {
+        padding-left: 15px;
+      }
+    }
+
+    a {
+      color: $white;
+      text-decoration: none;
+      transition: color 0.2s ease;
+
+      &:hover,
+      &:focus {
+        color: $cigi-primary-colour;
+      }
+    }
+
+    ul {
+      font-size: 0.75em;
+      list-style: none;
+      margin: 0;
+      max-height: 0;
+      overflow: hidden;
+      padding: 0;
+      transition: max-height 0.2s ease-out;
+
+      @include media-breakpoint-up(md) {
+        max-height: 100%;
+      }
+
+      a {
+        color: $cigi-medium-grey;
+
+        &:hover,
+        &:focus {
+          color: $cigi-primary-colour;
+        }
+      }
+    }
+  }
+
+  .anniversary-menu-submenu-link {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+  }
+
+  .anniversary-menu-accordion {
+    color: $white;
+    float: right;
+    padding: 0;
+
+    @include media-breakpoint-up(md) {
+      display: none;
+    }
+
+    i {
+      font-size: 0.8em;
+    }
+  }
+
+  .anniversary-menu-footer-menu {
+    margin-bottom: 1rem;
+    max-height: 100% !important;
+
+    li {
+      display: inline-block;
+      margin: 0 0.8rem 0.5rem 0;
+
+      @include media-breakpoint-up(md) {
+        display: block;
+      }
+    }
+  }
+
+  .anniversary-menu-social-links {
+    max-height: 100% !important;
+
+    li {
+      display: inline-block;
+      margin-right: 0.7rem;
+    }
+
+    a {
+      color: $white;
+      font-size: 1.1rem;
+
+      svg {
+        fill: currentColor;
+        height: 1em;
+        width: 1em;
+      }
+    }
+  }
+
+  .anniversary-section-anchor {
+    scroll-margin-top: 112px;
+
+    @include media-breakpoint-up(md) {
+      scroll-margin-top: 72px;
+    }
+  }
+
+  .hero {
+    h1 {
+      max-width: 10em;
+    }
+
+    h2 {
+      max-width: 36em;
+    }
+  }
+
+  .anniversary-hero-image {
+    margin-bottom: 2em;
+
+    figure {
+      margin-bottom: 0;
+    }
+  }
+
+  .body {
+    @include media-breakpoint-up(md) {
+      margin: 3em 0;
+    }
+    margin: 2em 0;
+
+    h2 {
+      text-align: left;
+      margin: 0 0 1rem;
+    }
+  }
+
+  hr {
+    @include media-breakpoint-up(md) {
+      margin: 2em auto;
+    }
+    @include media-breakpoint-up(lg) {
+      margin: 3em auto;
+    }
+    margin: 1em auto;
+    width: 50%;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1;
+    margin: 0;
+    text-align: center;
+
+    @include media-breakpoint-up(md) {
+      font-size: 2rem;
+    }
+  }
+
+  .anniversary-about-section {
+    @include media-breakpoint-up(lg) {
+      padding: 4rem 0;
+    }
+    padding: 3rem 0;
+
+    .body {
+      margin: 0;
+    }
+  }
+
+  .anniversary-about-subscribe {
+    display: flex;
+    justify-content: center;
+    margin-top: 2.5rem;
+  }
+
+  .anniversary-about-subscribe-button {
+    background-color: $cigi-primary-colour;
+    color: $white;
+    font-size: 0.85rem;
+    font-weight: 700;
+    min-height: 44px;
+    padding: 0.75rem 1.25rem;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+    white-space: nowrap;
+
+    &:hover,
+    &:focus {
+      background-color: $black;
+      color: $white;
+      outline: 0;
+    }
+
+    span {
+      margin-left: 0.5rem;
+    }
+  }
+
+  .anniversary-events-section {
+    background-color: $black;
+    color: $white;
+    overflow: hidden;
+    padding: 3rem 0;
+
+    @include media-breakpoint-up(md) {
+      padding: 4rem 0;
+    }
+  }
+
+  .anniversary-events-swiper-wrap {
+    margin-top: 2rem;
+    padding: 0;
+  }
+
+  .anniversary-events-swiper {
+    overflow: hidden;
+
+    .swiper-wrapper {
+      align-items: stretch;
+    }
+  }
+
+  .anniversary-event-slide {
+    height: auto;
+  }
+
+  .anniversary-event-card {
+    border: 1px solid rgba($white, 0.75);
+    display: flex;
+    gap: 1rem;
+    height: 100%;
+    padding: 1.25rem;
+    text-align: left;
+
+    @include media-breakpoint-up(md) {
+      gap: 1.25rem;
+      padding: 1.5rem;
+    }
+
+    h3 {
+      color: $white;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.2;
+      margin: 0 0 1rem;
+
+      @include media-breakpoint-up(lg) {
+        font-size: 1.5rem;
+      }
+
+      a {
+        -webkit-box-decoration-break: clone;
+        background-image: linear-gradient($cigi-primary-colour, $cigi-primary-colour);
+        background-position: left 100%;
+        background-repeat: no-repeat;
+        background-size: 0 2px;
+        box-decoration-break: clone;
+        color: $white;
+        display: inline;
+        line-height: 1.2;
+        padding: 0;
+        text-decoration: none;
+        transition:
+          background-size 0.25s ease,
+          color 0.2s ease;
+
+        &.is-line-split {
+          background-image: none;
+          display: inline-block;
+        }
+
+        &:hover,
+        &:focus {
+          background-size: 100% 2px;
+
+          .anniversary-event-title-line {
+            background-size: 100% 2px;
+            transition: background-size 0.1s ease calc(var(--line-index, 0) * 0.1s);
+          }
+        }
+      }
+    }
+  }
+
+  .anniversary-event-title-line {
+    background-image: linear-gradient($cigi-primary-colour, $cigi-primary-colour);
+    background-position: left 100%;
+    background-repeat: no-repeat;
+    background-size: 0 2px;
+    display: block;
+    width: fit-content;
+  }
+
+  .anniversary-event-date-badge {
+    align-items: center;
+    border: 2px solid $cigi-primary-colour;
+    border-radius: 50%;
+    color: $white;
+    display: flex;
+    flex: 0 0 4.25rem;
+    flex-direction: column;
+    height: 4.25rem;
+    justify-content: center;
+    line-height: 1;
+    text-align: center;
+    text-transform: uppercase;
+    width: 4.25rem;
+
+    span {
+      font-size: 1rem;
+      font-weight: 400;
+      letter-spacing: 0;
+      margin-bottom: 0.25rem;
+    }
+
+    p {
+      font-size: 1.25rem;
+      font-weight: 400;
+      margin: 0;
+    }
+  }
+
+  .anniversary-event-details {
+    min-width: 0;
+  }
+
+  .anniversary-event-date {
+    color: $white;
+    font-size: 0.8rem;
+    font-weight: 400;
+    line-height: 1.4;
+    margin-bottom: 0.25rem;
+  }
+
+  .anniversary-event-description {
+    color: rgba($white, 0.86);
+    font-size: 0.95rem;
+    line-height: 1.5;
+
+    p {
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .anniversary-events-controls {
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-top: 2.5rem;
+    padding: 0;
+  }
+
+  .anniversary-events-pagination {
+    align-items: baseline;
+    display: flex;
+    gap: 0.4rem;
+
+    .swiper-pagination-bullet {
+      align-items: center;
+      appearance: none;
+      background-color: $white;
+      border: 0;
+      border-radius: 50%;
+      cursor: pointer;
+      display: inline-flex;
+      height: 0.625rem;
+      justify-content: center;
+      margin: 0;
+      opacity: 1;
+      padding: 0;
+      width: 0.625rem;
+
+      span {
+        display: none;
+      }
+    }
+
+    .swiper-pagination-bullet-active {
+      background-color: transparent;
+      color: $cigi-primary-colour;
+      font-size: 1.25rem;
+      font-weight: 700;
+      height: 1.25rem;
+      line-height: 1;
+
+      span {
+        display: block;
+      }
+    }
+  }
+
+  .anniversary-events-navigation {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .anniversary-events-button {
+    align-items: center;
+    background-color: transparent;
+    border: 1px solid $white;
+    border-radius: 50%;
+    color: $white;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 1.75rem;
+    height: 2.5rem;
+    justify-content: center;
+    padding: 0;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease,
+      opacity 0.2s ease;
+    width: 2.5rem;
+
+    &:hover,
+    &:focus {
+      background-color: $white;
+      color: $black;
+    }
+
+    &.swiper-button-disabled {
+      cursor: default;
+      opacity: 0.35;
+    }
+  }
+
+  .anniversary-history-section {
+    @include media-breakpoint-up(lg) {
+      margin-bottom: 4rem;
+      padding-top: 4rem;
+    }
+    margin-bottom: 3rem;
+    padding-top: 3rem;
+
+    .anniversary-timeline-gallery {
+      margin-top: 2em;
+      overflow: hidden;
+
+      .anniversary-timeline-nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 0 0 1em;
+        padding-left: 0;
+
+        li {
+          font-size: 1rem;
+          list-style: none;
+
+          &:not(:last-child) {
+            &::after {
+              color: $cigi-primary-colour;
+              content: '/';
+              padding: 0 0.5em;
+            }
+          }
+
+          button {
+            color: $cigi-medium-grey;
+            position: relative;
+            transition: color 0.3s ease;
+
+            &::before {
+              background-color: $cigi-primary-colour;
+              bottom: 0;
+              content: '';
+              height: 0.2em;
+              position: absolute;
+              transition: width 300ms ease;
+              width: 0;
+            }
+
+            &:hover {
+              &::before {
+                width: 100%;
+              }
+            }
+
+            &.active {
+              color: $black;
+              font-weight: 600;
+            }
+          }
+        }
+      }
+
+      .anniversary-timeline-stage {
+        position: relative;
+      }
+
+      .anniversary-timeline-swiper {
+        cursor: grab;
+        overflow: visible;
+
+        .swiper-wrapper {
+          align-items: center;
+        }
+
+        .swiper-slide {
+          @include media-breakpoint-up(lg) {
+            img {
+              transform: scale(0.7);
+            }
+          }
+          opacity: 0;
+          transition:
+            opacity 1s ease,
+            // transform 1s ease,
+            filter 1s ease;
+
+          .img-wrapper {
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+
+            @include media-breakpoint-up(lg) {
+              aspect-ratio: 16 / 9;
+            }
+
+            img {
+              display: block;
+              height: 100%;
+              object-fit: cover;
+              width: 100%;
+              transition: transform 1s ease;
+
+              @include media-breakpoint-up(lg) {
+                border-radius: 15px;
+              }
+            }
+          }
+
+          .gallery-text {
+            display: flex;
+            margin-right: 18px;
+            margin-top: 1em;
+            opacity: 0;
+            transition: opacity 1s ease;
+            visibility: hidden;
+            padding: 0 2rem;
+            align-items: flex-start;
+
+            .year {
+              @include media-breakpoint-up(md) {
+                font-size: 1.5em;
+              }
+              @include media-breakpoint-up(lg) {
+                font-size: 1.75em;
+              }
+              font-size: 1em;
+              font-weight: 400;
+              margin: 0 0.75em;
+              position: relative;
+            }
+
+            .caption {
+              flex-basis: 90%;
+              font-size: 1rem;
+              line-height: 1.3;
+
+              p {
+                &:last-child {
+                  margin-bottom: 0;
+                }
+              }
+            }
+          }
+
+          &.swiper-slide-next,
+          &.swiper-slide-prev {
+            filter: grayscale(100%);
+            opacity: 0.7;
+          }
+
+          &.swiper-slide-next {
+            @include media-breakpoint-up(lg) {
+              transform: translateX(-10%);
+              img {
+                transform: scale(0.7);
+              }
+            }
+          }
+
+          &.swiper-slide-prev {
+            @include media-breakpoint-up(lg) {
+              transform: translateX(10%);
+              img {
+                transform: scale(0.7);
+              }
+            }
+          }
+
+          &.swiper-slide-active {
+            @include media-breakpoint-up(lg) {
+              img {
+                transform: scale(1);
+              }
+            }
+            opacity: 1;
+
+            .gallery-text {
+              opacity: 1;
+              visibility: visible;
+            }
+          }
+        }
+      }
+
+      .anniversary-timeline-button {
+        align-items: center;
+        background-color: rgba($white, 0.78);
+        border: 0;
+        border-radius: 50%;
+        color: $cigi-primary-colour;
+        cursor: pointer;
+        display: flex;
+        font-size: 2em;
+        height: 54px;
+        justify-content: center;
+        margin-top: 0;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        transition:
+          background-color 0.2s ease,
+          color 0.2s ease;
+        width: 54px;
+        z-index: 10;
+
+        &::after {
+          content: '';
+        }
+
+        &:hover,
+        &:focus {
+          background-color: rgba($white, 0.95);
+          color: $black;
+        }
+      }
+
+      .anniversary-timeline-button-next {
+        @include media-breakpoint-up(xl) {
+          right: 25%;
+        }
+        @include media-breakpoint-up(lg) {
+          right: 15%;
+        }
+        right: 0.5em;
+      }
+
+      .anniversary-timeline-button-prev {
+        @include media-breakpoint-up(xl) {
+          left: 25%;
+        }
+        @include media-breakpoint-up(lg) {
+          left: 15%;
+        }
+        left: 0.5em;
+      }
+
+      .swiper-button-disabled {
+        display: none;
+      }
+    }
+  }
+
+  .anniversary-footer {
+    background-color: $black;
+    color: $white;
+    font-size: 1rem;
+    margin-top: 0;
+    padding: 3rem 0 5rem;
+    position: relative;
+    z-index: 20;
+
+    @include media-breakpoint-up(md) {
+      padding: 4rem 0 8rem;
+    }
+  }
+
+  .anniversary-footer-layout {
+    display: grid;
+    gap: 3rem;
+
+    @include media-breakpoint-up(md) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .anniversary-footer-contact {
+    address {
+      color: rgba($white, 0.82);
+      font-size: 0.9rem;
+      font-style: normal;
+      line-height: 1.5;
+      margin: 1.5rem 0 0;
+    }
+  }
+
+  .anniversary-footer-logo {
+    display: inline-flex;
+
+    svg {
+      fill: $white;
+      height: auto;
+      transition: fill 0.2s ease;
+      width: 100%;
+    }
+
+    .anniversary-site-logo-mark {
+      width: 100px;
+    }
+
+    &:hover,
+    &:focus {
+      .anniversary-site-logo-mark {
+        fill: $cigi-primary-colour;
+      }
+    }
+  }
+
+  .anniversary-footer-newsletter {
+    h2 {
+      text-align: left;
+      color: $white;
+      font-size: 1.35rem;
+      font-weight: 400;
+      line-height: 1.2;
+      margin: 0 0 1.5rem;
+    }
+
+    p {
+      color: rgba($white, 0.72);
+      font-size: 0.8rem;
+      line-height: 1.45;
+      margin: 1rem 0 0;
+
+      a {
+        color: $white;
+        text-decoration: underline;
+        text-decoration-color: $cigi-primary-colour;
+        text-underline-offset: 0.2em;
+
+        &:hover,
+        &:focus {
+          color: $cigi-primary-colour;
+        }
+      }
+    }
+  }
+
+  .anniversary-footer-subscribe-button,
+  .anniversary-newsletter-submit {
+    background-color: $white;
+    color: $black;
+    font-size: 0.85rem;
+    font-weight: 700;
+    min-height: 44px;
+    padding: 0.75rem 1.25rem;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+    white-space: nowrap;
+
+    &:hover,
+    &:focus {
+      background-color: $cigi-primary-colour;
+      color: $white;
+      outline: 0;
+    }
+
+    span {
+      margin-left: 0.5rem;
+    }
+  }
+
+  .anniversary-newsletter-submit {
+    background-color: $cigi-primary-colour;
+    color: $white;
+    margin-top: 0.5rem;
+
+    &:disabled {
+      cursor: wait;
+      opacity: 0.7;
+    }
+
+    &:hover,
+    &:focus {
+      background-color: $black;
+      color: $white;
+    }
+  }
+
+  .anniversary-newsletter-modal-backdrop {
+    align-items: center;
+    background-color: rgba($black, 0.68);
+    display: flex;
+    inset: 0;
+    justify-content: center;
+    opacity: 0;
+    padding: 1rem;
+    position: fixed;
+    transition: opacity 0.22s ease;
+    z-index: 1000;
+
+    &.is-open {
+      opacity: 1;
+
+      .anniversary-newsletter-modal {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+  }
+
+  .anniversary-newsletter-modal {
+    background-color: $white;
+    color: $black;
+    max-height: calc(100vh - 2rem);
+    max-width: 760px;
+    opacity: 0;
+    overflow-y: auto;
+    padding: 0 1.25rem 2rem;
+    position: relative;
+    transform: translateY(0.75rem) scale(0.985);
+    transition:
+      opacity 0.22s ease,
+      transform 0.22s ease;
+    width: 100%;
+
+    @include media-breakpoint-up(md) {
+      padding: 0 2.5rem 2.5rem;
+    }
+  }
+
+  .anniversary-newsletter-modal-header {
+    align-items: center;
+    background-color: $white;
+    border-bottom: 1px solid $cigi-light-grey;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 -1.25rem 1.5rem;
+    padding: 1.25rem;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+
+    @include media-breakpoint-up(md) {
+      margin: 0 -2.5rem 1.5rem;
+      padding: 1.5rem 2.5rem;
+    }
+
+    h2 {
+      color: $black;
+      font-size: 1.5rem;
+      font-weight: 400;
+      line-height: 1.2;
+      margin: 0 1rem 0 0;
+      text-align: left;
+    }
+  }
+
+  .anniversary-newsletter-modal-close {
+    align-items: center;
+    color: $black;
+    display: inline-flex;
+    flex: 0 0 auto;
+    font-size: 1.4rem;
+    justify-content: center;
+    padding: 0.5rem;
+    transition: color 0.2s ease;
+
+    &:hover,
+    &:focus {
+      color: $cigi-primary-colour;
+      outline: 0;
+    }
+  }
+
+  .anniversary-newsletter-modal-form {
+    &.is-loading {
+      cursor: wait;
+    }
+
+    &.is-submitted {
+      .anniversary-newsletter-form-body {
+        display: none;
+      }
+    }
+
+    .anniversary-newsletter-form-message {
+      color: $black;
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 1rem;
+
+      &[hidden] {
+        display: none;
+      }
+
+      &.is-error {
+        color: $cigi-primary-colour;
+      }
+
+      &.is-info {
+        color: $cigi-dark-grey;
+      }
+    }
+
+    .anniversary-newsletter-errors,
+    .anniversary-newsletter-messages {
+      margin-bottom: 1rem;
+    }
+
+    .anniversary-newsletter-errors,
+    .errorlist {
+      color: $cigi-primary-colour;
+      font-size: 0.8rem;
+    }
+
+    .errorlist {
+      list-style: none;
+      margin: 0.35rem 0 0;
+      padding: 0;
+    }
+
+    .anniversary-newsletter-messages {
+      p {
+        color: $black;
+        font-weight: 700;
+        margin: 0;
+
+        &.error {
+          color: $cigi-primary-colour;
+        }
+      }
+    }
+
+    p {
+      color: $cigi-dark-grey;
+      font-size: 0.8rem;
+      line-height: 1.45;
+      margin: 1rem 0;
+
+      a {
+        color: $black;
+        text-decoration: underline;
+        text-decoration-color: $cigi-primary-colour;
+        text-underline-offset: 0.2em;
+
+        &:hover,
+        &:focus {
+          color: $cigi-primary-colour;
+        }
+      }
+    }
+  }
+
+  .anniversary-newsletter-modal-grid {
+    display: grid;
+    gap: 1rem;
+
+    @include media-breakpoint-up(sm) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .anniversary-newsletter-field {
+    display: grid;
+    gap: 0.35rem;
+
+    label,
+    legend {
+      color: $black;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    input,
+    select,
+    textarea {
+      border: 1px solid $cigi-light-grey;
+      color: $black;
+      min-height: 44px;
+      padding: 0.65rem 0.75rem;
+      width: 100%;
+
+      &:focus {
+        border-color: $cigi-primary-colour;
+        outline: 0;
+      }
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    input[type='checkbox'] {
+      margin-right: 0.45rem;
+      min-height: 0;
+      width: auto;
+    }
+  }
+
+  .anniversary-newsletter-field-full {
+    @include media-breakpoint-up(sm) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  fieldset.anniversary-newsletter-field {
+    border: 0;
+    padding: 0;
+
+    legend {
+      margin-bottom: 0.5rem;
+    }
+
+    label {
+      align-items: flex-start;
+      display: flex;
+      gap: 0.65rem;
+      line-height: 1.45;
+    }
+
+    input[type='checkbox'] {
+      flex: 0 0 auto;
+      margin-top: 0.2rem;
+    }
+  }
+}

@@ -65,6 +65,8 @@ from wagtail.admin.panels import (
     PageChooserPanel,
     TitleFieldPanel,
 )
+from wagtail.admin.widgets import AdminPageChooser
+from wagtailmedia.edit_handlers import MediaChooserPanel
 from .panels import QRCodePanel
 from wagtail import blocks
 from wagtail.fields import RichTextField, StreamField
@@ -969,6 +971,7 @@ class BasicPage(
         'core.FundingPage',
         'core.TwentiethPage',
         'core.TwentiethPageSingleton',
+        'core.TwentyFifthPageSingleton',
         'core.FacilityRentalsPage',
         'people.PersonListPage',
         'research.ProjectPage',
@@ -1437,6 +1440,257 @@ class TwentiethPageSingleton(
 
     class Meta:
         verbose_name = 'Twentieth Page Singleton'
+
+
+class TwentyFifthPageSingleton(
+    ContentPage,
+    BasicPageAbstract,
+    FeatureablePageAbstract,
+    SearchablePageAbstract,
+    ShareablePageAbstract,
+    ThemeablePageAbstract,
+):
+    body = StreamField(BasicPageAbstract.body_default_blocks, use_json_field=True)
+    history_timeline = StreamField(
+        [
+            ('gallery', TimelineGalleryBlock()),
+        ],
+        blank=True,
+        help_text='Timeline gallery shown in the History section.',
+        use_json_field=True,
+    )
+    splash_video = models.ForeignKey(
+        'wagtailmedia.Media',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Splash Video',
+        help_text='Full-screen background video shown before the page content.',
+    )
+    splash_image = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Splash Still Image',
+        help_text='Still image shown before the splash video loads, and used instead of video on mobile.',
+    )
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('splash_image'),
+                MediaChooserPanel('splash_video', media_type='video'),
+            ],
+            heading='Splash',
+            classname='collapsible',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('body'),
+            ]
+        ),
+        MultiFieldPanel(
+            [
+                InlinePanel('anniversary_events', label='Event'),
+            ],
+            heading='Events',
+            classname='collapsible',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('history_timeline'),
+            ],
+            heading='History',
+            classname='collapsible',
+        ),
+        BasicPageAbstract.images_panel,
+        BasicPageAbstract.hero_link_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('publishing_date'),
+            ],
+            heading='General Information',
+            classname='collapsible collapsed'
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('topics'),
+            ],
+            heading='Related',
+            classname='collapsible collapsed',
+        )
+    ]
+
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+        BasicPageAbstract.qr_code_panel,
+    ]
+
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
+
+    max_count = 1
+    parent_page_types = ['core.BasicPage']
+    subpage_types = []
+    template = 'core/twenty_fifth_page_singleton.html'
+    anniversary_mailchimp_tag = '25 Anniversary'
+
+    def get_subscribe_page(self):
+        from subscribe.models import SubscribePage
+
+        subscribe_page = SubscribePage.objects.live().first()
+
+        if subscribe_page:
+            return subscribe_page
+
+        subscribe_page = object.__new__(SubscribePage)
+        subscribe_page.consent_text = SubscribePage._meta.get_field('consent_text').default
+        return subscribe_page
+
+    def get_anniversary_subscribe_form(self, data=None):
+        from subscribe.models import SubscribeForm
+
+        return SubscribeForm(
+            data,
+            consent_text=self.get_subscribe_page().consent_text,
+        )
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        context.setdefault(
+            'anniversary_subscribe_form',
+            self.get_anniversary_subscribe_form(),
+        )
+        context['turnstile_site_key'] = getattr(settings, 'CLOUDFLARE_TURNSTILE_SITE_KEY', '')
+        return context
+
+    def serve(self, request, *args, **kwargs):
+        if request.method == 'POST' and request.POST.get('anniversary_newsletter_form'):
+            from mailchimp_marketing.api_client import ApiClientError
+            from subscribe.models import MailchimpSubscriptionError
+            from utils.security import verify_turnstile_token
+
+            is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest'
+            context = self.get_context(request, *args, **kwargs)
+            form = self.get_anniversary_subscribe_form(request.POST)
+            context['anniversary_subscribe_form'] = form
+            context['anniversary_subscribe_modal_open'] = True
+
+            turnstile_token = request.POST.get('cf-turnstile-response', '')
+            if not settings.DEBUG and not verify_turnstile_token(turnstile_token, request.META.get('REMOTE_ADDR')):
+                if is_ajax:
+                    return JsonResponse(
+                        {
+                            'success': False,
+                            'message': 'Security verification failed. Please try again.',
+                        },
+                        status=400,
+                    )
+
+                messages.error(request, 'Security verification failed. Please try again.')
+                return render(request, self.template, context)
+
+            if form.is_valid():
+                try:
+                    self.get_subscribe_page().subscribe_to_mailchimp(
+                        form,
+                        extra_tags=[self.anniversary_mailchimp_tag],
+                    )
+                except (ApiClientError, MailchimpSubscriptionError) as error:
+                    import logging
+
+                    error_text = getattr(error, 'text', str(error))
+                    logging.getLogger('cigionline').error(f'An error occurred with Mailchimp: {error_text}')
+                    if is_ajax:
+                        return JsonResponse(
+                            {
+                                'success': False,
+                                'message': 'There was a problem subscribing you. Please try again.',
+                            },
+                            status=502,
+                        )
+
+                    messages.error(request, 'There was a problem subscribing you. Please try again.')
+                else:
+                    if is_ajax:
+                        return JsonResponse(
+                            {
+                                'success': True,
+                                'message': 'Thanks for subscribing.',
+                            }
+                        )
+
+                    messages.success(request, 'Thanks for subscribing.')
+                    context['anniversary_subscribe_form'] = self.get_anniversary_subscribe_form()
+                    context['anniversary_subscribe_modal_open'] = True
+            elif is_ajax:
+                return JsonResponse(
+                    {
+                        'success': False,
+                        'message': 'Please correct the highlighted fields and try again.',
+                        'errors': form.errors.get_json_data(),
+                    },
+                    status=400,
+                )
+
+            return render(request, self.template, context)
+
+        return super().serve(request, *args, **kwargs)
+
+    class Meta:
+        verbose_name = 'Twenty-Fifth Anniversary Page'
+
+
+class EventPageAdminChooser(AdminPageChooser):
+    def __init__(self, **kwargs):
+        super().__init__(target_models=['events.EventPage'], **kwargs)
+
+    def get_js_init_options(self, id_, name, value_data):
+        opts = super().get_js_init_options(id_, name, value_data)
+
+        if 'parentId' not in opts:
+            from events.models import EventListPage
+
+            event_list_page = EventListPage.objects.order_by('path').first()
+
+            if event_list_page:
+                opts['parentId'] = event_list_page.pk
+
+        return opts
+
+
+class EventPageChooserPanel(FieldPanel):
+    def get_form_options(self):
+        opts = super().get_form_options()
+        opts.setdefault('widgets', {})[self.field_name] = EventPageAdminChooser()
+        return opts
+
+
+class TwentyFifthPageEvent(Orderable):
+    page = ParentalKey(
+        'core.TwentyFifthPageSingleton',
+        related_name='anniversary_events',
+    )
+    event_page = models.ForeignKey(
+        'events.EventPage',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Event',
+    )
+
+    panels = [
+        FieldPanel('event_page'),
+    ]
 
 
 class Theme(models.Model):

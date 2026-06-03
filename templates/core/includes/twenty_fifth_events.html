@@ -1,0 +1,55 @@
+{% load wagtailcore_tags %}
+
+<section id="anniversary-events" class="anniversary-section-anchor anniversary-events-section" data-anniversary-events>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col">
+        <h2>Events</h2>
+        {% if events %}
+          <div class="anniversary-events-swiper-wrap">
+            <div class="swiper-container anniversary-events-swiper">
+              <div class="swiper-wrapper">
+                {% for event_relation in events %}
+                  {% with event=event_relation.event_page %}
+                    <article class="swiper-slide anniversary-event-slide">
+                      <div class="anniversary-event-card">
+                        <time class="anniversary-event-date-badge" datetime="{{ event.publishing_date|date:'c' }}">
+                          <span>{{ event.publishing_date|date:"M" }}</span>
+                          <p>{{ event.publishing_date|date:"j" }}</p>
+                        </time>
+                        <div class="anniversary-event-details">
+                          <div class="anniversary-event-date">
+                            {{ event.publishing_date|date:"F j, Y - g:i A" }} {{ event.time_zone_label }}
+                          </div>
+                          <h3>
+                            <a href="{{ event.url }}">{{ event.title }}</a>
+                          </h3>
+                          {% if event.short_description %}
+                            <div class="anniversary-event-description">
+                              {{ event.short_description|richtext }}
+                            </div>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </article>
+                  {% endwith %}
+                {% endfor %}
+              </div>
+            </div>
+            <div class="anniversary-events-controls">
+              <div class="anniversary-events-pagination"></div>
+              <div class="anniversary-events-navigation">
+                <button class="anniversary-events-button anniversary-events-button-prev" type="button" aria-label="Previous event">
+                  <i class="fal fa-angle-left"></i>
+                </button>
+                <button class="anniversary-events-button anniversary-events-button-next" type="button" aria-label="Next event">
+                  <i class="fal fa-angle-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>

@@ -77,7 +77,7 @@ Unidecode==1.2.0
 urllib3==1.26.5
 wagtail==7.3
 wagtail-2fa==1.7.1
-wagtailmedia==0.16.0
+wagtailmedia==0.17.2
 webencodings==0.5.1
 Willow==1.11.0
 wrapt==1.14.1
