@@ -366,7 +366,7 @@ def send_event_campaign_email(campaign, registrant) -> None:
     Creates an EmailCampaignSend row to ensure idempotency.
     """
 
-    from .models import EmailCampaignSend
+    from .models import EmailCampaignSend, Registrant
 
     api_key = settings.SENDGRID_API_KEY
 
