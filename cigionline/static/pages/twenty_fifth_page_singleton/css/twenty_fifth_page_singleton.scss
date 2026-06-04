@@ -670,6 +670,13 @@
     @include media-breakpoint-up(md) {
       padding: 4rem 0;
     }
+
+    &.is-locked {
+      .anniversary-events-pagination,
+      .anniversary-events-navigation {
+        display: none;
+      }
+    }
   }
 
   .anniversary-events-swiper-wrap {

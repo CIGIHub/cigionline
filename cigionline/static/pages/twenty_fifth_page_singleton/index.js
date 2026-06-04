@@ -493,6 +493,7 @@ if (eventsBlock) {
     const eventSwiper = new Swiper(swiperContainer, {
       slidesPerView: 1,
       spaceBetween: 16,
+      watchOverflow: true,
       breakpoints: {
         768: {
           slidesPerView: 2,
@@ -520,6 +521,13 @@ if (eventsBlock) {
       },
     });
 
+    const updateEventsOverflow = () => {
+      eventsBlock.classList.toggle('is-locked', eventSwiper.isLocked);
+    };
+    const queueEventsOverflowUpdate = () => {
+      window.requestAnimationFrame(updateEventsOverflow);
+    };
+
     let eventTitleSplitTimer = null;
     const queueEventTitleSplit = () => {
       window.clearTimeout(eventTitleSplitTimer);
@@ -529,8 +537,17 @@ if (eventsBlock) {
     };
 
     splitEventTitleLines(eventsBlock);
-    eventSwiper.on('resize', queueEventTitleSplit);
-    eventSwiper.on('breakpoint', queueEventTitleSplit);
+    updateEventsOverflow();
+    eventSwiper.on('lock', updateEventsOverflow);
+    eventSwiper.on('unlock', updateEventsOverflow);
+    eventSwiper.on('resize', () => {
+      queueEventTitleSplit();
+      queueEventsOverflowUpdate();
+    });
+    eventSwiper.on('breakpoint', () => {
+      queueEventTitleSplit();
+      queueEventsOverflowUpdate();
+    });
     window.addEventListener('load', queueEventTitleSplit);
 
     if (document.fonts) {
