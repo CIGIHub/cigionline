@@ -87,6 +87,24 @@
 
   {% include "includes/body.html" with body=self.body %}
 
+  {% if self.event_agenda %}
+    <section class="body event-agenda">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <h2 class="paragraph-heading"><i class="fal fa-calendar-alt" aria-hidden="true"></i> Agenda</h2>
+            <p>
+              <a href="{{ self.event_agenda.url }}" target="_blank" rel="noopener noreferrer">
+                <i class="far fa-file-pdf" aria-hidden="true"></i>
+                {{ self.event_agenda.title }}
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
   {% if self.author_count > 0 %}
     {% include "includes/about_the_author.html" with authors=self.authors.all author_count=self.author_count title_override="Event Speaker"%}
   {% endif %}
