@@ -1538,7 +1538,7 @@ class TwentyFifthPageSingleton(
     search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
 
     max_count = 1
-    parent_page_types = ['core.BasicPage']
+    parent_page_types = ['home.HomePage']
     subpage_types = []
     template = 'core/twenty_fifth_page_singleton.html'
     anniversary_mailchimp_tag = '25 Anniversary'

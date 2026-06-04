@@ -11,6 +11,7 @@ from contact.models import ContactPage
 from core.models import (
     BasicPage,
     PrivacyNoticePage,
+    TwentyFifthPageSingleton,
 )
 from events.models import EventListPage
 from features.models import FeaturesListPage
@@ -61,6 +62,7 @@ class HomePageTests(WagtailPageTestCase):
                 PublicationSeriesListPage,
                 ResearchLandingPage,
                 SubscribePage,
+                TwentyFifthPageSingleton,
                 TopicListPage,
                 StrategicPlanSPAPage,
             }

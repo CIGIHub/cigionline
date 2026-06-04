@@ -41,7 +41,6 @@ class BasicPageTests(WagtailPageTestCase):
                 FundingPage,
                 PersonListPage,
                 ProjectPage,
-                TwentyFifthPageSingleton,
                 TwentiethPage,
                 TwentiethPageSingleton,
             }
@@ -52,7 +51,7 @@ class TwentyFifthPageSingletonTests(WagtailPageTestCase):
     def test_twentyfifthpagesingleton_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             TwentyFifthPageSingleton,
-            {BasicPage},
+            {HomePage},
         )
 
     def test_twentyfifthpagesingleton_child_page_types(self):
