@@ -595,6 +595,10 @@
       text-align: left;
       margin: 0 0 1rem;
     }
+
+    p {
+      font-size: 20px;
+    }
   }
 
   hr {
@@ -711,7 +715,7 @@
 
     h3 {
       color: $white;
-      font-size: 1rem;
+      font-size: 1.2rem;
       font-weight: 400;
       line-height: 1.2;
       margin: 0 0 1rem;
@@ -806,13 +810,13 @@
 
   .anniversary-event-description {
     color: rgba($white, 0.86);
-    font-size: 0.95rem;
     line-height: 1.5;
 
     p {
       &:last-child {
         margin-bottom: 0;
       }
+      font-size: 1rem;
     }
   }
 
