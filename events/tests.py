@@ -1,3 +1,4 @@
+import base64
 from datetime import datetime, timedelta, timezone as datetime_timezone
 from django.template.loader import render_to_string
 from django.test import SimpleTestCase, TestCase
@@ -56,6 +57,48 @@ class EventCalendarTemplateTests(SimpleTestCase):
         self.assertIn("Add to Calendar", html)
         self.assertIn("calendar/render", html)
         self.assertIn("/events/feed.ics?id=123", html)
+
+
+class EmailCampaignAttachmentTests(SimpleTestCase):
+    def test_attach_campaign_attachment_adds_wagtail_document_to_sendgrid_message(self):
+        from sendgrid.helpers.mail import Mail
+
+        from events.emailing import _attach_campaign_attachment
+
+        class DummyFile:
+            name = "event-campaigns/agenda.pdf"
+
+            def __init__(self):
+                self.opened = False
+                self.closed = False
+
+            def open(self, mode):
+                self.opened = mode == "rb"
+
+            def read(self):
+                return b"%PDF-1.4"
+
+            def close(self):
+                self.closed = True
+
+        dummy_file = DummyFile()
+        document = SimpleNamespace(file=dummy_file, title="Agenda")
+        message = Mail(
+            from_email="events@example.com",
+            to_emails="recipient@example.com",
+            subject="Campaign",
+            plain_text_content="Body",
+        )
+
+        _attach_campaign_attachment(message, document)
+
+        attachment = message.get()["attachments"][0]
+        self.assertTrue(dummy_file.opened)
+        self.assertTrue(dummy_file.closed)
+        self.assertEqual(attachment["content"], base64.b64encode(b"%PDF-1.4").decode())
+        self.assertEqual(attachment["filename"], "agenda.pdf")
+        self.assertEqual(attachment["type"], "application/pdf")
+        self.assertEqual(attachment["disposition"], "attachment")
 
 
 class DuplicateRegistrationTests(TestCase):
