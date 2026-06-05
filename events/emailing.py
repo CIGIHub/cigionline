@@ -1,13 +1,23 @@
 from __future__ import annotations
 
+import base64
 import html
+import mimetypes
+import os
 from typing import TYPE_CHECKING
 
 import pytz
 from django.conf import settings
 from django.template.loader import render_to_string
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+from sendgrid.helpers.mail import (
+    Attachment,
+    Disposition,
+    FileContent,
+    FileName,
+    FileType,
+    Mail,
+)
 
 from .email_rendering import render_email_subject, render_streamfield_email_html
 
@@ -29,6 +39,36 @@ def _from_email() -> tuple[str, str]:
     address = settings.SENDGRID_FROM_EMAIL_EVENTS
     name = getattr(settings, "SENDGRID_FROM_NAME_EVENTS", "CIGI Events")
     return (address, name)
+
+
+def _attach_campaign_attachment(message: Mail, document) -> None:
+    if not document:
+        return
+
+    file_field = getattr(document, "file", None)
+    if not file_field:
+        return
+
+    file_field.open("rb")
+    try:
+        encoded_file = base64.b64encode(file_field.read()).decode()
+    finally:
+        file_field.close()
+
+    filename = (
+        getattr(document, "filename", None)
+        or os.path.basename(getattr(file_field, "name", ""))
+        or getattr(document, "title", "")
+        or "attachment"
+    )
+    content_type = mimetypes.guess_type(filename)[0] or "application/octet-stream"
+
+    message.attachment = Attachment(
+        FileContent(encoded_file),
+        FileName(filename),
+        FileType(content_type),
+        Disposition("attachment"),
+    )
 
 
 def _absolute_event_base(event) -> str:
@@ -413,6 +453,7 @@ def send_event_campaign_email(campaign, registrant) -> None:
         plain_text_content=text,
         html_content=html,
     )
+    _attach_campaign_attachment(message, campaign.attachment)
 
     sg = SendGridAPIClient(api_key)
     try:
