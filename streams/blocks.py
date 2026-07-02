@@ -438,6 +438,32 @@ class ImageFullBleedBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/image_full_bleed_block.html'
 
 
+class PublicationVisualElementsBlock(blocks.StructBlock):
+    heading = blocks.CharBlock(required=False)
+    items = blocks.ListBlock(
+        blocks.StructBlock(
+            [
+                ('label', blocks.CharBlock(required=True, max_length=140)),
+                ('image', ImageChooserBlock(required=True)),
+                ('display_size', blocks.ChoiceBlock(
+                    choices=[
+                        ('full', 'Full width'),
+                        ('icon', 'Icon'),
+                    ],
+                    default='full',
+                    required=True,
+                )),
+            ]
+        ),
+        required=True,
+    )
+
+    class Meta:
+        icon = 'image'
+        label = 'Publication Visual Elements'
+        template = 'streams/publication_visual_elements_block.html'
+
+
 class InlineVideoBlock(blocks.PageChooserBlock, ThemeableBlock):
     """Inline video"""
 

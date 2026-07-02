@@ -35,6 +35,7 @@ from streams.blocks import (
     PersonsListBlock,
     PublicationsListBlock,
     PosterBlock,
+    PublicationVisualElementsBlock,
     PullQuoteLeftBlock,
     PullQuoteRightBlock,
     RecommendedBlock,
@@ -1194,7 +1195,10 @@ class HumanAnalysisStandardPage(
     ShareablePageAbstract,
 ):
     body = StreamField(
-        BasicPageAbstract.body_default_blocks,
+        BasicPageAbstract.body_default_blocks + [
+            BasicPageAbstract.body_text_border_block,
+            ('publication_visual_elements', PublicationVisualElementsBlock()),
+        ],
         blank=True,
         use_json_field=True,
     )

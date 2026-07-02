@@ -6,4 +6,151 @@
       font-weight: 600;
     }
   }
+
+  .text-border-block {
+    margin: 0 0 2rem;
+
+    .block-contents {
+      background: #111;
+      border: 0;
+      color: $white;
+      font-size: 1.1875rem;
+      line-height: 1.5;
+      padding: 2.25rem 2.5rem;
+      position: relative;
+
+      &::before {
+        background: $cigi-primary-colour;
+        content: '';
+        height: 3px;
+        left: 2.5rem;
+        position: absolute;
+        right: 2.5rem;
+        top: 0;
+      }
+
+      p {
+        margin-bottom: 1.15rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      strong:first-child {
+        display: block;
+        font-size: 0.8125rem;
+        letter-spacing: 0.14em;
+        line-height: 1;
+        margin-bottom: 1rem;
+        opacity: 0.78;
+        text-transform: uppercase;
+      }
+    }
+  }
+
+  @include media-breakpoint-down(sm) {
+    .text-border-block {
+      .block-contents {
+        font-size: 1.0625rem;
+        padding: 1.75rem 1.5rem;
+
+        &::before {
+          left: 1.5rem;
+          right: 1.5rem;
+        }
+      }
+    }
+  }
+
+  .body > .container:first-child .text-border-block {
+    margin-top: 0;
+  }
+
+  .stream-image-block {
+    background: $white;
+    border: 1px solid $cigi-light-grey;
+    box-shadow: 0 1rem 1rem rgba($black, 0.08);
+    margin: 1rem 0 2rem;
+    padding: 0.75rem;
+    position: relative;
+
+    &::before {
+      background: $cigi-primary-colour;
+      content: '';
+      height: 3px;
+      left: 0.75rem;
+      position: absolute;
+      right: 0.75rem;
+      top: 0;
+    }
+
+    img {
+      background: $white;
+      display: block;
+      height: auto;
+      width: 100%;
+    }
+
+    figcaption {
+      display: none;
+    }
+  }
+
+  .publication-visual-elements-block {
+    h2 {
+      border-bottom: 1px solid $cigi-light-grey;
+      font-size: 1.625rem;
+      margin-bottom: 0;
+      padding-bottom: 1rem;
+    }
+  }
+
+  .publication-visual-element {
+    margin-bottom: 2rem;
+
+    figcaption {
+      color: $black;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+
+    img {
+      background: $white;
+      border: 1px solid $cigi-light-grey;
+      display: block;
+      height: auto;
+      width: 100%;
+    }
+
+    &--icon {
+      img {
+        max-width: 9rem;
+        width: auto;
+      }
+    }
+  }
+
+  @include media-breakpoint-down(sm) {
+    .stream-image-block {
+      margin: 1.5rem 0 2.5rem;
+      padding: 0.5rem;
+
+      &::before {
+        left: 0.5rem;
+        right: 0.5rem;
+      }
+    }
+
+    .publication-visual-elements-block {
+      margin: 3rem 0;
+
+      h2 {
+        font-size: 1.375rem;
+      }
+    }
+  }
 }
