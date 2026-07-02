@@ -48,9 +48,14 @@
                     <tr>
                       <td bgcolor="#111111" style="border-radius:4px;">
                         <a href="{{ manage_url }}" target="_blank" rel="noopener" style="display:inline-block; padding:10px 14px; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:18px; color:#ffffff; text-decoration:none; font-weight:bold;">
-                          Manage registration
+                          Manage Registration
                         </a>
                       </td>
+                    </tr>
+                  </table>
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:18px 0;">
+                    <tr>
+                      <td style="border-top:1px solid #e6e6e6; font-size:0; line-height:0;">&nbsp;</td>
                     </tr>
                   </table>
                 {% endif %}
@@ -133,16 +138,24 @@
                     <td style="border-top:1px solid #e6e6e6; font-size:0; line-height:0;">&nbsp;</td>
                   </tr>
                 </table>
-                <div style="font-size:12px; line-height:18px; color:#666666; margin-top:14px;">
-                  If you have questions, please email us at <a href="mailto:rsvp@cigionline.org">rsvp@cigionline.org</a>.
+                <div class="email-footer-logo" style="width:250px; max-width:250px; margin:18px auto 0 auto; text-align:center;">
+                  <a href="https://www.cigionline.org/" target="_blank" rel="noopener" style="display:block; text-decoration:none;">
+                    <img src="https://www.cigionline.org/static/images/CIGI-logo-full-RBG_v3.original.jpg" width="250" alt="Centre for International Governance Innovation" style="display:block; border:0; outline:none; text-decoration:none; width:250px; max-width:250px; height:auto;" />
+                  </a>
+                </div>
+                <div style="font-size:12px; line-height:18px; color:#666666; margin-top:14px; text-align:center;">
+                  67 Erb Street West, Waterloo, Ontario, Canada, N2L 6C2<br />
+                  Copyright (C) 2026 Centre for International Governance Innovation. All rights reserved.
+                </div>
+                <div style="font-size:12px; line-height:18px; color:#666666; margin-top:14px; text-align:center;">
+                  You are receiving this email because you registered to attend a CIGI event.
+                </div>
+                <div style="font-size:12px; line-height:18px; color:#666666; margin-top:14px; text-align:center;">
+                  <a href="mailto:rsvp@cigionline.org" style="color:#111111; text-decoration:underline;">Contact CIGI Events</a> | <a href="https://www.cigionline.org/privacy-policy/" target="_blank" rel="noopener" style="color:#111111; text-decoration:underline;">Privacy Notice</a>
                 </div>
               </td>
             </tr>
           </table>
-
-          <div style="font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:18px; color:#999999; padding-top:10px;">
-            CIGI &middot; {{ event.get_site.root_url|default:"" }}
-          </div>
         </td>
       </tr>
     </table>
