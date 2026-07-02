@@ -264,6 +264,10 @@ body {
           font-size: 0.9rem;
           line-height: 1.25;
         }
+
+        a {
+          word-break: break-all;
+        }
       }
 
       &.episode-info {
