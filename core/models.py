@@ -35,6 +35,7 @@ from streams.blocks import (
     PersonsListBlock,
     PublicationsListBlock,
     PosterBlock,
+    PublicationVisualElementsBlock,
     PullQuoteLeftBlock,
     PullQuoteRightBlock,
     RecommendedBlock,
@@ -973,6 +974,7 @@ class BasicPage(
         'core.TwentiethPageSingleton',
         'core.TwentyFifthPageSingleton',
         'core.FacilityRentalsPage',
+        'core.HumanAnalysisStandardPage',
         'people.PersonListPage',
         'research.ProjectPage',
     ]
@@ -1183,6 +1185,47 @@ class FacilityRentalsPage(
 
     class Meta:
         verbose_name = 'Facility Rentals Page'
+
+
+class HumanAnalysisStandardPage(
+    Page,
+    BasicPageAbstract,
+    FeatureablePageAbstract,
+    SearchablePageAbstract,
+    ShareablePageAbstract,
+):
+    body = StreamField(
+        BasicPageAbstract.body_default_blocks + [
+            BasicPageAbstract.body_text_border_block,
+            ('publication_visual_elements', PublicationVisualElementsBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+    ]
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+        BasicPageAbstract.qr_code_panel,
+    ]
+
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
+
+    max_count = 1
+    parent_page_types = ['core.BasicPage']
+    subpage_types = []
+    template = 'core/human_analysis_standard_page.html'
+
+    class Meta:
+        verbose_name = 'Human Analysis Standard Page'
 
 
 class TwentiethPage(
