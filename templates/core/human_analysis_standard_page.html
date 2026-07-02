@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load webpack_loader %}
+
+{% block extra_css %}
+{% render_bundle 'humanAnalysisStandardPage' 'css' %}
+{% endblock %}
+
+{% block extra_js %}
+{% render_bundle 'humanAnalysisStandardPage' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block content %}
+<main class="human-analysis-standard-page">
+  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+  {% include "includes/body.html" with body=self.body %}
+</main>
+{% endblock %}

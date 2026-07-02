@@ -11,6 +11,7 @@ from .models import (
     BasicPage,
     FacilityRentalsPage,
     FundingPage,
+    HumanAnalysisStandardPage,
     PrivacyNoticePage,
     TwentyFifthPageSingleton,
     TwentiethPage,
@@ -39,6 +40,7 @@ class BasicPageTests(WagtailPageTestCase):
                 BasicPage,
                 FacilityRentalsPage,
                 FundingPage,
+                HumanAnalysisStandardPage,
                 PersonListPage,
                 ProjectPage,
                 TwentiethPage,
@@ -71,6 +73,20 @@ class FundingPageTests(WagtailPageTestCase):
     def test_fundingpage_child_page_types(self):
         self.assertAllowedSubpageTypes(
             FundingPage,
+            {},
+        )
+
+
+class HumanAnalysisStandardPageTests(WagtailPageTestCase):
+    def test_humananalysisstandardpage_parent_page_types(self):
+        self.assertAllowedParentPageTypes(
+            HumanAnalysisStandardPage,
+            {BasicPage},
+        )
+
+    def test_humananalysisstandardpage_child_page_types(self):
+        self.assertAllowedSubpageTypes(
+            HumanAnalysisStandardPage,
             {},
         )
 
