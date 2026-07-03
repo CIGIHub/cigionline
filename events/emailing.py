@@ -20,6 +20,7 @@ from sendgrid.helpers.mail import (
 )
 
 from .email_rendering import render_email_subject, render_streamfield_email_html
+from .forms import is_non_answer_field_type
 
 if TYPE_CHECKING:
     from .models import Registrant
@@ -291,6 +292,8 @@ def _render_registrant_answers(registrant) -> tuple[str, str]:
             tmpl = getattr(registrant.event, "registration_form_template", None)
             if tmpl:
                 for i, ff in enumerate(tmpl.fields.all().order_by("sort_order", "id"), start=1):
+                    if is_non_answer_field_type(getattr(ff, "field_type", "")):
+                        continue
                     # Stored answer keys look like: f_<uuid>
                     order_map[f"f_{ff.field_key}"] = i
         except Exception:

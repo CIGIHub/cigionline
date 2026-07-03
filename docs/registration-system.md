@@ -17,6 +17,7 @@ This guide maps the event registration system for future AI agents and maintaine
 
 - `events/forms.py`
   - `build_dynamic_form(...)` converts `RegistrationFormField` rows into a Django `Form` class.
+  - `rich_text` rows are display-only layout blocks. They render with the form but are not Django fields and are never stored in `Registrant.answers`.
   - Standard dynamic answers are stored under `f_<field_key>`.
   - `conditional_text` stores:
     - `f_<field_key>__enabled`

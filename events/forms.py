@@ -3,6 +3,8 @@ from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 from .models import _split_slugs, _match
 
+NON_ANSWER_FIELD_TYPES = {"rich_text"}
+
 BASE_INPUT_CLASS = "cigi-input"
 BASE_SELECT_CLASS = "cigi-select"
 BASE_GROUP_CLASS = "cigi-group"       # radios/checkbox groups
@@ -78,10 +80,44 @@ CONDITIONAL_OTHER_FIELD_TYPES = (
 )
 
 
+def is_non_answer_field_type(field_type: str) -> bool:
+    return field_type in NON_ANSWER_FIELD_TYPES
+
+
 def _selected_contains_trigger(selected, trigger_value: str) -> bool:
     if isinstance(selected, (list, tuple, set)):
         return trigger_value in {str(value).strip() for value in selected}
     return (selected or "").strip() == trigger_value
+
+
+def _template_field_visible(ff, current_slug: str, *, is_guest_form: bool) -> bool:
+    if is_guest_form and getattr(ff, "exclude_from_guest_forms", False):
+        return False
+
+    vis_slugs = _split_slugs(ff.visible_type_slugs)
+    return _match(ff.visible_rule, vis_slugs, current_slug)
+
+
+def _answer_keys_for_template_field(ff) -> list[str]:
+    base = f"f_{ff.field_key}"
+    if ff.field_type == "conditional_text":
+        return [f"{base}__enabled", f"{base}__details"]
+    if ff.field_type in CONDITIONAL_OTHER_FIELD_TYPES:
+        return [base, f"{base}__other"]
+    return [base]
+
+
+def strip_non_answer_data(event, data: dict) -> dict:
+    """Remove display-only template rows from data before answer storage."""
+
+    form_template = getattr(event, "registration_form_template", None)
+    if not form_template:
+        return data
+
+    for ff in form_template.fields.all().only("field_key", "field_type"):
+        if is_non_answer_field_type(getattr(ff, "field_type", "")):
+            data.pop(f"f_{ff.field_key}", None)
+    return data
 
 
 def build_dynamic_form(
@@ -113,12 +149,13 @@ def build_dynamic_form(
 
     fields_qs = event.registration_form_template.fields.all()
 
-    for ff in fields_qs.order_by("sort_order"):
-        if is_guest_form and getattr(ff, "exclude_from_guest_forms", False):
+    ordered_template_fields = list(fields_qs.order_by("sort_order"))
+
+    for ff in ordered_template_fields:
+        if not _template_field_visible(ff, current_slug, is_guest_form=is_guest_form):
             continue
 
-        vis_slugs = _split_slugs(ff.visible_type_slugs)
-        if not _match(ff.visible_rule, vis_slugs, current_slug):
+        if is_non_answer_field_type(ff.field_type):
             continue
 
         req_slugs = _split_slugs(ff.required_type_slugs)
@@ -312,6 +349,23 @@ def build_dynamic_form(
     bases = (HoneypotMixin, forms.Form) if include_honeypot else (forms.Form,)
     DynamicForm = type("EventDynamicForm", bases, attrs)
 
+    def _layout_items(self):
+        items = []
+        for ff in ordered_template_fields:
+            if not _template_field_visible(ff, current_slug, is_guest_form=is_guest_form):
+                continue
+
+            if ff.field_type == "rich_text":
+                content = getattr(ff, "rich_text", "")
+                if content:
+                    items.append({"kind": "rich_text", "content": content})
+                continue
+
+            for key in _answer_keys_for_template_field(ff):
+                if key in self.fields:
+                    items.append({"kind": "field", "field": self[key]})
+        return items
+
     def _dynamic_clean(self):
         cleaned = super(DynamicForm, self).clean()
 
@@ -347,4 +401,5 @@ def build_dynamic_form(
         return cleaned
 
     DynamicForm.clean = _dynamic_clean
+    DynamicForm.layout_items = _layout_items
     return DynamicForm
