@@ -22,6 +22,7 @@ from django.utils.text import slugify
 from wagtail.documents.models import Document
 
 from .models import Registrant
+from .forms import is_non_answer_field_type
 
 
 def build_type_rows(event) -> list[dict[str, Any]]:
@@ -70,6 +71,9 @@ def build_answer_columns(event) -> list[AnswerColumn]:
     columns: list[AnswerColumn] = []
 
     for ff in form_fields:
+        if is_non_answer_field_type(ff.field_type):
+            continue
+
         base = f"f_{ff.field_key}"
 
         if ff.field_type in {"conditional_dropdown_other", "conditional_multiselect_other"}:
@@ -242,7 +246,8 @@ def registrants_csv_response(
 
     form_template = getattr(event, "registration_form_template", None)
     form_fields = list(form_template.fields.all().order_by("sort_order")) if form_template else []
-    file_fields = [ff for ff in form_fields if ff.field_type == "file"]
+    answer_fields = [ff for ff in form_fields if not is_non_answer_field_type(ff.field_type)]
+    file_fields = [ff for ff in answer_fields if ff.field_type == "file"]
 
     header = [
         "Registrant ID",
@@ -257,7 +262,7 @@ def registrants_csv_response(
         "Invite Email",
     ]
 
-    for ff in form_fields:
+    for ff in answer_fields:
         if ff.field_type == "file":
             continue
         if ff.field_type == "conditional_text":
@@ -310,7 +315,7 @@ def registrants_csv_response(
         answers = getattr(r, "answers", {}) or {}
 
         non_file_cells: list[str] = []
-        for ff in form_fields:
+        for ff in answer_fields:
             if ff.field_type == "file":
                 continue
 

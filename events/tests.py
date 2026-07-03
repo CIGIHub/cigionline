@@ -1,7 +1,7 @@
 import base64
 from datetime import datetime, timedelta, timezone as datetime_timezone
 from django.template.loader import render_to_string
-from django.test import SimpleTestCase, TestCase
+from django.test import RequestFactory, SimpleTestCase, TestCase
 from django.utils import timezone
 from home.models import HomePage, Think7HomePage
 from types import SimpleNamespace
@@ -257,6 +257,162 @@ class GuestRegistrationQuestionExclusionTests(TestCase):
             "f_" + str(RegistrationFormField.objects.first().field_key),
             guest_form.fields,
         )
+
+
+class RegistrationRichTextBlockTests(TestCase):
+    def _event_with_template(self):
+        from wagtail.models import Site
+        from django.contrib.auth import get_user_model
+        from events.models import EventPage, RegistrationType, RegistrationFormTemplate
+
+        root = Site.objects.get(is_default_site=True).root_page
+        owner = get_user_model().objects.create_user(
+            username="richtext-owner",
+            email="owner@example.com",
+            password="password",
+        )
+        event = EventPage(
+            title="Rich Text Event",
+            registration_open=True,
+            publishing_date=timezone.now(),
+            owner=owner,
+        )
+        root.add_child(instance=event)
+        event.save_revision(user=owner).publish()
+
+        tmpl = RegistrationFormTemplate.objects.create(title="Rich Text Template")
+        event.registration_form_template = tmpl
+        event.save(update_fields=["registration_form_template"])
+
+        reg_type = RegistrationType.objects.create(
+            event=event,
+            name="General",
+            slug="general",
+            sort_order=0,
+            is_public=True,
+            allow_group_registrations=True,
+            max_guest_registrations=2,
+        )
+        return event, reg_type, tmpl
+
+    def test_rich_text_block_renders_on_registration_form_between_fields(self):
+        from events.models import RegistrationFormField
+
+        event, reg_type, tmpl = self._event_with_template()
+        RegistrationFormField.objects.create(
+            template=tmpl,
+            label="Organization",
+            field_type="singleline",
+            required=False,
+            sort_order=0,
+        )
+        RegistrationFormField.objects.create(
+            template=tmpl,
+            label="Arrival instructions",
+            field_type="rich_text",
+            rich_text="<p>Please arrive early.</p>",
+            sort_order=1,
+        )
+        RegistrationFormField.objects.create(
+            template=tmpl,
+            label="Role",
+            field_type="singleline",
+            required=False,
+            sort_order=2,
+        )
+
+        resp = self.client.get(f"{event.url}register/type/{reg_type.slug}/")
+
+        self.assertEqual(resp.status_code, 200)
+        html = resp.content.decode()
+        self.assertIn("<p>Please arrive early.</p>", html)
+        self.assertLess(html.index("Organization"), html.index("Please arrive early."))
+        self.assertLess(html.index("Please arrive early."), html.index("Role"))
+
+    def test_rich_text_block_is_not_form_field_or_saved_answer_or_report_output(self):
+        from events.emailing import _render_registrant_answers
+        from events.forms import build_dynamic_form
+        from events.models import RegistrationFormField
+        from events.reporting import build_answer_columns, registrants_csv_response
+        from events.utils import save_registrant_from_form
+
+        event, reg_type, tmpl = self._event_with_template()
+        answer_field = RegistrationFormField.objects.create(
+            template=tmpl,
+            label="Organization",
+            field_type="singleline",
+            required=False,
+            sort_order=0,
+        )
+        rich_block = RegistrationFormField.objects.create(
+            template=tmpl,
+            label="Arrival instructions",
+            field_type="rich_text",
+            rich_text="<p>Please arrive early.</p>",
+            sort_order=1,
+        )
+
+        form_class = build_dynamic_form(event, reg_type)
+        rich_key = f"f_{rich_block.field_key}"
+        answer_key = f"f_{answer_field.field_key}"
+        self.assertNotIn(rich_key, form_class.base_fields)
+
+        form = form_class(
+            data={
+                "first_name": "Test",
+                "last_name": "Registrant",
+                "email": "test@example.com",
+                "website": "",
+                answer_key: "CIGI",
+                rich_key: "posted junk",
+            }
+        )
+        self.assertTrue(form.is_valid(), form.errors)
+        self.assertNotIn(rich_key, form.cleaned_data)
+
+        form.cleaned_data[rich_key] = "posted junk"
+        registrant = save_registrant_from_form(event, reg_type, form)
+        self.assertEqual(registrant.answers, {answer_key: "CIGI"})
+
+        columns = build_answer_columns(event)
+        self.assertEqual([column.label for column in columns], ["Organization"])
+
+        csv_resp = registrants_csv_response(
+            request=RequestFactory().get("/"),
+            event=event,
+            registrants_qs=event.registrants.select_related("registration_type", "invite"),
+            filename_prefix="rich-text",
+        )
+        csv_text = csv_resp.content.decode("utf-8-sig")
+        self.assertIn("Organization", csv_text)
+        self.assertNotIn("Arrival instructions", csv_text)
+        self.assertNotIn("Please arrive early", csv_text)
+
+        answers_html, answers_text = _render_registrant_answers(registrant)
+        self.assertIn("Organization", answers_text)
+        self.assertNotIn("Arrival instructions", answers_text)
+        self.assertNotIn("Please arrive early", answers_html)
+
+    def test_rich_text_block_respects_guest_exclusion_in_layout(self):
+        from events.models import RegistrationFormField
+        from events.guest_registration import build_primary_and_guest_forms
+
+        event, reg_type, tmpl = self._event_with_template()
+        RegistrationFormField.objects.create(
+            template=tmpl,
+            label="Primary instructions",
+            field_type="rich_text",
+            rich_text="<p>Primary only.</p>",
+            sort_order=0,
+            exclude_from_guest_forms=True,
+        )
+
+        forms_obj = build_primary_and_guest_forms(event=event, reg_type=reg_type, invite=None)
+        primary_items = forms_obj.primary_form.layout_items()
+        guest_items = forms_obj.guest_formset.forms[0].layout_items()
+
+        self.assertIn("Primary only.", str(primary_items[0]["content"]))
+        self.assertEqual(guest_items, [])
 
 
 class GroupRegistrationConfirmTests(TestCase):

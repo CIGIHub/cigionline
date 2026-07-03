@@ -1,5 +1,5 @@
 {% extends "wagtailadmin/base.html" %}
-{% load i18n %}
+{% load i18n wagtailcore_tags %}
 
 {% block titletag %}Edit answers – {{ registrant.email }}{% endblock %}
 
@@ -95,6 +95,9 @@
     gap: 0.75rem;
     align-items: center;
     margin-top: 0.5rem;
+  }
+  .ea-rich-text {
+    margin-bottom: 1.25rem;
   }
 
   /* ---- Breadcrumb ---- */
@@ -201,8 +204,11 @@
     <div class="ea-section">
       <h2>Registration answers</h2>
 
-      {% for field in form %}
-        {% if field.name != 'first_name' and field.name != 'last_name' and field.name != 'email' and field.name != 'website' %}
+      {% for item in form.layout_items %}
+        {% if item.kind == "rich_text" %}
+          <div class="ea-rich-text">{{ item.content|richtext }}</div>
+        {% else %}
+          {% with field=item.field %}
           <div class="ea-field">
             {{ field.label_tag }}
             {% if field.field.widget.input_type == 'file' %}
@@ -221,6 +227,7 @@
             {% endif %}
             {% for e in field.errors %}<ul class="errorlist"><li>{{ e }}</li></ul>{% endfor %}
           </div>
+          {% endwith %}
         {% endif %}
       {% endfor %}
     </div>

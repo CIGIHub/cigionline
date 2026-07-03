@@ -170,7 +170,7 @@ class RegistrantViewSet(ModelViewSet):
 
     def edit_answers_view(self, request, pk: int):
         """Admin view to edit a registrant's dynamic form answers with labelled fields."""
-        from .forms import build_dynamic_form
+        from .forms import build_dynamic_form, strip_non_answer_data
         from .utils import _jsonable
         from wagtail.documents.models import Document
 
@@ -204,6 +204,7 @@ class RegistrantViewSet(ModelViewSet):
                 registrant.first_name = cleaned.pop("first_name", registrant.first_name)
                 registrant.last_name = cleaned.pop("last_name", registrant.last_name)
                 cleaned.pop("email", None)  # email not changed here; keep existing
+                strip_non_answer_data(event, cleaned)
 
                 # Handle file fields: if no new file was uploaded for a key, preserve
                 # the existing stored value so we don't silently wipe document refs.

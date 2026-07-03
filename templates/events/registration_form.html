@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailimages_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
 {% block title %}Register — {{ event.title }} · {{ reg_type.name }}{% endblock %}
 {% block extra_css %}
   {% render_bundle 'eventPage' 'css' %}
@@ -54,9 +54,11 @@
           {% include "events/includes/_field.html" with field=form.email %}
 
           {# All other primary registrant fields #}
-          {% for field in form %}
-            {% if field.name != 'first_name' and field.name != 'last_name' and field.name != 'email' and field.name != 'website' %}
-              {% include "events/includes/_field.html" with field=field %}
+          {% for item in form.layout_items %}
+            {% if item.kind == "rich_text" %}
+              <div class="cigi-rich-text">{{ item.content|richtext }}</div>
+            {% else %}
+              {% include "events/includes/_field.html" with field=item.field %}
             {% endif %}
           {% endfor %}
 
@@ -99,9 +101,11 @@
                       {% include "events/includes/_field.html" with field=gf.first_name %}
                       {% include "events/includes/_field.html" with field=gf.last_name %}
                     </div>
-                    {% for field in gf %}
-                      {% if field.name != 'first_name' and field.name != 'last_name' %}
-                        {% include "events/includes/_field.html" with field=field %}
+                    {% for item in gf.layout_items %}
+                      {% if item.kind == "rich_text" %}
+                        <div class="cigi-rich-text">{{ item.content|richtext }}</div>
+                      {% else %}
+                        {% include "events/includes/_field.html" with field=item.field %}
                       {% endif %}
                     {% endfor %}
                   </div>
@@ -120,9 +124,11 @@
                     {% include "events/includes/_field.html" with field=guest_formset.empty_form.first_name %}
                     {% include "events/includes/_field.html" with field=guest_formset.empty_form.last_name %}
                   </div>
-                  {% for field in guest_formset.empty_form %}
-                    {% if field.name != 'first_name' and field.name != 'last_name' %}
-                      {% include "events/includes/_field.html" with field=field %}
+                  {% for item in guest_formset.empty_form.layout_items %}
+                    {% if item.kind == "rich_text" %}
+                      <div class="cigi-rich-text">{{ item.content|richtext }}</div>
+                    {% else %}
+                      {% include "events/includes/_field.html" with field=item.field %}
                     {% endif %}
                   {% endfor %}
                 </div>

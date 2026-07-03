@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load webpack_loader %}
+{% load wagtailcore_tags webpack_loader %}
 
 {% block title %}Manage registration — {{ event.title }}{% endblock %}
 
@@ -77,9 +77,11 @@
             </div>
 
             {# Render remaining dynamic fields (skip identity + email + honeypot) #}
-            {% for field in form %}
-              {% if field.name != 'first_name' and field.name != 'last_name' and field.name != 'email' and field.name != 'website' %}
-                {% include "events/includes/_field.html" with field=field %}
+            {% for item in form.layout_items %}
+              {% if item.kind == "rich_text" %}
+                <div class="cigi-rich-text">{{ item.content|richtext }}</div>
+              {% else %}
+                {% include "events/includes/_field.html" with field=item.field %}
               {% endif %}
             {% endfor %}
 

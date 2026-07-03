@@ -8,7 +8,8 @@ This guide maps the event registration system for future AI agents and maintaine
   - `EventPage`: owns registration routes, registration settings, registration report routes, and page rendering.
   - `RegistrationType`: per-event registration options, capacity, group registration settings, and email template overrides.
   - `RegistrationFormTemplate`: reusable container for custom registration questions.
-  - `RegistrationFormField`: one dynamic question in a template. `field_type` controls how `events/forms.py` builds the runtime form.
+  - `RegistrationFormField`: one dynamic question or display block in a template. `field_type` controls how `events/forms.py` builds the runtime form/layout.
+    - `rich_text` is display-only content stored on `RegistrationFormField.rich_text`; it is not an answer field.
   - `Registrant`: stores submitted identity fields and dynamic answers in `answers` JSON.
   - `RegistrationGroup`: links primary and guest registrants for group registrations.
   - `Invite`: private/invite-only registration access and use limits.
@@ -17,6 +18,9 @@ This guide maps the event registration system for future AI agents and maintaine
 
 - `events/forms.py`
   - `build_dynamic_form(...)` converts `RegistrationFormField` rows into a Django `Form` class.
+  - `form.layout_items()` returns ordered render items so templates can interleave Django fields and display-only blocks.
+  - `rich_text` rows are display-only layout blocks. They render with the form but are not Django fields and are never stored in `Registrant.answers`.
+  - `strip_non_answer_data(event, data)` removes display-only keys before answer storage as a final safety guard.
   - Standard dynamic answers are stored under `f_<field_key>`.
   - `conditional_text` stores:
     - `f_<field_key>__enabled`
@@ -33,12 +37,13 @@ This guide maps the event registration system for future AI agents and maintaine
 
 - `events/utils.py`
   - `save_registrant_from_form(...)` creates `Registrant` records from valid forms.
+  - Calls `strip_non_answer_data(...)` before writing `Registrant.answers`, so display-only blocks cannot be persisted even if unexpected keys appear in cleaned data.
   - `_jsonable(...)` converts form values, dates, decimals, uploads, lists, and dicts before storing them in JSON.
 
 - `events/models.py`
   - `EventPage.register_form(...)` handles public registration POSTs, duplicate registration checks, invite usage, group registration creation, and pending confirmation redirects.
   - `EventPage.manage_registration(...)` builds the self-service edit form and pre-populates answers.
-  - `EventPage.manage_registration_update(...)` validates and saves self-service answer edits.
+  - `EventPage.manage_registration_update(...)` validates and saves self-service answer edits; it also strips non-answer keys before replacing `Registrant.answers`.
   - `EventPage.confirm_registration(...)` and `EventPage.confirm_group_registration(...)` finalize pending registrations.
 
 - `events/guest_registration.py`
@@ -49,9 +54,11 @@ This guide maps the event registration system for future AI agents and maintaine
 
 - `templates/events/registration_form.html`
   - Public registration form, including optional guest formset and guest prototype.
+  - Renders `form.layout_items()` / guest `layout_items()` so `rich_text` blocks appear in order with fields.
 
 - `templates/events/registration_manage.html`
   - Self-service single registrant edit/cancel form.
+  - Renders `form.layout_items()` for editable fields plus `rich_text` blocks.
 
 - `templates/events/registration_manage_group.html`
   - Self-service group registration management list.
@@ -61,6 +68,7 @@ This guide maps the event registration system for future AI agents and maintaine
 
 - `templates/events/admin/registrant_edit_answers.html`
   - Wagtail admin dynamic-answer edit view.
+  - Renders `form.layout_items()` and shows `rich_text` blocks as context, without editing/storing them as answers.
 
 ## Frontend JavaScript
 
@@ -72,13 +80,14 @@ This guide maps the event registration system for future AI agents and maintaine
 - `cigionline/static/js/admin/registration_fields_admin.js`
   - Wagtail admin registration-template editor UX.
   - Shows/hides conditional settings based on `RegistrationFormField.field_type`.
+  - Shows the `rich_text` editor only for `rich_text` rows and hides answer-only settings for those rows.
   - Also drives conditional show/hide on the Wagtail admin registrant answer edit form.
 
 ## Admin And Reports
 
 - `events/wagtail_hooks.py`
   - Registers Wagtail admin viewsets for events, registrants, invites, registration reports, form templates, and email tools.
-  - `RegistrantViewSet.edit_answers_view(...)` lets admins edit labelled dynamic answers.
+  - `RegistrantViewSet.edit_answers_view(...)` lets admins edit labelled dynamic answers and strips non-answer keys before saving.
   - `RegistrationReportViewSet` routes admin registration reports and CSV exports.
   - `registration_fields_admin_js()` injects the admin registration JavaScript globally.
 
@@ -87,6 +96,7 @@ This guide maps the event registration system for future AI agents and maintaine
   - `build_answer_columns(...)` maps form fields to report columns.
   - `attach_answer_cells(...)` formats table cells.
   - `registrants_csv_response(...)` exports event/type registrants to CSV.
+  - Display-only field types such as `rich_text` are skipped in report columns and CSV exports.
 
 - `templates/events/admin/registration_report_*.html`
   - Wagtail admin report views.
@@ -99,6 +109,7 @@ This guide maps the event registration system for future AI agents and maintaine
 - `events/emailing.py`
   - Sends pending confirmation, duplicate/manage, group, cancellation, reminder, and campaign-related emails.
   - `_render_registrant_answers(...)` formats `Registrant.answers` for email merge variables.
+  - Display-only field types such as `rich_text` are skipped when ordering/formatting answer output.
 
 - `events/email_preview.py`
   - Builds preview data for email campaign admin UI.
@@ -109,7 +120,7 @@ This guide maps the event registration system for future AI agents and maintaine
 ## Tests
 
 - `events/tests.py`
-  - Existing coverage for duplicate registrations, guest exclusion, group double opt-in, and conditional multiselect "Other" behavior.
+  - Existing coverage for duplicate registrations, guest exclusion, group double opt-in, conditional multiselect "Other" behavior, and rich text display-only registration blocks.
 
 ## Adding A New Registration Field Type
 
@@ -118,6 +129,7 @@ Update these places together:
 1. `events/models.py`: add the `RegistrationFormField.FIELD_CHOICES` option.
 2. `events/migrations/`: add an `AlterField` migration for `field_type` choices.
 3. `events/forms.py`: build the Django field, widget attributes, storage keys, and validation.
+   - For display-only types, do not add a Django field; render through `layout_items()` and add the type to `NON_ANSWER_FIELD_TYPES`.
 4. `events/reporting.py`: add report columns, table formatting, and CSV handling.
 5. `events/wagtail_hooks.py`: update admin edit prefill or save behavior if the storage shape changes.
 6. `cigionline/static/js/admin/registration_fields_admin.js`: update Wagtail template editor visibility and admin answer form behavior.
