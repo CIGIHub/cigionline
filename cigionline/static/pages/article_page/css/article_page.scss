@@ -119,6 +119,39 @@
   margin-bottom: 0;
 }
 
+.has-disclaimer {
+  margin-bottom: 2em;
+
+  &__content {
+    align-items: center;
+    background: #111;
+    color: $white;
+    display: flex;
+    gap: 1.5em;
+    padding: 1.25em;
+  }
+
+  &__image {
+    flex: 0 0 150px;
+    height: 100px;
+    object-fit: contain;
+    width: 150px;
+  }
+
+  p {
+    font-size: 0.9em;
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  @include media-breakpoint-down(sm) {
+    &__content {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+}
+
 .opinion-series-description {
   @include link($color: $white, $hover-color: $cigi-dark-pink);
   border-radius: 5px;
