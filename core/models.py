@@ -1202,10 +1202,71 @@ class HumanAnalysisStandardPage(
         blank=True,
         use_json_field=True,
     )
+    conversion = StreamField(
+        [
+            ('paragraph', ParagraphBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
+    small_has_image = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Small HAS image',
+    )
+    big_has_image = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Big HAS image',
+    )
+    policy_download = StreamField(
+        [
+            ('paragraph', ParagraphBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
+    policy_download_pdf = models.ForeignKey(
+        Document,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Policy download PDF',
+    )
 
     content_panels = [
         BasicPageAbstract.title_panel,
-        BasicPageAbstract.body_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('body'),
+                FieldPanel('small_has_image'),
+                FieldPanel('big_has_image'),
+            ],
+            heading='Body',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('conversion'),
+            ],
+            heading='Conversion',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('policy_download'),
+                FieldPanel('policy_download_pdf'),
+            ],
+            heading='Policy Download',
+            classname='collapsible collapsed',
+        ),
     ]
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
