@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
+
+{% block extra_css %}
+{% render_bundle 'humanAnalysisStandardPage' 'css' %}
+{% endblock %}
+
+{% block extra_js %}
+{% render_bundle 'humanAnalysisStandardPage' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block content %}
+<main class="human-analysis-standard-page">
+  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+  {% if self.body or self.small_has_image or self.big_has_image %}
+    <section class="body" id="article-body">
+      {% for block in self.body %}
+        {% if block.block_type != 'additional_disclaimer' and block.block_type != 'additional_file' %}
+          {% include_block block %}
+        {% endif %}
+      {% endfor %}
+      {% if self.small_has_image or self.big_has_image %}
+        <div class="container has-image-pair">
+          <div class="row d-block">
+            <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+              <div class="has-image-pair__items">
+                {% if self.small_has_image %}
+                  <figure class="has-image-pair__item has-image-pair__item--small">
+                    {% image self.small_has_image width-400 %}
+                  </figure>
+                {% endif %}
+                {% if self.big_has_image %}
+                  <figure class="has-image-pair__item has-image-pair__item--big">
+                    {% image self.big_has_image width-1400 %}
+                  </figure>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </section>
+  {% endif %}
+  {% if self.conversion %}
+    <section class="conversion">
+      {% for block in self.conversion %}
+        {% include_block block %}
+      {% endfor %}
+      <div class="container conversion-cta">
+        <div class="row d-block">
+          <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+            <a href="mailto:HAS@cigionline.org">Contact HAS@cigionline.org</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+  {% if self.policy_download or self.policy_download_pdf %}
+    <section class="policy-download">
+      {% for block in self.policy_download %}
+        {% include_block block %}
+      {% endfor %}
+      {% if self.policy_download_pdf %}
+        <div class="container policy-download-cta">
+          <div class="row d-block">
+            <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+              <a href="{{ self.policy_download_pdf.url }}" target="_blank">
+                <i class="fas fa-download" aria-hidden="true"></i>
+                Download Policy
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </section>
+  {% endif %}
+</main>
+{% endblock %}

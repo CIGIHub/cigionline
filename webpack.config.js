@@ -38,6 +38,7 @@ const config = {
     eventPage: './cigionline/static/pages/event_page/index.js',
     facilityRentalsPage: './cigionline/static/pages/facility_rentals_page/index.js',
     fundingPage: './cigionline/static/pages/funding_page/index.js',
+    humanAnalysisStandardPage: './cigionline/static/pages/human_analysis_standard_page/index.js',
     homePage: './cigionline/static/pages/home_page/index.js',
     igcTimelinePage: './cigionline/static/pages/igc_timeline_page/index.js',
     jobPostingListPage: './cigionline/static/pages/job_posting_list_page/index.js',
@@ -93,6 +94,7 @@ const config = {
     themePfPCSeries: './cigionline/static/themes/pfpc_series/index.js',
     themePlatformGovernanceSeries: './cigionline/static/themes/platform_governance_series/index.js',
     themePolicyPrompt: './cigionline/static/themes/policy_prompt/index.js',
+    themeResponsibleTechnology: './cigionline/static/themes/responsible_technology/index.js',
     themeSpaceSeries: './cigionline/static/themes/space_series/index.js',
     themeSpecialOpinions: './cigionline/static/themes/special_opinions/index.js',
     themeWomenAndTradeSeries: './cigionline/static/themes/women_and_trade_series/index.js',
@@ -108,6 +110,8 @@ const config = {
     think7AbstractSubmissionPage:
       './cigionline/static/pages/think7/abstract_submission_page/index.js',
     topicPage: './cigionline/static/pages/topic_page/index.js',
+    twentyFifthPageSingleton:
+      './cigionline/static/pages/twenty_fifth_page_singleton/index.js',
     twentiethPage: './cigionline/static/pages/twentieth_page/index.js',
     twentiethPageSingleton: './cigionline/static/pages/twentieth_page_singleton/index.js',
   },

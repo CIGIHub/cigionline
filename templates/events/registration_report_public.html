@@ -4,11 +4,12 @@
 {% block title %}{{ event.title }} — {% trans "Registration report" %}{% endblock %}
 
 {% block content %}
+{% firstof report_base_url page.url as report_url %}
 <section class="py-5">
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-lg-10">
-        <a href="{{ event.url }}" class="btn btn-link p-0 mb-3">&larr; {% trans "Back to event" %}</a>
+        <a href="{{ event.url }}" class="btn mb-3"><i class="far fa-arrow-left"></i> {% trans "Back to event" %}</a>
 
         <div class="d-flex align-items-start justify-content-between gap-3 flex-wrap mb-3">
           <div>
@@ -33,7 +34,7 @@
               {% for r in type_rows %}
                 <tr>
                   <td>
-                    <a href="{{ page.url }}type/{{ r.slug }}/">{{ r.name }}</a>
+                    <a href="{{ report_url }}type/{{ r.slug }}/">{{ r.name }}</a>
                   </td>
                   <td class="text-nowrap"><code>{{ r.slug }}</code></td>
                   <td class="text-nowrap">

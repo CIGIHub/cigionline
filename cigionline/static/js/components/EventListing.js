@@ -74,13 +74,21 @@ function EventListing(props) {
                   Watch
                 </a>
               ) : (
-                !!row.registration_url
-                && DateTime.fromISO(row.publishing_date) > DateTime.local().startOf('day')
+                DateTime.fromISO(row.publishing_date) > DateTime.local().startOf('day')
                 && (
-                  <a href={row.registration_url} className="button-action track-cta" data-cta="event-rsvp" onClick={handleCTAClick}>
-                    <i className="fal fa-calendar-alt" />
-                    RSVP
-                  </a>
+                  (row.registration_open && !row.is_private_registration)
+                    ? (
+                      <a href={row.url} className="button-action track-cta" data-cta="event-rsvp" onClick={handleCTAClick}>
+                        <i className="fal fa-calendar-alt" />
+                        RSVP
+                      </a>
+                    )
+                    : (!!row.registration_url && (
+                      <a href={row.registration_url} className="button-action track-cta" data-cta="event-rsvp" onClick={handleCTAClick}>
+                        <i className="fal fa-calendar-alt" />
+                        RSVP
+                      </a>
+                    ))
                 )
               )
             )}
@@ -94,10 +102,12 @@ EventListing.propTypes = {
   row: PropTypes.shape({
     event_access: PropTypes.number,
     id: PropTypes.number,
+    is_private_registration: PropTypes.bool,
     location_city: PropTypes.string,
     location_country: PropTypes.string,
     multimedia_url: PropTypes.string,
     publishing_date: PropTypes.string,
+    registration_open: PropTypes.bool,
     registration_url: PropTypes.string,
     title: PropTypes.string,
     topics: PropTypes.arrayOf(PropTypes.shape({

@@ -179,7 +179,7 @@ body {
       padding-top: 0;
       margin-top: 0;
 
-      &:first-child {
+      &:first-of-type {
         margin-top: 1.5rem;
       }
     }

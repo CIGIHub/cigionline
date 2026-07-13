@@ -9,12 +9,12 @@
 <div class="promotion-block promotion-block-{{ promotion_block.block_type|slugify }}">
   {% if promotion_block.block_type == "podcast_player" %}
     {% with episode=promotion_block.episode %}
-    <a href="/big-tech" class="podcast-logo">
-      <img class="ad-block-bt-logo" src="/static/assets/ad_block_bt_logo.svg" alt="">
-      <img class="ad-block-bt-logo-sm" src="/static/assets/ad_block_bt_logo_sm.svg" alt="">
+    <a href="/big-tech" class="podcast-logo" aria-label="Big Tech Podcast">
+      <img class="ad-block-bt-logo" src="/static/assets/ad_block_bt_logo.svg" alt="Big Tech">
+      <img class="ad-block-bt-logo-sm" src="/static/assets/ad_block_bt_logo_sm.svg" alt="Big Tech">
       <p class="logo-text">Is big tech going to save humanity or destroy it? Host Taylor Owen thinks it's more complicated than that.</p>
     </a>
-    <a href="{{episode.url}}" class="podcast-image">
+    <a href="{{episode.url}}" class="podcast-image" aria-label="{{ episode.title }}">
       {% image episode.image_square fill-400x400 %}
     </a>
     <div class="podcast-info">
@@ -25,18 +25,18 @@
     {% endwith %}
   {% else %}
     {% if promotion_block.link_url %}
-      <a href="{{ promotion_block.link_url }}" aria-label="Link to {{ promotion_block.link_url }}">
+      <a href="{{ promotion_block.link_url }}"{% if promotion_block.accessible_name %} aria-label="{{ promotion_block.accessible_name }}"{% else %} aria-label="{{ promotion_block.name }}"{% endif %}>
     {% endif %}
-      <div class="promotion-block-background" style="background-image: url('{{ image_promotion_url }}');">
+      <div class="promotion-block-background" style="background-image: url('{{ image_promotion_url }}');"{% if not promotion_block.link_url %}{% if promotion_block.accessible_name %} role="img" aria-label="{{ promotion_block.accessible_name }}"{% else %} role="img" aria-label="{{ promotion_block.name }}"{% endif %}{% endif %}>
         {% if promotion_block.block_type == "social" %}
           <div class='social-content'>
             <div class='social-text'>Follow us on social media</div>
             <div class='social-links'>
-              <a class='social-link' href='https://x.com/cigionline' target='_blank' rel="noopener noreferrer">
-                <i class='fa-brands fa-x-twitter'></i>
+              <a class='social-link' href='https://x.com/cigionline' target='_blank' rel="noopener noreferrer" aria-label="CIGI on X (Twitter)">
+                <i class='fa-brands fa-x-twitter' aria-hidden="true"></i>
               </a>
-              <a class='social-link' href='https://www.linkedin.com/company/cigionline/' target='_blank' rel="noopener noreferrer">
-                <i class='fa-brands fa-linkedin-in'></i>
+              <a class='social-link' href='https://www.linkedin.com/company/cigionline/' target='_blank' rel="noopener noreferrer" aria-label="CIGI on LinkedIn">
+                <i class='fa-brands fa-linkedin-in' aria-hidden="true"></i>
               </a>
             </div>
           </div>
@@ -48,7 +48,7 @@
             {% image promotion_block.image_promotion_small original as image_promotion_small %}
             {% define image_promotion_small.url as image_promotion_small_url %}
           {% endif %}
-          <div class="promotion-block-background promotion-block-background-small" style="background-image: url('{{ image_promotion_small_url }}');"></div>
+          <div class="promotion-block-background promotion-block-background-small" style="background-image: url('{{ image_promotion_small_url }}');" aria-hidden="true"></div>
         {% endif %}
       </div>
     {% if promotion_block.link_url %}

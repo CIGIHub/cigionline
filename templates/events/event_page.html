@@ -69,12 +69,13 @@
   {% endif %}
 
   {% if self.registration_open and not self.is_private_registration or self.registration_open and invite %}
-    <section>
+    <section class="event-page-registration">
       <div class="container">
         <div class="row justify-content-center">
           <div class="col col-md-10 col-lg-8">
             <a href="{{ self.url }}register/{% if invite %}?invite={{ invite.token }}{% endif %}">
-              <button class="register btn btn-primary btn-lg mb-4">
+              <button class="button-action track-cta event-registration-button">
+                <i class="fal fa-calendar-plus"></i>
                 Register
               </button>
             </a>
@@ -85,6 +86,24 @@
   {% endif %}
 
   {% include "includes/body.html" with body=self.body %}
+
+  {% if self.event_agenda %}
+    <section class="body event-agenda">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <h2 class="paragraph-heading"><i class="fal fa-calendar-alt" aria-hidden="true"></i> Agenda</h2>
+            <p>
+              <a href="{{ self.event_agenda.url }}" target="_blank" rel="noopener noreferrer">
+                <i class="far fa-file-pdf" aria-hidden="true"></i>
+                {{ self.event_agenda.title }}
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
 
   {% if self.author_count > 0 %}
     {% include "includes/about_the_author.html" with authors=self.authors.all author_count=self.author_count title_override="Event Speaker"%}

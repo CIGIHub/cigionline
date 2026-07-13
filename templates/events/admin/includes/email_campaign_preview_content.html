@@ -1,0 +1,46 @@
+{% load i18n %}
+
+<style>
+  .email-campaign-preview-meta {
+    background: #fff;
+    border-bottom: 1px solid #d9d9d9;
+    padding: 12px 16px;
+  }
+
+  .email-campaign-preview-meta div {
+    margin: 0 0 4px;
+  }
+
+  .email-campaign-preview-meta div:last-child {
+    margin-bottom: 0;
+  }
+
+  .email-campaign-preview-empty {
+    padding: 18px 16px;
+    background: #fff;
+  }
+
+  .email-campaign-preview-body {
+    background: #fff;
+  }
+</style>
+
+{% if message %}
+  <div class="email-campaign-preview-empty">{{ message }}</div>
+{% else %}
+  <div class="email-campaign-preview-meta">
+    <div><strong>{% trans "Subject:" %}</strong> {{ subject }}</div>
+    <div>
+      <strong>{% trans "Context:" %}</strong>
+      {{ event_title }} ·
+      {% if using_real_registrant %}
+        {% blocktrans with registrant=registrant_label %}previewing as {{ registrant }}{% endblocktrans %}
+      {% else %}
+        {% trans "sample registrant" %}
+      {% endif %}
+    </div>
+  </div>
+  <div class="email-campaign-preview-body">
+    {{ email_body_html|safe }}
+  </div>
+{% endif %}

@@ -1,0 +1,16 @@
+{% load i18n %}
+
+{% with report_url=self.instance.registration_report_full_url %}
+  {% if report_url %}
+    <p><strong>{% trans "Registration report URL:" %}</strong></p>
+    <input type="text"
+           readonly
+           value="{{ report_url }}"
+           style="width:100%">
+    <p class="help">
+      {% trans "Set a password above to enable access. If no password is set, this URL returns a 404 page." %}
+    </p>
+  {% else %}
+    <p>{% trans "Save this event to generate the report URL." %}</p>
+  {% endif %}
+{% endwith %}

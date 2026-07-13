@@ -1,0 +1,19 @@
+{% load wagtailimages_tags %}
+
+<div class="container publication-visual-elements-block">
+  <div class="row d-block">
+    <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+      {% if self.heading %}
+        <h2>{{ self.heading }}</h2>
+      {% endif %}
+      <div class="publication-visual-elements">
+        {% for item in self.items %}
+          <figure class="publication-visual-element publication-visual-element--{{ item.display_size }}">
+            <figcaption>{{ item.label }}</figcaption>
+            {% image item.image width-1400 %}
+          </figure>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>

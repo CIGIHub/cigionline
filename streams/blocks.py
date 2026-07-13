@@ -11,6 +11,7 @@ from wagtail import blocks
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.models import Page
+from wagtail.snippets.blocks import SnippetChooserBlock
 from wagtailmedia.blocks import AbstractMediaChooserBlock
 import pytz
 from django.core.exceptions import ValidationError
@@ -435,6 +436,32 @@ class ImageFullBleedBlock(blocks.StructBlock, ThemeableBlock):
         icon = 'image'
         label = 'Full Bleed Image'
         template = 'streams/image_full_bleed_block.html'
+
+
+class PublicationVisualElementsBlock(blocks.StructBlock):
+    heading = blocks.CharBlock(required=False)
+    items = blocks.ListBlock(
+        blocks.StructBlock(
+            [
+                ('label', blocks.CharBlock(required=True, max_length=140)),
+                ('image', ImageChooserBlock(required=True)),
+                ('display_size', blocks.ChoiceBlock(
+                    choices=[
+                        ('full', 'Full width'),
+                        ('icon', 'Icon'),
+                    ],
+                    default='full',
+                    required=True,
+                )),
+            ]
+        ),
+        required=True,
+    )
+
+    class Meta:
+        icon = 'image'
+        label = 'Publication Visual Elements'
+        template = 'streams/publication_visual_elements_block.html'
 
 
 class InlineVideoBlock(blocks.PageChooserBlock, ThemeableBlock):
@@ -2176,3 +2203,12 @@ class CollapsibleParagraphBlockV2(blocks.StructBlock):
         icon = 'edit'
         label = 'Collapsible Paragraph V2'
         template = 'streams/collapsible_paragraph_block_v2.html'
+
+
+class PromotionBlockStreamBlock(blocks.StructBlock):
+    block = SnippetChooserBlock('promotions.PromotionBlock')
+
+    class Meta:
+        icon = 'pick'
+        label = 'Promotion Block'
+        template = 'streams/promotion_block_stream_block.html'

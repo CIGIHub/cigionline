@@ -93,6 +93,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.sitemaps',
     'django.contrib.staticfiles',
+
+    'django_countries',
 ]
 
 MIDDLEWARE = [
@@ -182,6 +184,7 @@ simplecast_provider = {
 }
 
 WAGTAILEMBEDS_FINDERS = [
+    {'class': 'embeds.finders.oembed.IssuuEmbedFinder'},
     {'class': 'embeds.finders.oembed.YouTubeOEmbedFinder'},
     {'class': 'wagtail.embeds.finders.oembed', 'providers': [simplecast_provider], },
     {'class': 'wagtail.embeds.finders.oembed', },
@@ -340,5 +343,9 @@ if 'SENDGRID_API_KEY' in os.environ:
     SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
 if 'PUBLISHING_NOTIFICATION_FROM_EMAIL' in os.environ:
     PUBLISHING_NOTIFICATION_FROM_EMAIL = os.environ['PUBLISHING_NOTIFICATION_FROM_EMAIL']
+if 'CLOUDFLARE_TURNSTILE_SITE_KEY' in os.environ:
+    CLOUDFLARE_TURNSTILE_SITE_KEY = os.environ['CLOUDFLARE_TURNSTILE_SITE_KEY']
+if 'CLOUDFLARE_TURNSTILE_SECRET_KEY' in os.environ:
+    CLOUDFLARE_TURNSTILE_SECRET_KEY = os.environ['CLOUDFLARE_TURNSTILE_SECRET_KEY']
 
 WAGTAILDOCS_EXTENSIONS = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'rtf']

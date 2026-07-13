@@ -16,6 +16,12 @@ class PromotionBlock(models.Model):
         blank=False,
         max_length=32
     )
+    accessible_name = models.CharField(
+        blank=True,
+        max_length=255,
+        verbose_name='Accessible Name',
+        help_text='Describe the visual content of this block for screen readers (e.g. "Register for the 2025 Annual Conference"). Used as the aria-label.',
+    )
     block_type = models.CharField(
         blank=False,
         max_length=32,
@@ -59,6 +65,7 @@ class PromotionBlock(models.Model):
 
     panels = [
         FieldPanel('name'),
+        FieldPanel('accessible_name'),
         FieldPanel('block_type'),
         FieldPanel('link_url'),
         FieldPanel('image_promotion'),

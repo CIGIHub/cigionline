@@ -174,12 +174,21 @@ class ProjectPage(
         default='standard',
         help_text='Select how featured content is displayed on the project page. Medium Only displays medium cards in rows of three. Large Only displays a large card in a single column.',
     )
+    subscribe_page = models.ForeignKey(
+        "wagtailcore.Page",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="+",
+        help_text="The newsletter subscription landing page for this project.",
+    )
 
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
     content_panels = [
         BasicPageAbstract.title_panel,
+        BasicPageAbstract.hero_link_panel,
         BasicPageAbstract.body_panel,
         MultiFieldPanel(
             [
@@ -215,8 +224,8 @@ class ProjectPage(
                 FieldPanel('primary_themes'),
                 FieldPanel('secondary_themes'),
                 FieldPanel('topics'),
-                FieldPanel('countries'),
                 FieldPanel('related_files'),
+                FieldPanel('subscribe_page'),
             ],
             heading='Related',
             classname='collapsible collapsed',
@@ -250,7 +259,7 @@ class ProjectPage(
         SearchablePageAbstract.search_panel,
     ]
 
-    settings_panels = Page.settings_panels + [
+    settings_panels = ContentPage.settings_panels + [
         ArchiveablePageAbstract.archive_panel,
         BasicPageAbstract.submenu_panel,
         ThemeablePageAbstract.theme_panel,
@@ -262,12 +271,24 @@ class ProjectPage(
         + ContentPage.search_fields
 
     parent_page_types = ['core.BasicPage', 'research.ProjectListPage']
-    subpage_types = []
+    subpage_types = ['subscribe.TFGBVSubscribePage']
     templates = 'research/project_page.html'
 
     @property
     def has_tagged_pages(self):
         return ContentPage.objects.live().filter(projects=self).exists()
+
+    @property
+    def subscribe_button_text(self):
+        if self.subscribe_page:
+            return self.subscribe_page.specific.button_text or "Sign Up"
+        return "Sign Up"
+
+    @property
+    def subscribe_help_text(self):
+        if self.subscribe_page:
+            return self.subscribe_page.specific.button_help_text or ""
+        return ""
 
     def get_featured_pages(self):
         featured_page_ids = self.featured_pages.order_by('sort_order').values_list('featured_page', flat=True)

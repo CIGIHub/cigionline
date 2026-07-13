@@ -21,6 +21,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.http import HttpResponse
 from django.contrib import messages
+from django.core.exceptions import ValidationError
 from django.views.decorators.http import require_POST
 from django.utils.decorators import method_decorator
 from django.utils.html import format_html
@@ -169,7 +170,7 @@ class RegistrantViewSet(ModelViewSet):
 
     def edit_answers_view(self, request, pk: int):
         """Admin view to edit a registrant's dynamic form answers with labelled fields."""
-        from .forms import build_dynamic_form
+        from .forms import build_dynamic_form, strip_non_answer_data
         from .utils import _jsonable
         from wagtail.documents.models import Document
 
@@ -203,11 +204,20 @@ class RegistrantViewSet(ModelViewSet):
                 registrant.first_name = cleaned.pop("first_name", registrant.first_name)
                 registrant.last_name = cleaned.pop("last_name", registrant.last_name)
                 cleaned.pop("email", None)  # email not changed here; keep existing
+                strip_non_answer_data(event, cleaned)
 
                 # Handle file fields: if no new file was uploaded for a key, preserve
                 # the existing stored value so we don't silently wipe document refs.
                 existing = registrant.answers if isinstance(registrant.answers, dict) else {}
                 uploaded_doc_ids = list(registrant.uploaded_document_ids or [])
+                file_answer_keys = set()
+                tpl = getattr(event, "registration_form_template", None)
+                if tpl:
+                    file_answer_keys = {
+                        f"f_{ff.field_key}"
+                        for ff in tpl.fields.all().only("field_key", "field_type")
+                        if getattr(ff, "field_type", "") == "file"
+                    }
 
                 for key, val in list(cleaned.items()):
                     if hasattr(val, "read"):
@@ -217,7 +227,7 @@ class RegistrantViewSet(ModelViewSet):
                         )
                         uploaded_doc_ids.append(doc.id)
                         cleaned[key] = {"document_id": doc.id, "name": getattr(val, "name", "upload")}
-                    elif val in (None, ""):
+                    elif key in file_answer_keys and val in (None, ""):
                         # Keep the existing stored value rather than overwriting with blank.
                         if key in existing:
                             cleaned[key] = existing[key]
@@ -237,15 +247,22 @@ class RegistrantViewSet(ModelViewSet):
                 tpl = getattr(event, "registration_form_template", None)
                 if tpl:
                     for ff in tpl.fields.all().only("field_key", "field_type", "conditional_other_value"):
-                        if getattr(ff, "field_type", "") != "conditional_dropdown_other":
+                        if getattr(ff, "field_type", "") not in (
+                            "conditional_dropdown_other",
+                            "conditional_multiselect_other",
+                        ):
                             continue
                         base_key = f"f_{ff.field_key}"
                         other_key = f"{base_key}__other"
                         trigger = (getattr(ff, "conditional_other_value", "") or "").strip() or "Other"
-                        selected = (initial.get(base_key) or "").strip()
+                        selected = initial.get(base_key)
+                        if isinstance(selected, (list, tuple, set)):
+                            has_trigger = trigger in {str(value).strip() for value in selected}
+                        else:
+                            has_trigger = (selected or "").strip() == trigger
                         if other_key not in initial:
                             initial[other_key] = ""
-                        if selected == trigger:
+                        if has_trigger:
                             prev = (initial.get(other_key) or "").strip()
                             if not prev and isinstance(registrant.answers, dict):
                                 initial[other_key] = (registrant.answers.get(other_key) or "").strip()
@@ -581,10 +598,140 @@ class EmailCampaignViewSet(ModelViewSet):
         "scheduled_for",
         "include_statuses",
         "include_type_slugs",
+        "test_recipient_emails",
         "attachment",
         "sent_at",
         "completed_at",
     ]
+
+    def preview_selected_view(self, request):
+        if not (
+            request.user.has_perm("events.add_emailcampaign")
+            or request.user.has_perm("events.change_emailcampaign")
+        ):
+            return HttpResponse("Forbidden", status=403)
+
+        template_id = request.GET.get("template_id")
+        if not template_id:
+            return TemplateResponse(
+                request,
+                "events/admin/email_campaign_preview.html",
+                {"message": "Select an email template to preview it."},
+            )
+
+        try:
+            template = EmailTemplate.objects.filter(pk=template_id).first()
+        except (TypeError, ValueError):
+            template = None
+
+        if not template:
+            return TemplateResponse(
+                request,
+                "events/admin/email_campaign_preview.html",
+                {"message": "The selected email template could not be found."},
+            )
+
+        event = None
+        event_id = request.GET.get("event_id")
+        if event_id:
+            try:
+                event = EventPage.objects.specific().filter(pk=event_id).first()
+            except (TypeError, ValueError):
+                event = None
+
+        from .email_preview import build_email_campaign_preview
+
+        preview = build_email_campaign_preview(
+            request=request,
+            template_obj=template,
+            event=event,
+            include_statuses=request.GET.get("include_statuses", ""),
+            include_type_slugs=request.GET.get("include_type_slugs", ""),
+        )
+
+        return TemplateResponse(
+            request,
+            "events/admin/email_campaign_preview.html",
+            {
+                "subject": preview.subject,
+                "email_html": preview.html,
+                "email_body_html": preview.body_html,
+                "event_title": preview.event_title,
+                "registrant_label": preview.registrant_label,
+                "using_real_registrant": preview.using_real_registrant,
+            },
+        )
+
+    def send_test_view(self, request, pk: int):
+        if request.method != "POST":
+            return HttpResponse("Method not allowed", status=405)
+
+        if not request.user.has_perm("events.change_emailcampaign"):
+            return HttpResponse("Forbidden", status=403)
+
+        campaign = get_object_or_404(
+            EmailCampaign.objects.select_related("event", "template"),
+            pk=pk,
+        )
+        self._apply_test_send_post_values(campaign, request.POST)
+
+        try:
+            from .email_preview import send_email_campaign_test
+
+            recipients = send_email_campaign_test(request=request, campaign=campaign)
+        except ValidationError as exc:
+            messages.error(request, "; ".join(exc.messages))
+        except Exception as exc:
+            logger.exception(
+                "Failed to send test email campaign_id=%s",
+                campaign.pk,
+            )
+            messages.error(request, f"Could not send test email: {exc}")
+        else:
+            messages.success(
+                request,
+                f"Test email sent to {', '.join(recipients)}.",
+            )
+
+        return redirect(reverse(self.get_url_name("edit"), args=[campaign.pk]))
+
+    def _apply_test_send_post_values(self, campaign, post_data):
+        campaign.test_recipient_emails = post_data.get(
+            "test_recipient_emails",
+            campaign.test_recipient_emails,
+        )
+        campaign.include_statuses = post_data.get(
+            "include_statuses",
+            campaign.include_statuses,
+        )
+        campaign.include_type_slugs = post_data.get(
+            "include_type_slugs",
+            campaign.include_type_slugs,
+        )
+
+        template_id = post_data.get("template")
+        if template_id:
+            try:
+                template = EmailTemplate.objects.get(pk=template_id)
+            except (EmailTemplate.DoesNotExist, TypeError, ValueError):
+                pass
+            else:
+                campaign.template = template
+
+        event_id = post_data.get("event")
+        if event_id:
+            try:
+                event = EventPage.objects.specific().get(pk=event_id)
+            except (EventPage.DoesNotExist, TypeError, ValueError):
+                pass
+            else:
+                campaign.event = event
+
+    def get_urlpatterns(self):
+        return super().get_urlpatterns() + [
+            path("preview-selected/", self.preview_selected_view, name="preview_selected"),
+            path("send-test/<int:pk>/", self.send_test_view, name="send_test"),
+        ]
 
 
 class EventViewSetGroup(ViewSetGroup):

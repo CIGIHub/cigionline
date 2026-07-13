@@ -1,0 +1,24 @@
+{% extends "wagtaildocs/documents/edit.html" %}
+{% load i18n core_tags %}
+
+{% block form_content %}
+    {{ block.super }}
+    {% document_qr document as qr %}
+    <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e9e9e9;">
+        <h2 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem;">{% trans "QR Code" %}</h2>
+        {% if qr.qr_image_data %}
+            <img src="{{ qr.qr_image_data }}"
+                 alt="{% trans 'QR code for this document' %}"
+                 style="display: block; width: 180px; height: 180px;">
+            <p style="margin-top: 8px; font-size: 0.9em;">
+                {% trans "Scans" %}: <strong>{{ qr.scan_count }}</strong>
+            </p>
+            <p style="margin-top: 4px; font-size: 0.8em; color: #666;">
+                <b>{% trans "Note" %}:</b>
+                {% trans "This QR code links directly to this document file. If the file is replaced, reprint any copies of this QR code." %}
+            </p>
+        {% else %}
+            <p style="color: #666;">{% trans "QR code unavailable – install the qrcode package." %}</p>
+        {% endif %}
+    </div>
+{% endblock %}

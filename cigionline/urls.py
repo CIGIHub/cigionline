@@ -13,7 +13,12 @@ from search import views as search_views
 from events import views as events_views
 from articles import views as article_views
 from annual_reports import views as annual_report_views
-from subscribe.views import subscribe_dph, subscribe_think7, subscribe_digital_finance
+from subscribe.views import (
+    subscribe_digital_finance,
+    subscribe_dph,
+    subscribe_second_century_commission,
+    subscribe_think7,
+)
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
 from wagtail.contrib.sitemaps.views import sitemap
@@ -26,6 +31,8 @@ if settings.ADMIN_ENABLED:
         re_path(r'^admin/', include(wagtailadmin_urls)),
     ]
 urlpatterns = urlpatterns + [
+    path('qr/<int:page_id>/', core_views.qr_redirect, name='qr_redirect'),
+    path('qr/doc/<int:doc_id>/', core_views.qr_document_redirect, name='qr_document_redirect'),
     path('api/annual-report/<int:page_id>/slides/', annual_report_views.get_ordered_slides_annual_report, name='ordered_slides_api'),
     path('api/strategic_plan/<int:page_id>/slides/', annual_report_views.get_ordered_slides_strategic_plan, name='ordered_slides_api'),
     path('oauth/callback/', core_views.oauth_callback, name='auth0_callback'),
@@ -53,6 +60,16 @@ urlpatterns = urlpatterns + [
     re_path(r'^subscribe_dph$', subscribe_dph, name='subscribe_dph'),
     re_path(r'^subscribe_think7$', subscribe_think7, name='subscribe_think7'),
     re_path(r'^subscribe_digital_finance$', subscribe_digital_finance, name='subscribe_digital_finance'),
+    path(
+        'api/subscribe/second-century-commission/',
+        subscribe_second_century_commission,
+        name='subscribe_second_century_commission',
+    ),
+    path(
+        'api/subscribe/second-century-commission',
+        subscribe_second_century_commission,
+        name='subscribe_second_century_commission_no_slash',
+    ),
     re_path(r'^events/feed.ics$', EventFeed()),
     re_path(r'^favicon\.ico$', favicon_view),
     re_path(r'^robots\.txt$', robots_views.RobotsView.as_view(), name='robots'),

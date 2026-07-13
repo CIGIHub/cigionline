@@ -48,7 +48,9 @@
 {% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu image_banner=self.image_banner %}
+  {% block page_hero %}
+    {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu image_banner=self.image_banner %}
+  {% endblock %}
   {% if featured_pages|length > 0 %}
     <section class="featured">
       <div class="container">

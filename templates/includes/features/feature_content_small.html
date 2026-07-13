@@ -22,6 +22,10 @@
       <div class="table-icon icon-opinion">
         <i class="fal fa-comment-dots"></i>
       </div>
+    {% elif content.contenttype == 'Activity' %}
+      <div class="table-icon icon-activity">
+        <i class="fal fa-file-search"></i>
+      </div>
     {% endif %}
   {% endif %}
   <div class="feature-content-text center-text">
@@ -33,8 +37,16 @@
     {% include 'includes/features/feature_content_title.html' %}
     {% if content.t7_authors %}
       {% include '../../think7/includes/features/feature_content_people.html' with authors=content.t7_authors %}
-    {% else %}
+    {% elif content.authors.exists %}
       {% include 'includes/features/feature_content_people.html' with authors=content.authors.all %}
+    {% else %}
+      {% if content.contenttype == 'Activity' %}
+        <div class="meta">Research</div>
+      {% elif content.contenttype == 'Opinion' %}
+        <div class="meta">{{ content.contentsubtype|remove_trailing_s }}</div>
+      {% else %}
+        <div class="meta">{{ content.contenttype }}</div>
+      {% endif %}
     {% endif %}
     {% if content.from_the_archives %}
       <div class="feature-content-from-the-archives">FROM THE ARCHIVES</div>

@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Defer one tick so layout/images settle a bit before measuring.
     window.setTimeout(() => {
       scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 50);
+    }, 500);
   }
 
   // --- Modal helpers (used for cancel confirmation on manage pages) ---
@@ -129,7 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!modal) return;
     e.preventDefault();
     // The templates place the modal right after the form.
-    const form = modal.previousElementSibling?.tagName === 'FORM' ? modal.previousElementSibling : null;
+    const form =
+      modal.previousElementSibling?.tagName === 'FORM' ? modal.previousElementSibling : null;
     if (form) form.submit();
     else closeModal(modal);
   });
@@ -191,12 +192,11 @@ document.addEventListener('DOMContentLoaded', () => {
     return el;
   };
 
-  const getFieldWrapper = (input) => (
-    input?.closest('.cigi-field')
-    || input?.closest('.w-field')
-    || input?.closest('.field')
-    || input?.parentElement
-  );
+  const getFieldWrapper = (input) =>
+    input?.closest('.cigi-field') ||
+    input?.closest('.w-field') ||
+    input?.closest('.field') ||
+    input?.parentElement;
 
   const syncConditionalToggle = (toggleEl, opts = {}) => {
     const { clearOnHide = false } = opts;
@@ -218,14 +218,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const otherInput = findTargetInput(scope, targetName);
     if (!otherInput) return;
     const wrapper = getFieldWrapper(otherInput);
-    const show = (selectEl.value || '').trim() === triggerValue;
+    const show = selectEl.multiple
+      ? Array.from(selectEl.selectedOptions).some(
+          (option) => (option.value || '').trim() === triggerValue,
+        )
+      : (selectEl.value || '').trim() === triggerValue;
     if (wrapper) wrapper.style.display = show ? '' : 'none';
     if (!show && clearOnHide) otherInput.value = '';
   };
 
   const initConditionalsIn = (root) => {
-    root.querySelectorAll('[data-conditional-target]').forEach((t) => syncConditionalToggle(t));
-    root.querySelectorAll("[data-conditional-select='1']").forEach((s) => syncConditionalSelectOther(s));
+    root.querySelectorAll("[data-conditional-toggle='1']").forEach((t) => syncConditionalToggle(t));
+    root
+      .querySelectorAll("[data-conditional-select='1']")
+      .forEach((s) => syncConditionalSelectOther(s));
   };
 
   const addGuest = () => {
@@ -292,7 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
     formEl.addEventListener('change', (e) => {
       const t = e.target;
       if (!t) return;
-      if (t.matches('[data-conditional-target]')) {
+      if (t.matches("[data-conditional-toggle='1']")) {
         syncConditionalToggle(t, { clearOnHide: true });
       }
       if (t.matches("[data-conditional-select='1']")) {

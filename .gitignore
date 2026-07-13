@@ -94,3 +94,5 @@ cigionline/static/bundles/*
 
 # Postgres
 *.dump
+
+true/

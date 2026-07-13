@@ -466,7 +466,6 @@ class PublicationPage(
             [
                 FieldPanel('topics'),
                 FieldPanel('projects'),
-                FieldPanel('countries'),
                 PageChooserPanel(
                     'publication_series',
                     ['publications.PublicationSeriesPage'],
@@ -482,7 +481,7 @@ class PublicationPage(
         ShareablePageAbstract.social_panel,
         SearchablePageAbstract.search_panel,
     ]
-    settings_panels = Page.settings_panels + [
+    settings_panels = ContentPage.settings_panels + [
         ThemeablePageAbstract.theme_panel,
     ]
 
@@ -599,7 +598,6 @@ class PublicationSeriesPage(
             [
                 FieldPanel('topics'),
                 FieldPanel('projects'),
-                FieldPanel('countries'),
             ],
             heading='Related',
             classname='collapsible collapsed',

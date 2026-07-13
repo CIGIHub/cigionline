@@ -1,4 +1,4 @@
-{% load wagtailcore_tags menu_tags core_tags wagtailimages_tags %}
+{% load static wagtailcore_tags menu_tags core_tags wagtailimages_tags %}
 
 <section class="hero {{ additional_classes }}">
   {% if video_banner %}
@@ -27,8 +27,17 @@
           {% include 'includes/topics.html' %}
         {% endif %}
         <h1>{{title}}</h1>
-        <h2>{{subtitle|safe}}</h2>
+        <h2>
+          {% if subtitle_image_static %}
+            <img class="hero-subtitle-image" src="{% static subtitle_image_static %}" alt="{{ subtitle|striptags }}">
+          {% else %}
+            {{subtitle|safe}}
+          {% endif %}
+        </h2>
         {% if self.hero_link %}
+          {% if hero_link_heading %}
+            <div class="hero-link-heading">{{ hero_link_heading }}</div>
+          {% endif %}
           <div class="hero-links">
             {% for block in self.hero_link %}
               <div class="hero-link">

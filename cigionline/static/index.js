@@ -49,10 +49,7 @@ $(function () {
     $(this).attr('aria-expanded', !isOpen);
     $(this).attr('aria-label', isOpen ? 'Open search' : 'Close search');
 
-    $openMenuBtn
-      .removeClass('open')
-      .attr('aria-expanded', false)
-      .attr('aria-label', 'Open menu');
+    $openMenuBtn.removeClass('open').attr('aria-expanded', false).attr('aria-label', 'Open menu');
 
     if ($('#popup-menu').hasClass(openMenuClass)) {
       $('body').addClass('disable-scroll');
@@ -122,18 +119,12 @@ $(function () {
       fetch(encodeURI(uri))
         .then((res) => res.json())
         .then((data) => {
-          const rows = data.items.filter(
-            (v, i, a) => a.findIndex((t) => t.id === v.id) === i,
-          );
+          const rows = data.items.filter((v, i, a) => a.findIndex((t) => t.id === v.id) === i);
           $navSearchInputDropdownList.empty();
           $navSearchInputDropdownCount.empty();
-          $navSearchInputDropdownCount.append(
-            `Results <span>(${data.meta.total_count})<span>`,
-          );
+          $navSearchInputDropdownCount.append(`Results <span>(${data.meta.total_count})<span>`);
           rows.forEach((row) =>
-            $navSearchInputDropdownList.append(
-              `<li><a href=${row.url}>${row.title}</a></li>`,
-            ),
+            $navSearchInputDropdownList.append(`<li><a href=${row.url}>${row.title}</a></li>`),
           );
         });
     } else {
@@ -141,9 +132,7 @@ $(function () {
     }
   });
 
-  const collapsibleParagraphs = document.querySelectorAll(
-    '.collapsible-paragraph-block',
-  );
+  const collapsibleParagraphs = document.querySelectorAll('.collapsible-paragraph-block');
 
   collapsibleParagraphs.forEach((paragraph) => {
     const toggleButton = paragraph.querySelector('.toggle-expand');
@@ -152,39 +141,18 @@ $(function () {
 
     toggleButton.addEventListener('click', () => {
       paragraph.classList.toggle('collapsed');
-      toggleButton.setAttribute(
-        'aria-expanded',
-        !paragraph.classList.contains('collapsed'),
-      );
+      toggleButton.setAttribute('aria-expanded', !paragraph.classList.contains('collapsed'));
     });
   });
 });
 
 addInlineVideoActions();
 
-const cookieConsentContainer = document.getElementById(
-  'cigi-cookie-consent-container',
-);
+const cookieConsentContainer = document.getElementById('cigi-cookie-consent-container');
 if (
   cookieConsentContainer &&
-  !document.cookie
-    .split(';')
-    .some((item) => item.includes('cigionline.accept.privacy.notice=1'))
+  !document.cookie.split(';').some((item) => item.includes('cigionline.accept.privacy.notice=1'))
 ) {
   const root = createRoot(cookieConsentContainer);
   root.render(<CookieConsent />);
-}
-
-// Add Meta pixel tracking to all elements with class 'track-cta'
-const buttons = document.getElementsByClassName('track-cta');
-for (let i = 0; i < buttons.length; i += 1) {
-  buttons[i].addEventListener('click', function () {
-    const dataCTA = this.getAttribute('data-cta').split('-');
-    const cta = dataCTA[0];
-    const action = dataCTA.length > 1 ? dataCTA[1] : 'click';
-    fbq('track', 'CTA Click', {
-      cta_type: cta,
-      cta_action: action,
-    });
-  });
 }

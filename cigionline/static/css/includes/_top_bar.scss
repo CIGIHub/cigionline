@@ -357,6 +357,12 @@ header {
                   display: inline-block;
                   margin-right: 0.7em;
                 }
+
+                svg {
+                  fill: currentColor;
+                  height: 1em;
+                  width: 1em;
+                }
               }
             }
           }

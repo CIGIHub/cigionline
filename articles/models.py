@@ -506,7 +506,6 @@ class ArticlePage(
             [
                 FieldPanel('topics'),
                 FieldPanel('projects'),
-                FieldPanel('countries'),
                 PageChooserPanel(
                     'article_series',
                     ['articles.ArticleSeriesPage'],
@@ -533,7 +532,7 @@ class ArticlePage(
         ShareablePageAbstract.social_panel,
         SearchablePageAbstract.search_panel,
     ]
-    settings_panels = Page.settings_panels + [
+    settings_panels = ContentPage.settings_panels + [
         ThemeablePageAbstract.theme_panel,
         FieldPanel('canonical_link'),
     ]
@@ -865,7 +864,6 @@ class ArticleSeriesPage(
             [
                 FieldPanel('topics'),
                 FieldPanel('projects'),
-                FieldPanel('countries'),
             ],
             heading='Related',
             classname='collapsible collapsed',
@@ -1122,7 +1120,6 @@ class OpinionSeriesPage(
             [
                 FieldPanel('topics'),
                 FieldPanel('projects'),
-                FieldPanel('countries'),
             ],
             heading='Related',
             classname='collapsible collapsed',

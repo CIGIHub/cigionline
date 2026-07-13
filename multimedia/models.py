@@ -441,7 +441,6 @@ class MultimediaPage(
                 ),
                 FieldPanel('topics'),
                 FieldPanel('projects'),
-                FieldPanel('countries'),
             ],
             heading='Related',
             classname='collapsible collapsed',
@@ -453,7 +452,7 @@ class MultimediaPage(
         ShareablePageAbstract.social_panel,
         SearchablePageAbstract.search_panel,
     ]
-    settings_panels = Page.settings_panels + [
+    settings_panels = ContentPage.settings_panels + [
         ThemeablePageAbstract.theme_panel,
     ]
 
@@ -628,7 +627,6 @@ class MultimediaSeriesPage(
             [
                 FieldPanel('topics'),
                 FieldPanel('projects'),
-                FieldPanel('countries'),
             ],
             heading='Related',
             classname='collapsible collapsed',

@@ -1,4 +1,5 @@
 from .forms_admin import EventPageAdminForm
+from .panels import EmailCampaignPreviewPanel, EmailCampaignTestSendPanel
 from core.models import (
     BasicPageAbstract,
     ContentPage,
@@ -8,11 +9,12 @@ from core.models import (
     ThemeablePageAbstract
 )
 from django.contrib import messages
+from django.contrib.auth.hashers import check_password
 from django.db import models, transaction
 from django.utils import timezone
 import logging
 from django.utils.translation import gettext_lazy as _
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import redirect
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
@@ -57,6 +59,11 @@ def _split_tokens(s: str):
     """Split a comma-separated string into normalized tokens."""
 
     return [x.strip().lower() for x in (s or "").split(",") if x.strip()]
+
+
+def _registration_type_open_filter(now=None):
+    now = now or timezone.now()
+    return models.Q(close_date__isnull=True) | models.Q(close_date__gt=now)
 
 
 def _match(rule: str, slugs: list[str], current_slug: str) -> bool:
@@ -315,6 +322,16 @@ class EventPage(
 
     # Registration related fields
     registration_open = models.BooleanField(default=False)
+    mailchimp_tag = models.CharField(
+        blank=True,
+        max_length=255,
+        help_text='Mailchimp tag(s) to apply to subscribers who opt in via the registration form. Separate multiple tags with commas.',
+    )
+    registration_report_password_hash = models.CharField(
+        blank=True,
+        editable=False,
+        max_length=128,
+    )
     is_private_registration = models.BooleanField(
         default=False, help_text="Require invite token or private link to register."
     )
@@ -465,7 +482,180 @@ class EventPage(
     def register_url(self):
         return self.url + "register/"
 
+    @property
+    def registration_report_url(self):
+        base = self.url
+        if base and not base.endswith("/"):
+            base += "/"
+        return f"{base}registration-report/" if base else ""
+
+    @property
+    def registration_report_full_url(self):
+        base = self.full_url or self.url
+        if base and not base.endswith("/"):
+            base += "/"
+        return f"{base}registration-report/" if base else ""
+
+    def _registration_report_base_url(self, request):
+        base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+        if not base.endswith("/"):
+            base += "/"
+        return f"{base}registration-report/"
+
+    def _registration_report_session_key(self):
+        return f"events.registration_report:{self.pk}"
+
+    def _has_registration_report_access(self, request):
+        return (
+            bool(self.registration_report_password_hash)
+            and request.session.get(self._registration_report_session_key())
+            == self.registration_report_password_hash
+        )
+
+    def _registration_report_password_gate(self, request):
+        if not self.registration_report_password_hash:
+            raise Http404
+
+        if self._has_registration_report_access(request):
+            return None
+
+        from django import forms
+        from django.template.response import TemplateResponse
+
+        class RegistrationReportPasswordForm(forms.Form):
+            password = forms.CharField(
+                label=_("Password"),
+                strip=False,
+                widget=forms.PasswordInput(
+                    attrs={
+                        "autocomplete": "current-password",
+                        "class": "form-control",
+                    }
+                ),
+            )
+
+        if request.method == "POST":
+            form = RegistrationReportPasswordForm(request.POST)
+            if form.is_valid():
+                if check_password(
+                    form.cleaned_data["password"],
+                    self.registration_report_password_hash,
+                ):
+                    request.session[
+                        self._registration_report_session_key()
+                    ] = self.registration_report_password_hash
+                    return redirect(request.get_full_path())
+
+                form.add_error("password", _("The password you entered was incorrect."))
+        else:
+            form = RegistrationReportPasswordForm()
+
+        return TemplateResponse(
+            request,
+            "events/registration_report_password.html",
+            {
+                "page": self,
+                "event": self,
+                "form": form,
+                "report_base_url": self._registration_report_base_url(request),
+            },
+        )
+
     # ---------- ROUTES ----------
+
+    @route(r"^registration-report/$")
+    def registration_report(self, request, *args, **kwargs):
+        gate_response = self._registration_report_password_gate(request)
+        if gate_response:
+            return gate_response
+
+        from .reporting import build_type_rows
+
+        return self.render(
+            request,
+            template="events/registration_report_public.html",
+            context_overrides={
+                "event": self,
+                "report_base_url": self._registration_report_base_url(request),
+                "type_rows": build_type_rows(self),
+            },
+        )
+
+    @route(r"^registration-report/type/(?P<type_slug>[-\w]+)/$")
+    def registration_report_type(self, request, type_slug: str, *args, **kwargs):
+        gate_response = self._registration_report_password_gate(request)
+        if gate_response:
+            return gate_response
+
+        from django.shortcuts import get_object_or_404
+        from django.template.response import TemplateResponse
+
+        from .reporting import (
+            attach_answer_cells,
+            build_answer_columns,
+            filter_registrants_queryset,
+            paginate_queryset,
+        )
+
+        rtype = get_object_or_404(self.registration_types, slug=type_slug)
+        q = (request.GET.get("q") or "").strip()
+        status = (request.GET.get("status") or "").strip().lower()
+
+        registrants = filter_registrants_queryset(event=self, rtype=rtype, q=q, status=status)
+        columns = build_answer_columns(self)
+        page_obj = paginate_queryset(registrants, request=request, per_page=50)
+        attach_answer_cells(page_obj, columns=columns)
+
+        return TemplateResponse(
+            request,
+            "events/registration_report_type_public.html",
+            {
+                "page": self,
+                "event": self,
+                "rtype": rtype,
+                "page_obj": page_obj,
+                "q": q,
+                "status": status,
+                "columns": [c.__dict__ for c in columns],
+                "report_base_url": self._registration_report_base_url(request),
+            },
+        )
+
+    @route(r"^registration-report/type/(?P<type_slug>[-\w]+)/export/?$")
+    def registration_report_type_csv(self, request, type_slug: str, *args, **kwargs):
+        gate_response = self._registration_report_password_gate(request)
+        if gate_response:
+            return gate_response
+
+        from django.shortcuts import get_object_or_404
+
+        from .reporting import registrants_csv_response
+
+        rtype = get_object_or_404(self.registration_types, slug=type_slug)
+        registrants = (
+            Registrant.objects.filter(event=self, registration_type=rtype)
+            .select_related("registration_type", "invite")
+            .only(
+                "id",
+                "created_at",
+                "status",
+                "first_name",
+                "last_name",
+                "email",
+                "registration_type__name",
+                "registration_type__slug",
+                "answers",
+                "invite_id",
+                "invite__email",
+            )
+            .order_by("created_at")
+        )
+        return registrants_csv_response(
+            request=request,
+            event=self,
+            registrants_qs=registrants,
+            filename_prefix=f"{self.title}-{rtype.slug}",
+        )
 
     @route(r"^register/$")
     def register_entry(self, request, *args, **kwargs):
@@ -505,7 +695,9 @@ class EventPage(
             if allowed:
                 types_qs = types_qs.filter(slug__in=allowed)
 
-        types = list(types_qs.order_by("sort_order"))
+        types = list(
+            types_qs.filter(_registration_type_open_filter()).order_by("sort_order")
+        )
         if not types:
             return self.render(
                 request,
@@ -559,14 +751,12 @@ class EventPage(
         from .models import Registrant
         from .emailing import (
             send_confirmation_email,
-            send_registration_pending_confirm_email,
             send_duplicate_registration_manage_email,
-            # (guest/group emails added in events/emailing.py)
             send_group_confirmation_email,
             send_group_duplicate_manage_email,
-            send_group_registration_pending_confirm_email,
         )
         from .guest_registration import build_primary_and_guest_forms
+        from .utils import verify_turnstile_token
 
         if not self.registration_open:
             return self.render(
@@ -597,6 +787,13 @@ class EventPage(
                     context_overrides={"event": self},
                 )
 
+        if not reg_type.is_open_for_registration():
+            return self.render(
+                request,
+                template="events/registration_no_types.html",
+                context_overrides={"event": self},
+            )
+
         # Primary form + optional guest formset (if enabled on the event)
         forms_obj = None
 
@@ -608,6 +805,12 @@ class EventPage(
                 getattr(reg_type, "allow_group_registrations", False),
             )
             if request.POST.get("website"):
+                base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
+                return redirect(f"{base}register/result/?s=bot")
+
+            turnstile_token = request.POST.get("cf-turnstile-response", "")
+            if not verify_turnstile_token(turnstile_token, request.META.get("REMOTE_ADDR")):
+                self.logger.warning("Turnstile verification failed event_id=%s", self.pk)
                 base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
                 return redirect(f"{base}register/result/?s=bot")
 
@@ -703,11 +906,7 @@ class EventPage(
                         if getattr(existing, "group_id", None):
                             send_group_duplicate_manage_email(existing.group)
                         else:
-                            # If they're still pending, re-send the confirm link.
-                            if existing.status == Registrant.Status.PENDING:
-                                send_registration_pending_confirm_email(existing)
-                            else:
-                                send_duplicate_registration_manage_email(existing)
+                            send_duplicate_registration_manage_email(existing)
                     except Exception:
                         # Don't break the registration flow if email sending fails, but log it.
                         self.logger.exception(
@@ -717,7 +916,7 @@ class EventPage(
                         )
 
                     base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
-                    return redirect(f"{base}register/result/?s=ok")
+                    return redirect(f"{base}register/result/?s=dup")
 
                 # If there are guests, create a group and one Registrant per attendee.
                 # Don't treat an empty extra form as a guest submission.
@@ -855,15 +1054,29 @@ class EventPage(
                         )
                         raise
 
-                    # Send email after commit.
-                    # Double opt-in for group registrations: send ONE confirm link
-                    # to the primary email, and keep all attendees PENDING until
-                    # the group confirm endpoint is clicked.
+                    # Immediately confirm/waitlist each attendee and send the confirmation email.
+                    confirmed_flags = []
+                    for r in created:
+                        try:
+                            confirmed_flags.append(bool(r.confirm_with_capacity()))
+                        except Exception:
+                            self.logger.exception(
+                                "confirm_with_capacity failed for registrant_id=%s group_id=%s",
+                                r.pk,
+                                group.pk,
+                            )
+                            confirmed_flags.append(False)
+
                     try:
-                        send_group_registration_pending_confirm_email(group=group)
+                        send_group_confirmation_email(
+                            group=group,
+                            registrants=created,
+                            confirmed_flags=confirmed_flags,
+                            manage_url=manage_url,
+                        )
                     except Exception:
                         self.logger.exception(
-                            "Failed to send group pending-confirm email for group_id=%s event_id=%s",
+                            "Failed to send group confirmation email for group_id=%s event_id=%s",
                             group.pk,
                             self.pk,
                         )
@@ -874,7 +1087,8 @@ class EventPage(
                         [r.pk for r in created],
                     )
 
-                    return redirect(f"{base}register/result/?s=pending")
+                    any_confirmed = any(confirmed_flags)
+                    return redirect(f"{base}register/result/?s={'ok' if any_confirmed else 'wait'}")
 
                 else:
                     with transaction.atomic():
@@ -904,40 +1118,21 @@ class EventPage(
                                 )
                         registrant = save_registrant_from_form(self, reg_type, form, invite)
 
-                # Double opt-in flow: send a confirm link and keep PENDING until clicked.
+                # Immediately confirm/waitlist the registrant and send the outcome email.
+                confirmed = registrant.confirm_with_capacity()
                 try:
-                    send_registration_pending_confirm_email(registrant)
+                    send_confirmation_email(registrant, confirmed)
                 except Exception:
-                    # Don't break registration UX, but do log so we can debug missing emails.
                     self.logger.exception(
-                        "Failed to send pending-confirm email registrant_id=%s event_id=%s",
+                        "Failed to send confirmation email registrant_id=%s event_id=%s",
                         registrant.pk,
                         self.pk,
                     )
 
                 base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
-                # New result state for double opt-in.
-                return redirect(f"{base}register/result/?s=pending")
+                result_status = "ok" if confirmed else "wait"
+                return redirect(f"{base}register/result/?s={result_status}&rid={registrant.pk}")
             else:
-                # Primary form errors
-                for field, errs in form.errors.items():
-                    label = form.fields.get(field).label if field in form.fields else field
-                    for e in errs:
-                        messages.error(request, f"{label}: {e}" if label else str(e))
-
-                # Guest errors (if any)
-                if forms_obj and forms_obj.guest_formset is not None:
-                    for idx, gf in enumerate(forms_obj.guest_formset.forms, start=1):
-                        if not gf.errors:
-                            continue
-                        for field, errs in gf.errors.items():
-                            label = gf.fields.get(field).label if field in gf.fields else field
-                            for e in errs:
-                                messages.error(
-                                    request,
-                                    f"Guest {idx} — {label}: {e}" if label else f"Guest {idx}: {e}",
-                                )
-
                 base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
                 return self.render(
                     request,
@@ -948,6 +1143,7 @@ class EventPage(
                         "form": form,
                         "guest_formset": (forms_obj.guest_formset if forms_obj else None),
                         "invite": invite,
+                        "turnstile_site_key": getattr(settings, "CLOUDFLARE_TURNSTILE_SITE_KEY", ""),
                     },
                 )
         else:
@@ -963,6 +1159,7 @@ class EventPage(
                 "form": form,
                 "guest_formset": (forms_obj.guest_formset if forms_obj else None),
                 "invite": invite,
+                "turnstile_site_key": getattr(settings, "CLOUDFLARE_TURNSTILE_SITE_KEY", ""),
             },
         )
 
@@ -974,7 +1171,7 @@ class EventPage(
             get_registrant_for_manage_link,
             get_registrant_for_group_manage_link,
         )
-        from .forms import build_dynamic_form
+        from .forms import build_dynamic_form, strip_non_answer_data
 
         token = request.GET.get("t", "")
         rid = request.GET.get("rid", "")
@@ -1000,8 +1197,8 @@ class EventPage(
             initial.update(registrant.answers)
 
         # Backfill conditional 'Other' textbox initial values.
-        # conditional_dropdown_other uses two fields:
-        #   - f_<uuid> (select)
+        # Conditional "Other" field types use two fields:
+        #   - f_<uuid> (select value or selected values list)
         #   - f_<uuid>__other (textbox)
         # If the textbox key is absent from stored answers, the select can still
         # show "Other" but the textbox will render blank.
@@ -1013,21 +1210,28 @@ class EventPage(
                     "field_type",
                     "conditional_other_value",
                 ):
-                    if getattr(ff, "field_type", "") != "conditional_dropdown_other":
+                    if getattr(ff, "field_type", "") not in (
+                        "conditional_dropdown_other",
+                        "conditional_multiselect_other",
+                    ):
                         continue
 
                     base_key = f"f_{ff.field_key}"
                     other_key = f"{base_key}__other"
 
                     trigger = (getattr(ff, "conditional_other_value", "") or "").strip() or "Other"
-                    selected = (initial.get(base_key) or "").strip()
+                    selected = initial.get(base_key)
+                    if isinstance(selected, (list, tuple, set)):
+                        has_trigger = trigger in {str(value).strip() for value in selected}
+                    else:
+                        has_trigger = (selected or "").strip() == trigger
 
                     # Ensure the key exists in initial so the form binds it.
                     if other_key not in initial:
                         initial[other_key] = ""
 
                     # If they previously chose the trigger value, restore the typed text.
-                    if selected == trigger and registrant.answers and isinstance(registrant.answers, dict):
+                    if has_trigger and registrant.answers and isinstance(registrant.answers, dict):
                         prev_other = (registrant.answers.get(other_key) or "").strip()
                         if prev_other and not (initial.get(other_key) or "").strip():
                             initial[other_key] = prev_other
@@ -1059,7 +1263,7 @@ class EventPage(
             get_registrant_for_group_manage_link,
         )
         from .forms import build_dynamic_form
-        from .utils import _jsonable
+        from .utils import _jsonable, _try_mailchimp_optin
 
         if request.method != "POST":
             return HttpResponse("Method not allowed", status=405)
@@ -1083,16 +1287,6 @@ class EventPage(
         form = form_class(request.POST, request.FILES or None)
 
         if not form.is_valid():
-            # Bubble up exactly what's invalid (including __all__ errors like honeypot/conditional rules)
-            for field, errs in form.errors.items():
-                if field == "__all__":
-                    for e in errs:
-                        messages.error(request, str(e))
-                    continue
-                label = form.fields.get(field).label if field in form.fields else field
-                for e in errs:
-                    messages.error(request, f"{label}: {e}" if label else str(e))
-
             return self.render(
                 request,
                 template="events/registration_manage.html",
@@ -1118,10 +1312,20 @@ class EventPage(
         # We intentionally do NOT allow changing email via self-service.
         # Ignore posted value and also prevent storing it into answers.
         cleaned.pop("email", None)
+        strip_non_answer_data(self, cleaned)
 
         # Persist answers (basic JSON-ability). File handling isn't supported in update yet.
         registrant.answers = _jsonable(cleaned)
         registrant.save(update_fields=["first_name", "last_name", "answers"])
+
+        _try_mailchimp_optin(
+            email=registrant.email,
+            first_name=registrant.first_name,
+            last_name=registrant.last_name,
+            answers=registrant.answers,
+            form_template=getattr(self, "registration_form_template", None),
+            mailchimp_tag=getattr(self, "mailchimp_tag", ""),
+        )
 
         base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
         if gid:
@@ -1510,7 +1714,6 @@ class EventPage(
             [
                 FieldPanel('topics'),
                 FieldPanel('projects'),
-                FieldPanel('countries'),
                 PageChooserPanel(
                     'multimedia_page',
                     ['multimedia.MultimediaPage'],
@@ -1532,7 +1735,7 @@ class EventPage(
         ShareablePageAbstract.social_panel,
         SearchablePageAbstract.search_panel,
     ]
-    settings_panels = Page.settings_panels + [
+    settings_panels = ContentPage.settings_panels + [
         ThemeablePageAbstract.theme_panel,
     ]
     edit_handler = TabbedInterface([
@@ -1543,8 +1746,21 @@ class EventPage(
                     FieldPanel('registration_open'),
                     FieldPanel('is_private_registration'),
                     FieldPanel('registration_image_banner'),
+                    FieldPanel('mailchimp_tag'),
                 ],
                 heading='General Settings',
+                classname='collapsible collapsed',
+            ),
+            MultiFieldPanel(
+                [
+                    FieldPanel('registration_report_password'),
+                    FieldPanel('clear_registration_report_password'),
+                    HelpPanel(
+                        template="events/includes/registration_report_url_help_panel.html",
+                        heading="Report URL",
+                    ),
+                ],
+                heading='Registration Report',
                 classname='collapsible collapsed',
             ),
             MultiFieldPanel(
@@ -1661,6 +1877,7 @@ class EventRegistrationReportPage(RoutablePageMixin, Page):
                 "q": q,
                 "status": status,
                 "columns": [c.__dict__ for c in columns],
+                "report_base_url": self.url,
             },
         )
 
@@ -1706,6 +1923,7 @@ class EventRegistrationReportPage(RoutablePageMixin, Page):
         event = self._get_event()
         context["event"] = event
         context["type_rows"] = build_type_rows(event)
+        context["report_base_url"] = self.url
         return context
 
     class Meta:
@@ -1720,6 +1938,14 @@ class RegistrationType(Orderable):
     slug = models.SlugField(max_length=140)
     capacity = models.PositiveIntegerField(null=True, blank=True)
     is_public = models.BooleanField(default=True)
+    close_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text=(
+            "After this date and time, this registration type is hidden and no longer accepts "
+            "new registrations. Leave blank to keep it open while event registration is open."
+        ),
+    )
     custom_confirmation_text = RichTextField(blank=True)
 
     allow_group_registrations = models.BooleanField(
@@ -1762,6 +1988,7 @@ class RegistrationType(Orderable):
         FieldPanel("slug"),
         FieldPanel("capacity"),
         FieldPanel("is_public"),
+        FieldPanel("close_date"),
         MultiFieldPanel(
             [
                 FieldPanel("allow_group_registrations"),
@@ -1784,6 +2011,10 @@ class RegistrationType(Orderable):
     def __str__(self) -> str:
         return f"{self.name}" + (f" (cap {self.capacity})" if self.capacity is not None else "")
 
+    def is_open_for_registration(self, now=None) -> bool:
+        now = now or timezone.now()
+        return self.close_date is None or self.close_date > now
+
 
 class RegistrationFormField(AbstractFormField):
     FIELD_CHOICES = (
@@ -1803,6 +2034,9 @@ class RegistrationFormField(AbstractFormField):
         ("file", _("File upload")),
         ("conditional_text", _("Conditional text (checkbox + details)")),
         ("conditional_dropdown_other", _("Conditional dropdown (Other + textbox)")),
+        ("conditional_multiselect_other", _("Conditional multiselect (Other + textbox)")),
+        ("mailchimp_optin", _("Opt-in mailing list (Yes/No)")),
+        ("rich_text", _("Rich text block")),
     )
     field_key = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     template = ParentalKey(
@@ -1819,6 +2053,7 @@ class RegistrationFormField(AbstractFormField):
         null=True, blank=True,
         help_text="Max file size (MB). Leave blank for no limit."
     )
+    rich_text = RichTextField(blank=True)
 
     field_type = models.CharField(
         max_length=32,
@@ -1883,6 +2118,7 @@ class RegistrationFormField(AbstractFormField):
     )
 
     panels = AbstractFormField.panels + [
+        FieldPanel("rich_text"),
         FieldPanel("exclude_from_guest_forms"),
         MultiFieldPanel(
             [
@@ -2097,13 +2333,13 @@ class Registrant(models.Model):
             return True
 
         with transaction.atomic():
-            RegistrationType.objects.select_for_update().get(pk=self.registration_type_id)
+            rt = RegistrationType.objects.select_for_update().get(pk=self.registration_type_id)
             confirmed_count = Registrant.objects.filter(
                 registration_type_id=self.registration_type_id,
                 status=Registrant.Status.CONFIRMED
             ).count()
 
-            if confirmed_count < (self.registration_type.capacity or 0):
+            if confirmed_count < (rt.capacity or 0):
                 self.status = Registrant.Status.CONFIRMED
                 self.save(update_fields=["status"])
                 return True
@@ -2290,6 +2526,14 @@ class EmailCampaign(models.Model):
         default="",
         help_text='Comma-separated registration type slugs (e.g. "general,student"). Leave blank for all.',
     )
+    test_recipient_emails = models.TextField(
+        blank=True,
+        default="",
+        help_text=(
+            "Comma-, semicolon-, or newline-separated email addresses for test sends. "
+            "These addresses are never included in scheduled campaign sends."
+        ),
+    )
     # Optional single attachment via Wagtail Documents
     attachment = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -2297,11 +2541,14 @@ class EmailCampaign(models.Model):
     panels = [
         FieldPanel('event'),
         FieldPanel('template'),
+        EmailCampaignPreviewPanel(),
         FieldPanel('scheduled_for'),
         FieldPanel('sent_at'),
         FieldPanel('completed_at'),
         FieldPanel('include_type_slugs'),
         FieldPanel('include_statuses'),
+        FieldPanel('test_recipient_emails'),
+        EmailCampaignTestSendPanel(),
         FieldPanel('attachment'),
     ]
 

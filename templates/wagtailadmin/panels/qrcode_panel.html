@@ -1,0 +1,26 @@
+{% load i18n %}
+<div class="w-field__wrapper">
+  <div class="w-field">
+    {% if qr_image_data %}
+      <div style="padding: 12px 0;">
+        <img src="{{ qr_image_data }}"
+             alt="{% trans 'QR code for this page' %}"
+             style="display: block; width: 180px; height: 180px;">
+        {% if page_url %}
+          <p style="margin-top: 8px; font-size: 0.8em; color: #666; word-break: break-all;">{{ page_url }}</p>
+        {% endif %}
+        <p style="margin-top: 8px; font-size: 0.9em;">
+          {% trans "Scans" %}: <strong>{{ scan_count }}</strong>
+        </p>
+        <p style="margin-top: 4px; font-size: 0.8em; color: #666;">
+          <b>{% trans "Note" %}:</b>
+          {% trans "If the page URL changes, this QR code updates automatically. Previously printed codes will stop working." %}
+        </p>
+      </div>
+    {% elif page_url %}
+      <p>{% trans "QR code unavailable – install the qrcode package." %}</p>
+    {% else %}
+      <p>{% trans "QR code unavailable until the page has been published." %}</p>
+    {% endif %}
+  </div>
+</div>

@@ -1,0 +1,107 @@
+{% load i18n %}
+
+<div class="w-field__wrapper"
+     data-email-campaign-preview
+     data-preview-url="{{ preview_url }}"
+     data-initial-preview-url="{{ initial_preview_url }}">
+  <div class="w-field">
+    <h2 class="w-label-2">{% trans "Email preview" %}</h2>
+    <p class="help">
+      {% trans "This preview refreshes when the selected template, event, or audience filters change. Edits made inside the email template itself must be saved in the template editor first." %}
+    </p>
+
+    <div
+      data-email-campaign-preview-target
+      role="region"
+      aria-label="{% trans 'Email campaign preview' %}"
+      style="width:100%; min-height:760px; border:1px solid #d9d9d9; background:#fff; overflow:auto;"
+    >
+      {% include "events/admin/includes/email_campaign_preview_content.html" with message=initial_preview_message subject=initial_preview_subject email_body_html=initial_preview_email_body_html event_title=initial_preview_event_title registrant_label=initial_preview_registrant_label using_real_registrant=initial_preview_using_real_registrant only %}
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var script = document.currentScript;
+      var panel = script.closest("[data-email-campaign-preview]");
+      if (!panel) {
+        return;
+      }
+
+      var target = panel.querySelector("[data-email-campaign-preview-target]");
+      var previewUrl = panel.getAttribute("data-preview-url");
+      var initialPreviewUrl = panel.getAttribute("data-initial-preview-url");
+      var fieldNames = ["template", "event", "include_statuses", "include_type_slugs"];
+      var timer = null;
+      var currentUrl = "";
+
+      function fieldFor(name) {
+        return document.getElementById("id_" + name) || document.querySelector("[name='" + name + "']");
+      }
+
+      function previewContentFrom(html) {
+        var doc = new DOMParser().parseFromString(html, "text/html");
+        var content = doc.querySelector(".email-campaign-preview-content");
+        if (content) {
+          return content.innerHTML;
+        }
+        return doc.body ? doc.body.innerHTML : html;
+      }
+
+      function setError(message) {
+        target.innerHTML = '<div style="padding:18px 16px;">' + message + '</div>';
+      }
+
+      function loadPreview(nextUrl) {
+        if (currentUrl === nextUrl) {
+          return;
+        }
+
+        currentUrl = nextUrl;
+        fetch(nextUrl, {credentials: "same-origin"})
+          .then(function (response) {
+            if (!response.ok) {
+              throw new Error("Preview request failed: " + response.status);
+            }
+            return response.text();
+          })
+          .then(function (html) {
+            target.innerHTML = previewContentFrom(html);
+          })
+          .catch(function () {
+            setError("{% trans 'The preview could not be loaded.' %}");
+          });
+      }
+
+      function updatePreview() {
+        var url = new URL(previewUrl, window.location.origin);
+
+        fieldNames.forEach(function (name) {
+          var field = fieldFor(name);
+          if (field && field.value) {
+            var paramName = name === "template" ? "template_id" : name === "event" ? "event_id" : name;
+            url.searchParams.set(paramName, field.value);
+          }
+        });
+
+        loadPreview(url.toString());
+      }
+
+      function queueUpdate() {
+        window.clearTimeout(timer);
+        timer = window.setTimeout(updatePreview, 250);
+      }
+
+      fieldNames.forEach(function (name) {
+        var field = fieldFor(name);
+        if (field) {
+          field.addEventListener("change", queueUpdate);
+          field.addEventListener("input", queueUpdate);
+        }
+      });
+
+      loadPreview(new URL(initialPreviewUrl || previewUrl, window.location.origin).toString());
+      updatePreview();
+    }());
+  </script>
+</div>

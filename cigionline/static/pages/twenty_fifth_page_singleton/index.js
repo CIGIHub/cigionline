@@ -1,0 +1,611 @@
+import './css/twenty_fifth_page_singleton.scss';
+import 'swiper/swiper-bundle.css';
+import Swiper from 'swiper';
+import { Navigation, Pagination } from 'swiper/modules'; // eslint-disable-line import/no-unresolved
+
+Swiper.use([Navigation, Pagination]);
+
+const splashScrollButton = document.querySelector('.anniversary-splash-scroll');
+const anniversarySplash = document.querySelector('.anniversary-splash');
+const splashPoster = document.querySelector('.anniversary-splash-poster');
+const splashVideo = document.querySelector('.anniversary-splash-video');
+const anniversaryContent = document.getElementById('anniversary-content');
+const anniversaryStickyHeader = document.querySelector('.anniversary-sticky-header');
+
+if (splashPoster) {
+  const splashPosterImage = splashPoster.querySelector('img');
+  const markSplashPosterLoaded = () => {
+    splashPoster.classList.add('is-loaded');
+  };
+
+  if (!splashPosterImage || splashPosterImage.complete) {
+    markSplashPosterLoaded();
+  } else {
+    splashPosterImage.addEventListener('load', markSplashPosterLoaded, { once: true });
+  }
+}
+
+if (splashVideo) {
+  const desktopSplashMedia = window.matchMedia('(min-width: 768px)');
+  const reducedMotionMedia = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  const loadSplashVideo = () => {
+    if (
+      splashVideo.dataset.loaded
+      || !desktopSplashMedia.matches
+      || reducedMotionMedia.matches
+      || !splashVideo.dataset.src
+    ) {
+      return;
+    }
+
+    splashVideo.dataset.loaded = 'true';
+    splashVideo.src = splashVideo.dataset.src;
+    splashVideo.load();
+
+    splashVideo.addEventListener('canplay', () => {
+      splashVideo.classList.add('is-loaded');
+      splashVideo.play().catch(() => {});
+    }, { once: true });
+  };
+
+  loadSplashVideo();
+  desktopSplashMedia.addEventListener('change', loadSplashVideo);
+  reducedMotionMedia.addEventListener('change', loadSplashVideo);
+}
+
+if (splashScrollButton && anniversaryContent) {
+  splashScrollButton.addEventListener('click', () => {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    anniversaryContent.scrollIntoView({
+      behavior: reduceMotion ? 'auto' : 'smooth',
+      block: 'start',
+    });
+  });
+}
+
+if (anniversarySplash && anniversaryStickyHeader) {
+  let headerQueued = false;
+
+  const updateAnniversaryHeader = () => {
+    headerQueued = false;
+    const headerHeight = anniversaryStickyHeader.querySelector('.anniversary-site-header')?.offsetHeight || 72;
+    anniversaryStickyHeader.classList.toggle(
+      'is-visible',
+      anniversarySplash.getBoundingClientRect().bottom <= headerHeight,
+    );
+  };
+
+  const queueHeaderUpdate = () => {
+    if (headerQueued) return;
+    headerQueued = true;
+    window.requestAnimationFrame(updateAnniversaryHeader);
+  };
+
+  updateAnniversaryHeader();
+  window.addEventListener('scroll', queueHeaderUpdate, { passive: true });
+  window.addEventListener('resize', queueHeaderUpdate);
+}
+
+const anniversaryToggleButtons = document.querySelectorAll('[data-anniversary-toggle]');
+const closeAnniversaryToggles = (focusButton = null) => {
+  anniversaryToggleButtons.forEach((button) => {
+    const target = document.getElementById(button.dataset.anniversaryToggle);
+    button.setAttribute('aria-expanded', 'false');
+    if (target) {
+      target.hidden = true;
+    }
+  });
+
+  if (focusButton) {
+    focusButton.focus();
+  }
+};
+
+anniversaryToggleButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    const target = document.getElementById(button.dataset.anniversaryToggle);
+    if (!target) return;
+
+    const isExpanded = button.getAttribute('aria-expanded') === 'true';
+    closeAnniversaryToggles();
+
+    button.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
+    target.hidden = isExpanded;
+  });
+});
+
+document.addEventListener('click', (event) => {
+  if (!event.target.closest('[data-anniversary-toggle], .anniversary-share-panel')) {
+    closeAnniversaryToggles();
+  }
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key !== 'Escape') return;
+
+  const openButton = [...anniversaryToggleButtons].find(
+    (button) => button.getAttribute('aria-expanded') === 'true',
+  );
+  closeAnniversaryToggles(openButton);
+});
+
+document.querySelectorAll('.anniversary-share-panel a').forEach((link) => {
+  link.addEventListener('click', () => {
+    closeAnniversaryToggles();
+  });
+});
+
+const anniversaryMenuButton = document.querySelector('[data-anniversary-menu-toggle]');
+const anniversaryMenuOverlay = document.getElementById('anniversary-menu-overlay');
+const anniversaryMenuAccordions = document.querySelectorAll('.anniversary-menu-accordion');
+const anniversaryPageNavLinks = document.querySelectorAll('.anniversary-site-links a');
+
+const setAnniversaryPageNavEnabled = (isEnabled) => {
+  anniversaryPageNavLinks.forEach((link) => {
+    link.setAttribute('aria-hidden', isEnabled ? 'false' : 'true');
+    if (isEnabled) {
+      link.removeAttribute('tabindex');
+    } else {
+      link.setAttribute('tabindex', '-1');
+    }
+  });
+};
+
+const closeAnniversaryMenu = (focusButton = null) => {
+  if (!anniversaryMenuButton || !anniversaryMenuOverlay) return;
+
+  anniversaryMenuButton.classList.remove('open');
+  anniversaryMenuButton.setAttribute('aria-expanded', 'false');
+  anniversaryMenuButton.setAttribute('aria-label', 'Open menu');
+  anniversaryMenuOverlay.hidden = true;
+  if (anniversaryStickyHeader) {
+    anniversaryStickyHeader.classList.remove('menu-open');
+  }
+  setAnniversaryPageNavEnabled(true);
+  document.body.classList.remove('disable-scroll');
+
+  if (focusButton) {
+    focusButton.focus();
+  }
+};
+
+const openAnniversaryMenu = () => {
+  if (!anniversaryMenuButton || !anniversaryMenuOverlay) return;
+
+  closeAnniversaryToggles();
+  anniversaryMenuButton.classList.add('open');
+  anniversaryMenuButton.setAttribute('aria-expanded', 'true');
+  anniversaryMenuButton.setAttribute('aria-label', 'Close menu');
+  anniversaryMenuOverlay.hidden = false;
+  if (anniversaryStickyHeader) {
+    anniversaryStickyHeader.classList.add('menu-open');
+  }
+  setAnniversaryPageNavEnabled(false);
+  document.body.classList.add('disable-scroll');
+};
+
+if (anniversaryMenuButton && anniversaryMenuOverlay) {
+  anniversaryMenuButton.addEventListener('click', () => {
+    const isOpen = anniversaryMenuButton.getAttribute('aria-expanded') === 'true';
+
+    if (isOpen) {
+      closeAnniversaryMenu();
+    } else {
+      openAnniversaryMenu();
+    }
+  });
+
+  anniversaryMenuOverlay.addEventListener('click', (event) => {
+    if (event.target === anniversaryMenuOverlay) {
+      closeAnniversaryMenu();
+    }
+  });
+}
+
+document.addEventListener('keydown', (event) => {
+  if (
+    event.key === 'Escape'
+    && anniversaryMenuButton
+    && anniversaryMenuButton.getAttribute('aria-expanded') === 'true'
+  ) {
+    closeAnniversaryMenu(anniversaryMenuButton);
+  }
+});
+
+anniversaryMenuAccordions.forEach((accordion) => {
+  accordion.addEventListener('click', () => {
+    const panel = accordion.nextElementSibling;
+    if (!panel) return;
+
+    const isExpanded = accordion.getAttribute('aria-expanded') === 'true';
+    accordion.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
+    panel.style.maxHeight = isExpanded ? null : `${panel.scrollHeight}px`;
+  });
+});
+
+const newsletterOpenButtons = document.querySelectorAll('[data-anniversary-newsletter-open]');
+const newsletterModal = document.querySelector('[data-anniversary-newsletter-modal]');
+const newsletterCloseButton = document.querySelector('[data-anniversary-newsletter-close]');
+const newsletterFirstField = newsletterModal ? newsletterModal.querySelector('[name="first_name"]') : null;
+const newsletterForm = newsletterModal ? newsletterModal.querySelector('.anniversary-newsletter-modal-form') : null;
+const newsletterFormMessage = newsletterModal ? newsletterModal.querySelector('.anniversary-newsletter-form-message') : null;
+const newsletterSubmitButton = newsletterForm ? newsletterForm.querySelector('.anniversary-newsletter-submit') : null;
+let newsletterReturnFocus = null;
+let newsletterCloseTimer = null;
+
+const lockBodyScroll = () => {
+  const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+  if (scrollbarWidth > 0) {
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
+    if (anniversaryStickyHeader) {
+      anniversaryStickyHeader.style.setProperty('--anniversary-scrollbar-offset', `${scrollbarWidth}px`);
+    }
+  }
+  document.body.classList.add('disable-scroll');
+};
+
+const unlockBodyScroll = () => {
+  document.body.classList.remove('disable-scroll');
+  document.body.style.paddingRight = '';
+  if (anniversaryStickyHeader) {
+    anniversaryStickyHeader.style.removeProperty('--anniversary-scrollbar-offset');
+  }
+};
+
+const closeNewsletterModal = () => {
+  if (!newsletterModal || newsletterModal.hidden) return;
+
+  newsletterModal.classList.remove('is-open');
+  window.clearTimeout(newsletterCloseTimer);
+  newsletterCloseTimer = window.setTimeout(() => {
+    newsletterModal.hidden = true;
+    unlockBodyScroll();
+
+    if (newsletterReturnFocus) {
+      newsletterReturnFocus.focus();
+      newsletterReturnFocus = null;
+    }
+  }, 220);
+};
+
+const openNewsletterModal = () => {
+  if (!newsletterModal) return;
+
+  window.clearTimeout(newsletterCloseTimer);
+  closeAnniversaryToggles();
+  closeAnniversaryMenu();
+  newsletterReturnFocus = document.activeElement;
+  newsletterModal.hidden = false;
+  if (newsletterForm && newsletterForm.classList.contains('is-submitted')) {
+    newsletterForm.classList.remove('is-submitted');
+    if (newsletterFormMessage) {
+      newsletterFormMessage.hidden = true;
+      newsletterFormMessage.textContent = '';
+    }
+  }
+  lockBodyScroll();
+  window.requestAnimationFrame(() => {
+    newsletterModal.classList.add('is-open');
+  });
+
+  if (newsletterFirstField) {
+    newsletterFirstField.focus();
+  }
+};
+
+if (newsletterOpenButtons.length && newsletterModal) {
+  newsletterOpenButtons.forEach((button) => {
+    button.addEventListener('click', openNewsletterModal);
+  });
+
+  newsletterModal.addEventListener('click', (event) => {
+    if (event.target === newsletterModal) {
+      closeNewsletterModal();
+    }
+  });
+}
+
+if (newsletterModal && !newsletterModal.hidden) {
+  lockBodyScroll();
+}
+
+if (newsletterCloseButton) {
+  newsletterCloseButton.addEventListener('click', closeNewsletterModal);
+}
+
+const setNewsletterMessage = (message, type = 'info') => {
+  if (!newsletterFormMessage) return;
+
+  newsletterFormMessage.hidden = false;
+  newsletterFormMessage.textContent = message;
+  newsletterFormMessage.classList.remove('is-error', 'is-info', 'is-success');
+  newsletterFormMessage.classList.add(`is-${type}`);
+};
+
+const resetNewsletterTurnstile = () => {
+  if (!window.turnstile) return;
+
+  try {
+    window.turnstile.reset();
+  } catch {
+    // Turnstile may not be fully ready yet; the next submission will render a fresh token.
+  }
+};
+
+if (newsletterForm && newsletterSubmitButton && window.fetch) {
+  const submitButtonContent = newsletterSubmitButton.innerHTML;
+
+  newsletterForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    newsletterForm.classList.remove('is-submitted');
+    newsletterForm.classList.add('is-loading');
+    newsletterSubmitButton.disabled = true;
+    newsletterSubmitButton.innerHTML = 'SUBSCRIBING...';
+    setNewsletterMessage('Subscribing...', 'info');
+
+    try {
+      const response = await fetch(newsletterForm.action, {
+        method: 'POST',
+        body: new FormData(newsletterForm),
+        credentials: 'same-origin',
+        headers: {
+          Accept: 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+      });
+      const contentType = response.headers.get('content-type') || '';
+      const payload = contentType.includes('application/json') ? await response.json() : {};
+
+      if (!response.ok || !payload.success) {
+        throw payload;
+      }
+
+      newsletterForm.reset();
+      newsletterForm.classList.add('is-submitted');
+      setNewsletterMessage(payload.message || 'Thanks for subscribing.', 'success');
+    } catch (error) {
+      setNewsletterMessage(error.message || 'There was a problem subscribing you. Please try again.', 'error');
+      resetNewsletterTurnstile();
+    } finally {
+      newsletterForm.classList.remove('is-loading');
+      newsletterSubmitButton.disabled = false;
+      newsletterSubmitButton.innerHTML = submitButtonContent;
+    }
+  });
+}
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && newsletterModal && !newsletterModal.hidden) {
+    closeNewsletterModal();
+  }
+});
+
+const splitEventTitleLines = (scope = document) => {
+  const eventTitleLinks = scope.querySelectorAll('.anniversary-event-card h3 a');
+
+  eventTitleLinks.forEach((link) => {
+    const title = link.dataset.anniversaryEventTitle || link.textContent.trim();
+    if (!title) return;
+
+    link.dataset.anniversaryEventTitle = title;
+    link.classList.remove('is-line-split');
+    link.textContent = '';
+
+    title.split(/\s+/).forEach((word, index, words) => {
+      const wordSpan = document.createElement('span');
+      wordSpan.className = 'anniversary-event-title-word';
+      wordSpan.textContent = `${word}${index < words.length - 1 ? ' ' : ''}`;
+      link.appendChild(wordSpan);
+    });
+
+    const lines = [];
+    link.querySelectorAll('.anniversary-event-title-word').forEach((wordSpan) => {
+      const wordTop = Math.round(wordSpan.offsetTop);
+      let line = lines.find((item) => Math.abs(item.top - wordTop) <= 1);
+
+      if (!line) {
+        line = { text: '', top: wordTop };
+        lines.push(line);
+      }
+
+      line.text += wordSpan.textContent;
+    });
+
+    link.textContent = '';
+
+    lines.forEach((line, index) => {
+      const lineSpan = document.createElement('span');
+      lineSpan.className = 'anniversary-event-title-line';
+      lineSpan.style.setProperty('--line-index', index);
+      lineSpan.textContent = line.text.trimEnd();
+      link.appendChild(lineSpan);
+    });
+
+    link.classList.add('is-line-split');
+  });
+};
+
+const anniversaryNavLinks = [...document.querySelectorAll('[data-anniversary-nav-link]')];
+const anniversarySections = anniversaryNavLinks
+  .map((link) => ({
+    link,
+    section: document.querySelector(link.getAttribute('href')),
+  }))
+  .filter(({ section }) => section);
+if (anniversarySections.length) {
+  let scrollSpyQueued = false;
+
+  const setActiveAnniversarySection = () => {
+    scrollSpyQueued = false;
+    const headerOffset = anniversaryStickyHeader
+      ? anniversaryStickyHeader.getBoundingClientRect().height
+      : 0;
+    const activationPoint = window.scrollY + headerOffset + 16;
+    let activeItem = anniversarySections[0];
+
+    anniversarySections.forEach((item) => {
+      const sectionTop = item.section.getBoundingClientRect().top + window.scrollY;
+      if (sectionTop <= activationPoint) {
+        activeItem = item;
+      }
+    });
+
+    anniversarySections.forEach(({ link }) => {
+      const isActive = link === activeItem.link;
+      link.classList.toggle('active', isActive);
+      if (isActive) {
+        link.setAttribute('aria-current', 'true');
+      } else {
+        link.removeAttribute('aria-current');
+      }
+    });
+  };
+
+  const queueScrollSpy = () => {
+    if (scrollSpyQueued) return;
+    scrollSpyQueued = true;
+    window.requestAnimationFrame(setActiveAnniversarySection);
+  };
+
+  setActiveAnniversarySection();
+  window.addEventListener('scroll', queueScrollSpy, { passive: true });
+  window.addEventListener('resize', queueScrollSpy);
+}
+
+const eventsBlock = document.querySelector('[data-anniversary-events]');
+if (eventsBlock) {
+  const swiperContainer = eventsBlock.querySelector('.anniversary-events-swiper');
+  const prevButton = eventsBlock.querySelector('.anniversary-events-button-prev');
+  const nextButton = eventsBlock.querySelector('.anniversary-events-button-next');
+  const pagination = eventsBlock.querySelector('.anniversary-events-pagination');
+
+  if (
+    swiperContainer
+    && prevButton
+    && nextButton
+    && pagination
+    && swiperContainer.querySelector('.swiper-slide')
+  ) {
+    swiperContainer.classList.add('swiper');
+
+    const eventSwiper = new Swiper(swiperContainer, {
+      slidesPerView: 1,
+      spaceBetween: 16,
+      watchOverflow: true,
+      breakpoints: {
+        768: {
+          slidesPerView: 2,
+          spaceBetween: 20,
+        },
+        992: {
+          slidesPerView: 3,
+          spaceBetween: 24,
+        },
+      },
+      navigation: {
+        nextEl: nextButton,
+        prevEl: prevButton,
+      },
+      pagination: {
+        el: pagination,
+        clickable: true,
+        renderBullet(index, className) {
+          return [
+            `<button class="${className}" type="button"`,
+            ` aria-label="Go to events slide ${index + 1}">`,
+            `<span>${index + 1}</span></button>`,
+          ].join('');
+        },
+      },
+    });
+
+    const updateEventsOverflow = () => {
+      eventsBlock.classList.toggle('is-locked', eventSwiper.isLocked);
+    };
+    const queueEventsOverflowUpdate = () => {
+      window.requestAnimationFrame(updateEventsOverflow);
+    };
+
+    let eventTitleSplitTimer = null;
+    const queueEventTitleSplit = () => {
+      window.clearTimeout(eventTitleSplitTimer);
+      eventTitleSplitTimer = window.setTimeout(() => {
+        splitEventTitleLines(eventsBlock);
+      }, 80);
+    };
+
+    splitEventTitleLines(eventsBlock);
+    updateEventsOverflow();
+    eventSwiper.on('lock', updateEventsOverflow);
+    eventSwiper.on('unlock', updateEventsOverflow);
+    eventSwiper.on('resize', () => {
+      queueEventTitleSplit();
+      queueEventsOverflowUpdate();
+    });
+    eventSwiper.on('breakpoint', () => {
+      queueEventTitleSplit();
+      queueEventsOverflowUpdate();
+    });
+    window.addEventListener('load', queueEventTitleSplit);
+
+    if (document.fonts) {
+      document.fonts.ready.then(queueEventTitleSplit);
+    }
+  }
+}
+
+const timelineGalleryBlocks = document.querySelectorAll('[data-anniversary-timeline-gallery]');
+timelineGalleryBlocks.forEach((timelineGalleryBlock) => {
+  const swiperContainer = timelineGalleryBlock.querySelector('.swiper-container');
+  const prevButton = timelineGalleryBlock.querySelector('.anniversary-timeline-button-prev');
+  const nextButton = timelineGalleryBlock.querySelector('.anniversary-timeline-button-next');
+  if (!swiperContainer || !prevButton || !nextButton) return;
+  if (!swiperContainer.querySelector('.swiper-slide')) return;
+  swiperContainer.classList.add('swiper');
+
+  const swiper = new Swiper(swiperContainer, {
+    slidesPerView: 1,
+    spaceBetween: 0,
+    centeredSlides: true,
+
+    breakpoints: {
+      992: {
+        slidesPerView: 2,
+      },
+    },
+
+    navigation: {
+      nextEl: nextButton,
+      prevEl: prevButton,
+    },
+  });
+
+  const timelineNavButtons = timelineGalleryBlock.querySelectorAll(
+    '.anniversary-timeline-nav li button',
+  );
+  const years = [...timelineNavButtons].map((button) => button.dataset.year);
+
+  const toggleYear = function () {
+    [].map.call(timelineNavButtons, function (elem) {
+      elem.classList.remove('active');
+    });
+    this.classList.add('active');
+    swiper.slideTo(years.indexOf(this.dataset.year));
+  };
+  [].map.call(timelineNavButtons, function (elem) {
+    elem.addEventListener('click', toggleYear, false);
+  });
+
+  swiper.on('activeIndexChange', function (e) {
+    for (let i = 0; i < timelineNavButtons.length; i += 1) {
+      if (timelineNavButtons[i].dataset.year === years[e.activeIndex]) {
+        [].map.call(timelineNavButtons, function (elem) {
+          elem.classList.remove('active');
+        });
+        timelineNavButtons[i].classList.add('active');
+      }
+    }
+  });
+});

@@ -9,8 +9,11 @@ from wagtail.test.utils import WagtailPageTestCase
 
 from .models import (
     BasicPage,
+    FacilityRentalsPage,
     FundingPage,
+    HumanAnalysisStandardPage,
     PrivacyNoticePage,
+    TwentyFifthPageSingleton,
     TwentiethPage,
     TwentiethPageSingleton,
 )
@@ -32,7 +35,31 @@ class BasicPageTests(WagtailPageTestCase):
         """
         self.assertAllowedSubpageTypes(
             BasicPage,
-            {AnnualReportListPage, BasicPage, FundingPage, PersonListPage, ProjectPage, TwentiethPage, TwentiethPageSingleton}
+            {
+                AnnualReportListPage,
+                BasicPage,
+                FacilityRentalsPage,
+                FundingPage,
+                HumanAnalysisStandardPage,
+                PersonListPage,
+                ProjectPage,
+                TwentiethPage,
+                TwentiethPageSingleton,
+            }
+        )
+
+
+class TwentyFifthPageSingletonTests(WagtailPageTestCase):
+    def test_twentyfifthpagesingleton_parent_page_types(self):
+        self.assertAllowedParentPageTypes(
+            TwentyFifthPageSingleton,
+            {HomePage},
+        )
+
+    def test_twentyfifthpagesingleton_child_page_types(self):
+        self.assertAllowedSubpageTypes(
+            TwentyFifthPageSingleton,
+            {},
         )
 
 
@@ -46,6 +73,20 @@ class FundingPageTests(WagtailPageTestCase):
     def test_fundingpage_child_page_types(self):
         self.assertAllowedSubpageTypes(
             FundingPage,
+            {},
+        )
+
+
+class HumanAnalysisStandardPageTests(WagtailPageTestCase):
+    def test_humananalysisstandardpage_parent_page_types(self):
+        self.assertAllowedParentPageTypes(
+            HumanAnalysisStandardPage,
+            {BasicPage},
+        )
+
+    def test_humananalysisstandardpage_child_page_types(self):
+        self.assertAllowedSubpageTypes(
+            HumanAnalysisStandardPage,
             {},
         )
 

@@ -179,6 +179,8 @@ class AnnualReportSPAPage(RoutablePageMixin, FeatureablePageAbstract, Searchable
         ShareablePageAbstract.social_panel,
         SearchablePageAbstract.search_panel,
     ]
+    
+    search_fields = Page.search_fields + SearchablePageAbstract.search_fields
 
     subpage_types = ["AnnualReportSlidePage"]
 

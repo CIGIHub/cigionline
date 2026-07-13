@@ -6,17 +6,16 @@
   {% render_bundle 'subscribePage' 'css' %}
 {% endblock %}
 
+{% block extra_js %}
+  {% if turnstile_site_key %}
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  {% endif %}
+{% endblock %}
+
 {% block content %}
   {% include "includes/heroes/hero_plain.html" with title=self.title %}
   <section class="body">
     {{self.body}}
-    <div class="container">
-      <div class="row d-block">
-        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-          <p>Read the latest newsletter, here: <a href="{{self.latest_newsletter.url}}">{{self.latest_newsletter.title}}</a>.</p>
-        </div>
-      </div>
-    </div>
   </section>
   <section>
     <div class="container">
@@ -26,8 +25,11 @@
           <form class="cigi-subscribe-form" action="/subscribe/" method="POST" id="subscribe-form" accept-charset="UTF-8">
             {% csrf_token %}
             {{form.as_p}}
-            <div><p>*Optional fields</p></div>
+            {% comment %} <div class="legends"><p>*Optional fields</p></div> {% endcomment %}
             <button class="button-action" type="submit">Sign Up</button>
+            {% if turnstile_site_key %}
+              <div class="cf-turnstile mt-3 mb-3" data-sitekey="{{ turnstile_site_key }}" data-appearance="invisible"></div>
+            {% endif %}
           </form>
         </div>
       </div>

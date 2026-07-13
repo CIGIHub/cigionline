@@ -1,0 +1,27 @@
+{% load i18n %}
+
+<div class="w-field__wrapper">
+  <div class="w-field">
+    <h2 class="w-label-2">{% trans "Send test" %}</h2>
+
+    {% if send_test_url %}
+      <p class="help">
+        {% trans "Sends the current campaign form values to the test recipients above. Changes to the email template body itself must still be saved in the template editor first." %}
+      </p>
+
+      <button
+        type="submit"
+        class="button button-secondary"
+        formaction="{{ send_test_url }}"
+        formmethod="post"
+        formnovalidate
+      >
+        {% trans "Send test email" %}
+      </button>
+    {% else %}
+      <p class="help">
+        {% trans "Save this campaign before sending a test email." %}
+      </p>
+    {% endif %}
+  </div>
+</div>

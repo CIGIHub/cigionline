@@ -1,6 +1,86 @@
 from django.apps import apps
-from wagtail.admin.panels import InlinePanel
+from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
+from urllib.parse import urlencode
+from wagtail.admin.panels import InlinePanel, Panel
 from wagtail.admin.panels.base import get_form_for_model
+
+
+class EmailCampaignPreviewPanel(Panel):
+    class BoundPanel(Panel.BoundPanel):
+        template_name = "events/admin/email_campaign_preview_panel.html"
+
+        def get_context_data(self, parent_context=None):
+            context = super().get_context_data(parent_context)
+            context["preview_url"] = reverse("emailcampaign:preview_selected")
+            context["initial_preview_url"] = self._get_initial_preview_url(
+                context["preview_url"]
+            )
+            context.update(self._get_initial_preview_context())
+            return context
+
+        def _get_initial_preview_context(self):
+            if not getattr(self.instance, "template_id", None):
+                return {
+                    "initial_preview_message": _("Select an email template to preview it."),
+                }
+
+            from .email_preview import build_email_campaign_preview
+
+            preview = build_email_campaign_preview(
+                request=self.request,
+                template_obj=self.instance.template,
+                event=getattr(self.instance, "event", None),
+                include_statuses=getattr(self.instance, "include_statuses", ""),
+                include_type_slugs=getattr(self.instance, "include_type_slugs", ""),
+            )
+
+            return {
+                "initial_preview_subject": preview.subject,
+                "initial_preview_email_body_html": preview.body_html,
+                "initial_preview_event_title": preview.event_title,
+                "initial_preview_registrant_label": preview.registrant_label,
+                "initial_preview_using_real_registrant": preview.using_real_registrant,
+            }
+
+        def _get_initial_preview_url(self, preview_url):
+            params = {}
+
+            if getattr(self.instance, "template_id", None):
+                params["template_id"] = self.instance.template_id
+
+            if getattr(self.instance, "event_id", None):
+                params["event_id"] = self.instance.event_id
+
+            if getattr(self.instance, "include_statuses", ""):
+                params["include_statuses"] = self.instance.include_statuses
+
+            if getattr(self.instance, "include_type_slugs", ""):
+                params["include_type_slugs"] = self.instance.include_type_slugs
+
+            if not params:
+                return preview_url
+
+            return f"{preview_url}?{urlencode(params)}"
+
+
+class EmailCampaignTestSendPanel(Panel):
+    class BoundPanel(Panel.BoundPanel):
+        template_name = "events/admin/email_campaign_test_send_panel.html"
+
+        def get_context_data(self, parent_context=None):
+            context = super().get_context_data(parent_context)
+
+            if getattr(self.instance, "pk", None):
+                context["send_test_url"] = reverse(
+                    "emailcampaign:send_test",
+                    args=[self.instance.pk],
+                )
+            else:
+                context["send_test_url"] = ""
+
+            return context
+
 
 class RegistrationFormFieldPanel(InlinePanel):
     """InlinePanel that filters show_for_types / required_for_types to this event's types."""

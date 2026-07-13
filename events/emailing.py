@@ -1,15 +1,26 @@
 from __future__ import annotations
 
+import base64
 import html
+import mimetypes
+import os
 from typing import TYPE_CHECKING
 
 import pytz
 from django.conf import settings
 from django.template.loader import render_to_string
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+from sendgrid.helpers.mail import (
+    Attachment,
+    Disposition,
+    FileContent,
+    FileName,
+    FileType,
+    Mail,
+)
 
 from .email_rendering import render_email_subject, render_streamfield_email_html
+from .forms import is_non_answer_field_type
 
 if TYPE_CHECKING:
     from .models import Registrant
@@ -29,6 +40,36 @@ def _from_email() -> tuple[str, str]:
     address = settings.SENDGRID_FROM_EMAIL_EVENTS
     name = getattr(settings, "SENDGRID_FROM_NAME_EVENTS", "CIGI Events")
     return (address, name)
+
+
+def _attach_campaign_attachment(message: Mail, document) -> None:
+    if not document:
+        return
+
+    file_field = getattr(document, "file", None)
+    if not file_field:
+        return
+
+    file_field.open("rb")
+    try:
+        encoded_file = base64.b64encode(file_field.read()).decode()
+    finally:
+        file_field.close()
+
+    filename = (
+        getattr(document, "filename", None)
+        or os.path.basename(getattr(file_field, "name", ""))
+        or getattr(document, "title", "")
+        or "attachment"
+    )
+    content_type = mimetypes.guess_type(filename)[0] or "application/octet-stream"
+
+    message.attachment = Attachment(
+        FileContent(encoded_file),
+        FileName(filename),
+        FileType(content_type),
+        Disposition("attachment"),
+    )
 
 
 def _absolute_event_base(event) -> str:
@@ -182,7 +223,7 @@ def _render_registrant_answers(registrant) -> tuple[str, str]:
     def _label_for_key(answer_key: str) -> str:
         # Dynamic fields are stored as f_<uuid> plus optional suffixes like:
         #   __details (conditional_text)
-        #   __other   (conditional_dropdown_other)
+        #   __other   (conditional_*_other fields)
         if not answer_key.startswith("f_"):
             return answer_key
 
@@ -251,6 +292,8 @@ def _render_registrant_answers(registrant) -> tuple[str, str]:
             tmpl = getattr(registrant.event, "registration_form_template", None)
             if tmpl:
                 for i, ff in enumerate(tmpl.fields.all().order_by("sort_order", "id"), start=1):
+                    if is_non_answer_field_type(getattr(ff, "field_type", "")):
+                        continue
                     # Stored answer keys look like: f_<uuid>
                     order_map[f"f_{ff.field_key}"] = i
         except Exception:
@@ -366,7 +409,7 @@ def send_event_campaign_email(campaign, registrant) -> None:
     Creates an EmailCampaignSend row to ensure idempotency.
     """
 
-    from .models import EmailCampaignSend
+    from .models import EmailCampaignSend, Registrant
 
     api_key = settings.SENDGRID_API_KEY
 
@@ -413,6 +456,7 @@ def send_event_campaign_email(campaign, registrant) -> None:
         plain_text_content=text,
         html_content=html,
     )
+    _attach_campaign_attachment(message, campaign.attachment)
 
     sg = SendGridAPIClient(api_key)
     try:

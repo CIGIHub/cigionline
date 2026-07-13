@@ -35,6 +35,7 @@ from streams.blocks import (
     PersonsListBlock,
     PublicationsListBlock,
     PosterBlock,
+    PublicationVisualElementsBlock,
     PullQuoteLeftBlock,
     PullQuoteRightBlock,
     RecommendedBlock,
@@ -52,7 +53,8 @@ from streams.blocks import (
     SovereignCanadaRationaleBlock,
     SovereignCanadaDashboardBlock,
     CollapsibleParagraphBlock,
-    NewsletterSubscriptionBlock
+    NewsletterSubscriptionBlock,
+    PromotionBlockStreamBlock,
 )
 from uploads.models import DocumentUpload
 from utils.email_utils import send_email, extract_errors_as_string
@@ -64,6 +66,9 @@ from wagtail.admin.panels import (
     PageChooserPanel,
     TitleFieldPanel,
 )
+from wagtail.admin.widgets import AdminPageChooser
+from wagtailmedia.edit_handlers import MediaChooserPanel
+from .panels import QRCodePanel
 from wagtail import blocks
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page, Collection
@@ -261,6 +266,7 @@ class BasicPageAbstract(models.Model):
         ('additional_pages_block', AddtionalPagesBlock()),
         ('files_block', FilesBlock()),
         ('collapsible_paragraph_block', CollapsibleParagraphBlock()),
+        ('promotion_block_stream_block', PromotionBlockStreamBlock()),
     ]
 
     body_accordion_block = ('accordion', AccordionBlock())
@@ -416,6 +422,7 @@ class BasicPageAbstract(models.Model):
         heading='Submenu',
         classname='collapsible collapsed',
     )
+    qr_code_panel = QRCodePanel(heading='QR Code')
 
     search_fields = [
         index.SearchField('body'),
@@ -601,26 +608,26 @@ class ContentPageForm(WagtailAdminPageForm):
         # filter out archived topics
         self.fields['topics'].queryset = TopicPage.objects.filter(archive=0)
 
-        # order commonly used country tags first
-        common_countries = [
-            'Canada',
-            'United States of America',
-            'Russian Federation',
-            'China',
-            'India',
-            'Brazil',
-        ]
+        # # order commonly used country tags first
+        # common_countries = [
+        #     'Canada',
+        #     'United States of America',
+        #     'Russian Federation',
+        #     'China',
+        #     'India',
+        #     'Brazil',
+        # ]
 
-        _whens = []
-        for sort_index, value in enumerate(common_countries):
-            _whens.append(models.When(title=value, then=sort_index))
+        # _whens = []
+        # for sort_index, value in enumerate(common_countries):
+        #     _whens.append(models.When(title=value, then=sort_index))
 
-        self.fields['countries'].queryset = CountryPage.objects.filter(archive=0).annotate(
-            _sort_index=models.Case(
-                *_whens,
-                output_field=models.IntegerField()
-            )
-        ).order_by('_sort_index', 'title')
+        # self.fields['countries'].queryset = CountryPage.objects.filter(archive=0).annotate(
+        #     _sort_index=models.Case(
+        #         *_whens,
+        #         output_field=models.IntegerField()
+        #     )
+        # ).order_by('_sort_index', 'title')
 
 
 class ContentPage(Page, SearchablePageAbstract):
@@ -779,7 +786,9 @@ class ContentPage(Page, SearchablePageAbstract):
     content_panels = [
         FieldPanel('publishing_date'),
         FieldPanel('topics'),
-        FieldPanel('countries'),
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.qr_code_panel,
     ]
 
     base_form_class = ContentPageForm
@@ -951,6 +960,7 @@ class BasicPage(
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
         ThemeablePageAbstract.theme_panel,
+        BasicPageAbstract.qr_code_panel,
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
@@ -962,7 +972,9 @@ class BasicPage(
         'core.FundingPage',
         'core.TwentiethPage',
         'core.TwentiethPageSingleton',
+        'core.TwentyFifthPageSingleton',
         'core.FacilityRentalsPage',
+        'core.HumanAnalysisStandardPage',
         'people.PersonListPage',
         'research.ProjectPage',
     ]
@@ -1043,6 +1055,7 @@ class FundingPage(BasicPageAbstract, Page):
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
+        BasicPageAbstract.qr_code_panel,
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields
@@ -1117,6 +1130,7 @@ class FacilityRentalsPage(
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
+        BasicPageAbstract.qr_code_panel,
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
@@ -1124,10 +1138,20 @@ class FacilityRentalsPage(
     def get_context(self, request, *args, **kwargs):
         ctx = super().get_context(request, *args, **kwargs)
         ctx["form"] = FacilityRentalInquiryForm()
+        ctx["turnstile_site_key"] = getattr(settings, "CLOUDFLARE_TURNSTILE_SITE_KEY", "")
         return ctx
 
     def serve(self, request, *args, **kwargs):
         if request.method == "POST":
+            from utils.security import verify_turnstile_token
+            turnstile_token = request.POST.get("cf-turnstile-response", "")
+            if not verify_turnstile_token(turnstile_token, request.META.get("REMOTE_ADDR")):
+                logger.warning("Turnstile verification failed for facility rentals form")
+                messages.error(request, "Security verification failed. Please try again.")
+                context = self.get_context(request)
+                context["form"] = FacilityRentalInquiryForm(request.POST)
+                return render(request, self.template, context)
+
             form = FacilityRentalInquiryForm(request.POST)
             if form.is_valid():
                 recipients = EmailFormSettings.for_request(request).recipients
@@ -1161,6 +1185,108 @@ class FacilityRentalsPage(
 
     class Meta:
         verbose_name = 'Facility Rentals Page'
+
+
+class HumanAnalysisStandardPage(
+    Page,
+    BasicPageAbstract,
+    FeatureablePageAbstract,
+    SearchablePageAbstract,
+    ShareablePageAbstract,
+):
+    body = StreamField(
+        BasicPageAbstract.body_default_blocks + [
+            BasicPageAbstract.body_text_border_block,
+            ('publication_visual_elements', PublicationVisualElementsBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
+    conversion = StreamField(
+        [
+            ('paragraph', ParagraphBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
+    small_has_image = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Small HAS image',
+    )
+    big_has_image = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Big HAS image',
+    )
+    policy_download = StreamField(
+        [
+            ('paragraph', ParagraphBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
+    policy_download_pdf = models.ForeignKey(
+        Document,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Policy download PDF',
+    )
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('body'),
+                FieldPanel('small_has_image'),
+                FieldPanel('big_has_image'),
+            ],
+            heading='Body',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('conversion'),
+            ],
+            heading='Conversion',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('policy_download'),
+                FieldPanel('policy_download_pdf'),
+            ],
+            heading='Policy Download',
+            classname='collapsible collapsed',
+        ),
+    ]
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+        BasicPageAbstract.qr_code_panel,
+    ]
+
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
+
+    max_count = 1
+    parent_page_types = ['core.BasicPage']
+    subpage_types = []
+    template = 'core/human_analysis_standard_page.html'
+
+    class Meta:
+        verbose_name = 'Human Analysis Standard Page'
 
 
 class TwentiethPage(
@@ -1261,6 +1387,7 @@ class TwentiethPage(
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
+        BasicPageAbstract.qr_code_panel,
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
@@ -1406,6 +1533,7 @@ class TwentiethPageSingleton(
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
+        BasicPageAbstract.qr_code_panel,
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
@@ -1416,6 +1544,257 @@ class TwentiethPageSingleton(
 
     class Meta:
         verbose_name = 'Twentieth Page Singleton'
+
+
+class TwentyFifthPageSingleton(
+    ContentPage,
+    BasicPageAbstract,
+    FeatureablePageAbstract,
+    SearchablePageAbstract,
+    ShareablePageAbstract,
+    ThemeablePageAbstract,
+):
+    body = StreamField(BasicPageAbstract.body_default_blocks, use_json_field=True)
+    history_timeline = StreamField(
+        [
+            ('gallery', TimelineGalleryBlock()),
+        ],
+        blank=True,
+        help_text='Timeline gallery shown in the History section.',
+        use_json_field=True,
+    )
+    splash_video = models.ForeignKey(
+        'wagtailmedia.Media',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Splash Video',
+        help_text='Full-screen background video shown before the page content.',
+    )
+    splash_image = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Splash Still Image',
+        help_text='Still image shown before the splash video loads, and used instead of video on mobile.',
+    )
+
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('splash_image'),
+                MediaChooserPanel('splash_video', media_type='video'),
+            ],
+            heading='Splash',
+            classname='collapsible',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('body'),
+            ]
+        ),
+        MultiFieldPanel(
+            [
+                InlinePanel('anniversary_events', label='Event'),
+            ],
+            heading='Events',
+            classname='collapsible',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('history_timeline'),
+            ],
+            heading='History',
+            classname='collapsible',
+        ),
+        BasicPageAbstract.images_panel,
+        BasicPageAbstract.hero_link_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('publishing_date'),
+            ],
+            heading='General Information',
+            classname='collapsible collapsed'
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('topics'),
+            ],
+            heading='Related',
+            classname='collapsible collapsed',
+        )
+    ]
+
+    promote_panels = Page.promote_panels + [
+        FeatureablePageAbstract.feature_panel,
+        ShareablePageAbstract.social_panel,
+        SearchablePageAbstract.search_panel,
+    ]
+    settings_panels = Page.settings_panels + [
+        BasicPageAbstract.submenu_panel,
+        BasicPageAbstract.qr_code_panel,
+    ]
+
+    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
+
+    max_count = 1
+    parent_page_types = ['home.HomePage']
+    subpage_types = []
+    template = 'core/twenty_fifth_page_singleton.html'
+    anniversary_mailchimp_tag = '25 Anniversary'
+
+    def get_subscribe_page(self):
+        from subscribe.models import SubscribePage
+
+        subscribe_page = SubscribePage.objects.live().first()
+
+        if subscribe_page:
+            return subscribe_page
+
+        subscribe_page = object.__new__(SubscribePage)
+        subscribe_page.consent_text = SubscribePage._meta.get_field('consent_text').default
+        return subscribe_page
+
+    def get_anniversary_subscribe_form(self, data=None):
+        from subscribe.models import SubscribeForm
+
+        return SubscribeForm(
+            data,
+            consent_text=self.get_subscribe_page().consent_text,
+        )
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        context.setdefault(
+            'anniversary_subscribe_form',
+            self.get_anniversary_subscribe_form(),
+        )
+        context['turnstile_site_key'] = getattr(settings, 'CLOUDFLARE_TURNSTILE_SITE_KEY', '')
+        return context
+
+    def serve(self, request, *args, **kwargs):
+        if request.method == 'POST' and request.POST.get('anniversary_newsletter_form'):
+            from mailchimp_marketing.api_client import ApiClientError
+            from subscribe.models import MailchimpSubscriptionError
+            from utils.security import verify_turnstile_token
+
+            is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest'
+            context = self.get_context(request, *args, **kwargs)
+            form = self.get_anniversary_subscribe_form(request.POST)
+            context['anniversary_subscribe_form'] = form
+            context['anniversary_subscribe_modal_open'] = True
+
+            turnstile_token = request.POST.get('cf-turnstile-response', '')
+            if not settings.DEBUG and not verify_turnstile_token(turnstile_token, request.META.get('REMOTE_ADDR')):
+                if is_ajax:
+                    return JsonResponse(
+                        {
+                            'success': False,
+                            'message': 'Security verification failed. Please try again.',
+                        },
+                        status=400,
+                    )
+
+                messages.error(request, 'Security verification failed. Please try again.')
+                return render(request, self.template, context)
+
+            if form.is_valid():
+                try:
+                    self.get_subscribe_page().subscribe_to_mailchimp(
+                        form,
+                        extra_tags=[self.anniversary_mailchimp_tag],
+                    )
+                except (ApiClientError, MailchimpSubscriptionError) as error:
+                    import logging
+
+                    error_text = getattr(error, 'text', str(error))
+                    logging.getLogger('cigionline').error(f'An error occurred with Mailchimp: {error_text}')
+                    if is_ajax:
+                        return JsonResponse(
+                            {
+                                'success': False,
+                                'message': 'There was a problem subscribing you. Please try again.',
+                            },
+                            status=502,
+                        )
+
+                    messages.error(request, 'There was a problem subscribing you. Please try again.')
+                else:
+                    if is_ajax:
+                        return JsonResponse(
+                            {
+                                'success': True,
+                                'message': 'Thanks for subscribing.',
+                            }
+                        )
+
+                    messages.success(request, 'Thanks for subscribing.')
+                    context['anniversary_subscribe_form'] = self.get_anniversary_subscribe_form()
+                    context['anniversary_subscribe_modal_open'] = True
+            elif is_ajax:
+                return JsonResponse(
+                    {
+                        'success': False,
+                        'message': 'Please correct the highlighted fields and try again.',
+                        'errors': form.errors.get_json_data(),
+                    },
+                    status=400,
+                )
+
+            return render(request, self.template, context)
+
+        return super().serve(request, *args, **kwargs)
+
+    class Meta:
+        verbose_name = 'Twenty-Fifth Anniversary Page'
+
+
+class EventPageAdminChooser(AdminPageChooser):
+    def __init__(self, **kwargs):
+        super().__init__(target_models=['events.EventPage'], **kwargs)
+
+    def get_js_init_options(self, id_, name, value_data):
+        opts = super().get_js_init_options(id_, name, value_data)
+
+        if 'parentId' not in opts:
+            from events.models import EventListPage
+
+            event_list_page = EventListPage.objects.order_by('path').first()
+
+            if event_list_page:
+                opts['parentId'] = event_list_page.pk
+
+        return opts
+
+
+class EventPageChooserPanel(FieldPanel):
+    def get_form_options(self):
+        opts = super().get_form_options()
+        opts.setdefault('widgets', {})[self.field_name] = EventPageAdminChooser()
+        return opts
+
+
+class TwentyFifthPageEvent(Orderable):
+    page = ParentalKey(
+        'core.TwentyFifthPageSingleton',
+        related_name='anniversary_events',
+    )
+    event_page = models.ForeignKey(
+        'events.EventPage',
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        verbose_name='Event',
+    )
+
+    panels = [
+        FieldPanel('event_page'),
+    ]
 
 
 class Theme(models.Model):
@@ -1531,6 +1910,7 @@ class Think7AbstractPage(BasicPageAbstract, Page):
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
+        BasicPageAbstract.qr_code_panel,
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields
@@ -1605,3 +1985,29 @@ class Auth0ProtectedPageAbstract(models.Model):
 
     class Meta:
         abstract = True
+
+
+class QRCodeScan(models.Model):
+    page = models.OneToOneField(
+        'wagtailcore.Page',
+        on_delete=models.CASCADE,
+        related_name='qr_code_scan',
+    )
+    scan_count = models.PositiveIntegerField(default=0)
+    last_scanned = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f'QR scans for "{self.page.title}": {self.scan_count}'
+
+
+class QRCodeDocumentScan(models.Model):
+    document = models.OneToOneField(
+        'wagtaildocs.Document',
+        on_delete=models.CASCADE,
+        related_name='qr_code_scan',
+    )
+    scan_count = models.PositiveIntegerField(default=0)
+    last_scanned = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f'QR scans for document "{self.document.title}": {self.scan_count}'

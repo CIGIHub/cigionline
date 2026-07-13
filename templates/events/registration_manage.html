@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load webpack_loader %}
+{% load wagtailcore_tags webpack_loader %}
 
 {% block title %}Manage registration — {{ event.title }}{% endblock %}
 
@@ -18,13 +18,13 @@
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-lg-8">
-        <a href="{{ event.url }}" class="btn btn-link p-2 mb-3">&larr; Back to event</a>
+        <a href="{{ event.url }}" class="btn mb-3"><i class="far fa-arrow-left"></i> Back to event</a>
 
         {% if request.GET.gid %}
           <a
             href="{{ event.url }}register/manage/group/?gid={{ request.GET.gid }}&t={{ token }}"
-            class="btn btn-link p-2 mb-3">
-            &larr; Back to registrants
+            class="btn mb-3">
+            <i class="far fa-arrow-left"></i> Back to registrants
           </a>
         {% endif %}
 
@@ -77,9 +77,11 @@
             </div>
 
             {# Render remaining dynamic fields (skip identity + email + honeypot) #}
-            {% for field in form %}
-              {% if field.name != 'first_name' and field.name != 'last_name' and field.name != 'email' and field.name != 'website' %}
-                {% include "events/includes/_field.html" with field=field %}
+            {% for item in form.layout_items %}
+              {% if item.kind == "rich_text" %}
+                <div class="cigi-rich-text">{{ item.content|richtext }}</div>
+              {% else %}
+                {% include "events/includes/_field.html" with field=item.field %}
               {% endif %}
             {% endfor %}
 
@@ -92,7 +94,10 @@
 
             <div class="cigi-actions">
               <button type="submit" class="btn btn-primary">Save changes</button>
-              <a class="btn" href="{{ event.url }}">Back to event</a>
+              <a class="btn" href="{{ event.url }}">
+                <i class="far fa-arrow-left"></i>
+                Back to event
+              </a>
             </div>
           </form>
 

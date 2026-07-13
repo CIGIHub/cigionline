@@ -3,6 +3,8 @@ from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 from .models import _split_slugs, _match
 
+NON_ANSWER_FIELD_TYPES = {"rich_text"}
+
 BASE_INPUT_CLASS = "cigi-input"
 BASE_SELECT_CLASS = "cigi-select"
 BASE_GROUP_CLASS = "cigi-group"       # radios/checkbox groups
@@ -63,11 +65,59 @@ WAGTAIL_FIELD_MAP = {
     'checkboxes': forms.MultipleChoiceField,
     'dropdown': forms.ChoiceField,
     'multiselect': forms.MultipleChoiceField,
+    'conditional_multiselect_other': forms.MultipleChoiceField,
     'radio': forms.ChoiceField,
+    'mailchimp_optin': forms.ChoiceField,
     'date': forms.DateField,
     'datetime': forms.DateTimeField,
     'file': forms.FileField,
 }
+
+
+CONDITIONAL_OTHER_FIELD_TYPES = (
+    "conditional_dropdown_other",
+    "conditional_multiselect_other",
+)
+
+
+def is_non_answer_field_type(field_type: str) -> bool:
+    return field_type in NON_ANSWER_FIELD_TYPES
+
+
+def _selected_contains_trigger(selected, trigger_value: str) -> bool:
+    if isinstance(selected, (list, tuple, set)):
+        return trigger_value in {str(value).strip() for value in selected}
+    return (selected or "").strip() == trigger_value
+
+
+def _template_field_visible(ff, current_slug: str, *, is_guest_form: bool) -> bool:
+    if is_guest_form and getattr(ff, "exclude_from_guest_forms", False):
+        return False
+
+    vis_slugs = _split_slugs(ff.visible_type_slugs)
+    return _match(ff.visible_rule, vis_slugs, current_slug)
+
+
+def _answer_keys_for_template_field(ff) -> list[str]:
+    base = f"f_{ff.field_key}"
+    if ff.field_type == "conditional_text":
+        return [f"{base}__enabled", f"{base}__details"]
+    if ff.field_type in CONDITIONAL_OTHER_FIELD_TYPES:
+        return [base, f"{base}__other"]
+    return [base]
+
+
+def strip_non_answer_data(event, data: dict) -> dict:
+    """Remove display-only template rows from data before answer storage."""
+
+    form_template = getattr(event, "registration_form_template", None)
+    if not form_template:
+        return data
+
+    for ff in form_template.fields.all().only("field_key", "field_type"):
+        if is_non_answer_field_type(getattr(ff, "field_type", "")):
+            data.pop(f"f_{ff.field_key}", None)
+    return data
 
 
 def build_dynamic_form(
@@ -99,12 +149,13 @@ def build_dynamic_form(
 
     fields_qs = event.registration_form_template.fields.all()
 
-    for ff in fields_qs.order_by("sort_order"):
-        if is_guest_form and getattr(ff, "exclude_from_guest_forms", False):
+    ordered_template_fields = list(fields_qs.order_by("sort_order"))
+
+    for ff in ordered_template_fields:
+        if not _template_field_visible(ff, current_slug, is_guest_form=is_guest_form):
             continue
 
-        vis_slugs = _split_slugs(ff.visible_type_slugs)
-        if not _match(ff.visible_rule, vis_slugs, current_slug):
+        if is_non_answer_field_type(ff.field_type):
             continue
 
         req_slugs = _split_slugs(ff.required_type_slugs)
@@ -113,6 +164,17 @@ def build_dynamic_form(
         key = f"f_{ff.field_key}"
         FieldClass = WAGTAIL_FIELD_MAP.get(ff.field_type, forms.CharField)
         kwargs = {"label": ff.label, "help_text": ff.help_text, "required": is_required}
+
+        if ff.field_type == "mailchimp_optin":
+            field_obj = forms.ChoiceField(
+                label=ff.label,
+                help_text=ff.help_text,
+                required=is_required,
+                choices=[("Yes", "Yes"), ("No", "No")],
+                widget=forms.RadioSelect(attrs={"class": BASE_GROUP_CLASS}),
+            )
+            fields.append((key, field_obj))
+            continue
 
         if ff.field_type in ("dropdown", "radio", "checkboxes", "multiselect", "date", "datetime", "file"):
             choices = [(x.strip(), x.strip()) for x in ff.choices.splitlines() if x.strip()]
@@ -190,26 +252,35 @@ def build_dynamic_form(
                 "error": f"{details_label}: this field is required.",
             })
             continue
-        if ff.field_type == "conditional_dropdown_other":
+        if ff.field_type in CONDITIONAL_OTHER_FIELD_TYPES:
             base_key = f"f_{ff.field_key}"
             select_key = base_key
             other_key = f"{base_key}__other"
+            is_multiselect = ff.field_type == "conditional_multiselect_other"
 
             choices = [(x.strip(), x.strip()) for x in ff.choices.splitlines() if x.strip()]
-            choices = [("", "Select an option…")] + choices
+            if not is_multiselect:
+                choices = [("", "Select an option…")] + choices
 
             other_value = (getattr(ff, "conditional_other_value", "") or "").strip() or "Other"
             other_label = (getattr(ff, "conditional_other_label", "") or "").strip() or "Please specify"
             other_help = getattr(ff, "conditional_other_help_text", "") or ""
             other_required = bool(getattr(ff, "conditional_other_required", True))
 
-            select_field = forms.ChoiceField(
-                label=ff.label,
-                required=is_required,
-                help_text=ff.help_text,
-                choices=choices,
-            )
-            select_field.widget.attrs["class"] = f"{BASE_SELECT_CLASS}".strip()
+            select_field_class = forms.MultipleChoiceField if is_multiselect else forms.ChoiceField
+            select_kwargs = {
+                "label": ff.label,
+                "required": is_required,
+                "help_text": ff.help_text,
+                "choices": choices,
+            }
+            if is_multiselect:
+                select_kwargs["widget"] = forms.SelectMultiple()
+            select_field = select_field_class(**select_kwargs)
+            if is_multiselect:
+                select_field.widget.attrs["class"] = f"{BASE_SELECT_CLASS} {BASE_SELECT_CLASS}--multiple".strip()
+            else:
+                select_field.widget.attrs["class"] = f"{BASE_SELECT_CLASS}".strip()
 
             select_field.widget.attrs["data-conditional-select"] = "1"
             select_field.widget.attrs["data-conditional-target"] = other_key
@@ -278,15 +349,32 @@ def build_dynamic_form(
     bases = (HoneypotMixin, forms.Form) if include_honeypot else (forms.Form,)
     DynamicForm = type("EventDynamicForm", bases, attrs)
 
+    def _layout_items(self):
+        items = []
+        for ff in ordered_template_fields:
+            if not _template_field_visible(ff, current_slug, is_guest_form=is_guest_form):
+                continue
+
+            if ff.field_type == "rich_text":
+                content = getattr(ff, "rich_text", "")
+                if content:
+                    items.append({"kind": "rich_text", "content": content})
+                continue
+
+            for key in _answer_keys_for_template_field(ff):
+                if key in self.fields:
+                    items.append({"kind": "field", "field": self[key]})
+        return items
+
     def _dynamic_clean(self):
         cleaned = super(DynamicForm, self).clean()
 
         for rule in conditional_rules:
             if rule.get("kind") == "select_other":
-                selected = (cleaned.get(rule["select_key"]) or "").strip()
+                selected = cleaned.get(rule["select_key"])
                 other = (cleaned.get(rule["other_key"]) or "").strip()
 
-                if selected == rule["trigger_value"]:
+                if _selected_contains_trigger(selected, rule["trigger_value"]):
                     if rule["other_required"] and not other:
                         self.add_error(rule["other_key"], rule["error"])
                 else:
@@ -313,4 +401,5 @@ def build_dynamic_form(
         return cleaned
 
     DynamicForm.clean = _dynamic_clean
+    DynamicForm.layout_items = _layout_items
     return DynamicForm
