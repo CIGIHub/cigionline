@@ -54,6 +54,79 @@
             </tbody>
           </table>
         </div>
+
+        {% if choice_summary_rows %}
+          <style>
+            .answer-total {
+              border: 1px solid rgba(0, 0, 0, 0.15);
+              border-radius: 6px;
+              overflow: hidden;
+            }
+            .answer-total summary {
+              align-items: center;
+              background: rgba(0, 0, 0, 0.03);
+              cursor: pointer;
+              display: flex;
+              gap: 1rem;
+              justify-content: space-between;
+              list-style: none;
+              margin: 0;
+              padding: 0.85rem 1rem;
+            }
+            .answer-total summary::-webkit-details-marker {
+              display: none;
+            }
+            .answer-total summary::after {
+              border: 1px solid rgba(0, 0, 0, 0.2);
+              border-radius: 4px;
+              content: "{% trans 'Expand' %}";
+              font-size: 0.875rem;
+              font-weight: 600;
+              padding: 0.25rem 0.65rem;
+              white-space: nowrap;
+            }
+            .answer-total[open] summary::after {
+              content: "{% trans 'Collapse' %}";
+            }
+            .answer-total .table-responsive {
+              margin: 0;
+            }
+            .answer-total table {
+              margin-bottom: 0;
+            }
+          </style>
+          <h2 class="h4 mt-5 mb-2">{% trans "Answer totals" %}</h2>
+          <p class="text-muted">
+            {% trans "Counts include pending, confirmed, and waitlisted registrants. Cancelled registrants are excluded." %}
+          </p>
+          {% for row in choice_summary_rows %}
+            <details class="answer-total mb-3" open>
+              <summary>
+                <strong>{{ row.label }}</strong>
+              </summary>
+              <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                  <thead>
+                    <tr>
+                      <th scope="col">{% trans "Option" %}</th>
+                      <th scope="col" class="text-nowrap">{% trans "Registered" %}</th>
+                      <th scope="col" class="text-nowrap">{% trans "Limit" %}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for option in row.options %}
+                      <tr>
+                        <td>{{ option.label }}</td>
+                        <td class="text-nowrap">{{ option.count }}</td>
+                        <td class="text-nowrap">{% if option.limit %}{{ option.limit }}{% else %}—{% endif %}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </details>
+          {% endfor %}
+        {% endif %}
       </div>
     </div>
   </div>

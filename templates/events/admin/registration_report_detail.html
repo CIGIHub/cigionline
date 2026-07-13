@@ -56,5 +56,72 @@
       {% endfor %}
     </tbody>
   </table>
+
+  {% if choice_summary_rows %}
+    <style>
+      .answer-total {
+        border: 1px solid var(--w-color-border-furniture, #d9d9d9);
+        border-radius: 6px;
+        margin: 1rem 0;
+        overflow: hidden;
+      }
+      .answer-total summary {
+        align-items: center;
+        background: var(--w-color-surface-page, #fff);
+        cursor: pointer;
+        display: flex;
+        gap: 1rem;
+        justify-content: space-between;
+        padding: 0.85rem 1rem;
+      }
+      .answer-total summary::-webkit-details-marker {
+        display: none;
+      }
+      .answer-total summary::after {
+        background: var(--w-color-surface-button-default, #fff);
+        border: 1px solid var(--w-color-border-button-default, #bbb);
+        border-radius: 3px;
+        content: "{% trans 'Expand' %}";
+        font-weight: 600;
+        padding: 0.25rem 0.65rem;
+        white-space: nowrap;
+      }
+      .answer-total[open] summary::after {
+        content: "{% trans 'Collapse' %}";
+      }
+      .answer-total table {
+        margin: 0;
+      }
+    </style>
+    <h2>{% trans "Answer totals" %}</h2>
+    <p class="help-block">
+      {% trans "Counts include pending, confirmed, and waitlisted registrants. Cancelled registrants are excluded." %}
+    </p>
+    {% for row in choice_summary_rows %}
+      <details class="answer-total" open>
+        <summary>
+          <strong>{{ row.label }}</strong>
+        </summary>
+        <table class="listing">
+          <thead>
+            <tr>
+              <th>{% trans "Option" %}</th>
+              <th class="w-min">{% trans "Registered" %}</th>
+              <th class="w-min">{% trans "Limit" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for option in row.options %}
+              <tr>
+                <td>{{ option.label }}</td>
+                <td class="w-min">{{ option.count }}</td>
+                <td class="w-min">{% if option.limit %}{{ option.limit }}{% else %}—{% endif %}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </details>
+    {% endfor %}
+  {% endif %}
 </div>
 {% endblock %}

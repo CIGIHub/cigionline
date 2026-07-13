@@ -259,6 +259,368 @@ class GuestRegistrationQuestionExclusionTests(TestCase):
         )
 
 
+class RegistrationChoiceLimitTests(TestCase):
+    def _event_with_limited_choice(self, *, field_type="radio", limit=1, allow_groups=False):
+        from wagtail.models import Site
+        from events.models import EventPage, RegistrationType, RegistrationFormTemplate, RegistrationFormField
+
+        root = Site.objects.get(is_default_site=True).root_page
+        event = EventPage(
+            title="Choice Limit Event",
+            registration_open=True,
+            publishing_date=timezone.now(),
+        )
+        root.add_child(instance=event)
+
+        tmpl = RegistrationFormTemplate.objects.create(
+            title=f"Choice Limit Template {field_type} {RegistrationFormTemplate.objects.count()}"
+        )
+        event.registration_form_template = tmpl
+        event.save(update_fields=["registration_form_template"])
+
+        reg_type = RegistrationType.objects.create(
+            event=event,
+            name="General",
+            slug="general",
+            sort_order=0,
+            is_public=True,
+            allow_group_registrations=allow_groups,
+            max_guest_registrations=2,
+        )
+        field = RegistrationFormField.objects.create(
+            template=tmpl,
+            label="Session",
+            field_type=field_type,
+            choices="Workshop A\nWorkshop B",
+            choice_limits=f"Workshop A | {limit}",
+            required=False,
+            sort_order=0,
+        )
+        return event, reg_type, field
+
+    def test_choice_limits_model_validation_rejects_bad_mapping(self):
+        from django.core.exceptions import ValidationError
+        from events.models import RegistrationFormField, RegistrationFormTemplate
+
+        tmpl = RegistrationFormTemplate.objects.create(title="Validation Template")
+        field = RegistrationFormField(
+            template=tmpl,
+            label="Name",
+            field_type="singleline",
+            choices="Workshop A",
+            choice_limits="Workshop A | 1",
+        )
+
+        with self.assertRaises(ValidationError):
+            field.full_clean()
+
+        field.field_type = "radio"
+        field.choice_limits = "Missing | 1\nWorkshop A | nope\nWorkshop A | 2"
+        with self.assertRaises(ValidationError):
+            field.full_clean()
+
+    def test_sold_out_choice_is_disabled_and_rejected(self):
+        from events.forms import build_dynamic_form
+        from events.models import Registrant
+
+        event, reg_type, field = self._event_with_limited_choice()
+        key = f"f_{field.field_key}"
+        Registrant.objects.create(
+            event=event,
+            registration_type=reg_type,
+            email="taken@example.com",
+            answers={key: "Workshop A"},
+            status=Registrant.Status.CONFIRMED,
+        )
+
+        form_class = build_dynamic_form(event, reg_type)
+        html = str(form_class()[key])
+        self.assertIn("disabled", html)
+        self.assertIn("Workshop A (Sold out)", html)
+
+        form = form_class(
+            data={
+                "first_name": "Test",
+                "last_name": "User",
+                "email": "test@example.com",
+                "website": "",
+                key: "Workshop A",
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn(key, form.errors)
+
+    def test_sold_out_dropdown_choice_is_disabled_and_rejected(self):
+        from events.forms import build_dynamic_form
+        from events.models import Registrant
+
+        event, reg_type, field = self._event_with_limited_choice(field_type="dropdown")
+        key = f"f_{field.field_key}"
+        Registrant.objects.create(
+            event=event,
+            registration_type=reg_type,
+            email="taken@example.com",
+            answers={key: "Workshop A"},
+            status=Registrant.Status.CONFIRMED,
+        )
+
+        form_class = build_dynamic_form(event, reg_type)
+        html = str(form_class()[key])
+        self.assertIn("disabled", html)
+        self.assertIn("Workshop A (Sold out)", html)
+
+        form = form_class(
+            data={
+                "first_name": "Test",
+                "last_name": "User",
+                "email": "test@example.com",
+                "website": "",
+                key: "Workshop A",
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn(key, form.errors)
+
+    def test_checkboxes_allow_available_choice_and_reject_sold_out_choice(self):
+        from events.forms import build_dynamic_form
+        from events.models import Registrant
+
+        event, reg_type, field = self._event_with_limited_choice(field_type="checkboxes")
+        key = f"f_{field.field_key}"
+        Registrant.objects.create(
+            event=event,
+            registration_type=reg_type,
+            email="taken@example.com",
+            answers={key: ["Workshop A"]},
+            status=Registrant.Status.CONFIRMED,
+        )
+
+        form_class = build_dynamic_form(event, reg_type)
+        available_form = form_class(
+            data={
+                "first_name": "Test",
+                "last_name": "User",
+                "email": "test@example.com",
+                "website": "",
+                key: ["Workshop B"],
+            }
+        )
+        self.assertTrue(available_form.is_valid(), available_form.errors)
+
+        sold_out_form = form_class(
+            data={
+                "first_name": "Test",
+                "last_name": "User",
+                "email": "test@example.com",
+                "website": "",
+                key: ["Workshop A"],
+            }
+        )
+        self.assertFalse(sold_out_form.is_valid())
+        self.assertIn(key, sold_out_form.errors)
+
+    def test_conditional_dropdown_choice_limits_selected_value(self):
+        from events.forms import build_dynamic_form
+        from events.models import Registrant
+
+        event, reg_type, field = self._event_with_limited_choice(field_type="conditional_dropdown_other")
+        key = f"f_{field.field_key}"
+        other_key = f"{key}__other"
+        Registrant.objects.create(
+            event=event,
+            registration_type=reg_type,
+            email="taken@example.com",
+            answers={key: "Workshop A", other_key: ""},
+            status=Registrant.Status.CONFIRMED,
+        )
+
+        form_class = build_dynamic_form(event, reg_type)
+        form = form_class(
+            data={
+                "first_name": "Test",
+                "last_name": "User",
+                "email": "test@example.com",
+                "website": "",
+                key: "Workshop A",
+                other_key: "",
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn(key, form.errors)
+
+    def test_current_registrant_can_keep_full_choice(self):
+        from events.forms import build_dynamic_form
+        from events.models import Registrant
+
+        event, reg_type, field = self._event_with_limited_choice()
+        key = f"f_{field.field_key}"
+        registrant = Registrant.objects.create(
+            event=event,
+            registration_type=reg_type,
+            email="holder@example.com",
+            first_name="Existing",
+            last_name="Holder",
+            answers={key: "Workshop A"},
+            status=Registrant.Status.CONFIRMED,
+        )
+
+        form_class = build_dynamic_form(event, reg_type, require_email=False, current_registrant=registrant)
+        form = form_class(
+            data={
+                "first_name": "Existing",
+                "last_name": "Holder",
+                "website": "",
+                key: "Workshop A",
+            }
+        )
+
+        self.assertTrue(form.is_valid(), form.errors)
+
+    def test_current_registrant_cannot_switch_into_different_full_choice(self):
+        from events.forms import build_dynamic_form
+        from events.models import Registrant
+
+        event, reg_type, field = self._event_with_limited_choice()
+        field.choice_limits = "Workshop A | 1\nWorkshop B | 1"
+        field.save(update_fields=["choice_limits"])
+        key = f"f_{field.field_key}"
+        registrant = Registrant.objects.create(
+            event=event,
+            registration_type=reg_type,
+            email="holder-a@example.com",
+            first_name="Holder",
+            last_name="A",
+            answers={key: "Workshop A"},
+            status=Registrant.Status.CONFIRMED,
+        )
+        Registrant.objects.create(
+            event=event,
+            registration_type=reg_type,
+            email="holder-b@example.com",
+            answers={key: "Workshop B"},
+            status=Registrant.Status.CONFIRMED,
+        )
+
+        form_class = build_dynamic_form(event, reg_type, require_email=False, current_registrant=registrant)
+        form = form_class(
+            data={
+                "first_name": "Holder",
+                "last_name": "A",
+                "website": "",
+                key: "Workshop B",
+            }
+        )
+
+        self.assertFalse(form.is_valid())
+        self.assertIn(key, form.errors)
+
+    def test_pending_and_waitlisted_registrants_consume_choice_limit(self):
+        from events.forms import build_dynamic_form
+        from events.models import Registrant
+
+        event, reg_type, field = self._event_with_limited_choice(limit=2)
+        key = f"f_{field.field_key}"
+        for status, email in (
+            (Registrant.Status.PENDING, "pending@example.com"),
+            (Registrant.Status.WAITLISTED, "waitlisted@example.com"),
+        ):
+            Registrant.objects.create(
+                event=event,
+                registration_type=reg_type,
+                email=email,
+                answers={key: "Workshop A"},
+                status=status,
+            )
+
+        form_class = build_dynamic_form(event, reg_type)
+        form = form_class(
+            data={
+                "first_name": "New",
+                "last_name": "User",
+                "email": "new@example.com",
+                "website": "",
+                key: "Workshop A",
+            }
+        )
+
+        self.assertFalse(form.is_valid())
+        self.assertIn(key, form.errors)
+
+    def test_choice_summary_counts_active_registrants_and_limits(self):
+        from events.models import Registrant
+        from events.reporting import build_choice_summary_rows
+
+        event, reg_type, field = self._event_with_limited_choice(field_type="checkboxes", limit=3)
+        key = f"f_{field.field_key}"
+        for status, email, answers in (
+            (Registrant.Status.PENDING, "pending@example.com", ["Workshop A", "Workshop B"]),
+            (Registrant.Status.CONFIRMED, "confirmed@example.com", ["Workshop A"]),
+            (Registrant.Status.WAITLISTED, "waitlisted@example.com", ["Workshop B"]),
+            (Registrant.Status.CANCELLED, "cancelled@example.com", ["Workshop A"]),
+        ):
+            Registrant.objects.create(
+                event=event,
+                registration_type=reg_type,
+                email=email,
+                answers={key: answers},
+                status=status,
+            )
+
+        rows = build_choice_summary_rows(event)
+
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["label"], "Session")
+        options = {option["label"]: option for option in rows[0]["options"]}
+        self.assertEqual(options["Workshop A"]["count"], 2)
+        self.assertEqual(options["Workshop A"]["limit"], 3)
+        self.assertEqual(options["Workshop B"]["count"], 2)
+        self.assertIsNone(options["Workshop B"]["limit"])
+
+    def test_cancelled_registrant_does_not_consume_choice_limit(self):
+        from events.forms import build_dynamic_form
+        from events.models import Registrant
+
+        event, reg_type, field = self._event_with_limited_choice()
+        key = f"f_{field.field_key}"
+        Registrant.objects.create(
+            event=event,
+            registration_type=reg_type,
+            email="cancelled@example.com",
+            answers={key: "Workshop A"},
+            status=Registrant.Status.CANCELLED,
+        )
+
+        form_class = build_dynamic_form(event, reg_type)
+        form = form_class(
+            data={
+                "first_name": "New",
+                "last_name": "User",
+                "email": "new@example.com",
+                "website": "",
+                key: "Workshop A",
+            }
+        )
+
+        self.assertTrue(form.is_valid(), form.errors)
+
+    def test_group_registration_cannot_exceed_remaining_choice_limit(self):
+        from events.forms import validate_choice_limits
+
+        event, reg_type, field = self._event_with_limited_choice(limit=1, allow_groups=True)
+        key = f"f_{field.field_key}"
+
+        errors = validate_choice_limits(
+            event,
+            reg_type,
+            [
+                {key: "Workshop A"},
+                {key: "Workshop A"},
+            ],
+        )
+
+        self.assertEqual(errors[key], '"Workshop A" is sold out.')
+
+
 class RegistrationRichTextBlockTests(TestCase):
     def _event_with_template(self):
         from wagtail.models import Site
