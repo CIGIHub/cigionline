@@ -416,7 +416,7 @@ class ArticlePage(
 
         return (
             self.article_type.title in ['Op-Ed', 'Op-Eds']
-            and self.publishing_date.date() > datetime.date(2026, 7, 8)
+            and self.publishing_date.date() > datetime.date(2026, 7, 13)
         )
 
     def get_template(self, request, *args, **kwargs):
