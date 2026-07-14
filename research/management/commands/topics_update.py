@@ -50,6 +50,7 @@ class Command(BaseCommand):
     TOPICS_PARENT_TITLE = "Topics"
 
     DEFAULT_CSV_PATH = "pages_left_without_topics.csv"
+    DEFAULT_CHANGE_LOG_CSV_PATH = "topic_tag_update_changes.csv"
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -70,16 +71,50 @@ class Command(BaseCommand):
             help=f'CSV output path when --write-csv is used. Defaults to "{self.DEFAULT_CSV_PATH}".',
         )
 
+        parser.add_argument(
+            "--write-change-log-csv",
+            action="store_true",
+            help="Write a CSV log of all verbose change messages.",
+        )
+
+        parser.add_argument(
+            "--change-log-csv-path",
+            default=self.DEFAULT_CHANGE_LOG_CSV_PATH,
+            help=(
+                "CSV output path when --write-change-log-csv is used. "
+                f'Defaults to "{self.DEFAULT_CHANGE_LOG_CSV_PATH}".'
+            ),
+        )
+
     def get_page_url(self, page):
         return page.full_url or page.url or ""
 
     def get_page_type(self, page):
         return page.specific_class.__name__
 
+    def log_change(self, section, page, action, dry_run=False):
+        prefix = "[dry-run] " if dry_run else ""
+        page_url = self.get_page_url(page)
+
+        self.stdout.write(f"  {prefix}{page.title} ({page_url}): {action}")
+
+        return {
+            "dry_run": dry_run,
+            "section": section,
+            "title": page.title,
+            "url": page_url,
+            "page_type": self.get_page_type(page),
+            "action": action,
+        }
+
     def handle(self, *args, **options):
         dry_run = options["dry_run"]
         write_csv = options["write_csv"]
         csv_path = options["csv_path"]
+        write_change_log_csv = options["write_change_log_csv"]
+        change_log_csv_path = options["change_log_csv_path"]
+
+        change_log_rows = []
 
         grand_total_pages = 0
         grand_total_add_and_remove = 0
@@ -128,7 +163,6 @@ class Command(BaseCommand):
                 continue
 
             for page in pages:
-                page_url = self.get_page_url(page)
                 already_has_latter = page.topics.filter(pk=latter_topic.pk).exists()
 
                 pair_total_pages += 1
@@ -144,7 +178,14 @@ class Command(BaseCommand):
                     action = "add latter and remove former"
 
                 if dry_run:
-                    self.stdout.write(f'  [dry-run] {page.title} ({page_url}): {action}')
+                    change_log_rows.append(
+                        self.log_change(
+                            section="topic_replacement",
+                            page=page,
+                            action=action,
+                            dry_run=True,
+                        )
+                    )
                     continue
 
                 if not already_has_latter:
@@ -153,7 +194,14 @@ class Command(BaseCommand):
                 page.topics.remove(former_topic)
                 page.save()
 
-                self.stdout.write(f"  Updated {page.title} ({page_url}): {action}")
+                change_log_rows.append(
+                    self.log_change(
+                        section="topic_replacement",
+                        page=page,
+                        action=action,
+                        dry_run=False,
+                    )
+                )
 
             self.stdout.write(
                 f'  Subtotal for "{former_title}" -> "{latter_title}": '
@@ -187,7 +235,6 @@ class Command(BaseCommand):
                 self.stdout.write("  No pages currently tagged with this topic.")
             else:
                 for page in pages:
-                    page_url = self.get_page_url(page)
                     removed_topic_pks = removed_topic_pks_by_page_pk.setdefault(page.pk, set())
                     simulated_removed_topic_pks = removed_topic_pks | {topic.pk}
 
@@ -203,14 +250,15 @@ class Command(BaseCommand):
                             if not topic_to_add:
                                 self.stdout.write(
                                     self.style.WARNING(
-                                        f'  Skipping retag for {page.title} ({page_url}): '
+                                        f'  Skipping retag for {page.title} ({self.get_page_url(page)}): '
                                         f'suggested topic not found: "{suggested_topic_title}"'
                                     )
                                 )
                         else:
                             self.stdout.write(
                                 self.style.WARNING(
-                                    f'  No retag suggestion found for Competition page: {page.title} ({page_url})'
+                                    f'  No retag suggestion found for Competition page: '
+                                    f'{page.title} ({self.get_page_url(page)})'
                                 )
                             )
 
@@ -234,35 +282,33 @@ class Command(BaseCommand):
                         pages_left_without_topics.append(
                             {
                                 "title": page.title,
-                                "url": page_url,
+                                "url": self.get_page_url(page),
                                 "page_type": self.get_page_type(page),
                                 "current_topic": topic_title,
                             }
                         )
 
-                    if dry_run:
-                        if topic_to_add:
-                            already_has_suggested_topic = page.topics.filter(pk=topic_to_add.pk).exists()
+                    if topic_to_add:
+                        already_has_suggested_topic = page.topics.filter(pk=topic_to_add.pk).exists()
 
-                            if already_has_suggested_topic:
-                                self.stdout.write(
-                                    f'  [dry-run] {page.title} ({page_url}): '
-                                    f'already has "{suggested_topic_title}"; remove "{topic_title}"'
-                                )
-                            else:
-                                self.stdout.write(
-                                    f'  [dry-run] {page.title} ({page_url}): '
-                                    f'add "{suggested_topic_title}"; remove "{topic_title}"'
-                                )
-                        elif will_have_no_topics:
-                            self.stdout.write(
-                                f'  [dry-run] {page.title} ({page_url}): '
-                                f'remove "{topic_title}"; page will have no topics left'
-                            )
+                        if already_has_suggested_topic:
+                            action = f'already has "{suggested_topic_title}"; remove "{topic_title}"'
                         else:
-                            self.stdout.write(
-                                f'  [dry-run] {page.title} ({page_url}): remove "{topic_title}"'
+                            action = f'add "{suggested_topic_title}"; remove "{topic_title}"'
+                    elif will_have_no_topics:
+                        action = f'remove "{topic_title}"; page will have no topics left'
+                    else:
+                        action = f'remove "{topic_title}"'
+
+                    if dry_run:
+                        change_log_rows.append(
+                            self.log_change(
+                                section="topic_removal_retag",
+                                page=page,
+                                action=action,
+                                dry_run=True,
                             )
+                        )
 
                         removed_topic_pks.add(topic.pk)
                         continue
@@ -275,19 +321,20 @@ class Command(BaseCommand):
                     removed_topic_pks.add(topic.pk)
 
                     if topic_to_add:
-                        self.stdout.write(
-                            f'  {page.title} ({page_url}): '
-                            f'added "{suggested_topic_title}"; removed "{topic_title}"'
-                        )
+                        real_action = f'added "{suggested_topic_title}"; removed "{topic_title}"'
                     elif will_have_no_topics:
-                        self.stdout.write(
-                            f'  {page.title} ({page_url}): '
-                            f'removed "{topic_title}"; page now has no topics left'
-                        )
+                        real_action = f'removed "{topic_title}"; page now has no topics left'
                     else:
-                        self.stdout.write(
-                            f'  {page.title} ({page_url}): removed "{topic_title}"'
+                        real_action = f'removed "{topic_title}"'
+
+                    change_log_rows.append(
+                        self.log_change(
+                            section="topic_removal_retag",
+                            page=page,
+                            action=real_action,
+                            dry_run=False,
                         )
+                    )
 
             if dry_run:
                 self.stdout.write(f'  [dry-run] Would archive topic "{topic_title}"')
@@ -356,31 +403,33 @@ class Command(BaseCommand):
             already_tagged_count = 0
 
             for page in pages:
-                page_url = self.get_page_url(page)
                 already_tagged = page.topics.filter(title=self.NEW_TOPIC_TITLE).exists()
 
                 if already_tagged:
                     already_tagged_count += 1
+                    action = f'already tagged with "{self.NEW_TOPIC_TITLE}"'
 
-                    if dry_run:
-                        self.stdout.write(
-                            f'  [dry-run] {page.title} ({page_url}): '
-                            f'already tagged with "{self.NEW_TOPIC_TITLE}"'
+                    change_log_rows.append(
+                        self.log_change(
+                            section="project_topic_tagging",
+                            page=page,
+                            action=action,
+                            dry_run=dry_run,
                         )
-                    else:
-                        self.stdout.write(
-                            f'  {page.title} ({page_url}): '
-                            f'already tagged with "{self.NEW_TOPIC_TITLE}"'
-                        )
+                    )
 
                     continue
 
                 pages_to_tag_count += 1
 
                 if dry_run:
-                    self.stdout.write(
-                        f'  [dry-run] {page.title} ({page_url}): '
-                        f'would add "{self.NEW_TOPIC_TITLE}"'
+                    change_log_rows.append(
+                        self.log_change(
+                            section="project_topic_tagging",
+                            page=page,
+                            action=f'would add "{self.NEW_TOPIC_TITLE}"',
+                            dry_run=True,
+                        )
                     )
                     continue
 
@@ -388,8 +437,13 @@ class Command(BaseCommand):
                     page.topics.add(india_china_africa_topic)
                     page.save()
 
-                    self.stdout.write(
-                        f'  {page.title} ({page_url}): added "{self.NEW_TOPIC_TITLE}"'
+                    change_log_rows.append(
+                        self.log_change(
+                            section="project_topic_tagging",
+                            page=page,
+                            action=f'added "{self.NEW_TOPIC_TITLE}"',
+                            dry_run=False,
+                        )
                     )
 
             action_label = "would be tagged" if dry_run else "tagged"
@@ -431,6 +485,34 @@ class Command(BaseCommand):
         else:
             self.stdout.write("")
             self.stdout.write("CSV not written. Use --write-csv to export pages left without topics.")
+
+        if write_change_log_csv:
+            with open(change_log_csv_path, "w", newline="", encoding="utf-8") as csvfile:
+                fieldnames = [
+                    "dry_run",
+                    "section",
+                    "title",
+                    "url",
+                    "page_type",
+                    "action",
+                ]
+                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+                writer.writeheader()
+
+                for row in change_log_rows:
+                    writer.writerow(row)
+
+            self.stdout.write("")
+            self.stdout.write(
+                f'Change log CSV written to "{change_log_csv_path}" with '
+                f"{len(change_log_rows)} row(s)."
+            )
+        else:
+            self.stdout.write("")
+            self.stdout.write(
+                "Change log CSV not written. Use --write-change-log-csv to export all change messages."
+            )
 
         self.stdout.write("")
         self.stdout.write(
