@@ -409,6 +409,16 @@ class ArticlePage(
             'Opinion',
         ]
 
+    @property
+    def show_has_disclaimer(self):
+        if not self.article_type or not self.publishing_date:
+            return False
+
+        return (
+            self.article_type.title in ['Op-Ed', 'Op-Eds']
+            and self.publishing_date.date() > datetime.date(2026, 7, 13)
+        )
+
     def get_template(self, request, *args, **kwargs):
         standard_template = super(ArticlePage, self).get_template(request, *args, **kwargs)
         if self.theme:
