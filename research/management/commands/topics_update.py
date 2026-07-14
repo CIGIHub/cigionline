@@ -24,8 +24,29 @@ class Command(BaseCommand):
         "Space Governance",
     ]
 
+    COMPETITION_RETAG_SUGGESTIONS = {
+        "Are Canada's competition laws outdated? Some say it's time for change": "Digital Economy",
+        "Canadian Productivity Lecture Series Aims to Address Declining Standard of Living": "Emerging Technologies",
+        "Canadians Deserve Laws That Better Protect Competition": "Digital Economy",
+        "Competing Ideas: Canada’s Competition Reform Conversation": "Digital Economy",
+        "Competition Bureau remains firm in its decision to challenge proposed Rogers-Shaw merger": "Digital Economy",
+        "Competition Policy Explained": "Digital Economy",
+        "From Brain Drain to Brain Gain: How India Can Outflank the US in AI": "Artificial Intelligence",
+        "Is Competition Tribunal’s Decision on Rogers-Shaw on a Collision Course with the CRTC?": "Digital Economy",
+        "Ottawa Rejects Part of Rogers-Shaw Deal": "Digital Economy",
+        "Proposed Amendments to Canada’s Competition Act Should Go Further": "Digital Economy",
+        "The Canadian business playing field isn’t as fair as you think": "Digital Economy",
+        "The Canadian Standard of Living, Productivity and Innovation Lecture Series": "Emerging Technologies",
+        "The Competition Cage Match (Vass Bednar and Denise Hearn weigh in)": "Digital Economy",
+        "The DOJ’s Action against Google’s Monopoly Is Long Overdue": "Platform Governance",
+        "The Next Battleground for the Rogers-Shaw Merger Will Be the CRTC": "Digital Economy",
+        "What Is the Competition Bureau’s Vision for the Future of Competition Policy?": "Digital Economy",
+        "What’s Ahead for Canada’s Telecom Policy After Rogers-Shaw?": "Digital Economy",
+        "Why Canada’s Housing Crisis Is a Productivity Crisis, Too": "Digital Economy",
+    }
+
     NEW_TOPIC_TITLE = "India, China and Africa"
-    PROGRAM_TITLE = "Next-Generation Economies"
+    PROGRAM_TITLE = "Next-Generation Economies: Middle Powers in a Changing World"
     TOPICS_PARENT_TITLE = "Topics"
 
     DEFAULT_CSV_PATH = "pages_left_without_topics.csv"
@@ -44,6 +65,9 @@ class Command(BaseCommand):
 
     def get_page_url(self, page):
         return page.full_url or page.url or ""
+
+    def get_page_type(self, page):
+        return page.specific_class.__name__
 
     def handle(self, *args, **options):
         dry_run = options["dry_run"]
@@ -130,7 +154,7 @@ class Command(BaseCommand):
             )
 
         self.stdout.write("")
-        self.stdout.write("Untagging, archiving, and unpublishing topics")
+        self.stdout.write("Untagging, retagging where needed, archiving, and unpublishing topics")
 
         for topic_title in self.TOPICS_TO_UNTAG_ARCHIVE_UNPUBLISH:
             topic = TopicPage.objects.filter(title=topic_title).first()
@@ -148,6 +172,7 @@ class Command(BaseCommand):
 
             pair_untagged_pages = 0
             pair_pages_left_without_topics = 0
+            pair_retagged_pages = 0
 
             if not pages.exists():
                 self.stdout.write("  No pages currently tagged with this topic.")
@@ -156,11 +181,40 @@ class Command(BaseCommand):
                     removed_topic_pks = removed_topic_pks_by_page_pk.setdefault(page.pk, set())
                     simulated_removed_topic_pks = removed_topic_pks | {topic.pk}
 
+                    topic_to_add = None
+                    suggested_topic_title = None
+
+                    if topic_title == "Competition":
+                        suggested_topic_title = self.COMPETITION_RETAG_SUGGESTIONS.get(page.title)
+
+                        if suggested_topic_title:
+                            topic_to_add = TopicPage.objects.filter(title=suggested_topic_title).first()
+
+                            if not topic_to_add:
+                                self.stdout.write(
+                                    self.style.WARNING(
+                                        f'  Skipping retag for {page.title}: suggested topic not found: "{suggested_topic_title}"'
+                                    )
+                                )
+                        else:
+                            self.stdout.write(
+                                self.style.WARNING(
+                                    f'  No retag suggestion found for Competition page: {page.title}'
+                                )
+                            )
+
                     remaining_topics = page.topics.exclude(pk__in=simulated_removed_topic_pks)
-                    will_have_no_topics = not remaining_topics.exists()
+
+                    if topic_to_add:
+                        will_have_no_topics = False
+                    else:
+                        will_have_no_topics = not remaining_topics.exists()
 
                     pair_untagged_pages += 1
                     grand_total_untagged_pages += 1
+
+                    if topic_to_add:
+                        pair_retagged_pages += 1
 
                     if will_have_no_topics:
                         pair_pages_left_without_topics += 1
@@ -170,13 +224,24 @@ class Command(BaseCommand):
                             {
                                 "title": page.title,
                                 "url": self.get_page_url(page),
-                                "page_type": page.specific_class.__name__,
-                                "previous_topic": topic_title,
+                                "page_type": self.get_page_type(page),
+                                "current_topic": topic_title,
                             }
                         )
 
                     if dry_run:
-                        if will_have_no_topics:
+                        if topic_to_add:
+                            already_has_suggested_topic = page.topics.filter(pk=topic_to_add.pk).exists()
+
+                            if already_has_suggested_topic:
+                                self.stdout.write(
+                                    f'  [dry-run] {page.title}: already has "{suggested_topic_title}"; remove "{topic_title}"'
+                                )
+                            else:
+                                self.stdout.write(
+                                    f'  [dry-run] {page.title}: add "{suggested_topic_title}"; remove "{topic_title}"'
+                                )
+                        elif will_have_no_topics:
                             self.stdout.write(
                                 f'  [dry-run] {page.title}: remove "{topic_title}"; page will have no topics left'
                             )
@@ -188,11 +253,18 @@ class Command(BaseCommand):
                         removed_topic_pks.add(topic.pk)
                         continue
 
+                    if topic_to_add and not page.topics.filter(pk=topic_to_add.pk).exists():
+                        page.topics.add(topic_to_add)
+
                     page.topics.remove(topic)
                     page.save()
                     removed_topic_pks.add(topic.pk)
 
-                    if will_have_no_topics:
+                    if topic_to_add:
+                        self.stdout.write(
+                            f'  {page.title}: added "{suggested_topic_title}"; removed "{topic_title}"'
+                        )
+                    elif will_have_no_topics:
                         self.stdout.write(
                             f'  {page.title}: removed "{topic_title}"; page now has no topics left'
                         )
@@ -221,16 +293,17 @@ class Command(BaseCommand):
             self.stdout.write(
                 f'  Subtotal for "{topic_title}": '
                 f"{pair_untagged_pages} page(s) untagged; "
+                f"{pair_retagged_pages} page(s) retagged; "
                 f"{pair_pages_left_without_topics} page(s) left without topics."
             )
 
         self.stdout.write("")
-        self.stdout.write("Creating new topic and tagging program pages")
+        self.stdout.write("Creating new topic and tagging linked project pages")
 
-        topic = TopicPage.objects.filter(title=self.NEW_TOPIC_TITLE).first()
+        india_china_africa_topic = TopicPage.objects.filter(title=self.NEW_TOPIC_TITLE).first()
         topics_parent = Page.objects.filter(title=self.TOPICS_PARENT_TITLE).first()
 
-        if topic:
+        if india_china_africa_topic:
             self.stdout.write(f'  Topic already exists: "{self.NEW_TOPIC_TITLE}"')
         elif not topics_parent:
             self.stdout.write(
@@ -238,80 +311,73 @@ class Command(BaseCommand):
                     f'  Skipping topic creation: parent page not found: "{self.TOPICS_PARENT_TITLE}"'
                 )
             )
-            topic = None
+            india_china_africa_topic = None
         elif dry_run:
             self.stdout.write(
                 f'  [dry-run] Would create topic "{self.NEW_TOPIC_TITLE}" under "{self.TOPICS_PARENT_TITLE}"'
             )
-            topic = None
+            india_china_africa_topic = None
         else:
-            topic = TopicPage(title=self.NEW_TOPIC_TITLE)
-            topics_parent.specific.add_child(instance=topic)
+            india_china_africa_topic = TopicPage(title=self.NEW_TOPIC_TITLE)
+            topics_parent.specific.add_child(instance=india_china_africa_topic)
             self.stdout.write(f'  Created topic "{self.NEW_TOPIC_TITLE}"')
 
         program_page = Page.objects.filter(title=self.PROGRAM_TITLE).first()
 
+        if program_page:
+            program_page = program_page.specific
+
         if not program_page:
             self.stdout.write(
                 self.style.WARNING(
-                    f'  Skipping program tagging: program page not found: "{self.PROGRAM_TITLE}"'
+                    f'  Skipping project tagging: project page not found: "{self.PROGRAM_TITLE}"'
                 )
             )
-        elif dry_run:
-            pages = ContentPage.objects.descendant_of(program_page, inclusive=False).distinct().order_by("title")
+        else:
+            pages = ContentPage.objects.filter(projects=program_page).distinct().order_by("title")
 
             pages_to_tag_count = 0
             already_tagged_count = 0
 
             for page in pages:
-                already_tagged = (
-                    TopicPage.objects.filter(title=self.NEW_TOPIC_TITLE).exists()
-                    and page.topics.filter(title=self.NEW_TOPIC_TITLE).exists()
-                )
+                already_tagged = page.topics.filter(title=self.NEW_TOPIC_TITLE).exists()
 
                 if already_tagged:
                     already_tagged_count += 1
-                    self.stdout.write(
-                        f'  [dry-run] {page.title}: already tagged with "{self.NEW_TOPIC_TITLE}"'
-                    )
-                else:
-                    pages_to_tag_count += 1
+
+                    if dry_run:
+                        self.stdout.write(
+                            f'  [dry-run] {page.title}: already tagged with "{self.NEW_TOPIC_TITLE}"'
+                        )
+                    else:
+                        self.stdout.write(
+                            f'  {page.title}: already tagged with "{self.NEW_TOPIC_TITLE}"'
+                        )
+
+                    continue
+
+                pages_to_tag_count += 1
+
+                if dry_run:
                     self.stdout.write(
                         f'  [dry-run] {page.title}: would add "{self.NEW_TOPIC_TITLE}"'
                     )
-
-            self.stdout.write(
-                f'  Subtotal for "{self.PROGRAM_TITLE}": '
-                f"{pages.count()} descendant content page(s); "
-                f"{pages_to_tag_count} would be tagged; "
-                f"{already_tagged_count} already tagged."
-            )
-        elif topic:
-            pages = ContentPage.objects.descendant_of(program_page, inclusive=False).distinct().order_by("title")
-
-            pages_tagged_count = 0
-            already_tagged_count = 0
-
-            for page in pages:
-                if page.topics.filter(pk=topic.pk).exists():
-                    already_tagged_count += 1
-                    self.stdout.write(
-                        f'  {page.title}: already tagged with "{self.NEW_TOPIC_TITLE}"'
-                    )
                     continue
 
-                page.topics.add(topic)
-                page.save()
+                if india_china_africa_topic:
+                    page.topics.add(india_china_africa_topic)
+                    page.save()
 
-                pages_tagged_count += 1
-                self.stdout.write(
-                    f'  {page.title}: added "{self.NEW_TOPIC_TITLE}"'
-                )
+                    self.stdout.write(
+                        f'  {page.title}: added "{self.NEW_TOPIC_TITLE}"'
+                    )
+
+            action_label = "would be tagged" if dry_run else "tagged"
 
             self.stdout.write(
                 f'  Subtotal for "{self.PROGRAM_TITLE}": '
-                f"{pages.count()} descendant content page(s); "
-                f"{pages_tagged_count} tagged; "
+                f"{pages.count()} linked content page(s); "
+                f"{pages_to_tag_count} {action_label}; "
                 f"{already_tagged_count} already tagged."
             )
 
@@ -321,13 +387,13 @@ class Command(BaseCommand):
         if pages_left_without_topics:
             for item in pages_left_without_topics:
                 self.stdout.write(
-                    f'  - {item["title"]} [{item["page_type"]}] — removed "{item["previous_topic"]}"'
+                    f'  - {item["title"]} [{item["page_type"]}] — removed "{item["current_topic"]}"'
                 )
         else:
             self.stdout.write("  None.")
 
         with open(csv_path, "w", newline="", encoding="utf-8") as csvfile:
-            fieldnames = ["title", "url", "page_type", "previous_topic"]
+            fieldnames = ["title", "url", "page_type", "current_topic"]
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
             writer.writeheader()
