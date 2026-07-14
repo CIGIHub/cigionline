@@ -1,4 +1,7 @@
+import csv
+
 from django.core.management.base import BaseCommand
+from wagtail.models import Page
 
 from research.models import ContentPage, TopicPage
 
@@ -10,7 +13,7 @@ class Command(BaseCommand):
         "Gender": "Human Rights",
         "Digital Rights": "Digital Governance",
         "Global Cooperation": "Geopolitics",
-        "G7/G20": "Multilateral Institutions",
+        "G20/G7": "Multilateral Institutions",
         "Foreign Interference": "Democracy",
     }
 
@@ -21,15 +24,30 @@ class Command(BaseCommand):
         "Space Governance",
     ]
 
+    NEW_TOPIC_TITLE = "India, China and Africa"
+    PROGRAM_TITLE = "Next-Generation Economies"
+    TOPICS_PARENT_TITLE = "Topics"
+
+    DEFAULT_CSV_PATH = "pages_left_without_topics.csv"
+
     def add_arguments(self, parser):
         parser.add_argument(
             "--dry-run",
             action="store_true",
             help="Show changes without saving.",
         )
+        parser.add_argument(
+            "--csv-path",
+            default=self.DEFAULT_CSV_PATH,
+            help=f'CSV output path. Defaults to "{self.DEFAULT_CSV_PATH}".',
+        )
+
+    def get_page_url(self, page):
+        return page.full_url or page.url or ""
 
     def handle(self, *args, **options):
         dry_run = options["dry_run"]
+        csv_path = options["csv_path"]
 
         grand_total_pages = 0
         grand_total_add_and_remove = 0
@@ -37,7 +55,9 @@ class Command(BaseCommand):
 
         grand_total_untagged_pages = 0
         grand_total_pages_left_without_topics = 0
+
         pages_left_without_topics = []
+        removed_topic_pks_by_page_pk = {}
 
         self.stdout.write("")
         self.stdout.write("Replacing topic tags")
@@ -133,7 +153,10 @@ class Command(BaseCommand):
                 self.stdout.write("  No pages currently tagged with this topic.")
             else:
                 for page in pages:
-                    remaining_topics = page.topics.exclude(pk=topic.pk)
+                    removed_topic_pks = removed_topic_pks_by_page_pk.setdefault(page.pk, set())
+                    simulated_removed_topic_pks = removed_topic_pks | {topic.pk}
+
+                    remaining_topics = page.topics.exclude(pk__in=simulated_removed_topic_pks)
                     will_have_no_topics = not remaining_topics.exists()
 
                     pair_untagged_pages += 1
@@ -145,8 +168,10 @@ class Command(BaseCommand):
 
                         pages_left_without_topics.append(
                             {
-                                "page": page,
-                                "removed_topic": topic_title,
+                                "title": page.title,
+                                "url": self.get_page_url(page),
+                                "page_type": page.specific_class.__name__,
+                                "previous_topic": topic_title,
                             }
                         )
 
@@ -159,10 +184,13 @@ class Command(BaseCommand):
                             self.stdout.write(
                                 f'  [dry-run] {page.title}: remove "{topic_title}"'
                             )
+
+                        removed_topic_pks.add(topic.pk)
                         continue
 
                     page.topics.remove(topic)
                     page.save()
+                    removed_topic_pks.add(topic.pk)
 
                     if will_have_no_topics:
                         self.stdout.write(
@@ -197,18 +225,121 @@ class Command(BaseCommand):
             )
 
         self.stdout.write("")
+        self.stdout.write("Creating new topic and tagging program pages")
+
+        topic = TopicPage.objects.filter(title=self.NEW_TOPIC_TITLE).first()
+        topics_parent = Page.objects.filter(title=self.TOPICS_PARENT_TITLE).first()
+
+        if topic:
+            self.stdout.write(f'  Topic already exists: "{self.NEW_TOPIC_TITLE}"')
+        elif not topics_parent:
+            self.stdout.write(
+                self.style.WARNING(
+                    f'  Skipping topic creation: parent page not found: "{self.TOPICS_PARENT_TITLE}"'
+                )
+            )
+            topic = None
+        elif dry_run:
+            self.stdout.write(
+                f'  [dry-run] Would create topic "{self.NEW_TOPIC_TITLE}" under "{self.TOPICS_PARENT_TITLE}"'
+            )
+            topic = None
+        else:
+            topic = TopicPage(title=self.NEW_TOPIC_TITLE)
+            topics_parent.specific.add_child(instance=topic)
+            self.stdout.write(f'  Created topic "{self.NEW_TOPIC_TITLE}"')
+
+        program_page = Page.objects.filter(title=self.PROGRAM_TITLE).first()
+
+        if not program_page:
+            self.stdout.write(
+                self.style.WARNING(
+                    f'  Skipping program tagging: program page not found: "{self.PROGRAM_TITLE}"'
+                )
+            )
+        elif dry_run:
+            pages = ContentPage.objects.descendant_of(program_page, inclusive=False).distinct().order_by("title")
+
+            pages_to_tag_count = 0
+            already_tagged_count = 0
+
+            for page in pages:
+                already_tagged = (
+                    TopicPage.objects.filter(title=self.NEW_TOPIC_TITLE).exists()
+                    and page.topics.filter(title=self.NEW_TOPIC_TITLE).exists()
+                )
+
+                if already_tagged:
+                    already_tagged_count += 1
+                    self.stdout.write(
+                        f'  [dry-run] {page.title}: already tagged with "{self.NEW_TOPIC_TITLE}"'
+                    )
+                else:
+                    pages_to_tag_count += 1
+                    self.stdout.write(
+                        f'  [dry-run] {page.title}: would add "{self.NEW_TOPIC_TITLE}"'
+                    )
+
+            self.stdout.write(
+                f'  Subtotal for "{self.PROGRAM_TITLE}": '
+                f"{pages.count()} descendant content page(s); "
+                f"{pages_to_tag_count} would be tagged; "
+                f"{already_tagged_count} already tagged."
+            )
+        elif topic:
+            pages = ContentPage.objects.descendant_of(program_page, inclusive=False).distinct().order_by("title")
+
+            pages_tagged_count = 0
+            already_tagged_count = 0
+
+            for page in pages:
+                if page.topics.filter(pk=topic.pk).exists():
+                    already_tagged_count += 1
+                    self.stdout.write(
+                        f'  {page.title}: already tagged with "{self.NEW_TOPIC_TITLE}"'
+                    )
+                    continue
+
+                page.topics.add(topic)
+                page.save()
+
+                pages_tagged_count += 1
+                self.stdout.write(
+                    f'  {page.title}: added "{self.NEW_TOPIC_TITLE}"'
+                )
+
+            self.stdout.write(
+                f'  Subtotal for "{self.PROGRAM_TITLE}": '
+                f"{pages.count()} descendant content page(s); "
+                f"{pages_tagged_count} tagged; "
+                f"{already_tagged_count} already tagged."
+            )
+
+        self.stdout.write("")
         self.stdout.write("Pages left without any topics")
 
         if pages_left_without_topics:
             for item in pages_left_without_topics:
-                page = item["page"]
-                removed_topic = item["removed_topic"]
-
                 self.stdout.write(
-                    f'  - {page.title} [{page.specific_class.__name__}] — removed "{removed_topic}"'
+                    f'  - {item["title"]} [{item["page_type"]}] — removed "{item["previous_topic"]}"'
                 )
         else:
             self.stdout.write("  None.")
+
+        with open(csv_path, "w", newline="", encoding="utf-8") as csvfile:
+            fieldnames = ["title", "url", "page_type", "previous_topic"]
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+            writer.writeheader()
+
+            for item in pages_left_without_topics:
+                writer.writerow(item)
+
+        self.stdout.write("")
+        self.stdout.write(
+            f'CSV written to "{csv_path}" with '
+            f"{len(pages_left_without_topics)} page(s) left without topics."
+        )
 
         self.stdout.write("")
         self.stdout.write(
