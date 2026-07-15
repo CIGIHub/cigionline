@@ -16,6 +16,7 @@ import logging
 from django.utils.translation import gettext_lazy as _
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect
+from mediavalet.panels import MediaValetImageChooserPanel
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 from streams.blocks import AbstractSubmissionBlock
@@ -1745,7 +1746,7 @@ class EventPage(
                 [
                     FieldPanel('registration_open'),
                     FieldPanel('is_private_registration'),
-                    FieldPanel('registration_image_banner'),
+                    MediaValetImageChooserPanel('registration_image_banner'),
                     FieldPanel('mailchimp_tag'),
                 ],
                 heading='General Settings',

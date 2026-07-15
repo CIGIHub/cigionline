@@ -148,13 +148,18 @@ def import_asset_view(request):
         width=width,
         height=height,
     )
-    image.file.save(file_name, ContentFile(image_data), save=False)
-    # Set file_size and file_hash; dimensions are already populated above.
-    image._set_image_file_metadata()
-    # Guarantee dimensions survive even if _set_image_file_metadata resets them.
-    image.width = width
-    image.height = height
-    image.save()
+    try:
+        image.file.save(file_name, ContentFile(image_data), save=False)
+        # Set file_size and file_hash; dimensions are already populated above.
+        image._set_image_file_metadata()
+        # Guarantee dimensions survive even if _set_image_file_metadata resets them.
+        image.width = width
+        image.height = height
+        image.save()
+    except Exception:
+        if image.file.name:
+            image.file.delete(save=False)
+        raise
 
     return JsonResponse({
         'success': True,

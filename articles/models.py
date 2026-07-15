@@ -485,9 +485,9 @@ class ArticlePage(
         MultiFieldPanel(
             [
                 MediaValetImageChooserPanel('image_hero'),
-                FieldPanel('image_poster'),
-                FieldPanel('image_banner'),
-                FieldPanel('image_banner_small'),
+                MediaValetImageChooserPanel('image_poster'),
+                MediaValetImageChooserPanel('image_banner'),
+                MediaValetImageChooserPanel('image_banner_small'),
             ],
             heading='Images',
             classname='collapsible collapsed',
@@ -838,10 +838,10 @@ class ArticleSeriesPage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('image_hero'),
-                FieldPanel('image_banner'),
-                FieldPanel('image_banner_small'),
-                FieldPanel('image_poster'),
+                MediaValetImageChooserPanel('image_hero'),
+                MediaValetImageChooserPanel('image_banner'),
+                MediaValetImageChooserPanel('image_banner_small'),
+                MediaValetImageChooserPanel('image_poster'),
             ],
             heading='Image',
             classname='collapsible collapsed',
@@ -1102,8 +1102,8 @@ class OpinionSeriesPage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('image_hero'),
-                FieldPanel('image_banner'),
+                MediaValetImageChooserPanel('image_hero'),
+                MediaValetImageChooserPanel('image_banner'),
             ],
             heading='Images',
             classname='collapsible collapsed',

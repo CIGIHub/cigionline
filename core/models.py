@@ -7,6 +7,7 @@ from django.http import JsonResponse, HttpResponseForbidden
 from django.http.response import Http404
 from django.utils.functional import cached_property
 from django.shortcuts import render, redirect
+from mediavalet.panels import MediaValetImageChooserPanel
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from search.filters import (
     # AuthorFilterField,
@@ -409,8 +410,8 @@ class BasicPageAbstract(models.Model):
     )
     images_panel = MultiFieldPanel(
         [
-            FieldPanel('image_hero'),
-            FieldPanel('image_banner'),
+            MediaValetImageChooserPanel('image_hero'),
+            MediaValetImageChooserPanel('image_banner'),
         ],
         heading='Images',
         classname='collapsible collapsed',
@@ -451,7 +452,7 @@ class FeatureablePageAbstract(models.Model):
         [
             FieldPanel('feature_title'),
             FieldPanel('feature_subtitle'),
-            FieldPanel('image_feature'),
+            MediaValetImageChooserPanel('image_feature'),
             FieldPanel('feature_url'),
         ],
         heading='Feature Information',
@@ -514,7 +515,7 @@ class ShareablePageAbstract(models.Model):
         [
             FieldPanel('social_title'),
             FieldPanel('social_description'),
-            FieldPanel('image_social'),
+            MediaValetImageChooserPanel('image_social'),
         ],
         heading='Social Media',
         classname='collapsible collapsed',
@@ -1246,8 +1247,8 @@ class HumanAnalysisStandardPage(
         MultiFieldPanel(
             [
                 FieldPanel('body'),
-                FieldPanel('small_has_image'),
-                FieldPanel('big_has_image'),
+                MediaValetImageChooserPanel('small_has_image'),
+                MediaValetImageChooserPanel('big_has_image'),
             ],
             heading='Body',
             classname='collapsible collapsed',
@@ -1476,7 +1477,7 @@ class SlidePage(Page):
     content_panels = Page.content_panels + [
         FieldPanel('title_override'),
         FieldPanel('theme'),
-        FieldPanel('image_background'),
+        MediaValetImageChooserPanel('image_background'),
         FieldPanel('background_colour'),
         FieldPanel('body'),
         FieldPanel('timeline'),
@@ -1586,7 +1587,7 @@ class TwentyFifthPageSingleton(
         BasicPageAbstract.title_panel,
         MultiFieldPanel(
             [
-                FieldPanel('splash_image'),
+                MediaValetImageChooserPanel('splash_image'),
                 MediaChooserPanel('splash_video', media_type='video'),
             ],
             heading='Splash',

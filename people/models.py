@@ -8,6 +8,7 @@ from core.models import (
 from django.contrib.postgres.lookups import Unaccent
 from django.db import models
 from django.db.models.functions import Lower
+from mediavalet.panels import MediaValetImageChooserPanel
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from research.models import ProjectPage
 from search.filters import (
@@ -436,8 +437,8 @@ class PersonPage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('image_square'),
-                FieldPanel('image_media')
+                MediaValetImageChooserPanel('image_square'),
+                MediaValetImageChooserPanel('image_media')
             ],
             heading='Images',
             classname='collapsible collapsed'
