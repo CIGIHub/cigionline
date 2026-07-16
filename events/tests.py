@@ -7,10 +7,20 @@ from home.models import HomePage, Think7HomePage
 from types import SimpleNamespace
 from wagtail.test.utils import WagtailPageTestCase
 
-from .models import EventListPage, EventPage
+from .models import EventListPage, EventPage, EventRegistrationReportPage
 from .email_rendering import render_streamfield_email_html
 
 from unittest.mock import patch
+
+
+def test_owner():
+    from django.contrib.auth import get_user_model
+
+    user, _ = get_user_model().objects.get_or_create(
+        username="events-test-owner",
+        defaults={"email": "events-test-owner@example.com"},
+    )
+    return user
 
 
 class EventCalendarTemplateTests(SimpleTestCase):
@@ -104,16 +114,24 @@ class EmailCampaignAttachmentTests(SimpleTestCase):
 class DuplicateRegistrationTests(TestCase):
     """Duplicate email registrations should not create multiple active rows."""
 
-    @patch("events.models.send_confirmation_email")
-    def test_duplicate_registration_does_not_create_second_registrant(self, send_mock):
-        from events.models import EventPage, RegistrationType, Registrant
+    @patch("events.utils.verify_turnstile_token", return_value=True)
+    @patch("events.emailing.send_duplicate_registration_manage_email")
+    def test_duplicate_registration_does_not_create_second_registrant(self, send_mock, _turnstile_mock):
+        from events.models import EventPage, RegistrationType, RegistrationFormTemplate, Registrant
         from wagtail.models import Site
 
         # Minimal Site/Page setup so the EventPage route can resolve.
         root = Site.objects.get(is_default_site=True).root_page
-        event = EventPage(title="Dup Test Event")
+        event = EventPage(
+            title="Dup Test Event",
+            registration_open=True,
+            publishing_date=timezone.now(),
+            owner=test_owner(),
+        )
         root.add_child(instance=event)
-        event.save_revision().publish()
+        event.save_revision(user=test_owner()).publish()
+        event.registration_form_template = RegistrationFormTemplate.objects.create(title="Dup Test Template")
+        event.save(update_fields=["registration_form_template"])
 
         reg_type = RegistrationType(event=event, name="General", slug="general", sort_order=0, is_public=True)
         reg_type.save()
@@ -146,15 +164,23 @@ class DuplicateRegistrationTests(TestCase):
         self.assertEqual(before, after)
         self.assertTrue(send_mock.called)
 
-    @patch("events.models.send_confirmation_email")
-    def test_duplicate_registration_allows_if_cancelled(self, send_mock):
-        from events.models import EventPage, RegistrationType, Registrant
+    @patch("events.utils.verify_turnstile_token", return_value=True)
+    @patch("events.emailing.send_confirmation_email")
+    def test_duplicate_registration_allows_if_cancelled(self, send_mock, _turnstile_mock):
+        from events.models import EventPage, RegistrationType, RegistrationFormTemplate, Registrant
         from wagtail.models import Site
 
         root = Site.objects.get(is_default_site=True).root_page
-        event = EventPage(title="Dup Cancelled Event")
+        event = EventPage(
+            title="Dup Cancelled Event",
+            registration_open=True,
+            publishing_date=timezone.now(),
+            owner=test_owner(),
+        )
         root.add_child(instance=event)
-        event.save_revision().publish()
+        event.save_revision(user=test_owner()).publish()
+        event.registration_form_template = RegistrationFormTemplate.objects.create(title="Dup Cancelled Template")
+        event.save(update_fields=["registration_form_template"])
 
         reg_type = RegistrationType(event=event, name="General", slug="general", sort_order=0, is_public=True)
         reg_type.save()
@@ -206,7 +232,7 @@ class EventPageTests(WagtailPageTestCase):
     def test_eventpage_child_page_types(self):
         self.assertAllowedSubpageTypes(
             EventPage,
-            {},
+            {EventRegistrationReportPage},
         )
 
 
@@ -217,11 +243,11 @@ class GuestRegistrationQuestionExclusionTests(TestCase):
         from events.guest_registration import build_primary_and_guest_forms
 
         root = Site.objects.get(is_default_site=True).root_page
-        event = EventPage(title="Guest Exclusion Event")
+        event = EventPage(title="Guest Exclusion Event", publishing_date=timezone.now(), owner=test_owner())
         root.add_child(instance=event)
-        event.save_revision().publish()
+        event.save_revision(user=test_owner()).publish()
 
-        tmpl = RegistrationFormTemplate.objects.create(name="Guest Exclusion Template")
+        tmpl = RegistrationFormTemplate.objects.create(title="Guest Exclusion Template")
         event.registration_form_template = tmpl
         event.save(update_fields=["registration_form_template"])
 
@@ -778,17 +804,23 @@ class RegistrationRichTextBlockTests(TestCase):
 
 
 class GroupRegistrationConfirmTests(TestCase):
-    @patch("events.models.send_group_confirmation_email")
-    def test_group_registration_immediately_confirms_and_sends_confirmation_email(self, send_mock):
+    @patch("events.utils.verify_turnstile_token", return_value=True)
+    @patch("events.emailing.send_group_confirmation_email")
+    def test_group_registration_immediately_confirms_and_sends_confirmation_email(self, send_mock, _turnstile_mock):
         from wagtail.models import Site
         from events.models import EventPage, RegistrationType, RegistrationFormTemplate
 
         root = Site.objects.get(is_default_site=True).root_page
-        event = EventPage(title="Group Confirm Event", registration_open=True)
+        event = EventPage(
+            title="Group Confirm Event",
+            registration_open=True,
+            publishing_date=timezone.now(),
+            owner=test_owner(),
+        )
         root.add_child(instance=event)
-        event.save_revision().publish()
+        event.save_revision(user=test_owner()).publish()
 
-        tmpl = RegistrationFormTemplate.objects.create(name="Group Template")
+        tmpl = RegistrationFormTemplate.objects.create(title="Group Template")
         event.registration_form_template = tmpl
         event.save(update_fields=["registration_form_template"])
 
@@ -838,9 +870,14 @@ class RegistrationTypeCloseDateTests(TestCase):
         from events.models import EventPage, RegistrationType
 
         root = Site.objects.get(is_default_site=True).root_page
-        event = EventPage(title="Close Date Event", registration_open=True)
+        event = EventPage(
+            title="Close Date Event",
+            registration_open=True,
+            publishing_date=timezone.now(),
+            owner=test_owner(),
+        )
         root.add_child(instance=event)
-        event.save_revision().publish()
+        event.save_revision(user=test_owner()).publish()
 
         RegistrationType.objects.create(
             event=event,
@@ -869,9 +906,14 @@ class RegistrationTypeCloseDateTests(TestCase):
         from events.models import EventPage, RegistrationType, Registrant
 
         root = Site.objects.get(is_default_site=True).root_page
-        event = EventPage(title="Closed Direct Event", registration_open=True)
+        event = EventPage(
+            title="Closed Direct Event",
+            registration_open=True,
+            publishing_date=timezone.now(),
+            owner=test_owner(),
+        )
         root.add_child(instance=event)
-        event.save_revision().publish()
+        event.save_revision(user=test_owner()).publish()
 
         reg_type = RegistrationType.objects.create(
             event=event,
@@ -989,9 +1031,9 @@ class EmailTemplateRenderingTests(WagtailPageTestCase):
         from events.email_rendering import render_streamfield_email_html
 
         root = Site.objects.get(is_default_site=True).root_page
-        event = EventPage(title="Answers Event")
+        event = EventPage(title="Answers Event", publishing_date=timezone.now(), owner=test_owner())
         root.add_child(instance=event)
-        event.save_revision().publish()
+        event.save_revision(user=test_owner()).publish()
 
         reg_type = RegistrationType(event=event, name="General", slug="general", sort_order=0, is_public=True)
         reg_type.save()
@@ -1042,9 +1084,9 @@ class EmailTemplateRenderingTests(WagtailPageTestCase):
         from events.emailing import _render_registrant_answers
 
         root = Site.objects.get(is_default_site=True).root_page
-        event = EventPage(title="Answers UUID Event")
+        event = EventPage(title="Answers UUID Event", publishing_date=timezone.now(), owner=test_owner())
         root.add_child(instance=event)
-        event.save_revision().publish()
+        event.save_revision(user=test_owner()).publish()
 
         reg_type = RegistrationType(event=event, name="General", slug="general", sort_order=0, is_public=True)
         reg_type.save()
