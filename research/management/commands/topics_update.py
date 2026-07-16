@@ -49,7 +49,7 @@ class Command(BaseCommand):
     PROGRAM_TITLE = "Next-Generation Economies: Middle Powers in a Changing World"
     TOPICS_PARENT_TITLE = "Topics"
 
-    DEFAULT_CSV_PATH = "pages_left_without_topics.csv"
+    DEFAULT_CSV_PATH = "competition_pages_left_without_topics.csv"
     DEFAULT_CHANGE_LOG_CSV_PATH = "topic_tag_update_changes.csv"
 
     def add_arguments(self, parser):
@@ -62,7 +62,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--write-csv",
             action="store_true",
-            help="Write a CSV of pages left without topics.",
+            help="Write a CSV of Competition pages left without topics before suggestions are applied.",
         )
 
         parser.add_argument(
@@ -121,9 +121,11 @@ class Command(BaseCommand):
         grand_total_remove_only = 0
 
         grand_total_untagged_pages = 0
-        grand_total_pages_left_without_topics = 0
+        grand_total_competition_pages_left_without_topics = 0
 
-        pages_left_without_topics = []
+        competition_pages_left_without_topics = []
+        competition_pages_to_retag = []
+
         removed_topic_pks_by_page_pk = {}
 
         self.stdout.write("")
@@ -211,7 +213,7 @@ class Command(BaseCommand):
             )
 
         self.stdout.write("")
-        self.stdout.write("Untagging, retagging where needed, archiving, and unpublishing topics")
+        self.stdout.write("Untagging, archiving, and unpublishing topics")
 
         for topic_title in self.TOPICS_TO_UNTAG_ARCHIVE_UNPUBLISH:
             topic = TopicPage.objects.filter(title=topic_title).first()
@@ -228,8 +230,7 @@ class Command(BaseCommand):
             pages = ContentPage.objects.filter(topics=topic).distinct().order_by("title")
 
             pair_untagged_pages = 0
-            pair_pages_left_without_topics = 0
-            pair_retagged_pages = 0
+            pair_competition_pages_left_without_topics = 0
 
             if not pages.exists():
                 self.stdout.write("  No pages currently tagged with this topic.")
@@ -238,22 +239,22 @@ class Command(BaseCommand):
                     removed_topic_pks = removed_topic_pks_by_page_pk.setdefault(page.pk, set())
                     simulated_removed_topic_pks = removed_topic_pks | {topic.pk}
 
-                    topic_to_add = None
-                    suggested_topic_title = None
+                    remaining_topics = page.topics.exclude(pk__in=simulated_removed_topic_pks)
+                    will_have_no_topics = not remaining_topics.exists()
+
+                    pair_untagged_pages += 1
+                    grand_total_untagged_pages += 1
 
                     if topic_title == "Competition":
                         suggested_topic_title = self.COMPETITION_RETAG_SUGGESTIONS.get(page.title)
 
                         if suggested_topic_title:
-                            topic_to_add = TopicPage.objects.filter(title=suggested_topic_title).first()
-
-                            if not topic_to_add:
-                                self.stdout.write(
-                                    self.style.WARNING(
-                                        f'  Skipping retag for {page.title} ({self.get_page_url(page)}): '
-                                        f'suggested topic not found: "{suggested_topic_title}"'
-                                    )
-                                )
+                            competition_pages_to_retag.append(
+                                {
+                                    "page": page,
+                                    "suggested_topic_title": suggested_topic_title,
+                                }
+                            )
                         else:
                             self.stdout.write(
                                 self.style.WARNING(
@@ -262,40 +263,20 @@ class Command(BaseCommand):
                                 )
                             )
 
-                    remaining_topics = page.topics.exclude(pk__in=simulated_removed_topic_pks)
+                        if will_have_no_topics:
+                            pair_competition_pages_left_without_topics += 1
+                            grand_total_competition_pages_left_without_topics += 1
 
-                    if topic_to_add:
-                        will_have_no_topics = False
-                    else:
-                        will_have_no_topics = not remaining_topics.exists()
-
-                    pair_untagged_pages += 1
-                    grand_total_untagged_pages += 1
-
-                    if topic_to_add:
-                        pair_retagged_pages += 1
+                            competition_pages_left_without_topics.append(
+                                {
+                                    "title": page.title,
+                                    "url": self.get_page_url(page),
+                                    "page_type": self.get_page_type(page),
+                                    "current_topic": topic_title,
+                                }
+                            )
 
                     if will_have_no_topics:
-                        pair_pages_left_without_topics += 1
-                        grand_total_pages_left_without_topics += 1
-
-                        pages_left_without_topics.append(
-                            {
-                                "title": page.title,
-                                "url": self.get_page_url(page),
-                                "page_type": self.get_page_type(page),
-                                "current_topic": topic_title,
-                            }
-                        )
-
-                    if topic_to_add:
-                        already_has_suggested_topic = page.topics.filter(pk=topic_to_add.pk).exists()
-
-                        if already_has_suggested_topic:
-                            action = f'already has "{suggested_topic_title}"; remove "{topic_title}"'
-                        else:
-                            action = f'add "{suggested_topic_title}"; remove "{topic_title}"'
-                    elif will_have_no_topics:
                         action = f'remove "{topic_title}"; page will have no topics left'
                     else:
                         action = f'remove "{topic_title}"'
@@ -303,7 +284,7 @@ class Command(BaseCommand):
                     if dry_run:
                         change_log_rows.append(
                             self.log_change(
-                                section="topic_removal_retag",
+                                section="topic_removal",
                                 page=page,
                                 action=action,
                                 dry_run=True,
@@ -313,23 +294,18 @@ class Command(BaseCommand):
                         removed_topic_pks.add(topic.pk)
                         continue
 
-                    if topic_to_add and not page.topics.filter(pk=topic_to_add.pk).exists():
-                        page.topics.add(topic_to_add)
-
                     page.topics.remove(topic)
                     page.save()
                     removed_topic_pks.add(topic.pk)
 
-                    if topic_to_add:
-                        real_action = f'added "{suggested_topic_title}"; removed "{topic_title}"'
-                    elif will_have_no_topics:
+                    if will_have_no_topics:
                         real_action = f'removed "{topic_title}"; page now has no topics left'
                     else:
                         real_action = f'removed "{topic_title}"'
 
                     change_log_rows.append(
                         self.log_change(
-                            section="topic_removal_retag",
+                            section="topic_removal",
                             page=page,
                             action=real_action,
                             dry_run=False,
@@ -353,12 +329,125 @@ class Command(BaseCommand):
                 else:
                     self.stdout.write(f'  Topic "{topic_title}" was already unpublished')
 
+            if topic_title == "Competition":
+                self.stdout.write(
+                    f'  Subtotal for "{topic_title}": '
+                    f"{pair_untagged_pages} page(s) untagged; "
+                    f"{pair_competition_pages_left_without_topics} page(s) left without topics before suggestions."
+                )
+            else:
+                self.stdout.write(
+                    f'  Subtotal for "{topic_title}": '
+                    f"{pair_untagged_pages} page(s) untagged."
+                )
+
+        self.stdout.write("")
+        self.stdout.write("Competition pages left without any topics before suggestions")
+
+        if competition_pages_left_without_topics:
+            for item in competition_pages_left_without_topics:
+                self.stdout.write(
+                    f'  - {item["title"]} ({item["url"]}) '
+                    f'[{item["page_type"]}] — removed "{item["current_topic"]}"'
+                )
+        else:
+            self.stdout.write("  None.")
+
+        if write_csv:
+            with open(csv_path, "w", newline="", encoding="utf-8-sig") as csvfile:
+                fieldnames = ["title", "url", "page_type", "current_topic"]
+                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+                writer.writeheader()
+
+                for item in competition_pages_left_without_topics:
+                    writer.writerow(item)
+
+            self.stdout.write("")
             self.stdout.write(
-                f'  Subtotal for "{topic_title}": '
-                f"{pair_untagged_pages} page(s) untagged; "
-                f"{pair_retagged_pages} page(s) retagged; "
-                f"{pair_pages_left_without_topics} page(s) left without topics."
+                f'CSV written to "{csv_path}" with '
+                f"{len(competition_pages_left_without_topics)} Competition page(s) left without topics before suggestions."
             )
+        else:
+            self.stdout.write("")
+            self.stdout.write(
+                "CSV not written. Use --write-csv to export Competition pages left without topics before suggestions."
+            )
+
+        self.stdout.write("")
+        self.stdout.write("Retagging Competition pages from suggestions")
+
+        competition_retagged_count = 0
+        competition_already_tagged_count = 0
+        competition_missing_topic_count = 0
+
+        if not competition_pages_to_retag:
+            self.stdout.write("  No Competition pages queued for retagging.")
+        else:
+            for item in competition_pages_to_retag:
+                page = item["page"]
+                suggested_topic_title = item["suggested_topic_title"]
+
+                suggested_topic = TopicPage.objects.filter(title=suggested_topic_title).first()
+
+                if not suggested_topic:
+                    competition_missing_topic_count += 1
+
+                    self.stdout.write(
+                        self.style.WARNING(
+                            f'  Skipping retag for {page.title} ({self.get_page_url(page)}): '
+                            f'suggested topic not found: "{suggested_topic_title}"'
+                        )
+                    )
+                    continue
+
+                if page.topics.filter(pk=suggested_topic.pk).exists():
+                    competition_already_tagged_count += 1
+
+                    change_log_rows.append(
+                        self.log_change(
+                            section="competition_suggestion_retag",
+                            page=page,
+                            action=f'already tagged with "{suggested_topic_title}" after removing "Competition"',
+                            dry_run=dry_run,
+                        )
+                    )
+                    continue
+
+                if dry_run:
+                    competition_retagged_count += 1
+
+                    change_log_rows.append(
+                        self.log_change(
+                            section="competition_suggestion_retag",
+                            page=page,
+                            action=f'would add "{suggested_topic_title}" after removing "Competition"',
+                            dry_run=True,
+                        )
+                    )
+                    continue
+
+                page.topics.add(suggested_topic)
+                page.save()
+
+                competition_retagged_count += 1
+
+                change_log_rows.append(
+                    self.log_change(
+                        section="competition_suggestion_retag",
+                        page=page,
+                        action=f'added "{suggested_topic_title}" after removing "Competition"',
+                        dry_run=False,
+                    )
+                )
+
+        self.stdout.write(
+            f'  Subtotal for Competition suggestions: '
+            f"{competition_retagged_count} page(s) "
+            f"{'would be retagged' if dry_run else 'retagged'}; "
+            f"{competition_already_tagged_count} already tagged; "
+            f"{competition_missing_topic_count} missing suggested topic."
+        )
 
         self.stdout.write("")
         self.stdout.write("Creating new topic and tagging linked project pages")
@@ -455,39 +544,8 @@ class Command(BaseCommand):
                 f"{already_tagged_count} already tagged."
             )
 
-        self.stdout.write("")
-        self.stdout.write("Pages left without any topics")
-
-        if pages_left_without_topics:
-            for item in pages_left_without_topics:
-                self.stdout.write(
-                    f'  - {item["title"]} ({item["url"]}) '
-                    f'[{item["page_type"]}] — removed "{item["current_topic"]}"'
-                )
-        else:
-            self.stdout.write("  None.")
-
-        if write_csv:
-            with open(csv_path, "w", newline="", encoding="utf-8") as csvfile:
-                fieldnames = ["title", "url", "page_type", "current_topic"]
-                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
-                writer.writeheader()
-
-                for item in pages_left_without_topics:
-                    writer.writerow(item)
-
-            self.stdout.write("")
-            self.stdout.write(
-                f'CSV written to "{csv_path}" with '
-                f"{len(pages_left_without_topics)} page(s) left without topics."
-            )
-        else:
-            self.stdout.write("")
-            self.stdout.write("CSV not written. Use --write-csv to export pages left without topics.")
-
         if write_change_log_csv:
-            with open(change_log_csv_path, "w", newline="", encoding="utf-8") as csvfile:
+            with open(change_log_csv_path, "w", newline="", encoding="utf-8-sig") as csvfile:
                 fieldnames = [
                     "dry_run",
                     "section",
@@ -522,8 +580,12 @@ class Command(BaseCommand):
         )
 
         self.stdout.write(
-            f"Grand total removals: {grand_total_untagged_pages} page-topic match(es) untagged; "
-            f"{grand_total_pages_left_without_topics} page(s) left without topics."
+            f"Grand total removals: {grand_total_untagged_pages} page-topic match(es) untagged."
+        )
+
+        self.stdout.write(
+            f"Grand total Competition pages left without topics before suggestions: "
+            f"{grand_total_competition_pages_left_without_topics}."
         )
 
         if dry_run:

@@ -172,17 +172,18 @@ def fellows_latest_output(request):
 
     response = HttpResponse(content_type="text/csv; charset=utf-8")
     response["Content-Disposition"] = (
-        'attachment; filename="fellows_content.csv"'
+        'attachment; filename="fellows_latest.csv"'
     )
     response.write("\ufeff")
 
     writer = csv.writer(response)
     writer.writerow([
         "Fellow",
+        "Total Published Last Fiscal",
+        "Latest Publishing Date",
         "Content Type",
         "Content Subtype",
-        "Publishing Date",
-        "Total Published Since 2025-08-01",
+        "Position",
     ])
 
     for fellow in fellows:
@@ -207,18 +208,20 @@ def fellows_latest_output(request):
 
             writer.writerow([
                 fellow.title,
+                total_since_cutoff,
+                most_recent.publishing_date.date().isoformat(),
                 most_recent.contenttype,
                 content_subtype,
-                most_recent.publishing_date.isoformat(),
-                total_since_cutoff,
+                fellow.position,
             ])
         else:
             writer.writerow([
                 fellow.title,
-                "",
-                "",
-                "",
                 0,
+                "",
+                "",
+                "",
+                "",
             ])
 
     return response
