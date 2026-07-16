@@ -22,7 +22,15 @@ from django.utils.text import slugify
 from wagtail.documents.models import Document
 
 from .models import Registrant
-from .forms import is_non_answer_field_type
+from .forms import CHOICE_LIMIT_FIELD_TYPES, is_non_answer_field_type, parse_choice_limits
+
+
+def _as_values(value: Any) -> list[str]:
+    if value in (None, "", False):
+        return []
+    if isinstance(value, (list, tuple, set)):
+        return [str(v).strip() for v in value if str(v).strip()]
+    return [str(value).strip()]
 
 
 def build_type_rows(event) -> list[dict[str, Any]]:
@@ -46,6 +54,56 @@ def build_type_rows(event) -> list[dict[str, Any]]:
             }
         )
     return type_rows
+
+
+def build_choice_summary_rows(event) -> list[dict[str, Any]]:
+    """Count active registrants by answer option for choice-style questions."""
+
+    form_template = getattr(event, "registration_form_template", None)
+    if not form_template:
+        return []
+
+    form_fields = [
+        ff
+        for ff in form_template.fields.all().order_by("sort_order")
+        if ff.field_type in CHOICE_LIMIT_FIELD_TYPES
+    ]
+    if not form_fields:
+        return []
+
+    registrant_answers = list(
+        Registrant.objects.filter(event=event)
+        .exclude(status=Registrant.Status.CANCELLED)
+        .values_list("answers", flat=True)
+    )
+
+    rows = []
+    for ff in form_fields:
+        key = f"f_{ff.field_key}"
+        options = [choice.strip() for choice in (ff.choices or "").splitlines() if choice.strip()]
+        counts = {option: 0 for option in options}
+        for answers in registrant_answers:
+            for value in _as_values((answers or {}).get(key)):
+                if value in counts:
+                    counts[value] += 1
+
+        limits = parse_choice_limits(ff)
+        rows.append(
+            {
+                "label": ff.label,
+                "field_type": ff.field_type,
+                "options": [
+                    {
+                        "label": option,
+                        "count": counts[option],
+                        "limit": limits.get(option),
+                    }
+                    for option in options
+                ],
+            }
+        )
+
+    return rows
 
 
 @dataclass(frozen=True)
