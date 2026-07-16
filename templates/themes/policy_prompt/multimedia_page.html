@@ -327,5 +327,6 @@
 {% endblock content %}
 
 {% block footer %}
-  {% include "./includes/footer.html" with podcast_subscribe_buttons=self.multimedia_series.specific.podcast_subscribe_buttons live=self.multimedia_series.specific.podcast_live %}
+  {% firstof self.podcast_audio_url self.multimedia_url as episode_download_url %}
+  {% include "./includes/footer.html" with podcast_subscribe_buttons=self.multimedia_series.specific.podcast_subscribe_buttons live=self.multimedia_series.specific.podcast_live episode_download_url=episode_download_url %}
 {% endblock %}
