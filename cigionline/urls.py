@@ -74,6 +74,11 @@ urlpatterns = urlpatterns + [
     re_path(r'^favicon\.ico$', favicon_view),
     re_path(r'^robots\.txt$', robots_views.RobotsView.as_view(), name='robots'),
     re_path(r'^sitemap\.xml$', sitemap),
+    re_path(
+        r'^api/fellows-latest-output$',
+        people_views.fellows_latest_output,
+        name="fellows_latest_output",
+    ),
 ]
 
 
