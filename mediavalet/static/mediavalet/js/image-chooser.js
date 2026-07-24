@@ -36,7 +36,7 @@
       'border:none',
       'border-radius:6px',
       'width:90vw',
-      'max-width:1200px',
+      'max-width:2000px',
       'height:85vh',
       'flex-direction:column',
       'overflow:hidden',
