@@ -195,6 +195,7 @@ WAGTAILIMAGES_IMAGE_MODEL = 'images.CigionlineImage'
 # MediaValet Asset Picker integration
 # Override MEDIAVALET_ASSET_PICKER_URL in environment-specific settings if needed.
 MEDIAVALET_ASSET_PICKER_URL = 'https://assetpicker.mediavalet.com'
+MEDIAVALET_ASSET_PICKER_APP_ID = os.environ.get('MEDIAVALET_ASSET_PICKER_APP_ID', '')
 # Restrict image downloads to these hostnames (SSRF protection).
 MEDIAVALET_ALLOWED_HOSTNAMES = [
     'mediavalet.com',

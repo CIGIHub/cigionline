@@ -9,7 +9,7 @@ from PIL import Image as PILImage
 
 from images.models import CigionlineImage
 
-from .views import import_asset_view
+from .views import get_asset_picker_url, import_asset_view
 
 
 def png_bytes():
@@ -20,6 +20,19 @@ def png_bytes():
 
 
 PNG_BYTES = png_bytes()
+
+
+class AssetPickerUrlTests(TestCase):
+    @override_settings(MEDIAVALET_ASSET_PICKER_APP_ID='test-app-id')
+    def test_includes_configured_app_id(self):
+        self.assertEqual(
+            get_asset_picker_url(),
+            'https://assetpicker.mediavalet.com?allowedAssetTypes=Image&allowedFeatures=cdnLink&redirectType=popup&appId=test-app-id',
+        )
+
+    @override_settings(MEDIAVALET_ASSET_PICKER_APP_ID='')
+    def test_omits_blank_app_id(self):
+        self.assertNotIn('appId=', get_asset_picker_url())
 
 
 class ImportAssetTests(TestCase):

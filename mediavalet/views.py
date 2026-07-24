@@ -26,6 +26,23 @@ _DEFAULT_ALLOWED_HOSTNAMES = [
 MAX_IMAGE_BYTES = 50 * 1024 * 1024  # 50 MB
 
 
+def get_asset_picker_url():
+    base_url = getattr(settings, 'MEDIAVALET_ASSET_PICKER_URL', 'https://assetpicker.mediavalet.com')
+    parsed_url = urllib.parse.urlsplit(base_url)
+    query = dict(urllib.parse.parse_qsl(parsed_url.query, keep_blank_values=True))
+    query.update({
+        'allowedAssetTypes': 'Image',
+        'allowedFeatures': 'cdnLink',
+        'redirectType': 'popup',
+    })
+
+    app_id = getattr(settings, 'MEDIAVALET_ASSET_PICKER_APP_ID', '')
+    if app_id:
+        query['appId'] = app_id
+
+    return urllib.parse.urlunsplit(parsed_url._replace(query=urllib.parse.urlencode(query)))
+
+
 def _allowed_hostnames():
     return getattr(settings, 'MEDIAVALET_ALLOWED_HOSTNAMES', _DEFAULT_ALLOWED_HOSTNAMES)
 
@@ -69,16 +86,8 @@ def asset_picker_view(request):
         from wagtail.admin.auth import permission_denied
         return permission_denied(request)
 
-    base_url = getattr(settings, 'MEDIAVALET_ASSET_PICKER_URL', 'https://assetpicker.mediavalet.com')
-    picker_url = (
-        f'{base_url}'
-        '?allowedAssetTypes=Image'
-        '&allowedFeatures=cdnLink'
-        '&redirectType=popup'
-    )
-
     return render(request, 'mediavalet/asset_picker.html', {
-        'picker_url': picker_url,
+        'picker_url': get_asset_picker_url(),
     })
 
 
