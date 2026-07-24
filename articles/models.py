@@ -416,7 +416,7 @@ class ArticlePage(
             return False
 
         return (
-            self.article_type.title in ['Op-Ed', 'Op-Eds']
+            self.article_type.title in ['Opinion', 'Opinions']
             and self.publishing_date.date() > datetime.date(2026, 7, 13)
         )
 
