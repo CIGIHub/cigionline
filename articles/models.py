@@ -9,6 +9,7 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey
+from mediavalet.panels import MediaValetImageChooserPanel
 from publications.models import PublicationPage
 from streams.blocks import SeriesItemImageBlock
 from wagtail.admin.panels import (
@@ -493,10 +494,10 @@ class ArticlePage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('image_hero'),
-                FieldPanel('image_poster'),
-                FieldPanel('image_banner'),
-                FieldPanel('image_banner_small'),
+                MediaValetImageChooserPanel('image_hero'),
+                MediaValetImageChooserPanel('image_poster'),
+                MediaValetImageChooserPanel('image_banner'),
+                MediaValetImageChooserPanel('image_banner_small'),
             ],
             heading='Images',
             classname='collapsible collapsed',
@@ -847,10 +848,10 @@ class ArticleSeriesPage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('image_hero'),
-                FieldPanel('image_banner'),
-                FieldPanel('image_banner_small'),
-                FieldPanel('image_poster'),
+                MediaValetImageChooserPanel('image_hero'),
+                MediaValetImageChooserPanel('image_banner'),
+                MediaValetImageChooserPanel('image_banner_small'),
+                MediaValetImageChooserPanel('image_poster'),
             ],
             heading='Image',
             classname='collapsible collapsed',
@@ -1111,8 +1112,8 @@ class OpinionSeriesPage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('image_hero'),
-                FieldPanel('image_banner'),
+                MediaValetImageChooserPanel('image_hero'),
+                MediaValetImageChooserPanel('image_banner'),
             ],
             heading='Images',
             classname='collapsible collapsed',
