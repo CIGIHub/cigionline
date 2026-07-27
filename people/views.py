@@ -1,12 +1,17 @@
-from core.models import ArchiveablePageAbstract
+from core.models import ArchiveablePageAbstract, ContentPage
 from django.contrib.postgres.lookups import Unaccent
 from django.db.models.functions import Lower
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.core.cache import cache
 
 from .models import PersonPage
 from .search import experts_search
 from .search_expert import expert_latest_activity_search
+
+from django.db.models import Q
+import csv
+from datetime import date
+from django.views.decorators.http import require_GET
 
 EXPERTS_API_CACHE_TIMEOUT = 86400
 
@@ -151,3 +156,76 @@ def all_expertise(request):
         },
         'items': sorted(expertise_set),
     }, safe=False)
+
+
+@require_GET
+def fellows_latest_output(request):
+    cutoff_date = date(2025, 8, 1)
+
+    fellows = (
+        PersonPage.objects.live()
+        .filter(
+            archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
+            position__icontains="Fellow",
+        )
+        .order_by("title")
+    )
+
+    response = HttpResponse(content_type="text/csv; charset=utf-8")
+    response["Content-Disposition"] = (
+        'attachment; filename="fellows_latest.csv"'
+    )
+    response.write("\ufeff")
+
+    writer = csv.writer(response)
+    writer.writerow([
+        "Fellow",
+        "Total Published Last Fiscal",
+        "Latest Publishing Date",
+        "Content Type",
+        "Content Subtype",
+        "Position",
+    ])
+
+    for fellow in fellows:
+        published_content = (
+            ContentPage.objects.live()
+            .filter(
+                Q(authors__author=fellow) |
+                Q(articlepage__cigi_people_mentioned__person=fellow)
+            )
+            .exclude(publishing_date__isnull=True)
+            .order_by("-publishing_date")
+        )
+
+        most_recent = published_content.first()
+
+        total_since_cutoff = published_content.filter(
+            publishing_date__gte=cutoff_date
+        ).count()
+
+        if most_recent:
+            try:
+                content_subtype = most_recent.contentsubtype
+            except AttributeError:
+                content_subtype = ""
+
+            writer.writerow([
+                fellow.title,
+                total_since_cutoff,
+                most_recent.publishing_date.date().isoformat(),
+                most_recent.contenttype,
+                content_subtype,
+                fellow.position,
+            ])
+        else:
+            writer.writerow([
+                fellow.title,
+                0,
+                "",
+                "",
+                "",
+                "",
+            ])
+
+    return response

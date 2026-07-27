@@ -12,6 +12,7 @@ from robots import views as robots_views
 from search import views as search_views
 from events import views as events_views
 from articles import views as article_views
+from publications import views as publications_views
 from annual_reports import views as annual_report_views
 from subscribe.views import (
     subscribe_digital_finance,
@@ -74,6 +75,16 @@ urlpatterns = urlpatterns + [
     re_path(r'^favicon\.ico$', favicon_view),
     re_path(r'^robots\.txt$', robots_views.RobotsView.as_view(), name='robots'),
     re_path(r'^sitemap\.xml$', sitemap),
+    re_path(
+        r'^api/fellows-latest-output$',
+        people_views.fellows_latest_output,
+        name="fellows_latest_output",
+    ),
+    re_path(
+        r'^api/publications-by-type$',
+        publications_views.publications_by_type,
+        name="publications_by_type",
+    ),
 ]
 
 
