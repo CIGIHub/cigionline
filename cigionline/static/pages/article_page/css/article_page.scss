@@ -119,6 +119,73 @@
   margin-bottom: 0;
 }
 
+.has-disclaimer {
+  @include link($color: $black, $hover-color: $cigi-dark-pink);
+  margin-bottom: 2em;
+
+  &:hover {
+    svg {
+      fill: $cigi-dark-pink;
+
+      text{
+        fill: $cigi-dark-pink;
+      }
+
+      path, circle, polyline {
+        stroke: $cigi-dark-pink;
+      }
+
+      circle {
+        fill: $cigi-dark-pink;
+      }
+    }
+  }
+  
+  &__content {
+    border-top: 1px solid $cigi-light-grey;
+    border-bottom: 1px solid $cigi-light-grey;
+    align-items: center;
+    display: flex;
+    gap: 1.5em;
+  }
+
+  svg {
+    height: 100px;
+    object-fit: contain;
+
+    text {
+      font-family: $primary-font-family;
+      fill: $black;
+      transition: fill 0.2s ease;
+    }
+
+    path, circle, polyline {
+      transition: stroke 0.2s ease;
+    }
+
+    circle {
+      transition: fill 0.2s ease, stroke 0.2s ease;
+    }
+    
+    path {
+      display: inline-block;
+    }
+  }
+
+  p {
+    font-size: 0.9em;
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  @include media-breakpoint-down(sm) {
+    &__content {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+}
+
 .opinion-series-description {
   @include link($color: $white, $hover-color: $cigi-dark-pink);
   border-radius: 5px;

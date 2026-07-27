@@ -9,6 +9,7 @@ from core.models import (
 )
 from django.db import models
 from modelcluster.fields import ParentalKey
+from mediavalet.panels import MediaValetImageChooserPanel
 from publications.models import PublicationPage
 from streams.blocks import SeriesItemImageBlock
 from wagtail.admin.panels import (
@@ -409,6 +410,16 @@ class ArticlePage(
             'Opinion',
         ]
 
+    @property
+    def show_has_disclaimer(self):
+        if not self.article_type or not self.publishing_date:
+            return False
+
+        return (
+            self.article_type.title in ['Opinion', 'Opinions']
+            and self.publishing_date.date() > datetime.date(2026, 7, 13)
+        )
+
     def get_template(self, request, *args, **kwargs):
         standard_template = super(ArticlePage, self).get_template(request, *args, **kwargs)
         if self.theme:
@@ -483,10 +494,10 @@ class ArticlePage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('image_hero'),
-                FieldPanel('image_poster'),
-                FieldPanel('image_banner'),
-                FieldPanel('image_banner_small'),
+                MediaValetImageChooserPanel('image_hero'),
+                MediaValetImageChooserPanel('image_poster'),
+                MediaValetImageChooserPanel('image_banner'),
+                MediaValetImageChooserPanel('image_banner_small'),
             ],
             heading='Images',
             classname='collapsible collapsed',
@@ -837,10 +848,10 @@ class ArticleSeriesPage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('image_hero'),
-                FieldPanel('image_banner'),
-                FieldPanel('image_banner_small'),
-                FieldPanel('image_poster'),
+                MediaValetImageChooserPanel('image_hero'),
+                MediaValetImageChooserPanel('image_banner'),
+                MediaValetImageChooserPanel('image_banner_small'),
+                MediaValetImageChooserPanel('image_poster'),
             ],
             heading='Image',
             classname='collapsible collapsed',
@@ -1101,8 +1112,8 @@ class OpinionSeriesPage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('image_hero'),
-                FieldPanel('image_banner'),
+                MediaValetImageChooserPanel('image_hero'),
+                MediaValetImageChooserPanel('image_banner'),
             ],
             heading='Images',
             classname='collapsible collapsed',

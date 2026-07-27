@@ -1,3 +1,6 @@
+import datetime
+
+from django.utils import timezone
 from home.models import HomePage
 from wagtail.test.utils import WagtailPageTestCase
 
@@ -54,6 +57,27 @@ class ArticlePageTests(WagtailPageTestCase):
             ArticlePage,
             {},
         )
+
+    def test_show_has_disclaimer_for_op_ed_after_july_8_2026(self):
+        article = ArticlePage(
+            article_type=ArticleTypePage(title='Op-Eds'),
+            publishing_date=timezone.make_aware(datetime.datetime(2026, 7, 9)),
+        )
+
+        self.assertTrue(article.show_has_disclaimer)
+
+    def test_show_has_disclaimer_excludes_old_or_non_op_ed_articles(self):
+        old_article = ArticlePage(
+            article_type=ArticleTypePage(title='Op-Eds'),
+            publishing_date=timezone.make_aware(datetime.datetime(2026, 7, 8, 23, 59)),
+        )
+        opinion_article = ArticlePage(
+            article_type=ArticleTypePage(title='Opinion'),
+            publishing_date=timezone.make_aware(datetime.datetime(2026, 7, 9)),
+        )
+
+        self.assertFalse(old_article.show_has_disclaimer)
+        self.assertFalse(opinion_article.show_has_disclaimer)
 
 
 class ArticleSeriesListPageTests(WagtailPageTestCase):

@@ -7,6 +7,7 @@ from django.http import JsonResponse, HttpResponseForbidden
 from django.http.response import Http404
 from django.utils.functional import cached_property
 from django.shortcuts import render, redirect
+from mediavalet.panels import MediaValetImageChooserPanel
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from search.filters import (
     # AuthorFilterField,
@@ -409,8 +410,8 @@ class BasicPageAbstract(models.Model):
     )
     images_panel = MultiFieldPanel(
         [
-            FieldPanel('image_hero'),
-            FieldPanel('image_banner'),
+            MediaValetImageChooserPanel('image_hero'),
+            MediaValetImageChooserPanel('image_banner'),
         ],
         heading='Images',
         classname='collapsible collapsed',
@@ -451,7 +452,7 @@ class FeatureablePageAbstract(models.Model):
         [
             FieldPanel('feature_title'),
             FieldPanel('feature_subtitle'),
-            FieldPanel('image_feature'),
+            MediaValetImageChooserPanel('image_feature'),
             FieldPanel('feature_url'),
         ],
         heading='Feature Information',
@@ -514,7 +515,7 @@ class ShareablePageAbstract(models.Model):
         [
             FieldPanel('social_title'),
             FieldPanel('social_description'),
-            FieldPanel('image_social'),
+            MediaValetImageChooserPanel('image_social'),
         ],
         heading='Social Media',
         classname='collapsible collapsed',
@@ -1202,10 +1203,71 @@ class HumanAnalysisStandardPage(
         blank=True,
         use_json_field=True,
     )
+    conversion = StreamField(
+        [
+            ('paragraph', ParagraphBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
+    small_has_image = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Small HAS image',
+    )
+    big_has_image = models.ForeignKey(
+        'images.CigionlineImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Big HAS image',
+    )
+    policy_download = StreamField(
+        [
+            ('paragraph', ParagraphBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
+    policy_download_pdf = models.ForeignKey(
+        Document,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Policy download PDF',
+    )
 
     content_panels = [
         BasicPageAbstract.title_panel,
-        BasicPageAbstract.body_panel,
+        MultiFieldPanel(
+            [
+                FieldPanel('body'),
+                MediaValetImageChooserPanel('small_has_image'),
+                MediaValetImageChooserPanel('big_has_image'),
+            ],
+            heading='Body',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('conversion'),
+            ],
+            heading='Conversion',
+            classname='collapsible collapsed',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('policy_download'),
+                FieldPanel('policy_download_pdf'),
+            ],
+            heading='Policy Download',
+            classname='collapsible collapsed',
+        ),
     ]
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
@@ -1415,7 +1477,7 @@ class SlidePage(Page):
     content_panels = Page.content_panels + [
         FieldPanel('title_override'),
         FieldPanel('theme'),
-        FieldPanel('image_background'),
+        MediaValetImageChooserPanel('image_background'),
         FieldPanel('background_colour'),
         FieldPanel('body'),
         FieldPanel('timeline'),
@@ -1525,7 +1587,7 @@ class TwentyFifthPageSingleton(
         BasicPageAbstract.title_panel,
         MultiFieldPanel(
             [
-                FieldPanel('splash_image'),
+                MediaValetImageChooserPanel('splash_image'),
                 MediaChooserPanel('splash_video', media_type='video'),
             ],
             heading='Splash',

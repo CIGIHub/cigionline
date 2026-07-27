@@ -10,12 +10,14 @@ from core.models import (
 )
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
+from django.core.exceptions import ValidationError
 from django.db import models, transaction
 from django.utils import timezone
 import logging
 from django.utils.translation import gettext_lazy as _
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect
+from mediavalet.panels import MediaValetImageChooserPanel
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 from streams.blocks import AbstractSubmissionBlock
@@ -569,7 +571,7 @@ class EventPage(
         if gate_response:
             return gate_response
 
-        from .reporting import build_type_rows
+        from .reporting import build_choice_summary_rows, build_type_rows
 
         return self.render(
             request,
@@ -578,6 +580,7 @@ class EventPage(
                 "event": self,
                 "report_base_url": self._registration_report_base_url(request),
                 "type_rows": build_type_rows(self),
+                "choice_summary_rows": build_choice_summary_rows(self),
             },
         )
 
@@ -747,6 +750,7 @@ class EventPage(
     def register_form(self, request, type_slug: str, *args, **kwargs):
         from django.conf import settings
         from django.db import transaction
+        from .forms import add_choice_limit_errors, validate_choice_limits
         from .utils import save_registrant_from_form
         from .models import Registrant
         from .emailing import (
@@ -947,6 +951,28 @@ class EventPage(
                     # (confirm-until-full).
                     try:
                         with transaction.atomic():
+                            EventPage.objects.select_for_update().get(pk=self.pk)
+                            cleaned_forms = [form.cleaned_data] + [
+                                gf.cleaned_data for gf in guest_formset.forms if gf.cleaned_data
+                            ]
+                            quota_errors = validate_choice_limits(self, reg_type, cleaned_forms)
+                            if quota_errors:
+                                add_choice_limit_errors(form, quota_errors)
+                                for gf in guest_formset.forms:
+                                    add_choice_limit_errors(gf, quota_errors)
+                                return self.render(
+                                    request,
+                                    template="events/registration_form.html",
+                                    context_overrides={
+                                        "event": self,
+                                        "reg_type": reg_type,
+                                        "form": form,
+                                        "guest_formset": guest_formset,
+                                        "invite": invite,
+                                        "turnstile_site_key": getattr(settings, "CLOUDFLARE_TURNSTILE_SITE_KEY", ""),
+                                    },
+                                )
+
                             # Reserve invite usage *inside the same transaction* so
                             # nothing persists if the invite is maxed out.
                             if invite:
@@ -1092,6 +1118,23 @@ class EventPage(
 
                 else:
                     with transaction.atomic():
+                        EventPage.objects.select_for_update().get(pk=self.pk)
+                        quota_errors = validate_choice_limits(self, reg_type, [form.cleaned_data])
+                        if quota_errors:
+                            add_choice_limit_errors(form, quota_errors)
+                            return self.render(
+                                request,
+                                template="events/registration_form.html",
+                                context_overrides={
+                                    "event": self,
+                                    "reg_type": reg_type,
+                                    "form": form,
+                                    "guest_formset": (forms_obj.guest_formset if forms_obj else None),
+                                    "invite": invite,
+                                    "turnstile_site_key": getattr(settings, "CLOUDFLARE_TURNSTILE_SITE_KEY", ""),
+                                },
+                            )
+
                         # Reserve invite usage *inside the same transaction* so
                         # nothing persists if the invite is maxed out.
                         if invite:
@@ -1189,7 +1232,13 @@ class EventPage(
             registrant = get_registrant_for_manage_link(registrant_id=_safe_int(rid), token=token, event_id=self.id)
 
         reg_type = registrant.registration_type
-        form_class = build_dynamic_form(self, reg_type, registrant.invite, require_email=False)
+        form_class = build_dynamic_form(
+            self,
+            reg_type,
+            registrant.invite,
+            require_email=False,
+            current_registrant=registrant,
+        )
 
         # Pre-fill initial values from stored answers + core fields.
         initial = {}
@@ -1262,7 +1311,7 @@ class EventPage(
             get_registrant_for_manage_link,
             get_registrant_for_group_manage_link,
         )
-        from .forms import build_dynamic_form
+        from .forms import add_choice_limit_errors, build_dynamic_form, strip_non_answer_data, validate_choice_limits
         from .utils import _jsonable, _try_mailchimp_optin
 
         if request.method != "POST":
@@ -1283,7 +1332,13 @@ class EventPage(
             registrant = get_registrant_for_manage_link(registrant_id=_safe_int(rid), token=token, event_id=self.id)
 
         reg_type = registrant.registration_type
-        form_class = build_dynamic_form(self, reg_type, registrant.invite, require_email=False)
+        form_class = build_dynamic_form(
+            self,
+            reg_type,
+            registrant.invite,
+            require_email=False,
+            current_registrant=registrant,
+        )
         form = form_class(request.POST, request.FILES or None)
 
         if not form.is_valid():
@@ -1314,9 +1369,31 @@ class EventPage(
         cleaned.pop("email", None)
         strip_non_answer_data(self, cleaned)
 
-        # Persist answers (basic JSON-ability). File handling isn't supported in update yet.
-        registrant.answers = _jsonable(cleaned)
-        registrant.save(update_fields=["first_name", "last_name", "answers"])
+        with transaction.atomic():
+            EventPage.objects.select_for_update().get(pk=self.pk)
+            quota_errors = validate_choice_limits(
+                self,
+                reg_type,
+                [cleaned],
+                current_registrant=registrant,
+            )
+            if quota_errors:
+                add_choice_limit_errors(form, quota_errors)
+                return self.render(
+                    request,
+                    template="events/registration_manage.html",
+                    context_overrides={
+                        "event": self,
+                        "registrant": registrant,
+                        "reg_type": reg_type,
+                        "form": form,
+                        "token": token,
+                    },
+                )
+
+            # Persist answers (basic JSON-ability). File handling isn't supported in update yet.
+            registrant.answers = _jsonable(cleaned)
+            registrant.save(update_fields=["first_name", "last_name", "answers"])
 
         _try_mailchimp_optin(
             email=registrant.email,
@@ -1745,7 +1822,7 @@ class EventPage(
                 [
                     FieldPanel('registration_open'),
                     FieldPanel('is_private_registration'),
-                    FieldPanel('registration_image_banner'),
+                    MediaValetImageChooserPanel('registration_image_banner'),
                     FieldPanel('mailchimp_tag'),
                 ],
                 heading='General Settings',
@@ -1918,11 +1995,12 @@ class EventRegistrationReportPage(RoutablePageMixin, Page):
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
 
-        from .reporting import build_type_rows
+        from .reporting import build_choice_summary_rows, build_type_rows
 
         event = self._get_event()
         context["event"] = event
         context["type_rows"] = build_type_rows(event)
+        context["choice_summary_rows"] = build_choice_summary_rows(event)
         context["report_base_url"] = self.url
         return context
 
@@ -2017,6 +2095,15 @@ class RegistrationType(Orderable):
 
 
 class RegistrationFormField(AbstractFormField):
+    CHOICE_LIMIT_FIELD_TYPES = {
+        "dropdown",
+        "radio",
+        "checkboxes",
+        "multiselect",
+        "conditional_dropdown_other",
+        "conditional_multiselect_other",
+    }
+
     FIELD_CHOICES = (
         ("singleline", _("Single line text")),
         ("multiline", _("Multi-line text")),
@@ -2054,6 +2141,10 @@ class RegistrationFormField(AbstractFormField):
         help_text="Max file size (MB). Leave blank for no limit."
     )
     rich_text = RichTextField(blank=True)
+    choice_limits = models.TextField(
+        blank=True,
+        help_text='Optional per-choice limits, one per line: "Choice label | 10".',
+    )
 
     field_type = models.CharField(
         max_length=32,
@@ -2117,8 +2208,42 @@ class RegistrationFormField(AbstractFormField):
         ),
     )
 
+    def clean(self):
+        super().clean()
+        if not self.choice_limits.strip():
+            return
+
+        if self.field_type not in self.CHOICE_LIMIT_FIELD_TYPES:
+            raise ValidationError({"choice_limits": "Choice limits only apply to choice fields."})
+
+        valid_choices = {x.strip() for x in self.choices.splitlines() if x.strip()}
+        seen = set()
+        errors = []
+        for line in self.choice_limits.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            if "|" not in line:
+                errors.append(f'"{line}" must use "Choice label | limit".')
+                continue
+            label, limit = [part.strip() for part in line.split("|", 1)]
+            if label in seen:
+                errors.append(f'"{label}" has more than one limit.')
+            seen.add(label)
+            if label not in valid_choices:
+                errors.append(f'"{label}" is not one of this field\'s choices. the choices are: {", ".join(sorted(valid_choices))}')
+            try:
+                if int(limit) <= 0:
+                    raise ValueError
+            except ValueError:
+                errors.append(f'"{label}" limit must be a positive whole number.')
+
+        if errors:
+            raise ValidationError({"choice_limits": errors})
+
     panels = AbstractFormField.panels + [
         FieldPanel("rich_text"),
+        FieldPanel("choice_limits"),
         FieldPanel("exclude_from_guest_forms"),
         MultiFieldPanel(
             [
