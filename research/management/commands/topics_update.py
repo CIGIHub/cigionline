@@ -19,10 +19,11 @@ class Command(BaseCommand):
 
     TOPICS_TO_UNTAG_ARCHIVE_UNPUBLISH = [
         "Surveillance",
-        "Competition",
         "Freedom of Thought",
         "Space Governance",
     ]
+
+    COMPETITION_TOPIC_TITLE = "Competition"
 
     COMPETITION_RETAG_SUGGESTIONS = {
         "Are Canada's competition laws outdated? Some say it's time for change": "Digital Economy",
@@ -86,6 +87,12 @@ class Command(BaseCommand):
             ),
         )
 
+        parser.add_argument(
+            "--apply-competition-suggestions",
+            action="store_true",
+            help="After untagging Competition, retag affected pages using COMPETITION_RETAG_SUGGESTIONS.",
+        )
+
     def get_page_url(self, page):
         return page.full_url or page.url or ""
 
@@ -113,6 +120,7 @@ class Command(BaseCommand):
         csv_path = options["csv_path"]
         write_change_log_csv = options["write_change_log_csv"]
         change_log_csv_path = options["change_log_csv_path"]
+        apply_competition_suggestions = options["apply_competition_suggestions"]
 
         change_log_rows = []
 
@@ -215,7 +223,11 @@ class Command(BaseCommand):
         self.stdout.write("")
         self.stdout.write("Untagging, archiving, and unpublishing topics")
 
-        for topic_title in self.TOPICS_TO_UNTAG_ARCHIVE_UNPUBLISH:
+        topics_to_process = list(self.TOPICS_TO_UNTAG_ARCHIVE_UNPUBLISH)
+        if apply_competition_suggestions:
+            topics_to_process.append(self.COMPETITION_TOPIC_TITLE)
+
+        for topic_title in topics_to_process:
             topic = TopicPage.objects.filter(title=topic_title).first()
 
             self.stdout.write("")
@@ -374,80 +386,87 @@ class Command(BaseCommand):
                 "CSV not written. Use --write-csv to export Competition pages left without topics before suggestions."
             )
 
-        self.stdout.write("")
-        self.stdout.write("Retagging Competition pages from suggestions")
+        if apply_competition_suggestions:
+            self.stdout.write("")
+            self.stdout.write("Retagging Competition pages from suggestions")
 
-        competition_retagged_count = 0
-        competition_already_tagged_count = 0
-        competition_missing_topic_count = 0
+            competition_retagged_count = 0
+            competition_already_tagged_count = 0
+            competition_missing_topic_count = 0
 
-        if not competition_pages_to_retag:
-            self.stdout.write("  No Competition pages queued for retagging.")
-        else:
-            for item in competition_pages_to_retag:
-                page = item["page"]
-                suggested_topic_title = item["suggested_topic_title"]
+            if not competition_pages_to_retag:
+                self.stdout.write("  No Competition pages queued for retagging.")
+            else:
+                for item in competition_pages_to_retag:
+                    page = item["page"]
+                    suggested_topic_title = item["suggested_topic_title"]
 
-                suggested_topic = TopicPage.objects.filter(title=suggested_topic_title).first()
+                    suggested_topic = TopicPage.objects.filter(title=suggested_topic_title).first()
 
-                if not suggested_topic:
-                    competition_missing_topic_count += 1
+                    if not suggested_topic:
+                        competition_missing_topic_count += 1
 
-                    self.stdout.write(
-                        self.style.WARNING(
-                            f'  Skipping retag for {page.title} ({self.get_page_url(page)}): '
-                            f'suggested topic not found: "{suggested_topic_title}"'
+                        self.stdout.write(
+                            self.style.WARNING(
+                                f'  Skipping retag for {page.title} ({self.get_page_url(page)}): '
+                                f'suggested topic not found: "{suggested_topic_title}"'
+                            )
                         )
-                    )
-                    continue
+                        continue
 
-                if page.topics.filter(pk=suggested_topic.pk).exists():
-                    competition_already_tagged_count += 1
+                    if page.topics.filter(pk=suggested_topic.pk).exists():
+                        competition_already_tagged_count += 1
 
-                    change_log_rows.append(
-                        self.log_change(
-                            section="competition_suggestion_retag",
-                            page=page,
-                            action=f'already tagged with "{suggested_topic_title}" after removing "Competition"',
-                            dry_run=dry_run,
+                        change_log_rows.append(
+                            self.log_change(
+                                section="competition_suggestion_retag",
+                                page=page,
+                                action=f'already tagged with "{suggested_topic_title}" after removing "Competition"',
+                                dry_run=dry_run,
+                            )
                         )
-                    )
-                    continue
+                        continue
 
-                if dry_run:
+                    if dry_run:
+                        competition_retagged_count += 1
+
+                        change_log_rows.append(
+                            self.log_change(
+                                section="competition_suggestion_retag",
+                                page=page,
+                                action=f'would add "{suggested_topic_title}" after removing "Competition"',
+                                dry_run=True,
+                            )
+                        )
+                        continue
+
+                    page.topics.add(suggested_topic)
+                    page.save()
+
                     competition_retagged_count += 1
 
                     change_log_rows.append(
                         self.log_change(
                             section="competition_suggestion_retag",
                             page=page,
-                            action=f'would add "{suggested_topic_title}" after removing "Competition"',
-                            dry_run=True,
+                            action=f'added "{suggested_topic_title}" after removing "Competition"',
+                            dry_run=False,
                         )
                     )
-                    continue
 
-                page.topics.add(suggested_topic)
-                page.save()
-
-                competition_retagged_count += 1
-
-                change_log_rows.append(
-                    self.log_change(
-                        section="competition_suggestion_retag",
-                        page=page,
-                        action=f'added "{suggested_topic_title}" after removing "Competition"',
-                        dry_run=False,
-                    )
-                )
-
-        self.stdout.write(
-            f'  Subtotal for Competition suggestions: '
-            f"{competition_retagged_count} page(s) "
-            f"{'would be retagged' if dry_run else 'retagged'}; "
-            f"{competition_already_tagged_count} already tagged; "
-            f"{competition_missing_topic_count} missing suggested topic."
-        )
+            self.stdout.write(
+                f'  Subtotal for Competition suggestions: '
+                f"{competition_retagged_count} page(s) "
+                f"{'would be retagged' if dry_run else 'retagged'}; "
+                f"{competition_already_tagged_count} already tagged; "
+                f"{competition_missing_topic_count} missing suggested topic."
+            )
+        else:
+            self.stdout.write("")
+            self.stdout.write(
+                "Competition untagging and suggestion retagging skipped. "
+                "Use --apply-competition-suggestions to process Competition."
+            )
 
         self.stdout.write("")
         self.stdout.write("Creating new topic and tagging linked project pages")

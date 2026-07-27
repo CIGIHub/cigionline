@@ -8,6 +8,7 @@ from .models import PersonPage
 from .search import experts_search
 from .search_expert import expert_latest_activity_search
 
+from django.db.models import Q
 import csv
 from datetime import date
 from django.views.decorators.http import require_GET
@@ -189,7 +190,10 @@ def fellows_latest_output(request):
     for fellow in fellows:
         published_content = (
             ContentPage.objects.live()
-            .filter(authors__author=fellow)
+            .filter(
+                Q(authors__author=fellow) |
+                Q(articlepage__cigi_people_mentioned__person=fellow)
+            )
             .exclude(publishing_date__isnull=True)
             .order_by("-publishing_date")
         )
