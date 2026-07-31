@@ -192,8 +192,28 @@
       {% include "includes/body.html" with body=self.body %}
       <div class="anniversary-about-subscribe">
         <button class="anniversary-about-subscribe-button" type="button" aria-haspopup="dialog" data-anniversary-newsletter-open>
-          Stay Connected <span>&gt;</span>
+          Subscribe <span>&gt;</span>
         </button>
+      </div>
+      <div class="anniversary-about-social">
+        <h2 class="anniversary-about-social-title">Stay Connected</h2>
+        <ul class="anniversary-about-social-links">
+          <li>
+            <a href="https://x.com/cigionline" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's X profile"><i class="fa-brands fa-x-twitter"></i></a>
+          </li>
+          <li>
+            <a href="https://www.linkedin.com/company/cigionline/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's LinkedIn profile"><i class="fa-brands fa-linkedin-in"></i></a>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/user/cigivideos" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Youtube channel"><i class="fa-brands fa-youtube"></i></a>
+          </li>
+          <li>
+            <a href="https://www.instagram.com/cigionline/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Instagram Profile"><i class="fa-brands fa-instagram"></i></a>
+          </li>
+          <li>
+            <a href="https://cigionlineorg.substack.com/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Substack page">{% include 'includes/substack-logo.svg' %}</a>
+          </li>
+        </ul>
       </div>
     </section>
     {% include "core/includes/twenty_fifth_events.html" with events=self.anniversary_events.all %}
