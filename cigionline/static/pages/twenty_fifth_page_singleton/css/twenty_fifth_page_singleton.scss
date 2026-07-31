@@ -665,6 +665,56 @@
     }
   }
 
+  .anniversary-about-social {
+    margin-top: 2rem;
+    text-align: center;
+
+    .anniversary-about-social-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin: 0 0 1rem;
+    }
+
+    .anniversary-about-social-links {
+      ul {
+        padding-left: 0;
+      }
+
+      li {
+        display: inline-block;
+        list-style: none;
+        padding: 0 0.5em;
+        height: 25px;
+
+        a {
+          color: $black;
+
+          &:hover {
+            svg {
+              fill: $cigi-primary-colour;
+            }
+
+            i {
+              color: $cigi-primary-colour;
+            }
+          }
+
+          i {
+            transition: color 0.2s ease;
+          }
+
+          svg {
+            width: 1.15rem;
+            height: 1.15rem;
+            fill: $black;
+            margin-bottom: 0.3rem;
+            transition: fill 0.2s ease;
+          }
+        }
+      }
+    }
+  }
+
   .anniversary-events-section {
     background-color: $black;
     color: $white;
