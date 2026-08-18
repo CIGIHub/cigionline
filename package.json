@@ -22,11 +22,11 @@
     "start": "cross-env NODE_ENV=development webpack --mode development --progress --watch"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-pro": "6.7.2",
-    "@fortawesome/fontawesome-svg-core": "7.0.1",
-    "@fortawesome/free-brands-svg-icons": "^7.0.1",
-    "@fortawesome/free-solid-svg-icons": "7.0.1",
-    "@fortawesome/pro-light-svg-icons": "7.0.1",
+    "@fortawesome/fontawesome-pro": "7.3.0",
+    "@fortawesome/fontawesome-svg-core": "7.3.0",
+    "@fortawesome/free-brands-svg-icons": "7.3.0",
+    "@fortawesome/free-solid-svg-icons": "7.3.0",
+    "@fortawesome/pro-light-svg-icons": "7.3.0",
     "@fortawesome/react-fontawesome": "3.0.2",
     "@panzoom/panzoom": "4.4.1",
     "bootstrap": "4.6.0",

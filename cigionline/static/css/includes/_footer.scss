@@ -11,6 +11,11 @@ footer {
     margin: 0 auto 0.7em;
     width: 6em;
 
+    &.twentififth {
+      width: 10em;
+      margin: 0 auto 1em;
+    }
+
     .cigi-logo {
       fill: $white;
     }

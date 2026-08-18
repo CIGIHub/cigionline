@@ -3,6 +3,8 @@ from urllib.parse import urlparse
 from django import forms
 from django.apps import apps
 from django.conf import settings
+from django.core.cache import cache
+from django.core.cache.utils import make_template_fragment_key
 from django.core.exceptions import FieldDoesNotExist
 from django.db.models import F
 from django.shortcuts import render
@@ -53,6 +55,16 @@ PURGE_PAGE_TYPE_OPTIONS = {
     'core.BasicPage': {
         'label': 'Basic pages',
     },
+}
+
+TEMPLATE_FRAGMENT_CACHE_OPTIONS = {
+    'footer': 'Footer',
+    'top_bar': 'Top bar',
+}
+
+TEMPLATE_FRAGMENT_CACHE_NAMES = {
+    'footer': ['footer', 'footer_homepage'],
+    'top_bar': ['top_bar'],
 }
 
 
@@ -230,9 +242,42 @@ def get_filter_purge_cache_urls_debug(cleaned_data):
     return urls, debug_rows
 
 
+def clear_template_fragment_cache(fragment_name):
+    if fragment_name not in TEMPLATE_FRAGMENT_CACHE_OPTIONS:
+        raise forms.ValidationError('Choose a valid template fragment cache to clear.')
+
+    for cache_name in TEMPLATE_FRAGMENT_CACHE_NAMES[fragment_name]:
+        cache.delete(make_template_fragment_key(cache_name))
+
+
+def render_purge_cloudflare_cache(request, context):
+    context['template_fragment_cache_options'] = TEMPLATE_FRAGMENT_CACHE_OPTIONS
+    return render(request, 'core/admin/purge_cloudflare_cache.html', context)
+
+
 @permission_required('wagtailadmin.access_admin')
 def purge_cloudflare_cache_view(request):
     if request.method == 'POST':
+        fragment_name = request.POST.get('template_fragment')
+        if fragment_name:
+            try:
+                clear_template_fragment_cache(fragment_name)
+            except forms.ValidationError as error:
+                for message in error.messages:
+                    messages.error(request, message)
+            else:
+                messages.success(
+                    request,
+                    f'Cleared the {TEMPLATE_FRAGMENT_CACHE_OPTIONS[fragment_name]} template fragment cache.',
+                )
+
+            return render_purge_cloudflare_cache(
+                request,
+                {
+                    'form': PurgeCloudflareCacheForm(),
+                },
+            )
+
         form = PurgeCloudflareCacheForm(request.POST)
         if form.is_valid():
             urls = []
@@ -254,9 +299,8 @@ def purge_cloudflare_cache_view(request):
             if errors:
                 for error in errors:
                     messages.error(request, error)
-                return render(
+                return render_purge_cloudflare_cache(
                     request,
-                    'core/admin/purge_cloudflare_cache.html',
                     {
                         'form': form,
                         'debug_rows': debug_rows,
@@ -268,9 +312,8 @@ def purge_cloudflare_cache_view(request):
                     messages.error(request, 'No live public pages matched those filters.')
                 else:
                     messages.error(request, 'Enter at least one page to purge.')
-                return render(
+                return render_purge_cloudflare_cache(
                     request,
-                    'core/admin/purge_cloudflare_cache.html',
                     {
                         'form': form,
                         'debug_rows': debug_rows,
@@ -278,9 +321,8 @@ def purge_cloudflare_cache_view(request):
                 )
             elif is_preview:
                 messages.info(request, f'Preview found {len(urls)} URL{"s" if len(urls) != 1 else ""}. Nothing was purged.')
-                return render(
+                return render_purge_cloudflare_cache(
                     request,
-                    'core/admin/purge_cloudflare_cache.html',
                     {
                         'form': form,
                         'debug_rows': debug_rows,
@@ -289,9 +331,8 @@ def purge_cloudflare_cache_view(request):
                 )
             elif not getattr(settings, 'WAGTAILFRONTENDCACHE', None):
                 messages.error(request, 'No WAGTAILFRONTENDCACHE backend is configured.')
-                return render(
+                return render_purge_cloudflare_cache(
                     request,
-                    'core/admin/purge_cloudflare_cache.html',
                     {
                         'form': form,
                         'debug_rows': debug_rows,
@@ -304,9 +345,8 @@ def purge_cloudflare_cache_view(request):
                     request,
                     f'Purged {len(urls)} URL{"s" if len(urls) != 1 else ""} from Cloudflare.',
                 )
-                return render(
+                return render_purge_cloudflare_cache(
                     request,
-                    'core/admin/purge_cloudflare_cache.html',
                     {
                         'form': form,
                         'debug_rows': debug_rows,
@@ -316,7 +356,12 @@ def purge_cloudflare_cache_view(request):
     else:
         form = PurgeCloudflareCacheForm()
 
-    return render(request, 'core/admin/purge_cloudflare_cache.html', {'form': form})
+    return render_purge_cloudflare_cache(
+        request,
+        {
+            'form': form,
+        },
+    )
 
 
 @hooks.register('register_admin_urls')

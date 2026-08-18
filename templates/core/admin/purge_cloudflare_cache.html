@@ -113,6 +113,20 @@
       padding: 1rem;
     }
 
+    .purge-cache-admin__fragments {
+      background: #fff;
+      border: 1px solid #d9d9d9;
+      border-radius: 3px;
+      color: #262626;
+      margin-bottom: 1.5rem;
+      max-width: 48rem;
+      padding: 1rem;
+    }
+
+    .purge-cache-admin__fragments h2 {
+      margin-top: 0;
+    }
+
     .purge-cache-admin__debug h2,
     .purge-cache-admin__debug h3 {
       margin-top: 0;
@@ -246,6 +260,20 @@
         {% endif %}
       </section>
     {% endif %}
+
+    <section class="purge-cache-admin__fragments">
+      <h2>{% trans "Template fragment cache" %}</h2>
+      <form method="post">
+        {% csrf_token %}
+        <div class="purge-cache-admin__actions">
+          {% for fragment_name, fragment_label in template_fragment_cache_options.items %}
+            <button type="submit" name="template_fragment" value="{{ fragment_name }}" class="button button-secondary">
+              {% blocktrans with fragment_label=fragment_label %}Clear {{ fragment_label }}{% endblocktrans %}
+            </button>
+          {% endfor %}
+        </div>
+      </form>
+    </section>
 
     <form method="post" novalidate>
       {% csrf_token %}
