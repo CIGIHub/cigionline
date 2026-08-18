@@ -1,4 +1,6 @@
 from django import forms
+from django.core.cache import cache
+from django.core.cache.utils import make_template_fragment_key
 from django.utils import timezone
 from articles.models import ArticleListPage, ArticlePage, ArticleTypePage
 from annual_reports.models import AnnualReportListPage
@@ -11,7 +13,11 @@ from research.models import (
 from wagtail.models import Site
 from wagtail.test.utils import WagtailPageTestCase
 
-from .wagtail_hooks import get_filter_purge_cache_urls, get_purge_cache_url
+from .wagtail_hooks import (
+    clear_template_fragment_cache,
+    get_filter_purge_cache_urls,
+    get_purge_cache_url,
+)
 from .models import (
     BasicPage,
     FacilityRentalsPage,
@@ -83,6 +89,21 @@ class PurgeCloudflareCacheTests(WagtailPageTestCase):
         })
 
         self.assertEqual(urls, [matching_article.get_full_url()])
+
+    def test_clear_template_fragment_cache_deletes_known_fragment(self):
+        footer_key = make_template_fragment_key('footer')
+        homepage_footer_key = make_template_fragment_key('footer_homepage')
+        cache.set(footer_key, 'cached footer')
+        cache.set(homepage_footer_key, 'cached homepage footer')
+
+        clear_template_fragment_cache('footer')
+
+        self.assertIsNone(cache.get(footer_key))
+        self.assertIsNone(cache.get(homepage_footer_key))
+
+    def test_clear_template_fragment_cache_rejects_unknown_fragment(self):
+        with self.assertRaises(forms.ValidationError):
+            clear_template_fragment_cache('unknown')
 
 
 class BasicPageTests(WagtailPageTestCase):

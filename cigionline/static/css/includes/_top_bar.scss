@@ -104,6 +104,10 @@ header {
 
         display: none;
         width: 8em;
+
+        &.twentififth {
+          width: 11em;
+        }
       }
     }
 
@@ -352,10 +356,11 @@ header {
               &.overlay-menu-social-links {
                 @include link($color: $white, $hover-color: $cigi-dark-pink);
                 max-height: 100%;
+                display: flex;
+                gap: 0.3rem;
 
                 li {
                   display: inline-block;
-                  margin-right: 0.7em;
                 }
 
                 svg {
