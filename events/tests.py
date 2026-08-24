@@ -983,6 +983,19 @@ class EventsAPITests(WagtailPageTestCase):
         self.assertEqual(response_2['meta']['total_count'], 4)
         self.assertEqual(len(response_2['items']), 4)
 
+    def test_events_api_excludes_events_not_added_to_calendar(self):
+        EventPage.objects.filter(title="Test Event 2").update(add_to_calendar=False)
+
+        response = self.get_api_response(1, 2020)
+
+        self.assertEqual(response['meta']['total_count'], 2)
+        self.assertNotIn("Test Event 2", [item["title"] for item in response["items"]])
+
+    def test_events_api_is_not_cached(self):
+        response = self.client.get('/api/events/?month=1&year=2020')
+
+        self.assertIn("no-store", response.headers["Cache-Control"])
+
 
 class EmailTemplateRenderingTests(WagtailPageTestCase):
     def test_streamfield_email_rendering_outputs_email_safe_wrapper(self):
