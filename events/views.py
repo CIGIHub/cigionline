@@ -1,9 +1,11 @@
 from django.utils import timezone
 from django.http import JsonResponse
+from django.views.decorators.cache import never_cache
 
 from .models import EventPage
 
 
+@never_cache
 def events_api(request):
     """
     List events by month and year. Defaults to current month and year.
@@ -17,7 +19,11 @@ def events_api(request):
         year = now.year
 
     events = []
-    queryset = EventPage.objects.live().public().filter(publishing_date__year=year, publishing_date__month=month).exclude(path__startswith='00010002').exclude(exclude_from_search=True)
+    queryset = EventPage.objects.live().public().filter(
+        add_to_calendar=True,
+        publishing_date__year=year,
+        publishing_date__month=month,
+    ).exclude(path__startswith='00010002').exclude(exclude_from_search=True)
     for event_page in queryset:
         events.append({
             "title": event_page.title,

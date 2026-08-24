@@ -250,6 +250,10 @@ class EventPage(
         verbose_name='Event agenda',
     )
     event_access = models.IntegerField(choices=EventAccessOptions.choices, default=EventAccessOptions.PUBLIC, null=True, blank=True)
+    add_to_calendar = models.BooleanField(
+        default=True,
+        help_text='Show this event on the event list page calendar.',
+    )
     event_end = models.DateTimeField(blank=True, null=True)
     event_format = models.CharField(
         blank=True,
@@ -1735,6 +1739,7 @@ class EventPage(
         FieldPanel('publishing_date', heading='Event start'),
         FieldPanel('event_end'),
         FieldPanel('time_zone'),
+        FieldPanel('add_to_calendar'),
         MultiFieldPanel(
             [
                 FieldPanel('event_format'),
