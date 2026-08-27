@@ -30,11 +30,7 @@
           <p>
             or sign up for the email list to stay up to date:
           </p>
-          <form id='subscribe-form-dph' action="{% url 'subscribe_dph' %}" method="POST">
-            {% csrf_token %}
-            <input type="email" name="email" autocomplete="email" placeholder="enter your email" required id="subscribe-email">
-            <input type="submit" value="Sign up">
-          </form>
+          <a class="subscribe-link" href="{% url 'subscribe_dph' %}">Sign up</a>
           <div class="response-message" id="response-message"></div>
         </div>
       </div>

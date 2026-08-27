@@ -223,15 +223,18 @@ body {
       }
 
       .mailing-list-button {
-        color: $black;
         background-color: $white;
-        padding: 0.5rem 1rem;
         border: 1px solid $white;
         border-radius: 2rem;
+        color: $black;
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        text-decoration: none;
         transition: background-color ease 0.2s;
 
         &:hover {
           background-color: $dph-green;
+          text-decoration: none;
         }
       }
     }
@@ -611,6 +614,20 @@ body {
   }
 
   &.dph-basic-page {
+    .social-links {
+      @include link($color: $white, $hover-color: $cigi-primary-colour);
+
+      i {
+        color: $white;
+      }
+
+      a:hover {
+        i {
+          color: $cigi-primary-colour;
+        }
+      }
+    }
+
     .hero {
       @include media-breakpoint-down(sm) {
         margin-bottom: 0;

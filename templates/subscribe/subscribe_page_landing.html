@@ -6,9 +6,45 @@
   {% render_bundle 'subscribePage' 'css' %}
 {% endblock %}
 
+{% block theme_css %}
+  {% if subscription_type == 'dph' %}
+    {% render_bundle 'themeDPH' 'css' %}
+  {% endif %}
+{% endblock %}
+
+{% block theme_js %}
+  {% if subscription_type == 'dph' %}
+    {% render_bundle 'themeDPH' 'js' attrs='defer' %}
+  {% endif %}
+{% endblock %}
+
+{% block extra_fonts %}
+  {% if subscription_type == 'dph' %}
+    <link rel="stylesheet" href="https://use.typekit.net/mks4fbg.css">
+  {% endif %}
+{% endblock %}
+
+{% block body_class %}
+  {% if subscription_type == 'dph' %}dph-basic-page{% endif %}
+{% endblock %}
+
+{% block header %}
+  {% if subscription_type == 'dph' %}
+    {% include "themes/dph/includes/top_bar.html" with small=True %}
+  {% else %}
+    {{ block.super }}
+  {% endif %}
+{% endblock %}
+
 {% block content %}
   {% if subscription_type == 'dph' and status != 'subscribed_success' %}
-    {% include "includes/heroes/hero_plain.html" with title="There was an error with the subscription." %}
+    {% if status == 'pending' %}
+      {% include "includes/heroes/hero_plain.html" with title="Please confirm your subscription." %}
+    {% elif status == 'subscribed' %}
+      {% include "includes/heroes/hero_plain.html" with title="You're already subscribed." %}
+    {% else %}
+      {% include "includes/heroes/hero_plain.html" with title="There was an error with the subscription." %}
+    {% endif %}
     <section class="body">
       <div class="container">
         <div class="row justify-content-center">
@@ -18,10 +54,21 @@
             {% elif status == 'subscribed' %}
               <p>Your email is already subscribed. Please check your inbox for any updates.</p>
             {% elif status == 'unsubscribed' %}
-              <p>Your email has been unsubscribed. If you would like to resubscribe,please use the links in the unsubscribe confirmation email, or <a href="https://www.cigionline.org/contact">contact us</a>.</p>
+              <p>Your email has been unsubscribed. If you would like to resubscribe, please use the links in the unsubscribe confirmation email, or <a href="https://www.cigionline.org/contact">contact us</a>.</p>
             {% elif status == 'error' %}
               <p>There was an error with your subscription. Please <a href="https://www.cigionline.org/contact">contact us</a> for assistance.</p>
             {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% elif subscription_type == 'dph' %}
+    {% include "includes/heroes/hero_plain.html" with title="Thank You for Subscribing" %}
+    <section class="body">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12{% if full_heading is not True %} col-md-10 col-lg-8{% endif %}">
+            <p>Keep an eye on your inbox. We'll let you know about upcoming working papers, events and cohort announcements.</p>
           </div>
         </div>
       </div>
@@ -34,16 +81,30 @@
     <div class="container">
       <div class="row d-block">
         <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-          <h2>Follow Us:</h2>
-          <p>Stay connected with us on LinkedIn and X for daily news, events and updates.</p>
-          <a href="https://x.com/cigionline" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's X profile"><i class="fa-brands fa-x-twitter"></i></a>
-          <a href="https://www.linkedin.com/company/cigionline/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's LinkedIn profile"><i class="fa-brands fa-linkedin-in"></i></a>
-          <a href="https://www.youtube.com/user/cigivideos" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Youtube channel"><i class="fa-brands fa-youtube"></i></a>
-          <a href="https://www.instagram.com/cigionline/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Instagram Profile"><i class="fa-brands fa-instagram"></i></a>
-          <a href="https://cigionlineorg.substack.com/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Substack page">{% include 'includes/substack-logo.svg' %}</a>
-          <a href="https://medium.com/centre-for-international-governance-innovation" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Medium page">{% include 'includes/medium-logo.svg' %}</a>
+          {% if subscription_type == 'dph' %}
+            <h2>Follow Us:</h2>
+            <p>Stay connected on LinkedIn for more frequent updates.</p>
+            <a href="https://www.linkedin.com/showcase/digital-policy-hub-cigi/?utm_source=cigionline.org&utm_medium=referral&utm_campaign=dph_subscribe_success" target="_blank" rel="noopener noreferrer" aria-label="Link to Digital Policy Hub's LinkedIn page"><i class="fa-brands fa-linkedin-in"></i></a>
+          {% else %}
+            <h2>Follow Us:</h2>
+            <p>Stay connected with us on LinkedIn and X for daily news, events and updates.</p>
+            <a href="https://x.com/cigionline" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's X profile"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="https://www.linkedin.com/company/cigionline/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's LinkedIn profile"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="https://www.youtube.com/user/cigivideos" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Youtube channel"><i class="fa-brands fa-youtube"></i></a>
+            <a href="https://www.instagram.com/cigionline/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Instagram Profile"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://cigionlineorg.substack.com/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Substack page">{% include 'includes/substack-logo.svg' %}</a>
+            <a href="https://medium.com/centre-for-international-governance-innovation" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Medium page">{% include 'includes/medium-logo.svg' %}</a>
+          {% endif %}
         </div> 
       </div>
     </div>
   </section>
+{% endblock %}
+
+{% block footer %}
+  {% if subscription_type == 'dph' %}
+    {% include "themes/dph/includes/footer.html" %}
+  {% else %}
+    {{ block.super }}
+  {% endif %}
 {% endblock %}
