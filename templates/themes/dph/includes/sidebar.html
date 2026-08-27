@@ -12,9 +12,9 @@
     </li>
 
     <li class="mb-4">
-      <button class="mailing-list-button" role="button" id="mailing-list-button">
+      <a class="mailing-list-button" href="{% url 'subscribe_dph' %}">
         Sign up for updates
-      </button>
+      </a>
     </li>
   </ul>
   {% dph_related_files as related_files %}

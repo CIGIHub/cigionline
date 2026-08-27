@@ -16,31 +16,16 @@ footer {
   .email-list {
     @include link($color: $white, $hover-color: $cigi-dark-pink);
 
-    form {
-      display: flex;
+    .subscribe-link {
+      border: 1px solid $white;
+      border-radius: 2rem;
+      display: inline-block;
+      padding: 0.25rem 1rem;
+      transition: background-color ease 0.2s;
 
-      input[type='email'] {
-        background-color: $dph-dark-green;
-        border: 0;
-        border-bottom: 3px solid white;
-        margin-right: 0.5rem;
-        width: 75%;
-        padding-left: 1rem;
-
-        &::placeholder {
-          color: $white;
-        }
-      }
-
-      input[type='submit'] {
-        padding: 0.25rem 1rem;
-        border: 1px solid $white;
-        border-radius: 2rem;
-        transition: background-color ease 0.2s;
-
-        &:hover {
-          background-color: $dph-green;
-        }
+      &:hover {
+        background-color: $dph-green;
+        text-decoration: none;
       }
     }
 

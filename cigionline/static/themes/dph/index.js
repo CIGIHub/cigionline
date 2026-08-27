@@ -1,17 +1,5 @@
 import './css/dph.scss';
 
-const mailingListButton = document.getElementById('mailing-list-button');
-mailingListButton.addEventListener('click', () => {
-  const input = document.getElementById('subscribe-email');
-  input.scrollIntoView({
-    behavior: 'smooth',
-  });
-
-  setTimeout(() => {
-    input.focus();
-  }, 600);
-});
-
 function initVariantContainerHeight(contentEl) {
   const active =
     contentEl.querySelector('.variant.is-active') ||
