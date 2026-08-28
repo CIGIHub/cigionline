@@ -30,7 +30,12 @@
           <p>
             or sign up for the email list to stay up to date:
           </p>
-          <a class="subscribe-link" href="{% url 'subscribe_dph' %}">Sign up</a>
+          <form class="cigi-newsletter-subscription-form" title="DPH Newsletter Sign Up" action="/subscribe_dph" method="GET">
+            <input type="email" name="email" value="" size="60" maxlength="128" placeholder="Your email"
+              class="form-email required" required="required" aria-required="true">
+            <button type="submit" class="button-submit">Sign up</button>
+          </form>
+          {% comment %} <a class="subscribe-link" href="{% url 'subscribe_dph' %}">Sign up</a> {% endcomment %}
           <div class="response-message" id="response-message"></div>
         </div>
       </div>
