@@ -233,7 +233,16 @@ def subscribe_dph(request):
     status = None
     email = None
     if request.method != 'POST':
-        return render(request, 'themes/dph/subscribe_page.html', {'form': DphSubscribeForm()})
+        form = DphSubscribeForm(
+            initial={
+                'email': request.GET.get('email', ''),
+            }
+        )
+        return render(
+            request,
+            'themes/dph/subscribe_page.html',
+            {'form': form},
+        )
 
     form = DphSubscribeForm(request.POST)
     if not form.is_valid():
