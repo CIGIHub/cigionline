@@ -2212,3 +2212,18 @@ class PromotionBlockStreamBlock(blocks.StructBlock):
         icon = 'pick'
         label = 'Promotion Block'
         template = 'streams/promotion_block_stream_block.html'
+
+
+class TwentyFifthFeatureBlock(blocks.StructBlock):
+    page = blocks.PageChooserBlock(
+        page_type="publications.PublicationPage",
+        required=True,
+    )
+    description = blocks.TextBlock(
+        required=False,
+    )
+
+    class Meta:
+        icon = "link"
+        label = "Feature Link"
+        template = 'streams/twenty_fifth_feature_block.html'
