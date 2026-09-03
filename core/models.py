@@ -56,7 +56,6 @@ from streams.blocks import (
     CollapsibleParagraphBlock,
     NewsletterSubscriptionBlock,
     PromotionBlockStreamBlock,
-    TwentyFifthFeatureBlock,
 )
 from uploads.models import DocumentUpload
 from utils.email_utils import send_email, extract_errors_as_string
@@ -2018,10 +2017,13 @@ class QRCodeDocumentScan(models.Model):
 class TwentyFifthFeatureLandingPage(Page):
     pages = StreamField(
         [
-            ("page_link", TwentyFifthFeatureBlock()),
+            (
+                "featured_page", blocks.PageChooserBlock(),
+            ),
         ],
         blank=True,
         use_json_field=True,
+        verbose_name="Featured Pages",
     )
 
     max_count = 1

@@ -1564,3 +1564,39 @@
     }
   }
 }
+
+.featured-list {
+  margin-top: 8rem;
+
+  .landing-list-item {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+    font-size: 0.9rem;
+    align-items: center;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid #ddd;
+
+    &:first-child {
+      border-top: 1px solid #ddd;
+    }
+
+    &__title {
+      @include link($color: $black, $hover-color: $cigi-dark-pink);
+      font-size: 1.2rem;
+      font-weight: 500;
+      line-height: 1.25;
+      margin-bottom: 1rem;
+    }
+
+    .authors {
+      margin: 0;
+    }
+
+    .table-icon {
+      font-size: 1.5rem;
+      margin-right: 0;
+    }
+  }
+}
+
