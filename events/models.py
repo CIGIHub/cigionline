@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from .forms_admin import EventPageAdminForm
 from .panels import EmailCampaignPreviewPanel, EmailCampaignTestSendPanel
 from core.models import (
@@ -378,6 +380,41 @@ class EventPage(
 
     def location_map_url(self):
         return f'https://www.google.com/maps/search/?api=1&query={urllib.parse.quote(self.location_string())}'
+
+    @property
+    def calendar_feed_url(self):
+        return f'/events/feed.ics?id={self.id}'
+
+    @property
+    def calendar_end_time_utc(self):
+        if self.event_end:
+            return self.event_end_time_utc
+        return self.event_start_time_utc + timedelta(hours=1)
+
+    def _google_calendar_datetime(self, value):
+        return value.astimezone(pytz.utc).strftime('%Y%m%dT%H%M%SZ')
+
+    @property
+    def google_calendar_url(self):
+        event_url = self.full_url or self.url
+        params = {
+            'action': 'TEMPLATE',
+            'text': self.title,
+            'dates': (
+                f'{self._google_calendar_datetime(self.event_start_time_utc)}/'
+                f'{self._google_calendar_datetime(self.calendar_end_time_utc)}'
+            ),
+            'details': f'More Event Information: {event_url}',
+            'location': self.location_string(),
+            'trp': 'false',
+            'sprop': 'www.cigionline.org',
+            'pli': '1',
+            'sf': 'true',
+            'output': 'xml',
+        }
+        if self.time_zone:
+            params['ctz'] = self.time_zone
+        return f'https://www.google.com/calendar/render?{urllib.parse.urlencode(params)}'
 
     def event_format_string(self):
         return self.get_event_format_display()
