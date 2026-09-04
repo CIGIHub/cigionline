@@ -20,6 +20,7 @@
   <div class="container">
     <div class="row justify-content-center">
       <div class="col col-md-10 col-lg-8 featured-list">
+        <h1>{{self.title}}</h1>
         {% for item in page.pages %}
           {% with page_item=item.value.specific %}
             <article class="landing-list-item">

@@ -1568,6 +1568,10 @@
 .featured-list {
   margin-top: 8rem;
 
+  h1 {
+    margin: 0 0 3rem;
+  }
+
   .landing-list-item {
     display: flex;
     flex-direction: row;
@@ -1575,11 +1579,7 @@
     font-size: 0.9rem;
     align-items: center;
     padding: 1.5rem 0;
-    border-bottom: 1px solid #ddd;
-
-    &:first-child {
-      border-top: 1px solid #ddd;
-    }
+    border-top: 1px solid #ddd;
 
     &__title {
       @include link($color: $black, $hover-color: $cigi-dark-pink);
