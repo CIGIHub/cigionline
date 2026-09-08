@@ -1644,7 +1644,7 @@ class TwentyFifthPageSingleton(
 
     max_count = 1
     parent_page_types = ['home.HomePage']
-    subpage_types = []
+    subpage_types = ['core.TwentyFifthFeatureLandingPage']
     template = 'core/twenty_fifth_page_singleton.html'
     anniversary_mailchimp_tag = '25 Anniversary'
 
@@ -2012,3 +2012,25 @@ class QRCodeDocumentScan(models.Model):
 
     def __str__(self):
         return f'QR scans for document "{self.document.title}": {self.scan_count}'
+
+
+class TwentyFifthFeatureLandingPage(Page):
+    pages = StreamField(
+        [
+            (
+                "featured_page", blocks.PageChooserBlock(),
+            ),
+        ],
+        blank=True,
+        use_json_field=True,
+        verbose_name="Featured Pages",
+    )
+
+    max_count = 1
+    parent_page_types = ['core.TwentyFifthPageSingleton']
+    subpage_types = []
+    template = 'core/twenty_fifth_feature_landing_page.html'
+
+    content_panels = Page.content_panels + [
+        FieldPanel("pages"),
+    ]
