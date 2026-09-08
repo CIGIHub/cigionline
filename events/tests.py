@@ -5,6 +5,7 @@ from django.test import RequestFactory, SimpleTestCase, TestCase
 from django.utils import timezone
 from home.models import HomePage, Think7HomePage
 from types import SimpleNamespace
+from urllib.parse import parse_qs, urlparse
 from wagtail.test.utils import WagtailPageTestCase
 
 from .models import EventListPage, EventPage, EventRegistrationReportPage
@@ -58,6 +59,11 @@ class EventCalendarTemplateTests(SimpleTestCase):
             publishing_date=datetime(2030, 1, 1, 13, 0, tzinfo=datetime_timezone.utc),
             event_end=datetime(2030, 1, 1, 14, 0, tzinfo=datetime_timezone.utc),
             time_zone="America/Toronto",
+            google_calendar_url=(
+                "https://www.google.com/calendar/render?"
+                "action=TEMPLATE&dates=20300101T130000Z/20300101T140000Z"
+            ),
+            calendar_feed_url="/events/feed.ics?id=123",
             full_url="https://www.cigionline.org/events/template-event/",
             url="/events/template-event/",
         )
@@ -67,6 +73,77 @@ class EventCalendarTemplateTests(SimpleTestCase):
         self.assertIn("Add to Calendar", html)
         self.assertIn("calendar/render", html)
         self.assertIn("/events/feed.ics?id=123", html)
+
+
+class EventCalendarLinkTests(TestCase):
+    def make_event(self, **kwargs):
+        from wagtail.models import Site
+
+        root = Site.objects.get(is_default_site=True).root_page
+        event = EventPage(
+            title=kwargs.pop("title", "Calendar Test Event"),
+            slug=kwargs.pop("slug", "calendar-test-event"),
+            publishing_date=kwargs.pop(
+                "publishing_date",
+                datetime(2030, 1, 1, 13, 0, tzinfo=datetime_timezone.utc),
+            ),
+            event_end=kwargs.pop(
+                "event_end",
+                datetime(2030, 1, 1, 14, 30, tzinfo=datetime_timezone.utc),
+            ),
+            time_zone=kwargs.pop("time_zone", "America/Toronto"),
+            event_format=kwargs.pop("event_format", EventPage.EventFormats.IN_PERSON),
+            location_name=kwargs.pop("location_name", "CIGI Campus"),
+            location_address1=kwargs.pop("location_address1", "67 Erb Street West"),
+            location_city=kwargs.pop("location_city", "Waterloo"),
+            location_province=kwargs.pop("location_province", "ON"),
+            location_country=kwargs.pop("location_country", "Canada"),
+            owner=test_owner(),
+            **kwargs,
+        )
+        root.add_child(instance=event)
+        event.save_revision(user=test_owner()).publish()
+        return event
+
+    def test_google_calendar_url_uses_google_datetime_format_and_event_details(self):
+        event = self.make_event()
+
+        params = parse_qs(urlparse(event.google_calendar_url).query)
+
+        self.assertEqual(params["action"], ["TEMPLATE"])
+        self.assertEqual(params["text"], ["Calendar Test Event"])
+        self.assertEqual(params["dates"], ["20300101T130000Z/20300101T143000Z"])
+        self.assertEqual(params["ctz"], ["America/Toronto"])
+        self.assertEqual(params["location"], ["67 Erb Street West, Waterloo, ON, Canada"])
+        self.assertIn(event.full_url, params["details"][0])
+
+    def test_calendar_feed_contains_usable_event_fields(self):
+        event = self.make_event(slug="calendar-feed-test-event")
+
+        response = self.client.get(event.calendar_feed_url)
+        content = response.content.decode()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Disposition"], 'attachment; filename="calendar-test-event.ics"')
+        self.assertIn("SUMMARY:Calendar Test Event", content)
+        self.assertIn("DTSTART;VALUE=DATE-TIME:20300101T130000Z", content)
+        self.assertIn("DTEND;VALUE=DATE-TIME:20300101T143000Z", content)
+        self.assertIn("LOCATION:67 Erb Street West\\, Waterloo\\, ON\\, Canada", content)
+        self.assertIn(event.full_url, content)
+
+    def test_calendar_links_still_work_without_event_end(self):
+        event = self.make_event(slug="calendar-no-end-test-event", event_end=None)
+
+        params = parse_qs(urlparse(event.google_calendar_url).query)
+
+        self.assertEqual(params["dates"], ["20300101T130000Z/20300101T140000Z"])
+        self.assertEqual(event.calendar_end_time_utc, event.event_start_time_utc + timedelta(hours=1))
+
+    def test_calendar_feed_ignores_invalid_id(self):
+        response = self.client.get("/events/feed.ics?id=not-an-id")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn("BEGIN:VEVENT", response.content.decode())
 
 
 class EmailCampaignAttachmentTests(SimpleTestCase):
