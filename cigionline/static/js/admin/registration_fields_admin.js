@@ -215,10 +215,8 @@ function findTargetInput(scope, rawName) {
 
 function findInputsByName(scope, rawName) {
   if (!rawName) return [];
-  return Array.from(
-    scope.querySelectorAll(
-      `[name='${CSS.escape(rawName)}'], [name$='-${CSS.escape(rawName)}']`,
-    ),
+  return Array.from(scope.querySelectorAll('input, select, textarea')).filter(
+    (el) => el.name === rawName || (el.name && el.name.endsWith(`-${rawName}`)),
   );
 }
 

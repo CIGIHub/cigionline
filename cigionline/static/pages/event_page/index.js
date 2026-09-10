@@ -185,19 +185,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const findTargetInput = (scope, rawName) => {
     if (!rawName) return null;
-    // Prefer ID produced by non-formset fields.
-    let el = scope.querySelector(`#id_${CSS.escape(rawName)}`);
-    // Formsets: id includes prefix (e.g., id_guests-0-<rawName>).
-    if (!el) el = scope.querySelector(`[id$='-${CSS.escape(rawName)}']`);
-    return el;
+    const expectedId = `id_${rawName}`;
+    return Array.from(scope.querySelectorAll('input, select, textarea')).find(
+      (el) =>
+        el.id === expectedId ||
+        (el.id && el.id.endsWith(`-${rawName}`)),
+    );
   };
 
   const findInputsByName = (scope, rawName) => {
     if (!rawName) return [];
-    return Array.from(
-      scope.querySelectorAll(
-        `[name='${CSS.escape(rawName)}'], [name$='-${CSS.escape(rawName)}']`,
-      ),
+    return Array.from(scope.querySelectorAll('input, select, textarea')).filter(
+      (el) =>
+        el.name === rawName ||
+        (el.name && el.name.endsWith(`-${rawName}`)),
     );
   };
 
