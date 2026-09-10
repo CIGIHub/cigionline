@@ -185,11 +185,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const findTargetInput = (scope, rawName) => {
     if (!rawName) return null;
-    // Prefer ID produced by non-formset fields.
-    let el = scope.querySelector(`#id_${CSS.escape(rawName)}`);
-    // Formsets: id includes prefix (e.g., id_guests-0-<rawName>).
-    if (!el) el = scope.querySelector(`[id$='-${CSS.escape(rawName)}']`);
-    return el;
+    const expectedId = `id_${rawName}`;
+    return Array.from(scope.querySelectorAll('input, select, textarea')).find(
+      (el) =>
+        el.id === expectedId ||
+        (el.id && el.id.endsWith(`-${rawName}`)),
+    );
+  };
+
+  const findInputsByName = (scope, rawName) => {
+    if (!rawName) return [];
+    return Array.from(scope.querySelectorAll('input, select, textarea')).filter(
+      (el) =>
+        el.name === rawName ||
+        (el.name && el.name.endsWith(`-${rawName}`)),
+    );
   };
 
   const getFieldWrapper = (input) =>
@@ -227,11 +237,67 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!show && clearOnHide) otherInput.value = '';
   };
 
+  const selectedValuesFor = (scope, rawName) => {
+    const inputs = findInputsByName(scope, rawName);
+    if (!inputs.length) return [];
+    const first = inputs[0];
+    if (first.type === 'radio') {
+      const checked = inputs.find((input) => input.checked);
+      return checked ? [checked.value] : [];
+    }
+    if (first.type === 'checkbox' && inputs.length === 1) {
+      return first.checked ? ['yes', 'true', '1', first.value] : ['no', 'false', '0'];
+    }
+    if (first.type === 'checkbox') {
+      return inputs.filter((input) => input.checked).map((input) => input.value);
+    }
+    if (first.tagName === 'SELECT' && first.multiple) {
+      return Array.from(first.selectedOptions).map((option) => option.value);
+    }
+    return [first.value];
+  };
+
+  const clearInputsIn = (wrapper) => {
+    wrapper.querySelectorAll('input, select, textarea').forEach((input) => {
+      if (input.type === 'checkbox' || input.type === 'radio') input.checked = false;
+      else if (input.tagName === 'SELECT' && input.multiple) {
+        Array.from(input.options).forEach((option) => {
+          option.selected = false;
+        });
+      } else input.value = '';
+    });
+  };
+
+  const syncConditionalVisibility = (wrapper, opts = {}) => {
+    const { clearOnHide = false } = opts;
+    const parentName = wrapper.getAttribute('data-visibility-parent');
+    const triggers = (wrapper.getAttribute('data-visibility-values') || '')
+      .split('|')
+      .map((value) => value.trim().toLowerCase())
+      .filter(Boolean);
+    if (!parentName || !triggers.length) return;
+
+    const scope = wrapper.closest('[data-guest-block]') || wrapper.closest('form') || document;
+    const selected = selectedValuesFor(scope, parentName).map((value) =>
+      String(value || '').trim().toLowerCase(),
+    );
+    const show = selected.some((value) => triggers.includes(value));
+    wrapper.style.display = show ? '' : 'none';
+    if (!show && clearOnHide) clearInputsIn(wrapper);
+  };
+
+  const syncVisibilityIn = (root, opts = {}) => {
+    root
+      .querySelectorAll("[data-visibility-dependent='1']")
+      .forEach((wrapper) => syncConditionalVisibility(wrapper, opts));
+  };
+
   const initConditionalsIn = (root) => {
     root.querySelectorAll("[data-conditional-toggle='1']").forEach((t) => syncConditionalToggle(t));
     root
       .querySelectorAll("[data-conditional-select='1']")
       .forEach((s) => syncConditionalSelectOther(s));
+    syncVisibilityIn(root);
   };
 
   const addGuest = () => {
@@ -304,6 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (t.matches("[data-conditional-select='1']")) {
         syncConditionalSelectOther(t, { clearOnHide: true });
       }
+      syncVisibilityIn(formEl, { clearOnHide: true });
     });
 
     // Initial sync for primary + any server-rendered guests.

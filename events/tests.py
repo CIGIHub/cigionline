@@ -724,6 +724,163 @@ class RegistrationChoiceLimitTests(TestCase):
         self.assertEqual(errors[key], '"Workshop A" is sold out.')
 
 
+class RegistrationConditionalVisibilityTests(TestCase):
+    def _event_with_conditional_field(self):
+        from wagtail.models import Site
+        from events.models import EventPage, RegistrationType, RegistrationFormField, RegistrationFormTemplate
+
+        root = Site.objects.get(is_default_site=True).root_page
+        event = EventPage(
+            title="Conditional Visibility Event",
+            registration_open=True,
+            publishing_date=timezone.now(),
+        )
+        root.add_child(instance=event)
+
+        tmpl = RegistrationFormTemplate.objects.create(title="Conditional Visibility Template")
+        event.registration_form_template = tmpl
+        event.save(update_fields=["registration_form_template"])
+
+        reg_type = RegistrationType.objects.create(
+            event=event,
+            name="General",
+            slug="general",
+            sort_order=0,
+            is_public=True,
+        )
+        parent = RegistrationFormField.objects.create(
+            template=tmpl,
+            label="Do you require travel assistance?",
+            field_type="radio",
+            choices="Yes\nNo",
+            required=True,
+            sort_order=0,
+        )
+        child = RegistrationFormField.objects.create(
+            template=tmpl,
+            label="Departure city",
+            field_type="singleline",
+            required=True,
+            conditional_parent=parent,
+            conditional_parent_values="Yes",
+            sort_order=1,
+        )
+        return event, reg_type, parent, child
+
+    def test_hidden_conditional_field_is_not_required_and_is_cleared(self):
+        from events.forms import build_dynamic_form
+
+        event, reg_type, parent, child = self._event_with_conditional_field()
+        parent_key = f"f_{parent.field_key}"
+        child_key = f"f_{child.field_key}"
+        form_class = build_dynamic_form(event, reg_type)
+        form = form_class(
+            data={
+                "first_name": "Test",
+                "last_name": "User",
+                "email": "test@example.com",
+                "website": "",
+                parent_key: "No",
+                child_key: "stale city",
+            }
+        )
+
+        self.assertTrue(form.is_valid(), form.errors)
+        self.assertEqual(form.cleaned_data[child_key], "")
+
+    def test_visible_conditional_field_keeps_required_validation(self):
+        from events.forms import build_dynamic_form
+
+        event, reg_type, parent, child = self._event_with_conditional_field()
+        parent_key = f"f_{parent.field_key}"
+        child_key = f"f_{child.field_key}"
+        form_class = build_dynamic_form(event, reg_type)
+        form = form_class(
+            data={
+                "first_name": "Test",
+                "last_name": "User",
+                "email": "test@example.com",
+                "website": "",
+                parent_key: "Yes",
+                child_key: "",
+            }
+        )
+
+        self.assertFalse(form.is_valid())
+        self.assertIn(child_key, form.errors)
+
+    def test_conditional_field_widget_exposes_visibility_attrs(self):
+        from events.forms import build_dynamic_form
+
+        event, reg_type, parent, child = self._event_with_conditional_field()
+        parent_key = f"f_{parent.field_key}"
+        child_key = f"f_{child.field_key}"
+        form_class = build_dynamic_form(event, reg_type)
+        attrs = form_class.base_fields[child_key].widget.attrs
+
+        self.assertEqual(attrs["data-visibility-parent"], parent_key)
+        self.assertEqual(attrs["data-visibility-values"], "yes")
+
+    def test_conditional_parent_must_be_same_template_and_earlier(self):
+        from django.core.exceptions import ValidationError
+        from events.models import RegistrationFormField, RegistrationFormTemplate
+
+        tmpl = RegistrationFormTemplate.objects.create(title="Conditional Validation Template")
+        other_tmpl = RegistrationFormTemplate.objects.create(title="Other Conditional Validation Template")
+        parent = RegistrationFormField.objects.create(
+            template=other_tmpl,
+            label="Parent",
+            field_type="radio",
+            choices="Yes\nNo",
+            sort_order=0,
+        )
+        child = RegistrationFormField(
+            template=tmpl,
+            label="Child",
+            field_type="singleline",
+            conditional_parent=parent,
+            conditional_parent_values="Yes",
+            sort_order=1,
+        )
+
+        with self.assertRaises(ValidationError):
+            child.full_clean()
+
+
+class RegistrationFormTemplatePreviewTests(TestCase):
+    def test_registration_form_template_preview_renders_fields(self):
+        from events.models import RegistrationFormField, RegistrationFormTemplate
+
+        tmpl = RegistrationFormTemplate.objects.create(title="Previewable Registration Template")
+        RegistrationFormField.objects.create(
+            template=tmpl,
+            label="Organization",
+            field_type="singleline",
+            required=False,
+            sort_order=0,
+        )
+
+        response = tmpl.serve_preview(RequestFactory().get("/"), "form")
+        response.render()
+        html = response.content.decode()
+
+        self.assertIn("cigionline", html)
+        self.assertIn("eventPage", html)
+        self.assertIn("Organization", html)
+        self.assertIn("Submit registration", html)
+
+    def test_registration_form_template_events_listing_links_to_snippet_edit(self):
+        from events.models import RegistrationFormTemplate
+        from events.wagtail_hooks import registration_form_template_title
+
+        tmpl = RegistrationFormTemplate.objects.create(title="Snippet Edit Target")
+
+        html = str(registration_form_template_title(tmpl))
+
+        self.assertIn(f"/admin/snippets/events/registrationformtemplate/edit/{tmpl.pk}/", html)
+        self.assertIn("Snippet Edit Target", html)
+
+
 class RegistrationRichTextBlockTests(TestCase):
     def _event_with_template(self):
         from wagtail.models import Site
