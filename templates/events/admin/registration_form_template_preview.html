@@ -1,0 +1,45 @@
+{% load wagtailcore_tags webpack_loader %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Preview - {{ template.title }}</title>
+    {% render_bundle 'cigionline' 'css' %}
+    {% render_bundle 'eventPage' 'css' %}
+  </head>
+  <body>
+    <section class="event-registration-form-section">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <p class="text-muted mb-4">Registration type: {{ reg_type.name }}</p>
+
+            <form class="cigi-form" onsubmit="return false;">
+              <div class="cigi-grid cigi-grid--2">
+                {% include "events/includes/_field.html" with field=form.first_name %}
+                {% include "events/includes/_field.html" with field=form.last_name %}
+              </div>
+
+              {% include "events/includes/_field.html" with field=form.email %}
+
+              {% for item in form.layout_items %}
+                {% if item.kind == "rich_text" %}
+                  <div class="cigi-rich-text">{{ item.content|richtext }}</div>
+                {% else %}
+                  {% include "events/includes/_field.html" with field=item.field %}
+                {% endif %}
+              {% endfor %}
+
+              <div class="cigi-actions">
+                <button type="submit" class="btn btn-primary">Submit registration</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+    {% render_bundle 'cigionline' 'js' attrs='defer' %}
+    {% render_bundle 'eventPage' 'js' %}
+  </body>
+</html>

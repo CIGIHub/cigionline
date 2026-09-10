@@ -1,10 +1,13 @@
 {% load events_form %}
 
 {% with details_for=field.field.widget.attrs.data_conditional_details_for %}
+{% with visibility_parent=field.field.widget.attrs.data_visibility_parent visibility_values=field.field.widget.attrs.data_visibility_values %}
   <div
     class="cigi-field{% if field.errors %} has-errors{% endif %}"
-    {% if details_for %}style="display:none;"{% endif %}
+    {% if details_for or visibility_parent %}style="display:none;"{% endif %}
+    {% if visibility_parent %}data-visibility-dependent="1" data-visibility-parent="{{ visibility_parent }}" data-visibility-values="{{ visibility_values }}"{% endif %}
   >
+{% endwith %}
 {% endwith %}
   {% if field|is_conditional_toggle %}
     <div class="cigi-label">

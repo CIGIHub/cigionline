@@ -107,12 +107,14 @@ function toggleConditionalSettingsForItem(item) {
   // Show/hide the "group" wrappers if present
   showGroupHeading('Conditional form settings', isConditionalText);
   showGroupHeading("Conditional 'Other' settings", isConditionalOther);
+  showGroupHeading('Conditional visibility', !isRichText);
   showGroupHeading('Requiredness rules', !isRichText);
 
   // Show/hide underlying fields too (in case the group wrapper isn't there)
   showFields(['rich_text'], isRichText);
   showFields(['help_text', 'required', 'required_rule', 'required_type_slugs'], !isRichText);
   showFields(['file_allowed_types', 'file_max_mb'], isFile);
+  showFields(['conditional_parent', 'conditional_parent_values'], !isRichText);
 
   showFields(
     [
@@ -211,6 +213,15 @@ function findTargetInput(scope, rawName) {
   );
 }
 
+function findInputsByName(scope, rawName) {
+  if (!rawName) return [];
+  return Array.from(
+    scope.querySelectorAll(
+      `[name='${CSS.escape(rawName)}'], [name$='-${CSS.escape(rawName)}']`,
+    ),
+  );
+}
+
 function getFieldWrapper(input) {
   if (!input) return null;
   return (
@@ -221,6 +232,64 @@ function getFieldWrapper(input) {
     || input.closest('.field')
     || input.parentElement
   );
+}
+
+function selectedValuesFor(scope, rawName) {
+  const inputs = findInputsByName(scope, rawName);
+  if (!inputs.length) return [];
+  const first = inputs[0];
+  if (first.type === 'radio') {
+    const checked = inputs.find((input) => input.checked);
+    return checked ? [checked.value] : [];
+  }
+  if (first.type === 'checkbox' && inputs.length === 1) {
+    return first.checked ? ['yes', 'true', '1', first.value] : ['no', 'false', '0'];
+  }
+  if (first.type === 'checkbox') {
+    return inputs.filter((input) => input.checked).map((input) => input.value);
+  }
+  if (first.tagName === 'SELECT' && first.multiple) {
+    return Array.from(first.selectedOptions).map((option) => option.value);
+  }
+  return [first.value];
+}
+
+function clearInputsIn(wrapper) {
+  wrapper.querySelectorAll('input, select, textarea').forEach((input) => {
+    if (input.type === 'checkbox' || input.type === 'radio') input.checked = false;
+    else if (input.tagName === 'SELECT' && input.multiple) {
+      Array.from(input.options).forEach((option) => {
+        option.selected = false;
+      });
+    } else input.value = '';
+  });
+}
+
+function syncConditionalVisibility(input, opts = {}) {
+  const { clearOnHide = false } = opts;
+  const parentName = input.getAttribute('data-visibility-parent');
+  const triggers = (input.getAttribute('data-visibility-values') || '')
+    .split('|')
+    .map((value) => value.trim().toLowerCase())
+    .filter(Boolean);
+  if (!parentName || !triggers.length) return;
+
+  const wrapper = getFieldWrapper(input);
+  if (!wrapper) return;
+
+  const scope = input.closest('form') || document;
+  const selected = selectedValuesFor(scope, parentName).map((value) =>
+    String(value || '').trim().toLowerCase(),
+  );
+  const show = selected.some((value) => triggers.includes(value));
+  wrapper.style.display = show ? '' : 'none';
+  if (!show && clearOnHide) clearInputsIn(wrapper);
+}
+
+function syncVisibilityIn(root = document, opts = {}) {
+  root
+    .querySelectorAll('[data-visibility-parent]')
+    .forEach((input) => syncConditionalVisibility(input, opts));
 }
 
 function selectedContainsTrigger(selectEl, triggerValue) {
@@ -266,6 +335,7 @@ function initConditionalAnswerUI(root = document) {
   root
     .querySelectorAll("[data-conditional-select='1']")
     .forEach((selectEl) => syncConditionalSelectOther(selectEl));
+  syncVisibilityIn(root);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -282,4 +352,5 @@ document.addEventListener('change', (e) => {
   if (target.matches("[data-conditional-select='1']")) {
     syncConditionalSelectOther(target, { clearOnHide: true });
   }
+  syncVisibilityIn(document, { clearOnHide: true });
 });

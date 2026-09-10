@@ -22,6 +22,9 @@ This guide maps the event registration system for future AI agents and maintaine
   - `rich_text` rows are display-only layout blocks. They render with the form but are not Django fields and are never stored in `Registrant.answers`.
   - `strip_non_answer_data(event, data)` removes display-only keys before answer storage as a final safety guard.
   - Standard dynamic answers are stored under `f_<field_key>`.
+  - Fields can be conditionally visible based on a previous field's answer via `conditional_parent` and `conditional_parent_values`.
+    - When a dependent field is hidden, `build_dynamic_form(...)` clears its cleaned value and skips required validation.
+    - When a dependent field is visible, normal required validation is enforced.
   - `conditional_text` stores:
     - `f_<field_key>__enabled`
     - `f_<field_key>__details`
@@ -76,12 +79,14 @@ This guide maps the event registration system for future AI agents and maintaine
   - Public registration UX.
   - Handles file name display, modal behavior, guest form cloning, and conditional field show/hide.
   - Conditional select logic checks both single-select and multi-select widgets.
+  - Field-level conditional visibility uses `data-visibility-parent` / `data-visibility-values` on dependent field wrappers.
 
 - `cigionline/static/js/admin/registration_fields_admin.js`
   - Wagtail admin registration-template editor UX.
   - Shows/hides conditional settings based on `RegistrationFormField.field_type`.
   - Shows the `rich_text` editor only for `rich_text` rows and hides answer-only settings for those rows.
   - Also drives conditional show/hide on the Wagtail admin registrant answer edit form.
+  - Shows conditional visibility settings for answer fields and applies the same show/hide behavior when admins edit answers.
 
 ## Admin And Reports
 
