@@ -821,7 +821,7 @@ class RegistrationConditionalVisibilityTests(TestCase):
         self.assertEqual(attrs["data-visibility-parent"], parent_key)
         self.assertEqual(attrs["data-visibility-values"], "yes")
 
-    def test_conditional_parent_must_be_same_template_and_earlier(self):
+    def test_conditional_parent_must_be_same_template(self):
         from django.core.exceptions import ValidationError
         from events.models import RegistrationFormField, RegistrationFormTemplate
 
@@ -845,6 +845,28 @@ class RegistrationConditionalVisibilityTests(TestCase):
 
         with self.assertRaises(ValidationError):
             child.full_clean()
+
+    def test_conditional_parent_can_have_unreliable_inline_sort_order(self):
+        from events.models import RegistrationFormField, RegistrationFormTemplate
+
+        tmpl = RegistrationFormTemplate.objects.create(title="Conditional Inline Sort Template")
+        parent = RegistrationFormField.objects.create(
+            template=tmpl,
+            label="Letter of invitation",
+            field_type="radio",
+            choices="Yes\nNo",
+            sort_order=1,
+        )
+        child = RegistrationFormField(
+            template=tmpl,
+            label="Legal name",
+            field_type="singleline",
+            conditional_parent=parent,
+            conditional_parent_values="Yes",
+            sort_order=0,
+        )
+
+        child.full_clean()
 
 
 class RegistrationFormTemplatePreviewTests(TestCase):

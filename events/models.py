@@ -2276,9 +2276,6 @@ class RegistrationFormField(AbstractFormField):
                 raise ValidationError({"conditional_parent": "A field cannot depend on itself."})
             if self.conditional_parent and self.conditional_parent.template_id != self.template_id:
                 raise ValidationError({"conditional_parent": "Choose a field from the same form template."})
-            parent_order = getattr(self.conditional_parent, "sort_order", None)
-            if self.conditional_parent and parent_order is not None and self.sort_order is not None and parent_order >= self.sort_order:
-                raise ValidationError({"conditional_parent": "Choose a field that appears before this field."})
             if not self.conditional_parent_values.strip():
                 raise ValidationError({"conditional_parent_values": "Enter at least one trigger value."})
 
