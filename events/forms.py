@@ -337,7 +337,7 @@ def build_dynamic_form(
             continue
 
         req_slugs = _split_slugs(ff.required_type_slugs)
-        is_required = bool(ff.required) or _match(ff.required_rule, req_slugs, current_slug)
+        is_required = bool(ff.required) and _match(ff.required_rule, req_slugs, current_slug)
         parent_key = _conditional_parent_key(ff)
         trigger_values = _split_condition_values(getattr(ff, "conditional_parent_values", ""))
         has_visibility_condition = bool(parent_key and trigger_values)

@@ -725,7 +725,7 @@ class RegistrationChoiceLimitTests(TestCase):
 
 
 class RegistrationConditionalVisibilityTests(TestCase):
-    def _event_with_conditional_field(self):
+    def _event_with_conditional_field(self, *, child_required=True):
         from wagtail.models import Site
         from events.models import EventPage, RegistrationType, RegistrationFormField, RegistrationFormTemplate
 
@@ -760,7 +760,7 @@ class RegistrationConditionalVisibilityTests(TestCase):
             template=tmpl,
             label="Departure city",
             field_type="singleline",
-            required=True,
+            required=child_required,
             conditional_parent=parent,
             conditional_parent_values="Yes",
             sort_order=1,
@@ -788,6 +788,92 @@ class RegistrationConditionalVisibilityTests(TestCase):
         self.assertTrue(form.is_valid(), form.errors)
         self.assertEqual(form.cleaned_data[child_key], "")
 
+    def test_field_is_optional_when_required_is_unchecked_with_default_rule(self):
+        from events.forms import build_dynamic_form
+        from events.models import RegistrationFormField
+
+        event, reg_type, parent, child = self._event_with_conditional_field()
+        child.delete()
+        optional_field = RegistrationFormField.objects.create(
+            template=event.registration_form_template,
+            label="Optional organization",
+            field_type="singleline",
+            required=False,
+            sort_order=1,
+        )
+        form_class = build_dynamic_form(event, reg_type)
+        form = form_class(
+            data={
+                "first_name": "Test",
+                "last_name": "User",
+                "email": "test@example.com",
+                "website": "",
+                f"f_{parent.field_key}": "Yes",
+                f"f_{optional_field.field_key}": "",
+            }
+        )
+
+        self.assertTrue(form.is_valid(), form.errors)
+
+    def test_checked_required_field_honours_matching_requiredness_rule(self):
+        from events.forms import build_dynamic_form
+        from events.models import RegistrationFormField
+
+        event, reg_type, parent, child = self._event_with_conditional_field()
+        child.delete()
+        required_field = RegistrationFormField.objects.create(
+            template=event.registration_form_template,
+            label="Speaker affiliation",
+            field_type="singleline",
+            required=True,
+            required_rule="only",
+            required_type_slugs="general",
+            sort_order=1,
+        )
+        form_class = build_dynamic_form(event, reg_type)
+        form = form_class(
+            data={
+                "first_name": "Test",
+                "last_name": "User",
+                "email": "test@example.com",
+                "website": "",
+                f"f_{parent.field_key}": "Yes",
+                f"f_{required_field.field_key}": "",
+            }
+        )
+
+        self.assertFalse(form.is_valid())
+        self.assertIn(f"f_{required_field.field_key}", form.errors)
+
+    def test_checked_required_field_honours_non_matching_requiredness_rule(self):
+        from events.forms import build_dynamic_form
+        from events.models import RegistrationFormField
+
+        event, reg_type, parent, child = self._event_with_conditional_field()
+        child.delete()
+        optional_field = RegistrationFormField.objects.create(
+            template=event.registration_form_template,
+            label="Speaker affiliation",
+            field_type="singleline",
+            required=True,
+            required_rule="only",
+            required_type_slugs="speaker",
+            sort_order=1,
+        )
+        form_class = build_dynamic_form(event, reg_type)
+        form = form_class(
+            data={
+                "first_name": "Test",
+                "last_name": "User",
+                "email": "test@example.com",
+                "website": "",
+                f"f_{parent.field_key}": "Yes",
+                f"f_{optional_field.field_key}": "",
+            }
+        )
+
+        self.assertTrue(form.is_valid(), form.errors)
+
     def test_visible_conditional_field_keeps_required_validation(self):
         from events.forms import build_dynamic_form
 
@@ -808,6 +894,26 @@ class RegistrationConditionalVisibilityTests(TestCase):
 
         self.assertFalse(form.is_valid())
         self.assertIn(child_key, form.errors)
+
+    def test_visible_conditional_field_is_optional_when_required_is_unchecked(self):
+        from events.forms import build_dynamic_form
+
+        event, reg_type, parent, child = self._event_with_conditional_field(child_required=False)
+        parent_key = f"f_{parent.field_key}"
+        child_key = f"f_{child.field_key}"
+        form_class = build_dynamic_form(event, reg_type)
+        form = form_class(
+            data={
+                "first_name": "Test",
+                "last_name": "User",
+                "email": "test@example.com",
+                "website": "",
+                parent_key: "Yes",
+                child_key: "",
+            }
+        )
+
+        self.assertTrue(form.is_valid(), form.errors)
 
     def test_conditional_field_widget_exposes_visibility_attrs(self):
         from events.forms import build_dynamic_form
@@ -1384,6 +1490,58 @@ class EmailTemplateRenderingTests(WagtailPageTestCase):
         self.assertIn("Additional question", text)
         # Other non-uuid keys still render.
         self.assertIn("CIGI", text)
+
+    def test_registrant_answers_skip_hidden_conditional_children(self):
+        from wagtail.models import Site
+        from events.models import EventPage, RegistrationType, Registrant, RegistrationFormField, RegistrationFormTemplate
+        from events.emailing import _render_registrant_answers
+
+        root = Site.objects.get(is_default_site=True).root_page
+        event = EventPage(title="Conditional Email Event", publishing_date=timezone.now(), owner=test_owner())
+        root.add_child(instance=event)
+        event.save_revision(user=test_owner()).publish()
+
+        tmpl = RegistrationFormTemplate.objects.create(title="Conditional Email Template")
+        event.registration_form_template = tmpl
+        event.save(update_fields=["registration_form_template"])
+
+        reg_type = RegistrationType.objects.create(event=event, name="General", slug="general", sort_order=0, is_public=True)
+        parent = RegistrationFormField.objects.create(
+            template=tmpl,
+            label="Letter of invitation",
+            field_type="radio",
+            choices="Yes\nNo",
+            required=False,
+            sort_order=0,
+        )
+        child = RegistrationFormField.objects.create(
+            template=tmpl,
+            label="Legal name",
+            field_type="singleline",
+            required=False,
+            conditional_parent=parent,
+            conditional_parent_values="Yes",
+            sort_order=1,
+        )
+
+        registrant = Registrant.objects.create(
+            event=event,
+            registration_type=reg_type,
+            email="a@example.com",
+            first_name="A",
+            last_name="B",
+            answers={
+                f"f_{parent.field_key}": "No",
+                f"f_{child.field_key}": "Stale Legal Name",
+            },
+        )
+
+        _html, text = _render_registrant_answers(registrant)
+
+        self.assertIn("Letter of invitation", text)
+        self.assertIn("No", text)
+        self.assertNotIn("Legal name", text)
+        self.assertNotIn("Stale Legal Name", text)
 
 # class EventPageViewSetTests(WagtailPageTestCase):
 #     fixtures = ['events_search_table.json']

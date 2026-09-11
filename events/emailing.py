@@ -20,7 +20,12 @@ from sendgrid.helpers.mail import (
 )
 
 from .email_rendering import render_email_subject, render_streamfield_email_html
-from .forms import is_non_answer_field_type
+from .forms import (
+    _answer_keys_for_template_field,
+    _split_condition_values,
+    _value_matches_condition,
+    is_non_answer_field_type,
+)
 
 if TYPE_CHECKING:
     from .models import Registrant
@@ -320,9 +325,28 @@ def _render_registrant_answers(registrant) -> tuple[str, str]:
 
         return sorted(keys, key=_sort_key)
 
+    hidden_answer_keys: set[str] = set()
+    try:
+        tmpl = getattr(registrant.event, "registration_form_template", None)
+        if tmpl:
+            for ff in tmpl.fields.select_related("conditional_parent").all():
+                trigger_values = _split_condition_values(getattr(ff, "conditional_parent_values", ""))
+                parent = getattr(ff, "conditional_parent", None)
+                if not parent or not trigger_values:
+                    continue
+
+                parent_key = _answer_keys_for_template_field(parent)[0]
+                if not _value_matches_condition(answers.get(parent_key), trigger_values):
+                    hidden_answer_keys.update(_answer_keys_for_template_field(ff))
+    except Exception:
+        hidden_answer_keys = set()
+
     # Drop internal keys + empties; resolve labels + format values.
     items: list[tuple[str, str]] = []
     for k in _sorted_answer_keys():
+        if str(k) in hidden_answer_keys:
+            continue
+
         v = answers.get(k)
         if _is_internal_key(str(k)):
             continue
