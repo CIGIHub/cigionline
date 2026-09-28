@@ -136,6 +136,37 @@ document.querySelectorAll('.anniversary-share-panel a').forEach((link) => {
   });
 });
 
+const founderLetterDetails = document.querySelectorAll('.anniversary-founder-letter-details');
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+founderLetterDetails.forEach((details) => {
+  const toggle = details.querySelector('.letter-toggle-text');
+  const content = details.querySelector('.letter-content');
+  const inner = details.querySelector('.letter-content-inner');
+  if (!toggle || !content || !inner) return;
+
+  const setLetterHeight = () => {
+    content.style.setProperty('--letter-expanded-height', `${inner.scrollHeight}px`);
+  };
+
+  details.classList.add('is-enhanced');
+  setLetterHeight();
+  window.addEventListener('resize', setLetterHeight);
+
+  toggle.addEventListener('click', () => {
+    setLetterHeight();
+    const isOpen = details.classList.toggle('is-open');
+    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+
+    if (reducedMotion.matches) {
+      content.style.transition = 'none';
+      window.requestAnimationFrame(() => {
+        content.style.transition = '';
+      });
+    }
+  });
+});
+
 const anniversaryMenuButton = document.querySelector('[data-anniversary-menu-toggle]');
 const anniversaryMenuOverlay = document.getElementById('anniversary-menu-overlay');
 const anniversaryMenuAccordions = document.querySelectorAll('.anniversary-menu-accordion');

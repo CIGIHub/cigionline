@@ -785,6 +785,42 @@ class TextBorderBlock(blocks.StructBlock, ThemeableBlock):
         template = 'streams/text_border_block.html'
 
 
+class FounderLetterBlock(blocks.StructBlock):
+    """Letter section for the 25th anniversary page."""
+
+    kicker = blocks.CharBlock(required=False)
+    heading = blocks.CharBlock(required=True)
+    body = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link', 'ol', 'ul'],
+        required=True,
+    )
+    signature_name = blocks.CharBlock(required=True)
+    signature_title = blocks.CharBlock(required=False)
+
+    class Meta:
+        icon = 'edit'
+        label = 'Founder Letter'
+        template = 'streams/founder_letter_block.html'
+
+
+class VideoTextBlock(blocks.StructBlock):
+    """Text paired with a YouTube embed."""
+
+    video_url = blocks.URLBlock(
+        help_text='Paste the YouTube video URL.',
+        required=True,
+    )
+    paragraph = blocks.RichTextBlock(
+        features=['bold', 'italic', 'link', 'ol', 'ul'],
+        required=True,
+    )
+
+    class Meta:
+        icon = 'media'
+        label = 'Video + Text'
+        template = 'streams/video_text_block.html'
+
+
 class TooltipBlock(blocks.StructBlock):
     """Tooltip block"""
 
