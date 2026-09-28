@@ -1,0 +1,33 @@
+<section class="anniversary-founder-letter">
+  <div class="container">
+    <div class="row d-block">
+      <div class="col col-lg-8 offset-lg-2">
+        <div class="anniversary-founder-letter-details">
+          <div class="letter-summary-header">
+            {% if self.kicker %}
+              <span class="letter-kicker">{{ self.kicker }}</span>
+            {% endif %}
+            <span class="letter-heading">{{ self.heading }}</span>
+          </div>
+          <div class="letter-content">
+            <div class="letter-content-inner">
+              <div class="letter-body">
+                {{ self.body }}
+              </div>
+              <div class="letter-signature">
+                <p><strong>{{ self.signature_name }}</strong></p>
+                {% if self.signature_title %}
+                  <p>{{ self.signature_title }}</p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          <button class="letter-toggle-text" type="button" aria-expanded="false">
+            <span class="letter-toggle-text-closed">Continue reading</span>
+            <span class="letter-toggle-text-open">Close letter</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

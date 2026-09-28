@@ -26,6 +26,7 @@ from streams.blocks import (
     EmbeddedVideoBlock,
     ExternalQuoteBlock,
     ExternalVideoBlock,
+    FounderLetterBlock,
     HeroLinkBlock,
     HeroDocumentBlock,
     ImageBlock,
@@ -47,6 +48,7 @@ from streams.blocks import (
     TimelineGalleryBlock,
     TooltipBlock,
     TweetBlock,
+    VideoTextBlock,
     InlineVideoBlock,
     HighlightTitleBlock,
     LineBreakBlock,
@@ -1555,7 +1557,13 @@ class TwentyFifthPageSingleton(
     ShareablePageAbstract,
     ThemeablePageAbstract,
 ):
-    body = StreamField(BasicPageAbstract.body_default_blocks, use_json_field=True)
+    body = StreamField(
+        BasicPageAbstract.body_default_blocks + [
+            ('founder_letter', FounderLetterBlock()),
+            ('video_text', VideoTextBlock()),
+        ],
+        use_json_field=True,
+    )
     history_timeline = StreamField(
         [
             ('gallery', TimelineGalleryBlock()),

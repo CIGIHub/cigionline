@@ -60,7 +60,9 @@
   }
 
   .anniversary-splash-overlay {
-    background-color: rgba($black, 0.5);
+    background:
+      linear-gradient(to bottom, rgba($black, 0) 65%, $black 100%),
+      rgba($black, 0.5);
     z-index: 2;
   }
 
@@ -630,12 +632,213 @@
 
   .anniversary-about-section {
     @include media-breakpoint-up(lg) {
-      padding: 4rem 0;
+      padding: 0 0 4rem;
     }
-    padding: 3rem 0;
+    padding: 0 0 3rem;
 
     .body {
       margin: 0;
+    }
+  }
+
+  .anniversary-founder-letter {
+    background-color: $black;
+    color: $white;
+    margin: 0 0 5rem;
+    padding: 5rem 0;
+
+    @include media-breakpoint-up(md) {
+      margin: 0 0 4rem;
+      padding: 4rem 0;
+    }
+  }
+
+  .anniversary-founder-letter-details {
+    &.is-enhanced {
+      .letter-content {
+        max-height: 8.5rem;
+        overflow: hidden;
+
+        &::after {
+          opacity: 1;
+        }
+      }
+
+      .letter-toggle-text {
+        display: inline-block;
+      }
+    }
+
+    &.is-open {
+      .letter-content {
+        max-height: var(--letter-expanded-height);
+      }
+
+      .letter-toggle-text-open {
+        display: inline;
+      }
+
+      .letter-toggle-text-closed {
+        display: none;
+      }
+
+      .letter-content {
+        &::after {
+          opacity: 0;
+        }
+      }
+    }
+  }
+
+  .letter-kicker {
+    color: $cigi-primary-colour;
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin: 0 0 1rem;
+    text-transform: uppercase;
+  }
+
+  .letter-heading {
+    color: $white;
+    display: block;
+    font-size: 2rem;
+    line-height: 1.1;
+
+    @include media-breakpoint-up(md) {
+      font-size: 3rem;
+    }
+  }
+
+  .letter-content {
+    margin-top: 1.5rem;
+    position: relative;
+    transition: max-height 0.9s ease;
+
+    &::after {
+      background: linear-gradient(to bottom, rgba($black, 0), $black);
+      bottom: 0;
+      content: '';
+      height: 3.5rem;
+      left: 0;
+      opacity: 0;
+      position: absolute;
+      right: 0;
+      transition: opacity 0.3s ease;
+    }
+  }
+
+  .letter-content-inner {
+    padding-bottom: 0.25rem;
+  }
+
+  .letter-body {
+    font-size: 1.1rem;
+    line-height: 1.75;
+
+    p,
+    li {
+      color: $white;
+      font-size: inherit;
+      line-height: inherit;
+    }
+
+    a {
+      color: $white;
+      text-decoration-color: $cigi-primary-colour;
+
+      &:hover,
+      &:focus {
+        color: $cigi-primary-colour;
+      }
+    }
+  }
+
+  .letter-toggle-text {
+    background: transparent;
+    border: 0;
+    color: $cigi-primary-colour;
+    cursor: pointer;
+    display: none;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-top: 1rem;
+    padding: 0;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.25em;
+  }
+
+  .letter-toggle-text-open {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .letter-content {
+      transition: none;
+    }
+  }
+
+  .letter-signature {
+    border-top: 2px solid $cigi-primary-colour;
+    margin-top: 2.5rem;
+    padding-top: 1.25rem;
+
+    p {
+      color: $white;
+      font-size: 1rem;
+      margin: 0 0 0.25rem;
+    }
+  }
+
+  .anniversary-video-text {
+    margin: 3rem 0;
+
+    @include media-breakpoint-up(md) {
+      margin: 4rem 0;
+    }
+  }
+
+  .anniversary-video-text-copy {
+    margin-top: 1.5rem;
+
+    @include media-breakpoint-up(md) {
+      margin-top: 0;
+      padding-right: 2rem;
+    }
+
+    p,
+    li {
+      font-size: 1.1rem;
+      line-height: 1.7;
+    }
+
+    p {
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .anniversary-video-text-embed {
+    position: relative;
+    width: 100%;
+
+    &::after {
+      content: '';
+      display: block;
+      padding-bottom: 56.25%;
+    }
+
+    iframe {
+      height: 100%;
+      left: 0;
+      margin: 0;
+      max-width: 100%;
+      position: absolute;
+      top: 0;
+      width: 100%;
     }
   }
 
@@ -1603,4 +1806,3 @@
     }
   }
 }
-
