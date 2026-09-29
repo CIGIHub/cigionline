@@ -130,11 +130,15 @@
     }
   }
 
+  .button-block {
+    margin-bottom: 2rem;
+  }
+
   .stream-image-block {
     background: $white;
     border: 1px solid $cigi-light-grey;
     box-shadow: 0 1rem 1rem rgba($black, 0.08);
-    margin: 1rem 0 2rem;
+    margin: 1rem 0 1rem;
     padding: 0.75rem;
     position: relative;
 
@@ -205,7 +209,7 @@
     }
 
     .stream-image-block {
-      margin: 1.5rem 0 2.5rem;
+      margin: 1.5rem 0 1.5rem;
       padding: 0.5rem;
 
       &::before {

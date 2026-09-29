@@ -180,6 +180,28 @@ class BookPurchaseLinkBlock(blocks.StructBlock, ThemeableBlock):
         label = 'Purchase Link'
 
 
+class ButtonBlock(blocks.StructBlock):
+    text = blocks.CharBlock(required=True)
+    page = blocks.PageChooserBlock(required=False)
+    url = blocks.URLBlock(required=False)
+    icon = blocks.CharBlock(required=False, help_text='Use font-awesome classes such as fa-solid fa-download')
+
+    def clean(self, value):
+        value = super().clean(value)
+
+        if not value.get('page') and not value.get('url'):
+            raise blocks.StructBlockValidationError({
+                'page': ValidationError('Choose a page or enter a URL.'),
+            })
+
+        return value
+
+    class Meta:
+        icon = 'link'
+        label = 'Button'
+        template = 'streams/button_block.html'
+
+
 class ChartBlock(blocks.StructBlock, ThemeableBlock):
     """Chart image with title"""
 

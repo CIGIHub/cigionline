@@ -1,0 +1,17 @@
+{% load wagtailcore_tags %}
+
+<div class="container button-block">
+  <div class="row d-block">
+    <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+      {% if self.page %}
+        <a class="button-action" href="{% pageurl self.page %}">
+          {% if self.icon %}<i class="{{ self.icon }}" aria-hidden="true"></i> {% endif %}{{ self.text }}
+        </a>
+      {% else %}
+        <a class="button-action" href="{{ self.url }}">
+          {% if self.icon %}<i class="{{ self.icon }}" aria-hidden="true"></i> {% endif %}{{ self.text }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
