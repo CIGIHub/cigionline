@@ -491,6 +491,11 @@ class HeroLinkBlock(blocks.StructBlock):
 class HeroDocumentBlock(blocks.StructBlock):
     hero_link_text = blocks.CharBlock(required=True)
     hero_link_document = DocumentChooserBlock(required=True)
+    hero_link_icon_style = blocks.CharBlock(
+        required=False,
+        default='fa-solid',
+        help_text='Use a font-awesome style such as fa-solid or fa-light',
+    )
     hero_link_icon = blocks.CharBlock(required=False, help_text='Use a font-awesome icon name such as fa-envelope')
 
     class Meta:
