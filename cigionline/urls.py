@@ -58,6 +58,7 @@ urlpatterns = urlpatterns + [
     re_path(r'^api/years/$', core_views.years),
     re_path(r'^api/article_series_article_pages/$', article_views.get_article_series_article_pages),
     re_path(r'^api/document_uploads/download/', DocumentZipAPIView.as_view(), name='document_zip_api'),
+    re_path(r'^api/topic_updates_verification/', research_views.topic_updates_verification),
     re_path(r'^subscribe_dph$', subscribe_dph, name='subscribe_dph'),
     re_path(r'^subscribe_think7$', subscribe_think7, name='subscribe_think7'),
     re_path(r'^subscribe_digital_finance$', subscribe_digital_finance, name='subscribe_digital_finance'),

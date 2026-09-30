@@ -149,7 +149,28 @@
     z-index: 20;
 
     .featured-banner {
-      margin-bottom: 6rem;
+      position: relative;
+
+      img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      &--fade::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 8rem;
+        pointer-events: none;
+        background: linear-gradient(
+          to bottom,
+          transparent,
+          #000
+        );
+      }
     }
   }
 
