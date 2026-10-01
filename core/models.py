@@ -58,6 +58,7 @@ from streams.blocks import (
     SovereignCanadaDashboardBlock,
     CollapsibleParagraphBlock,
     NewsletterSubscriptionBlock,
+    AnniversarySubscribeBlock,
     PromotionBlockStreamBlock,
 )
 from uploads.models import DocumentUpload
@@ -1563,6 +1564,7 @@ class TwentyFifthPageSingleton(
         BasicPageAbstract.body_default_blocks + [
             ('founder_letter', FounderLetterBlock()),
             ('video_text', VideoTextBlock()),
+            ('anniversary_subscribe', AnniversarySubscribeBlock()),
         ],
         use_json_field=True,
     )

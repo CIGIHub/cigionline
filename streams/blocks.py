@@ -2156,6 +2156,13 @@ class NewsletterSubscriptionBlock(blocks.StructBlock):
         template = 'streams/newsletter_subscription_block.html'
 
 
+class AnniversarySubscribeBlock(blocks.StaticBlock):
+    class Meta:
+        icon = 'mail'
+        label = 'Anniversary Subscribe Button'
+        template = 'streams/anniversary_subscribe_block.html'
+
+
 class DotDividerBlock(blocks.StaticBlock):
     """A decorative row of five coloured dots."""
 

@@ -190,31 +190,6 @@
     </div>
     <section id="anniversary-about" class="anniversary-about-section anniversary-section-anchor">
       {% include "includes/body.html" with body=self.body %}
-      <div class="anniversary-about-subscribe">
-        <button class="anniversary-about-subscribe-button" type="button" aria-haspopup="dialog" data-anniversary-newsletter-open>
-          Subscribe <span>&gt;</span>
-        </button>
-      </div>
-      <div class="anniversary-about-social">
-        <h2 class="anniversary-about-social-title">Stay Connected</h2>
-        <ul class="anniversary-about-social-links">
-          <li>
-            <a href="https://x.com/cigionline" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's X profile"><i class="fa-brands fa-x-twitter"></i></a>
-          </li>
-          <li>
-            <a href="https://www.linkedin.com/company/cigionline/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's LinkedIn profile"><i class="fa-brands fa-linkedin-in"></i></a>
-          </li>
-          <li>
-            <a href="https://www.youtube.com/user/cigivideos" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Youtube channel"><i class="fa-brands fa-youtube"></i></a>
-          </li>
-          <li>
-            <a href="https://www.instagram.com/cigionline/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Instagram Profile"><i class="fa-brands fa-instagram"></i></a>
-          </li>
-          <li>
-            <a href="https://cigionlineorg.substack.com/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Substack page">{% include 'includes/substack-logo.svg' %}</a>
-          </li>
-        </ul>
-      </div>
     </section>
     {% include "core/includes/twenty_fifth_events.html" with events=self.anniversary_events.all %}
     <section id="anniversary-history" class="anniversary-section-anchor anniversary-history-section">
@@ -229,7 +204,18 @@
     </section>
     {% if self.image_banner %}
       <section class="featured-banner featured-banner--fade">
-        <a href="{% pageurl self %}25-years-of-global-impact/"><img src="{{ self.image_banner.file.url }}" alt="Banner Image"></a>
+        <a class="featured-banner-image" href="{% pageurl self %}25-years-of-global-impact/">
+          <img src="{{ self.image_banner.file.url }}" alt="Banner Image">
+        </a>
+        <div class="container featured-banner-container">
+          <div class="row featured-banner-row">
+            <div class="col col-lg-10 offset-lg-1 featured-banner-column">
+              <div class="featured-banner-link">
+                <a href="{% pageurl self %}25-years-of-global-impact/">Learn More <span>&gt;</span></a>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
     {% endif %}
   </section>
@@ -241,7 +227,7 @@
       <div class="anniversary-footer-layout">
         <div class="anniversary-footer-contact">
           <a class="anniversary-footer-logo" href="/" aria-label="CIGI home">
-            {% include "core/includes/twenty_fifth_cigi_logo.svg" %}
+            {% include "includes/CIGI_25_logo_small.svg" %}
           </a>
           <address>
             67 Erb Street West, Waterloo, ON<br>
