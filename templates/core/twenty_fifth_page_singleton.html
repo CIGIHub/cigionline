@@ -202,22 +202,6 @@
         {% endif %}
       {% endfor %}
     </section>
-    {% if self.image_banner %}
-      <section class="featured-banner featured-banner--fade">
-        <a class="featured-banner-image" href="{% pageurl self %}25-years-of-global-impact/">
-          <img src="{{ self.image_banner.file.url }}" alt="Banner Image">
-        </a>
-        <div class="container featured-banner-container">
-          <div class="row featured-banner-row">
-            <div class="col col-lg-10 offset-lg-1 featured-banner-column">
-              <div class="featured-banner-link">
-                <a href="{% pageurl self %}25-years-of-global-impact/">Learn More <span>&gt;</span></a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    {% endif %}
   </section>
 {% endblock content %}
 
