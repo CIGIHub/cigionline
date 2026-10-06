@@ -79,6 +79,15 @@ class ArticlePageTests(WagtailPageTestCase):
         self.assertFalse(old_article.show_has_disclaimer)
         self.assertFalse(opinion_article.show_has_disclaimer)
 
+    def test_show_has_disclaimer_can_be_hidden(self):
+        article = ArticlePage(
+            article_type=ArticleTypePage(title='Opinions'),
+            publishing_date=timezone.make_aware(datetime.datetime(2026, 7, 14)),
+            hide_has_disclaimer=True,
+        )
+
+        self.assertFalse(article.show_has_disclaimer)
+
 
 class ArticleSeriesListPageTests(WagtailPageTestCase):
     def test_articleserieslistpage_parent_page_types(self):
