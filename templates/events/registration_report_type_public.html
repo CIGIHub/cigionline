@@ -5,11 +5,15 @@
 
 {% block content %}
 {% firstof report_base_url report_page.url as report_url %}
-<section class="py-5">
+<section class="py-5 registration-report-public">
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-12">
         <style>
+          .registration-report-public {
+            padding-top: 6rem;
+          }
+          
           /* Keep the table readable when many dynamic answer columns exist */
           .registration-report-table {
             /* Let the table exceed container width so .table-responsive can scroll */

@@ -1,0 +1,20 @@
+{% load wagtailimages_tags %}
+
+<div class="container has-image-pair">
+  <div class="row d-block">
+    <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+      <div class="has-image-pair__items">
+        {% if value.small_image %}
+          <figure class="has-image-pair__item has-image-pair__item--small">
+            {% image value.small_image width-400 %}
+          </figure>
+        {% endif %}
+        {% if value.big_image %}
+          <figure class="has-image-pair__item has-image-pair__item--big">
+            {% image value.big_image width-1400 %}
+          </figure>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

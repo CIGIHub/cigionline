@@ -29,6 +29,9 @@ from streams.blocks import (
     FounderLetterBlock,
     HeroLinkBlock,
     HeroDocumentBlock,
+    HumanAnalysisConversionBlock,
+    HumanAnalysisImagePairBlock,
+    HumanAnalysisPolicyDownloadBlock,
     ImageBlock,
     ImageScrollBlock,
     AutoPlayVideoBlock,
@@ -1204,47 +1207,12 @@ class HumanAnalysisStandardPage(
         BasicPageAbstract.body_default_blocks + [
             BasicPageAbstract.body_text_border_block,
             ('publication_visual_elements', PublicationVisualElementsBlock()),
+            ('conversion', HumanAnalysisConversionBlock()),
+            ('policy_download', HumanAnalysisPolicyDownloadBlock()),
+            ('has_image_pair', HumanAnalysisImagePairBlock()),
         ],
         blank=True,
         use_json_field=True,
-    )
-    conversion = StreamField(
-        [
-            ('paragraph', ParagraphBlock()),
-        ],
-        blank=True,
-        use_json_field=True,
-    )
-    small_has_image = models.ForeignKey(
-        'images.CigionlineImage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        verbose_name='Small HAS image',
-    )
-    big_has_image = models.ForeignKey(
-        'images.CigionlineImage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        verbose_name='Big HAS image',
-    )
-    policy_download = StreamField(
-        [
-            ('paragraph', ParagraphBlock()),
-        ],
-        blank=True,
-        use_json_field=True,
-    )
-    policy_download_pdf = models.ForeignKey(
-        Document,
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        verbose_name='Policy download PDF',
     )
 
     content_panels = [
@@ -1252,25 +1220,8 @@ class HumanAnalysisStandardPage(
         MultiFieldPanel(
             [
                 FieldPanel('body'),
-                MediaValetImageChooserPanel('small_has_image'),
-                MediaValetImageChooserPanel('big_has_image'),
             ],
             heading='Body',
-            classname='collapsible collapsed',
-        ),
-        MultiFieldPanel(
-            [
-                FieldPanel('conversion'),
-            ],
-            heading='Conversion',
-            classname='collapsible collapsed',
-        ),
-        MultiFieldPanel(
-            [
-                FieldPanel('policy_download'),
-                FieldPanel('policy_download_pdf'),
-            ],
-            heading='Policy Download',
             classname='collapsible collapsed',
         ),
     ]

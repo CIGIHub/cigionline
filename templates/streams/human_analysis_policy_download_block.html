@@ -1,0 +1,17 @@
+{% load wagtailcore_tags %}
+
+<section class="policy-download">
+  {% include_block value.content %}
+  {% if value.pdf %}
+    <div class="container policy-download-cta">
+      <div class="row d-block">
+        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+          <a href="{{ value.pdf.url }}" target="_blank">
+            <i class="fas fa-download" aria-hidden="true"></i>
+            Download Policy
+          </a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</section>
