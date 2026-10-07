@@ -587,6 +587,41 @@ class ParagraphBlock(blocks.RichTextBlock, ThemeableBlock):
         template = 'streams/paragraph_block.html'
 
 
+class HumanAnalysisConversionBlock(blocks.StructBlock):
+    content = blocks.StreamBlock(
+        [('paragraph', ParagraphBlock())],
+        required=False,
+    )
+
+    class Meta:
+        icon = 'mail'
+        label = 'Conversion'
+        template = 'streams/human_analysis_conversion_block.html'
+
+
+class HumanAnalysisPolicyDownloadBlock(blocks.StructBlock):
+    content = blocks.StreamBlock(
+        [('paragraph', ParagraphBlock())],
+        required=False,
+    )
+    pdf = DocumentChooserBlock(required=False)
+
+    class Meta:
+        icon = 'download-alt'
+        label = 'Policy Download'
+        template = 'streams/human_analysis_policy_download_block.html'
+
+
+class HumanAnalysisImagePairBlock(blocks.StructBlock):
+    small_image = ImageChooserBlock(required=False)
+    big_image = ImageChooserBlock(required=False)
+
+    class Meta:
+        icon = 'image'
+        label = 'HAS Image Pair'
+        template = 'streams/human_analysis_image_pair_block.html'
+
+
 class PosterBlock(blocks.PageChooserBlock, ThemeableBlock):
     def get_template(self, value, context, *args, **kwargs):
         standard_template = super(PosterBlock, self).get_template(value, context, *args, **kwargs)
