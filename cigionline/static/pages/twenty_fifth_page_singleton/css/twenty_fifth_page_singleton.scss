@@ -145,89 +145,6 @@
     background-color: $white;
     position: relative;
     z-index: 20;
-
-    .featured-banner {
-      --featured-banner-padding-bottom: 4rem;
-      background-color: $black;
-      padding-bottom: var(--featured-banner-padding-bottom);
-      position: relative;
-
-      @include media-breakpoint-up(md) {
-        --featured-banner-padding-bottom: 2rem;
-      }
-
-      @include media-breakpoint-up(lg) {
-        --featured-banner-padding-bottom: 0;
-      }
-
-      .featured-banner-container {
-        bottom: 0;
-        left: 50%;
-        pointer-events: none;
-        position: absolute;
-        top: 0;
-        transform: translateX(-50%);
-        width: 100%;
-        z-index: 1;
-      }
-
-      .featured-banner-row {
-        height: 100%;
-      }
-
-      .featured-banner-column {
-        align-items: flex-end;
-        display: flex;
-        justify-content: flex-end;
-        padding-bottom: 1.5rem;
-      }
-
-      .featured-banner-image {
-        display: block;
-      }
-
-      img {
-        display: block;
-        height: auto;
-        width: 100%;
-      }
-
-      &--fade::after {
-        @include media-breakpoint-up(md) {
-          height: 8rem;
-        }
-        background: linear-gradient(to bottom, transparent, $black);
-        bottom: var(--featured-banner-padding-bottom);
-        content: '';
-        height: 2rem;
-        left: 0;
-        pointer-events: none;
-        position: absolute;
-        right: 0;
-      }
-
-      .featured-banner-link {
-        pointer-events: auto;
-
-        a {
-          background-color: $cigi-primary-colour;
-          color: $white;
-          display: inline-block;
-          font-size: 0.85rem;
-          font-weight: 700;
-          min-height: 44px;
-          padding: 0.75rem 1.25rem;
-          text-decoration: none;
-          transition: background-color 0.2s ease, color 0.2s ease;
-
-          &:focus,
-          &:hover {
-            background-color: $white;
-            color: $black;
-          }
-        }
-      }
-    }
   }
 
   .anniversary-sticky-header {
@@ -716,8 +633,6 @@
   }
 
   .anniversary-founder-letter {
-    background-color: $black;
-    color: $white;
     margin: 0;
     padding: 5rem 0;
 
@@ -774,7 +689,6 @@
   }
 
   .letter-heading {
-    color: $white;
     display: block;
     font-size: 2rem;
     line-height: 1.1;
@@ -790,7 +704,7 @@
     transition: max-height 0.9s ease;
 
     &::after {
-      background: linear-gradient(to bottom, rgba($black, 0), $black);
+      background: linear-gradient(to bottom, rgba($white, 0), $white);
       bottom: 0;
       content: '';
       height: 3.5rem;
@@ -812,13 +726,11 @@
 
     p,
     li {
-      color: $white;
       font-size: inherit;
       line-height: inherit;
     }
 
     a {
-      color: $white;
       text-decoration-color: $cigi-primary-colour;
 
       &:hover,
@@ -859,7 +771,6 @@
     padding-top: 1.25rem;
 
     p {
-      color: $white;
       font-size: 1rem;
       margin: 0 0 0.25rem;
     }
@@ -918,30 +829,49 @@
   }
 
   .anniversary-subscribe-block {
-    margin-top: 3rem;
-    margin-bottom: 4rem;
+    background-color: $black;
+    color: $white;
+    padding-bottom: 3rem;
+    padding-top: 3rem;
+
+    @include media-breakpoint-up(md) {
+      padding-bottom: 4rem;
+      padding-top: 4rem;
+    }
 
     .anniversary-about-subscribe {
+      align-items: center;
       display: flex;
+      flex-direction: column;
+      gap: 1rem;
       justify-content: center;
+
+      @include media-breakpoint-up(sm) {
+        flex-direction: row;
+      }
     }
 
     .anniversary-about-subscribe-button {
+      align-items: center;
       background-color: $cigi-primary-colour;
       color: $white;
+      display: inline-flex;
       font-size: 0.85rem;
       font-weight: 700;
+      justify-content: center;
       min-height: 44px;
       padding: 0.75rem 1.25rem;
+      text-decoration: none;
       transition:
         background-color 0.2s ease,
         color 0.2s ease;
       white-space: nowrap;
+      width: 12rem;
 
       &:hover,
       &:focus {
-        background-color: $black;
-        color: $white;
+        background-color: $white;
+        color: $black;
         outline: 0;
       }
 
@@ -955,6 +885,7 @@
       text-align: center;
 
       .anniversary-about-social-title {
+        color: $white;
         font-size: 1rem;
         font-weight: 700;
         margin: 0 0 1rem;
@@ -972,9 +903,10 @@
           padding: 0 0.5em;
 
           a {
-            color: $black;
+            color: $white;
 
-            &:hover {
+            &:hover,
+            &:focus {
               svg {
                 fill: $cigi-primary-colour;
               }
@@ -989,7 +921,7 @@
             }
 
             svg {
-              fill: $black;
+              fill: $white;
               height: 1.15rem;
               margin-bottom: 0.3rem;
               transition: fill 0.2s ease;

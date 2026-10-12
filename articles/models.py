@@ -254,6 +254,11 @@ class ArticlePage(
         verbose_name='Hide Disclaimer',
         help_text='When enabled, hide disclaimer at the bottom of the page',
     )
+    hide_has_disclaimer = models.BooleanField(
+        default=False,
+        verbose_name='Hide HAS Disclaimer',
+        help_text='When enabled, hide the Hub for Advanced Studies disclaimer',
+    )
     image_banner = models.ForeignKey(
         'images.CigionlineImage',
         null=True,
@@ -412,7 +417,7 @@ class ArticlePage(
 
     @property
     def show_has_disclaimer(self):
-        if not self.article_type or not self.publishing_date:
+        if self.hide_has_disclaimer or not self.article_type or not self.publishing_date:
             return False
 
         return (
@@ -475,6 +480,7 @@ class ArticlePage(
                 ),
                 FieldPanel('hide_excerpt'),
                 FieldPanel('hide_disclaimer'),
+                FieldPanel('hide_has_disclaimer'),
                 FieldPanel('publishing_date'),
                 FieldPanel('website_url'),
                 FieldPanel('website_button_text'),

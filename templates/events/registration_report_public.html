@@ -5,7 +5,7 @@
 
 {% block content %}
 {% firstof report_base_url page.url as report_url %}
-<section class="py-5">
+<section class="py-5 registration-report-public">
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-lg-10">
@@ -57,6 +57,9 @@
 
         {% if choice_summary_rows %}
           <style>
+            .registration-report-public {
+              padding-top: 6rem;
+            }
             .answer-total {
               border: 1px solid rgba(0, 0, 0, 0.15);
               border-radius: 6px;
