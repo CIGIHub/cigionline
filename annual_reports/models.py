@@ -11,21 +11,27 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.shortcuts import render, redirect
 from django.utils.text import slugify
+from geopy.geocoders import Nominatim
 from mediavalet.panels import MediaValetImageChooserPanel
+from modelcluster.fields import ParentalKey
+from modelcluster.models import ClusterableModel
 from streams.blocks import ARFinancialPositionBlock, ARFinancialsAuditorReportBlock, ARFundBalancesBlock, AROutputsBlock, ARSlideBoardBlock, ARSlideChooserBlock, ARSlideColumnBlock, SPSlideBoardBlock, SPSlideChooserBlock, SPSlideFrameworkBlock
+from utils.helpers import richtext_html, richtext_to_inline_html
 from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
+    PageChooserPanel,
+    InlinePanel,
 )
 from wagtail.blocks import PageChooserBlock, RichTextBlock
 from wagtail.fields import StreamField, RichTextField
-from wagtail.models import Page
+from wagtail.models import Page, Orderable
 from django.utils.html import strip_tags
 from wagtail.images.blocks import ImageChooserBlock
 from wagtailmedia.models import Media
 from wagtailmedia.widgets import AdminMediaChooser
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
-from utils.helpers import richtext_html, richtext_to_inline_html
+from wagtail.snippets.models import register_snippet
 
 
 class AnnualReportListPage(BasicPageAbstract, Page, SearchablePageAbstract):
@@ -180,7 +186,7 @@ class AnnualReportSPAPage(RoutablePageMixin, FeatureablePageAbstract, Searchable
         ShareablePageAbstract.social_panel,
         SearchablePageAbstract.search_panel,
     ]
-    
+
     search_fields = Page.search_fields + SearchablePageAbstract.search_fields
 
     subpage_types = ["AnnualReportSlidePage"]
@@ -312,6 +318,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
         ('presidents-message', 'President\'s Message'),
         ('standard', 'Standard'),
         ('outputs_and_activities', 'Outputs and Activities'),
+        ('map', 'Map Slide'),
         ('timeline', 'Timeline'),
         ('financials', 'Financials'),
     ]
@@ -403,6 +410,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
             [
                 FieldPanel("ar_slide_content"),
                 FieldPanel("download_pdf"),
+                InlinePanel('map_stories', label='Map stories', help_text='For map slide only'),
             ],
             heading="Slide Content",
             classname="collapsible collapsed",
@@ -451,6 +459,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
             ('survey', 'Sondage'),
             ('t7', 'T7'),
             ('website', 'Site web'),
+            ('map', 'Map (FR)'),
         ]
         content = {}
         if self.slide_type == 'toc':
@@ -797,6 +806,36 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                 outputs_and_activities.append(theme)
 
             content = {"outputs_and_activities": outputs_and_activities}
+        elif self.slide_type == 'map':
+            map_stories = []
+
+            for item in self.map_stories.all():
+                story = item.story
+                coordinates = story.coordinates
+
+                if not coordinates:
+                    continue
+
+                map_stories.append({
+                    'title': story.title,
+                    'short_description': str(story.short_description),
+                    'publishing_date': story.publishing_date.strftime('%B %-d, %Y') if story.publishing_date else '',
+                    'location': story.location,
+                    'research_theme': story.research_theme.title if story.research_theme else None,
+                    'related_pages': [
+                        {
+                            'title': related.page.title,
+                            'url': related.page.url,
+                        }
+                        for related in story.related_pages.all()
+                    ],
+                    'latitude': coordinates['latitude'],
+                    'longitude': coordinates['longitude'],
+                })
+
+            content = {
+                'map_stories': map_stories,
+            }
         return content
 
     def timeline_pages(self):
@@ -1067,3 +1106,104 @@ class StrategicPlanSlidePage(SlidePageAbstract, Page):
         """Always serve the SPA regardless of sub-page requested."""
         parent = self.get_parent().specific
         return render(request, "strategic_plan/strategic_plan_spa_page.html", {"page": parent, "self": self})
+
+
+class AnnualReportSlideMapStory(Orderable):
+    page = ParentalKey(
+        'annual_reports.AnnualReportSlidePage',
+        related_name='map_stories',
+        on_delete=models.CASCADE,
+    )
+
+    story = models.ForeignKey(
+        'annual_reports.MapStory',
+        on_delete=models.CASCADE,
+        related_name='+',
+    )
+
+    panels = [
+        FieldPanel('story'),
+    ]
+
+
+@register_snippet
+class MapStory(ClusterableModel):
+    title = models.CharField(max_length=255)
+    short_description = RichTextField(
+        blank=True,
+        null=False,
+        features=['bold', 'italic', 'link'],
+    )
+    publishing_date = models.DateTimeField(blank=False, null=True, verbose_name='Story Date')
+    location = models.CharField(max_length=255)
+    research_theme = models.ForeignKey(
+        'research.ThemePage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='map_stories',
+    )
+
+    @property
+    def coordinates(self):
+        if not self.location:
+            return None
+
+        location_text = self.location.strip()
+        cache_key = f'geocode:{location_text.lower()}'
+
+        sentinel = object()
+        cached = cache.get(cache_key, sentinel)
+
+        if cached is not sentinel:
+            return cached
+
+        geolocator = Nominatim(user_agent='your-site-name')
+        location = geolocator.geocode(location_text)
+
+        if not location:
+            cache.set(cache_key, None, 60 * 60 * 24)
+            return None
+
+        coordinates = {
+            'latitude': location.latitude,
+            'longitude': location.longitude,
+        }
+
+        cache.set(
+            cache_key,
+            coordinates,
+            60 * 60 * 24 * 30,
+        )
+
+        return coordinates
+
+    panels = [
+        FieldPanel('title'),
+        FieldPanel('short_description'),
+        FieldPanel('publishing_date'),
+        FieldPanel('location'),
+        PageChooserPanel('research_theme', ['research.ThemePage']),
+        InlinePanel('related_pages', label='Related pages'),
+    ]
+
+    def __str__(self):
+        return self.title
+
+
+class MapStoryRelatedPage(Orderable):
+    story = ParentalKey(
+        'MapStory',
+        related_name='related_pages',
+        on_delete=models.CASCADE,
+    )
+
+    page = models.ForeignKey(
+        'wagtailcore.Page',
+        on_delete=models.CASCADE,
+        related_name='+',
+    )
+
+    panels = [
+        PageChooserPanel('page'),
+    ]

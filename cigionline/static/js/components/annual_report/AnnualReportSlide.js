@@ -14,6 +14,7 @@ import AnnualReportTimelineSlide from './AnnualReportTimelineSlide';
 import AnnualReportsFinancialsSlide from './AnnualReportFinancialsSlide';
 import AnnualReportOutputsSlide from './AnnualReportOutputsSlide';
 import AnnualReportTOC from './AnnualReportTOC';
+import AnnualReportMap from './AnnualReportMap';
 
 const slideComponents = {
   title: AnnualReportTitleSlide,
@@ -24,6 +25,7 @@ const slideComponents = {
   timeline: AnnualReportTimelineSlide,
   financials: AnnualReportsFinancialsSlide,
   outputs_and_activities: AnnualReportOutputsSlide,
+  map: AnnualReportMap,
 };
 
 const backgroundStyles = {
@@ -114,6 +116,7 @@ function AnnualReportSlide({ slides, basePath }) {
     canScrollRef.current = checkScrollCondition();
 
     const handleNavigation = (direction) => {
+      if (event.target.closest('.annual-report-map')) return;
       if (!canScrollRef.current || isScrolling) return;
       setIsScrolling(true);
       setTimeout(() => setIsScrolling(false), 2000);
