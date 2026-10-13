@@ -1,12 +1,59 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import '../../../css/components/annual_reports/AnnualReportMap.scss';
 
+const storyMatches = (story, searchQuery, selectedTheme) => {
+  const words = searchQuery.trim().toLowerCase().split(/\s+/).filter(Boolean);
+
+  const matchesSearch = !words.length || [
+    story.title,
+    story.location,
+    story.country,
+    story.research_theme,
+  ].some((value) => {
+    const text = String(value || '').toLowerCase();
+    return words.every((word) => text.includes(word));
+  });
+
+  return matchesSearch && (
+    !selectedTheme || story.research_theme === selectedTheme
+  );
+};
+
 function AnnualReportMap({ slide }) {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedTheme, setSelectedTheme] = useState('');
+  const highlightMarkersRef = useRef([]);
+  const criteriaRef = useRef({ searchQuery, selectedTheme });
+  criteriaRef.current = { searchQuery, selectedTheme };
+
+  const isTouchEvent = (event) => (
+    event.originalEvent?.pointerType === 'touch'
+  );
+
+  const [isMobile, setIsMobile] = useState(
+    window.innerWidth <= 768
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 768px)');
+    const updateMobile = (event) => setIsMobile(event.matches);
+
+    mediaQuery.addEventListener('change', updateMobile);
+    return () => mediaQuery.removeEventListener('change', updateMobile);
+  }, []);
+
+  const stories = slide.slide_content?.map_stories || [];
+
+  const researchThemes = [...new Set(
+    stories
+      .map((story) => story.research_theme)
+      .filter(Boolean)
+  )].sort();
 
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return undefined;
@@ -72,6 +119,14 @@ function AnnualReportMap({ slide }) {
     map.attributionControl.setPrefix(false);
     mapRef.current = map;
 
+    const controls = mapContainerRef.current.parentElement
+      .querySelector('.annual-report-map-controls');
+
+    if (controls) {
+      L.DomEvent.disableClickPropagation(controls);
+      L.DomEvent.disableScrollPropagation(controls);
+    }
+
     requestAnimationFrame(() => {
       map.invalidateSize();
     });
@@ -90,6 +145,8 @@ function AnnualReportMap({ slide }) {
         }).addTo(map);
       })
       .catch((error) => console.error(error));
+
+    highlightMarkersRef.current = [];
 
     Object.entries(countryGroups).forEach(([country, group]) => {
       const coordinates = countries[country];
@@ -125,6 +182,8 @@ function AnnualReportMap({ slide }) {
         });
 
       const storyNodes = [];
+      const highlightRecord = { hub, stories: group.stories, nodes: [] };
+      highlightMarkersRef.current.push(highlightRecord);
       let closeTimeout;
 
       const collapseHub = () => {
@@ -134,6 +193,7 @@ function AnnualReportMap({ slide }) {
         });
 
         storyNodes.length = 0;
+        highlightRecord.nodes.length = 0;
       };
 
       const expandHub = () => {
@@ -167,8 +227,12 @@ function AnnualReportMap({ slide }) {
 
           const position = map.containerPointToLatLng([x, y]);
 
+          const { searchQuery: activeQuery, selectedTheme: activeTheme } = criteriaRef.current;
+          const isMatch = storyMatches(story, activeQuery, activeTheme);
+          const hasActiveSearch = Boolean(activeQuery.trim() || activeTheme);
+
           const nodeIcon = L.divIcon({
-            className: 'map-story-node',
+            className: `map-story-node${hasActiveSearch && isMatch ? ' map-story-node-highlight' : ''}`,
             html: '<div class="map-story-node-circle"></div>',
             iconSize: [20, 20],
             iconAnchor: [10, 10],
@@ -186,6 +250,7 @@ function AnnualReportMap({ slide }) {
             icon: nodeIcon,
             zIndexOffset: 1000,
           }).addTo(map);
+          highlightRecord.nodes.push({ marker: node, story });
 
           const popupWidth = Math.min(900, map.getSize().x - 40);
           const markerX = map.latLngToContainerPoint(node.getLatLng()).x;
@@ -241,14 +306,27 @@ function AnnualReportMap({ slide }) {
             offset: L.point(popupOffsetX, 0),
           });
 
-          node.on('mouseover', () => {
+          node.on('mouseover', (event) => {
+            if (isTouchEvent(event)) return;
+
             clearTimeout(closeTimeout);
             hub.closeTooltip();
             node.openPopup();
           });
 
-          node.on('mouseout', () => {
+          node.on('mouseout', (event) => {
+            if (isTouchEvent(event)) return;
+
             closeTimeout = setTimeout(collapseHub, 500);
+          });
+
+          node.on('click', (event) => {
+            if (!isTouchEvent(event)) return;
+
+            L.DomEvent.stopPropagation(event.originalEvent);
+            clearTimeout(closeTimeout);
+            hub.closeTooltip();
+            node.openPopup();
           });
 
           node.on('popupopen', (event) => {
@@ -289,18 +367,45 @@ function AnnualReportMap({ slide }) {
         });
       };
 
-      hub.on('mouseover', () => {
+      hub.on('mouseover', (event) => {
+        if (isTouchEvent(event)) return;
+
         expandHub();
         hub.openTooltip();
       });
 
-      hub.on('mouseout', () => {
+      hub.on('mouseout', (event) => {
+        if (isTouchEvent(event)) return;
+
         closeTimeout = setTimeout(collapseHub, 500);
+      });
+
+      hub.on('click', (event) => {
+        if (!isTouchEvent(event)) return;
+
+        L.DomEvent.stopPropagation(event.originalEvent);
+        clearTimeout(closeTimeout);
+
+        if (storyNodes.length) {
+          collapseHub();
+          hub.closeTooltip();
+        } else {
+          expandHub();
+          hub.openTooltip();
+        }
       });
 
       map.on('movestart', () => {
         clearTimeout(closeTimeout);
         collapseHub();
+      });
+
+      map.on('click', (event) => {
+        if (!isTouchEvent(event)) return;
+
+        clearTimeout(closeTimeout);
+        collapseHub();
+        hub.closeTooltip();
       });
     });
 
@@ -311,8 +416,69 @@ function AnnualReportMap({ slide }) {
     };
   }, [slide]);
 
+  useEffect(() => {
+    const hasActiveSearch = Boolean(searchQuery.trim() || selectedTheme);
+
+    highlightMarkersRef.current.forEach(({ hub, stories: hubStories, nodes }) => {
+      const hubMatches = hubStories.some((story) => storyMatches(story, searchQuery, selectedTheme));
+      const hubElement = hub.getElement();
+
+      if (hubElement) {
+        hubElement.classList.toggle('map-country-hub-highlight', hasActiveSearch && hubMatches);
+      }
+
+      nodes.forEach(({ marker, story }) => {
+        const nodeElement = marker.getElement();
+        if (nodeElement) {
+          nodeElement.classList.toggle(
+            'map-story-node-highlight',
+            hasActiveSearch && storyMatches(story, searchQuery, selectedTheme)
+          );
+        }
+      });
+    });
+  }, [searchQuery, selectedTheme, slide]);
+
   return (
     <div className="annual-report-map">
+      <div className="annual-report-map-controls">
+        <input
+          type="search"
+          placeholder="Search stories..."
+          value={searchQuery}
+          onChange={(event) => setSearchQuery(event.target.value)}
+          aria-label="Search stories"
+        />
+
+        <select
+          value={selectedTheme}
+          onChange={(event) => setSelectedTheme(event.target.value)}
+          aria-label="Filter by research theme"
+        >
+          <option value="">
+            {isMobile ? 'All' : 'All research themes'}
+          </option>
+          {researchThemes.map((theme) => (
+            <option key={theme} value={theme}>
+              {theme}
+            </option>
+          ))}
+        </select>
+
+        {(searchQuery || selectedTheme) && (
+          <button
+            type="button"
+            className="map-search-clear"
+            onClick={() => {
+              setSearchQuery('');
+              setSelectedTheme('');
+            }}
+          >
+            Clear
+          </button>
+        )}
+      </div>
+
       <div
         ref={mapContainerRef}
         className="annual-report-map-container"
