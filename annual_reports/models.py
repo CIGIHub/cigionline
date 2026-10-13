@@ -821,6 +821,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                     'short_description': str(story.short_description),
                     'publishing_date': story.publishing_date.strftime('%B %-d, %Y') if story.publishing_date else '',
                     'location': story.location,
+                    'country': story.location.rsplit(',', 1)[-1].strip(),
                     'research_theme': story.research_theme.title if story.research_theme else None,
                     'related_pages': [
                         {
@@ -829,12 +830,37 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                         }
                         for related in story.related_pages.all()
                     ],
-                    'latitude': coordinates['latitude'],
-                    'longitude': coordinates['longitude'],
                 })
+
+            countries = {}
+
+            geolocator = Nominatim(user_agent='cigi-ar-map')
+
+            for story in map_stories:
+                country = story['country']
+
+                if country not in countries:
+                    cache_key = f'geocode:country:{country.lower()}'
+                    coordinates = cache.get(cache_key)
+
+                    if coordinates is None:
+                        location = geolocator.geocode(country, featuretype='country')
+
+                        if not location:
+                            continue
+
+                        coordinates = {
+                            'latitude': location.latitude,
+                            'longitude': location.longitude,
+                        }
+
+                        cache.set(cache_key, coordinates, 60 * 60 * 24 * 30)
+
+                    countries[country] = coordinates
 
             content = {
                 'map_stories': map_stories,
+                'countries': countries,
             }
         return content
 
@@ -1186,6 +1212,10 @@ class MapStory(ClusterableModel):
         PageChooserPanel('research_theme', ['research.ThemePage']),
         InlinePanel('related_pages', label='Related pages'),
     ]
+
+    class Meta:
+        verbose_name = 'Map Story'
+        verbose_name_plural = 'Map Stories'
 
     def __str__(self):
         return self.title
