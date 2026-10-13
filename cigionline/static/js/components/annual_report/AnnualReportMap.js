@@ -61,7 +61,7 @@ function AnnualReportMap({ slide }) {
       // Recalculate the zoom for the current container dimensions
       const minZoom = Math.min(
         map.getBoundsZoom(worldBounds, false, [20, 20]),
-        2
+        1.5
       );
 
       map.setMinZoom(minZoom);
@@ -75,7 +75,7 @@ function AnnualReportMap({ slide }) {
     // Initial framing
     map.fitBounds(worldBounds, {
       padding: [20, 20],
-      maxZoom: 2,
+      maxZoom: 1.5,
     });
 
     map.setMinZoom(map.getZoom());
@@ -212,40 +212,57 @@ function AnnualReportMap({ slide }) {
           const node = L.marker(position, {
             icon: nodeIcon,
             zIndexOffset: 1000,
-          })
-            .addTo(map)
-            .bindPopup(`
-              <div class="map-card">
-                ${story.research_theme ? `
-                  <div class="map-card-theme">
-                    ${story.research_theme}
-                  </div>
-                ` : ''}
+          }).addTo(map);
 
-                <div class="map-card-title">
-                  ${story.title}
+          const popupWidth = Math.min(900, map.getSize().x - 40);
+          const markerX = map.latLngToContainerPoint(node.getLatLng()).x;
+          const mapWidth = map.getSize().x;
+
+          // Shift the popup to stay within the map's horizontal boundaries
+          const popupOffsetX = Math.max(
+            popupWidth / 2 + 20 - markerX,
+            Math.min(
+              0,
+              mapWidth - popupWidth / 2 - 20 - markerX
+            )
+          );
+
+          node.bindPopup(`
+            <div class="map-card">
+              ${story.research_theme ? `
+                <div class="map-card-theme">
+                  ${story.research_theme}
                 </div>
+              ` : ''}
 
-                <div class="map-card-description">
-                  ${story.short_description}
-                </div>
-
-                ${(story.related_pages || []).length ? `
-                  <div class="map-card-related">
-                    ${relatedPages}
-                  </div>
-                ` : ''}
-
-                <div class="map-card-meta">
-                  <span>${story.publishing_date}</span>
-                  <span>${story.location}</span>
-                </div>
+              <div class="map-card-title">
+                ${story.title}
               </div>
-            `, {
-              closeButton: false,
-              autoClose: false,
-              closeOnClick: false,
-            });
+
+              <div class="map-card-description">
+                ${story.short_description}
+              </div>
+
+              ${(story.related_pages || []).length ? `
+                <div class="map-card-related">
+                  ${relatedPages}
+                </div>
+              ` : ''}
+
+              <div class="map-card-meta">
+                <span>${story.publishing_date}</span>
+                <span>${story.location}</span>
+              </div>
+            </div>
+          `, {
+            closeButton: false,
+            autoClose: true,
+            closeOnClick: false,
+            autoPan: false,
+            minWidth: popupWidth,
+            maxWidth: popupWidth,
+            offset: L.point(popupOffsetX, 0),
+          });
 
           node.on('mouseover', () => {
             clearTimeout(closeTimeout);
