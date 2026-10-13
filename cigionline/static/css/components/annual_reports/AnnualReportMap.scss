@@ -197,6 +197,27 @@
 }
 
 .annual-report-map {
+  .leaflet-popup-content-wrapper {
+    background-color: $black;
+    color: $white;
+    border: 2px solid $cigi-primary-colour;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+}
+
+.annual-report-map {
+  .leaflet-tooltip {
+    border: 2px solid $cigi-primary-colour;
+    border-radius: 8px;
+
+    &::before {
+      display: none;
+    }
+  }
+}
+
+.annual-report-map {
   .leaflet-control-zoom {
     border: none;
     box-shadow: none;

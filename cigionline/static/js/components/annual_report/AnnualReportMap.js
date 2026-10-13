@@ -156,8 +156,8 @@ function AnnualReportMap({ slide }) {
             </ul>
           </div>
         `, {
-          direction: 'top',
-          offset: [0, -20],
+          direction: 'left',
+          offset: [-20, 0],
           opacity: 1,
         });
 
