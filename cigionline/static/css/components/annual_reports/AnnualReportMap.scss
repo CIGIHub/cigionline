@@ -1,11 +1,54 @@
+@import '../../global/variables.scss';
+
 .annual-report-map {
   width: 100%;
   height: 100vh;
+
+  .leaflet-popup-content-wrapper {
+    background-color: $black;
+    color: $white;
+    border-radius: 0;
+  }
+
+  .leaflet-popup-tip {
+    background-color: $black;
+  }
+
+  .leaflet-popup-content {
+    color: $white;
+
+    a {
+      color: $white;
+    }
+  }
+
+  .leaflet-tooltip {
+    background-color: $black;
+    color: $white;
+    border: none;
+    box-shadow: none;
+
+    &::before {
+      border-top-color: $black;
+    }
+  }
 }
 
 .annual-report-map-container {
   width: 100%;
   height: 100%;
+  background-color: $black;
+}
+
+.annual-report-map-container.leaflet-container {
+  background-color: $black;
+}
+
+.map-country {
+  fill: $cigi-light-grey;
+  fill-opacity: 1;
+  stroke: $cigi-light-grey;
+  stroke-width: 0.5;
 }
 
 .map-country-hub {
@@ -14,17 +57,24 @@
 }
 
 .map-country-hub-circle {
+  background-color: $cigi-primary-colour;
+  border: 5px solid $cigi-dark-pink;
+  border-radius: 50%;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #222;
-  color: #fff;
+  color: $white;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+
+  &:hover {
+    background-color: $cigi-dark-pink;
+  }
 }
 
 .map-story-node {
@@ -35,12 +85,169 @@
 .map-story-node-circle {
   width: 20px;
   height: 20px;
-  background: #888;
-  border: 2px solid #fff;
+  border: 2px solid $cigi-light-pink;
   border-radius: 50%;
   cursor: pointer;
+  background-color: $cigi-primary-colour;
 
   &:hover {
-    background: #222;
+    background-color: $cigi-dark-pink;
+  }
+}
+
+.map-hub-info {
+  min-width: 140px;
+  max-width: 240px;
+  white-space: normal;
+  text-align: center;
+}
+
+.map-hub-card {
+  min-width: 180px;
+
+  &-country {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+
+  &-themes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      padding: 0.5rem 0;
+
+      &::before {
+        content: '';
+        display: block;
+        width: 66.67%;
+        border-top: 1px solid $cigi-primary-colour;
+        margin-bottom: 0.25rem;
+      }
+    }
+  }
+}
+
+.map-card {
+  width: 300px;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 1rem;
+
+  a {
+    color: $white;
+    text-decoration: underline;
+    text-decoration-color: $cigi-primary-colour;
+    text-underline-offset: 3px;
+
+    &:hover {
+      color: $cigi-light-pink;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $cigi-primary-colour;
+      outline-offset: 3px;
+    }
+  }
+}
+
+.map-card-theme {
+  display: inline-block;
+  width: fit-content;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid $cigi-primary-colour;
+  border-radius: 1rem;
+  color: $white;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+}
+
+.map-card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+}
+
+.map-card-description {
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.map-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+
+  span:last-child {
+    text-align: right;
+  }
+}
+
+.annual-report-map {
+  .leaflet-popup-content {
+    margin: 0;
+  }
+}
+
+.annual-report-map {
+  .leaflet-control-zoom {
+    border: none;
+    box-shadow: none;
+
+    a {
+      display: block;
+      width: 30px;
+      height: 30px;
+      line-height: 28px;
+      text-align: center;
+      box-sizing: border-box;
+
+      background-color: $black;
+      color: $white;
+      border: 1px solid $cigi-primary-colour;
+      border-radius: 0;
+
+      &:hover {
+        background-color: $cigi-primary-colour;
+        color: $white;
+      }
+
+      &.leaflet-disabled {
+        background-color: $black;
+        color: $cigi-light-grey;
+        opacity: 0.5;
+      }
+    }
+
+    .leaflet-control-zoom-in,
+    .leaflet-control-zoom-out {
+      position: relative;
+      font-size: 0;
+      line-height: 0;
+
+      span {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -55%);
+        font-size: 22px;
+        line-height: 1;
+      }
+    }
+
+    .leaflet-control-zoom-out {
+      border-top: 0;
+
+      &:last-child {
+        border-bottom: 1px solid $cigi-primary-colour;
+      }
+    }
   }
 }
