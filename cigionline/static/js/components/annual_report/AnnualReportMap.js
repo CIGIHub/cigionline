@@ -40,6 +40,7 @@ function AnnualReportMap({ slide }) {
     const map = L.map(mapContainerRef.current, {
       maxZoom: 5,
       zoomSnap: 0.5,
+      wheelPxPerZoomLevel: 40,
       maxBounds: [
         [-85, -180],
         [85, 180],
@@ -48,39 +49,31 @@ function AnnualReportMap({ slide }) {
     });
 
     const worldBounds = L.latLngBounds(
-      [-60, -170],
-      [85, 170]
+      [-85, -180],
+      [85, 180]
     );
+
+    const getInitialZoom = () => (
+      map.getBoundsZoom(worldBounds) + Math.log2(1.5) + 0.5
+    );
+
+    const initialZoom = getInitialZoom();
+
+    map.setView([35, 0], initialZoom);
+    map.setMinZoom(initialZoom);
 
     const updateMapSize = () => {
       map.invalidateSize();
 
-      // Remove the previous minimum zoom restriction
-      map.setMinZoom(0);
-
-      // Recalculate the zoom for the current container dimensions
-      const minZoom = Math.min(
-        map.getBoundsZoom(worldBounds, false, [20, 20]),
-        1.5
-      );
+      const minZoom = getInitialZoom();
 
       map.setMinZoom(minZoom);
 
-      // Zoom out if necessary, without resetting the user's position
       if (map.getZoom() < minZoom) {
         map.setZoom(minZoom);
       }
     };
 
-    // Initial framing
-    map.fitBounds(worldBounds, {
-      padding: [20, 20],
-      maxZoom: 1.5,
-    });
-
-    map.setMinZoom(map.getZoom());
-
-    // Respond to container resizing
     const resizeObserver = new ResizeObserver(updateMapSize);
     resizeObserver.observe(mapContainerRef.current);
 
@@ -91,29 +84,12 @@ function AnnualReportMap({ slide }) {
       map.invalidateSize();
     });
 
-    const ReferrerTileLayer = L.TileLayer.extend({
-      createTile(coords, done) {
-        const tile = document.createElement('img');
-
-        tile.referrerPolicy = 'strict-origin-when-cross-origin';
-
-        L.DomEvent.on(tile, 'load', L.Util.bind(this._tileOnLoad, this, done, tile));
-        L.DomEvent.on(tile, 'error', L.Util.bind(this._tileOnError, this, done, tile));
-
-        tile.alt = '';
-        tile.src = this.getTileUrl(coords);
-
-        return tile;
-      },
-    });
-
     fetch('/static/assets/ne_110m_admin_0_countries.geojson')
       .then((response) => {
         if (!response.ok) throw new Error('Failed to load country GeoJSON');
         return response.json();
       })
       .then((data) => {
-        console.log(data.features[0].properties);
         L.geoJSON(data, {
           style: {
             className: 'map-country',
@@ -123,17 +99,12 @@ function AnnualReportMap({ slide }) {
       })
       .catch((error) => console.error(error));
 
-    delete L.Icon.Default.prototype._getIconUrl;
-
-    const markerBounds = [];
-
     Object.entries(countryGroups).forEach(([country, group]) => {
       const coordinates = countries[country];
 
       if (!coordinates) return;
 
       const hubPosition = [coordinates.latitude, coordinates.longitude];
-      markerBounds.push(hubPosition);
 
       const hubIcon = L.divIcon({
         className: 'map-country-hub',
@@ -164,18 +135,28 @@ function AnnualReportMap({ slide }) {
       const storyNodes = [];
       let closeTimeout;
 
+      const collapseHub = () => {
+        storyNodes.forEach((node) => {
+          node.closePopup();
+          map.removeLayer(node);
+        });
+
+        storyNodes.length = 0;
+      };
+
       const expandHub = () => {
         clearTimeout(closeTimeout);
 
         if (storyNodes.length) return;
 
-        const hubPoint = map.latLngToLayerPoint(hub.getLatLng());
+        const hubPoint = map.latLngToContainerPoint(hub.getLatLng());
         const count = group.stories.length;
         const radius = Math.max(90, (count - 1) * 16);
         const mapWidth = map.getSize().x;
         const expandLeft = hubPoint.x + radius + 20 > mapWidth;
         const direction = expandLeft ? -1 : 1;
         const mapHeight = map.getSize().y;
+
         const verticalOffset = Math.max(
           radius + 20 - hubPoint.y,
           0
@@ -192,7 +173,7 @@ function AnnualReportMap({ slide }) {
           const x = hubPoint.x + direction * radius * Math.cos(angle);
           const y = hubPoint.y + verticalOffset + radius * Math.sin(angle);
 
-          const position = map.layerPointToLatLng([x, y]);
+          const position = map.containerPointToLatLng([x, y]);
 
           const nodeIcon = L.divIcon({
             className: 'map-story-node',
@@ -216,14 +197,18 @@ function AnnualReportMap({ slide }) {
 
           const popupWidth = Math.min(900, map.getSize().x - 40);
           const markerX = map.latLngToContainerPoint(node.getLatLng()).x;
-          const mapWidth = map.getSize().x;
+          const currentMapWidth = map.getSize().x;
+          const markerY = map.latLngToContainerPoint(node.getLatLng()).y;
+          const mapHeight = map.getSize().y;
 
-          // Shift the popup to stay within the map's horizontal boundaries
+          // Place the popup below the node when there's insufficient room above
+          const openBelow = markerY < mapHeight / 2;
+
           const popupOffsetX = Math.max(
             popupWidth / 2 + 20 - markerX,
             Math.min(
               0,
-              mapWidth - popupWidth / 2 - 20 - markerX
+              currentMapWidth - popupWidth / 2 - 20 - markerX
             )
           );
 
@@ -279,6 +264,26 @@ function AnnualReportMap({ slide }) {
 
             if (!popup) return;
 
+            const mapHeight = map.getSize().y;
+            const markerY = map.latLngToContainerPoint(node.getLatLng()).y;
+            const popupHeight = popup.offsetHeight;
+            const padding = 20;
+
+            // Leaflet normally positions the popup above its marker.
+            const spaceAbove = markerY - padding;
+            const spaceBelow = mapHeight - markerY - padding;
+
+            if (popupHeight > spaceAbove && spaceBelow > spaceAbove) {
+              // Move the popup below the marker.
+              event.popup.options.offset = L.point(popupOffsetX, popupHeight + 20);
+            } else {
+              // Keep it above, shifting downward if necessary.
+              const overflow = Math.max(0, popupHeight - spaceAbove);
+              event.popup.options.offset = L.point(popupOffsetX, overflow);
+            }
+
+            event.popup.update();
+
             popup.addEventListener('mouseenter', () => {
               clearTimeout(closeTimeout);
             });
@@ -292,19 +297,10 @@ function AnnualReportMap({ slide }) {
         });
       };
 
-      const collapseHub = () => {
-        storyNodes.forEach((node) => {
-          node.closePopup();
-          map.removeLayer(node);
-        });
-
-        storyNodes.length = 0;
-      };
-
       hub.on('mouseover', () => {
         expandHub();
         hub.openTooltip();
-      });hub.on('mouseover', expandHub);
+      });
 
       hub.on('mouseout', () => {
         closeTimeout = setTimeout(collapseHub, 500);
@@ -315,13 +311,6 @@ function AnnualReportMap({ slide }) {
         collapseHub();
       });
     });
-
-    if (markerBounds.length) {
-      map.fitBounds(markerBounds, {
-        padding: [40, 40],
-        maxZoom: 5,
-      });
-    }
 
     return () => {
       resizeObserver.disconnect();
