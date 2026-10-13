@@ -38,6 +38,7 @@ function AnnualReportMap({ slide }) {
     }, {});
 
     const map = L.map(mapContainerRef.current, {
+      minZoom: 1.5,
       maxZoom: 5,
       zoomSnap: 0.5,
       wheelPxPerZoomLevel: 40,
@@ -60,18 +61,9 @@ function AnnualReportMap({ slide }) {
     const initialZoom = getInitialZoom();
 
     map.setView([35, 0], initialZoom);
-    map.setMinZoom(initialZoom);
 
     const updateMapSize = () => {
       map.invalidateSize();
-
-      const minZoom = getInitialZoom();
-
-      map.setMinZoom(minZoom);
-
-      if (map.getZoom() < minZoom) {
-        map.setZoom(minZoom);
-      }
     };
 
     const resizeObserver = new ResizeObserver(updateMapSize);
