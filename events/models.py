@@ -2525,6 +2525,7 @@ class Registrant(models.Model):
 
     invite = models.ForeignKey(Invite, null=True, blank=True, on_delete=models.SET_NULL, related_name="registrants")
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
+    attended = models.BooleanField(default=False)
 
     # Self-service management token for a "manage your registration" link.
     # Stored hashed so leaked DB dumps don't expose usable tokens.

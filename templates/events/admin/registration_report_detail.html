@@ -16,6 +16,9 @@
         <a class="button bicolor button-small" href="{% url export_csv_url_name pk=event.pk %}">
           Download CSV
         </a>
+        <a class="button bicolor button-small" href="{% url registrants_url_name pk=event.pk %}">
+          {% trans "View all registrants" %}
+        </a>
       </div>
     </div>
   </div>

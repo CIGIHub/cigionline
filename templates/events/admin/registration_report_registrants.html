@@ -1,0 +1,71 @@
+{% extends "wagtailadmin/base.html" %}
+{% load i18n %}
+
+{% block titletag %}{% trans "Registrants" %} · {{ event.title }}{% endblock %}
+
+{% block content %}
+  <header class="nice-padding">
+    <h1 class="w-header__title">{% trans "Registrants" %} <small>({{ event.title }})</small></h1>
+    <p>
+      <a href="{% url detail_url_name event.pk %}" class="button button-secondary">{% trans "Back to event report" %}</a>
+    </p>
+  </header>
+
+  <section class="nice-padding">
+    <form method="get" class="w-form w-mb-4" style="margin-bottom: 1rem;">
+      <label class="w-sr-only" for="id_q">{% trans "Search" %}</label>
+      <input id="id_q" type="search" name="q" value="{{ q }}" placeholder="{% trans 'Search name or email' %}" style="max-width: 420px;">
+      <button type="submit" class="button">{% trans "Search" %}</button>
+      {% if q %}<a class="button button-secondary" href="?">{% trans "Clear" %}</a>{% endif %}
+    </form>
+
+    <table class="listing">
+      <thead>
+        <tr>
+          <th>{% trans "Name" %}</th>
+          <th>{% trans "Email" %}</th>
+          <th>{% trans "Registration type" %}</th>
+          <th>{% trans "Attendance" %}</th>
+          <th>{% trans "Action" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for registrant in page_obj %}
+          <tr>
+            <td>{{ registrant.first_name }} {{ registrant.last_name }}</td>
+            <td>{{ registrant.email }}</td>
+            <td>{{ registrant.registration_type.name }}</td>
+            <td>{% if registrant.attended %}{% trans "Attended" %}{% else %}{% trans "Not attended" %}{% endif %}</td>
+            <td>
+              {% if can_change_registrant %}
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="registrant_id" value="{{ registrant.pk }}">
+                  <button type="submit" class="button button-small{% if registrant.attended %} button-secondary{% endif %}">
+                    {% if registrant.attended %}{% trans "Mark not attended" %}{% else %}{% trans "Mark attended" %}{% endif %}
+                  </button>
+                </form>
+              {% else %}
+                —
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="5">{% trans "No registrants found." %}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% if page_obj.paginator.num_pages > 1 %}
+      <nav class="pagination">
+        {% if page_obj.has_previous %}
+          <a class="button" href="?p={{ page_obj.previous_page_number }}&q={{ q|urlencode }}">{% trans "Previous" %}</a>
+        {% endif %}
+        <span>{% blocktrans with n=page_obj.number m=page_obj.paginator.num_pages %}Page {{ n }} of {{ m }}{% endblocktrans %}</span>
+        {% if page_obj.has_next %}
+          <a class="button" href="?p={{ page_obj.next_page_number }}&q={{ q|urlencode }}">{% trans "Next" %}</a>
+        {% endif %}
+      </nav>
+    {% endif %}
+  </section>
+{% endblock %}

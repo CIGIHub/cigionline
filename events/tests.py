@@ -2,6 +2,7 @@ import base64
 from datetime import datetime, timedelta, timezone as datetime_timezone
 from django.template.loader import render_to_string
 from django.test import RequestFactory, SimpleTestCase, TestCase
+from django.urls import reverse
 from django.utils import timezone
 from home.models import HomePage, Think7HomePage
 from types import SimpleNamespace
@@ -348,6 +349,147 @@ class EventPageTests(WagtailPageTestCase):
         listed_events = [row["event"] for row in response.context_data["rows"]]
 
         self.assertEqual(listed_events, [closed_event])
+
+
+class RegistrationAttendanceReportTests(TestCase):
+    def setUp(self):
+        from django.contrib.auth import get_user_model
+        from events.models import RegistrationType, Registrant
+        from wagtail.models import Site
+
+        self.user = get_user_model().objects.create_superuser(
+            username="attendance-admin",
+            email="attendance-admin@example.com",
+            password="password",
+        )
+        self.client.force_login(self.user)
+
+        root = Site.objects.get(is_default_site=True).root_page
+        self.event = EventPage(
+            title="Attendance Event",
+            publishing_date=timezone.now(),
+            owner=self.user,
+        )
+        root.add_child(instance=self.event)
+        self.general = RegistrationType.objects.create(
+            event=self.event,
+            name="General",
+            slug="general",
+            sort_order=0,
+        )
+        self.vip = RegistrationType.objects.create(
+            event=self.event,
+            name="VIP",
+            slug="vip",
+            sort_order=1,
+        )
+        self.registrant = Registrant.objects.create(
+            event=self.event,
+            registration_type=self.general,
+            first_name="Ada",
+            last_name="Lovelace",
+            email="ada@example.com",
+        )
+        Registrant.objects.create(
+            event=self.event,
+            registration_type=self.vip,
+            first_name="Grace",
+            last_name="Hopper",
+            email="grace@example.com",
+        )
+        self.url = reverse("registration_reports:registrants", args=[self.event.pk])
+
+    def test_report_lists_all_registration_types_and_searches(self):
+        response = self.client.get(self.url)
+
+        self.assertContains(response, "Ada Lovelace")
+        self.assertContains(response, "General")
+        self.assertContains(response, "Grace Hopper")
+        self.assertContains(response, "VIP")
+        self.assertFalse(self.registrant.attended)
+
+        response = self.client.get(self.url, {"q": "ada@example.com"})
+        self.assertContains(response, "Ada Lovelace")
+        self.assertNotContains(response, "Grace Hopper")
+
+    def test_attendance_can_be_toggled(self):
+        response = self.client.post(
+            f"{self.url}?q=Ada",
+            {"registrant_id": self.registrant.pk},
+        )
+
+        self.assertRedirects(response, f"{self.url}?q=Ada", fetch_redirect_response=False)
+        self.registrant.refresh_from_db()
+        self.assertTrue(self.registrant.attended)
+
+        self.client.post(self.url, {"registrant_id": self.registrant.pk})
+        self.registrant.refresh_from_db()
+        self.assertFalse(self.registrant.attended)
+
+    def test_attendance_cannot_change_a_registrant_from_another_event(self):
+        from events.models import RegistrationType, Registrant
+        from wagtail.models import Site
+
+        other_event = EventPage(
+            title="Other Event",
+            publishing_date=timezone.now(),
+            owner=self.user,
+        )
+        Site.objects.get(is_default_site=True).root_page.add_child(instance=other_event)
+        other_type = RegistrationType.objects.create(
+            event=other_event,
+            name="Other",
+            slug="other",
+            sort_order=0,
+        )
+        other_registrant = Registrant.objects.create(
+            event=other_event,
+            registration_type=other_type,
+            email="other@example.com",
+        )
+
+        response = self.client.post(self.url, {"registrant_id": other_registrant.pk})
+
+        self.assertEqual(response.status_code, 404)
+        other_registrant.refresh_from_db()
+        self.assertFalse(other_registrant.attended)
+
+    def test_attendance_rejects_an_invalid_registrant_id(self):
+        response = self.client.post(self.url, {"registrant_id": "invalid"})
+
+        self.assertEqual(response.status_code, 400)
+        self.registrant.refresh_from_db()
+        self.assertFalse(self.registrant.attended)
+
+    def test_attendance_change_requires_registrant_permission(self):
+        from django.contrib.auth import get_user_model
+        from events.wagtail_hooks import RegistrationReportViewSet
+
+        request = RequestFactory().post(self.url, {"registrant_id": self.registrant.pk})
+        request.user = get_user_model().objects.create_user(
+            username="attendance-viewer",
+            password="password",
+            is_staff=True,
+        )
+
+        response = RegistrationReportViewSet().registrants_view(request, self.event.pk)
+
+        self.assertEqual(response.status_code, 403)
+        self.registrant.refresh_from_db()
+        self.assertFalse(self.registrant.attended)
+
+    def test_admin_csv_includes_attendance(self):
+        self.registrant.attended = True
+        self.registrant.save(update_fields=["attended"])
+        url = reverse("registration_reports:export_csv", args=[self.event.pk])
+
+        response = self.client.get(url)
+        content = response.content.decode("utf-8-sig")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Attended?", content.splitlines()[0])
+        self.assertIn("ada@example.com", content)
+        self.assertIn(",Yes,General,", content)
 
 
 class GuestRegistrationQuestionExclusionTests(TestCase):
