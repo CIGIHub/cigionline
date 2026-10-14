@@ -23,6 +23,7 @@ import logging
 from django.utils.translation import gettext_lazy as _
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect
+from django.utils.cache import add_never_cache_headers
 from mediavalet.panels import MediaValetImageChooserPanel
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
@@ -517,6 +518,12 @@ class EventPage(
             return f'themes/{self.get_theme_dir()}/event_page.html'
         return standard_template
 
+    def serve(self, request, *args, **kwargs):
+        response = super().serve(request, *args, **kwargs)
+        if self.registration_open:
+            add_never_cache_headers(response)
+        return response
+
     @property
     def total_confirmed(self):
         return self.registrants.filter(status=Registrant.Status.CONFIRMED).count()
@@ -844,19 +851,12 @@ class EventPage(
             )
 
         invite = self._get_invite_from_request(request)
-        if self.is_private_registration:
-            if not invite or not invite.is_valid():
-                return self.render(
-                    request,
-                    template="events/registration_no_types.html",
-                    context_overrides={"event": self},
-                )
-            if not invite.allows_type_slug(reg_type.slug):
-                return self.render(
-                    request,
-                    template="events/registration_no_types.html",
-                    context_overrides={"event": self},
-                )
+        if not self._registration_types_for_invite(invite).filter(pk=reg_type.pk).exists():
+            return self.render(
+                request,
+                template="events/registration_no_types.html",
+                context_overrides={"event": self},
+            )
 
         if not self.is_registration_type_open(reg_type):
             return self.render(

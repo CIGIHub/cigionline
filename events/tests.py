@@ -312,6 +312,43 @@ class EventPageTests(WagtailPageTestCase):
             {EventRegistrationReportPage},
         )
 
+    def test_registration_reports_list_events_with_registrants(self):
+        from events.models import Registrant, RegistrationType
+        from events.wagtail_hooks import RegistrationReportViewSet
+        from wagtail.models import Site
+
+        root = Site.objects.get(is_default_site=True).root_page
+        closed_event = EventPage(
+            title="Closed Event with Registrants",
+            registration_open=False,
+            publishing_date=timezone.now(),
+            owner=test_owner(),
+        )
+        root.add_child(instance=closed_event)
+        empty_open_event = EventPage(
+            title="Open Event without Registrants",
+            registration_open=True,
+            publishing_date=timezone.now(),
+            owner=test_owner(),
+        )
+        root.add_child(instance=empty_open_event)
+        registration_type = RegistrationType.objects.create(
+            event=closed_event,
+            name="General",
+            slug="general",
+            sort_order=0,
+        )
+        Registrant.objects.create(
+            event=closed_event,
+            registration_type=registration_type,
+            email="registered@example.com",
+        )
+
+        response = RegistrationReportViewSet().index_view(RequestFactory().get("/"))
+        listed_events = [row["event"] for row in response.context_data["rows"]]
+
+        self.assertEqual(listed_events, [closed_event])
+
 
 class GuestRegistrationQuestionExclusionTests(TestCase):
     def test_exclude_from_guest_forms_omits_field_for_guests(self):
@@ -1248,6 +1285,56 @@ class RegistrationTypeCloseDateTests(TestCase):
         )
         event.save(update_fields=["registration_form_template"])
         return event
+
+    def test_registration_pages_are_not_cached(self):
+        from events.models import RegistrationType
+
+        event = self.make_event()
+        reg_type = RegistrationType.objects.create(
+            event=event, name="General", slug="general", sort_order=0, is_public=True
+        )
+
+        for url in (event.url, f"{event.url}register/", f"{event.url}register/type/{reg_type.slug}/"):
+            with self.subTest(url=url):
+                response = self.client.get(url)
+                self.assertIn("no-store", response["Cache-Control"])
+                self.assertIn("max-age=0", response["Cache-Control"])
+
+    def test_direct_form_url_enforces_public_and_invite_type_access(self):
+        from events.models import Invite, RegistrationType, Registrant
+
+        event = self.make_event()
+        hidden_type = RegistrationType.objects.create(
+            event=event, name="Hidden", slug="hidden", sort_order=0, is_public=False
+        )
+        public_type = RegistrationType.objects.create(
+            event=event, name="Public", slug="public", sort_order=1, is_public=True
+        )
+
+        hidden_url = f"{event.url}register/type/{hidden_type.slug}/"
+        denied_get = self.client.get(hidden_url)
+        denied_post = self.client.post(
+            hidden_url,
+            data={
+                "first_name": "Uninvited",
+                "last_name": "Registrant",
+                "email": "uninvited@example.com",
+                "website": "",
+            },
+        )
+
+        self.assertTemplateUsed(denied_get, "events/registration_no_types.html")
+        self.assertTemplateUsed(denied_post, "events/registration_no_types.html")
+        self.assertFalse(Registrant.objects.filter(event=event).exists())
+
+        invite = Invite.objects.create(event=event, allowed_type_slugs=hidden_type.slug)
+        allowed_get = self.client.get(f"{hidden_url}?invite={invite.token}")
+        restricted_get = self.client.get(
+            f"{event.url}register/type/{public_type.slug}/?invite={invite.token}"
+        )
+
+        self.assertTemplateNotUsed(allowed_get, "events/registration_no_types.html")
+        self.assertTemplateUsed(restricted_get, "events/registration_no_types.html")
 
     def test_effective_deadline_rules(self):
         from events.models import RegistrationType
