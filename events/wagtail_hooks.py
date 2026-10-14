@@ -156,13 +156,14 @@ class RegistrantViewSet(ModelViewSet):
         "event",
         "registration_type",
         "status",
+        "attended",
         "created_at",
     )
     search_fields = ("email", "event__title", "registration_type__name")
     ordering = "-created_at"
 
     # Helpful filter columns (keep simple for reliability)
-    list_filter = ("status", "registration_type")  # editors can drill down fast
+    list_filter = ("status", "registration_type", "attended")  # editors can drill down fast
 
     # Fields you want editable in admin (answers are usually read-only)
     form_fields = [
@@ -172,6 +173,7 @@ class RegistrantViewSet(ModelViewSet):
         "first_name",
         "last_name",
         "status",
+        "attended",
         "answers",
         "uploaded_document_ids",
         "invite",
@@ -394,6 +396,55 @@ class RegistrationReportViewSet(ViewSet):
                 "detail_url_name": self.get_url_name("detail"),
                 "export_csv_url_name": self.get_url_name("export_csv"),
                 "type_url_name": self.get_url_name("type_registrants"),
+                "registrants_url_name": self.get_url_name("registrants"),
+            },
+        )
+
+    def registrants_view(self, request, pk: int):
+        event = get_object_or_404(EventPage.objects.specific(), pk=pk)
+
+        if request.method == "POST":
+            if not request.user.has_perm("events.change_registrant"):
+                return HttpResponse("Forbidden", status=403)
+
+            try:
+                registrant_id = int(request.POST["registrant_id"])
+            except (KeyError, TypeError, ValueError):
+                return HttpResponse("Bad Request", status=400)
+
+            registrant = get_object_or_404(Registrant, pk=registrant_id, event=event)
+            registrant.attended = not registrant.attended
+            registrant.save(update_fields=["attended"])
+            messages.success(
+                request,
+                f"Attendance updated for {registrant.first_name} {registrant.last_name} ({registrant.email}).",
+            )
+            return redirect(request.get_full_path())
+
+        q = (request.GET.get("q") or "").strip()
+        registrants = Registrant.objects.filter(event=event).select_related("registration_type")
+        if q:
+            registrants = registrants.filter(
+                dj_models.Q(email__icontains=q)
+                | dj_models.Q(first_name__icontains=q)
+                | dj_models.Q(last_name__icontains=q)
+            )
+        page_obj = paginate_queryset(
+            registrants.order_by("last_name", "first_name", "email"),
+            request=request,
+            per_page=50,
+        )
+
+        return TemplateResponse(
+            request,
+            "events/admin/registration_report_registrants.html",
+            {
+                "view": self,
+                "event": event,
+                "page_obj": page_obj,
+                "q": q,
+                "can_change_registrant": request.user.has_perm("events.change_registrant"),
+                "detail_url_name": self.get_url_name("detail"),
             },
         )
 
@@ -413,6 +464,7 @@ class RegistrationReportViewSet(ViewSet):
                 "id",
                 "created_at",
                 "status",
+                "attended",
                 "first_name",
                 "last_name",
                 "email",
@@ -429,6 +481,7 @@ class RegistrationReportViewSet(ViewSet):
             event=event,
             registrants_qs=registrants,
             filename_prefix=event.title,
+            include_attendance=True,
         )
 
     def type_registrants_view(self, request, pk: int, type_id: int):
@@ -528,6 +581,7 @@ class RegistrationReportViewSet(ViewSet):
         return [
             path("", self.index_view, name="index"),
             path("<int:pk>/", self.detail_view, name="detail"),
+            path("<int:pk>/registrants/", self.registrants_view, name="registrants"),
             path("<int:pk>/export.csv", self.export_csv_view, name="export_csv"),
             path("<int:pk>/type/<int:type_id>/", self.type_registrants_view, name="type_registrants"),
             path("<int:pk>/unregister/<int:registrant_id>/", self.unregister_registrant_view, name="unregister"),

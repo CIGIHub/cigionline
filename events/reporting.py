@@ -277,6 +277,7 @@ def registrants_csv_response(
     event,
     registrants_qs,
     filename_prefix: str,
+    include_attendance: bool = False,
 ) -> HttpResponse:
     """CSV download for a registrants queryset (event-wide or per-type)."""
 
@@ -319,6 +320,8 @@ def registrants_csv_response(
         "Invited?",
         "Invite Email",
     ]
+    if include_attendance:
+        header.insert(3, "Attended?")
 
     for ff in answer_fields:
         if ff.field_type == "file":
@@ -369,6 +372,8 @@ def registrants_csv_response(
             "Yes" if getattr(r, "invite_id", None) else "No",
             getattr(r.invite, "email", "") if getattr(r, "invite_id", None) else "",
         ]
+        if include_attendance:
+            base_row.insert(3, "Yes" if getattr(r, "attended", False) else "No")
 
         answers = getattr(r, "answers", {}) or {}
 
