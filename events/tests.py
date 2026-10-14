@@ -1227,6 +1227,227 @@ class GroupRegistrationConfirmTests(TestCase):
 
 
 class RegistrationTypeCloseDateTests(TestCase):
+    def make_event(self, **kwargs):
+        from wagtail.models import Site
+        from events.models import EventPage, RegistrationFormTemplate
+
+        root = Site.objects.get(is_default_site=True).root_page
+        event = EventPage(
+            title=kwargs.pop("title", "Registration Deadline Event"),
+            registration_open=kwargs.pop("registration_open", True),
+            publishing_date=kwargs.pop("publishing_date", timezone.now()),
+            event_end=kwargs.pop("event_end", None),
+            time_zone=kwargs.pop("time_zone", ""),
+            owner=test_owner(),
+            **kwargs,
+        )
+        root.add_child(instance=event)
+        event.save_revision(user=test_owner()).publish()
+        event.registration_form_template = RegistrationFormTemplate.objects.create(
+            title=f"{event.title} Form"
+        )
+        event.save(update_fields=["registration_form_template"])
+        return event
+
+    def test_effective_deadline_rules(self):
+        from events.models import RegistrationType
+
+        now = timezone.now()
+        event = self.make_event(event_end=now)
+        inherited = RegistrationType.objects.create(
+            event=event, name="Inherited", slug="inherited", sort_order=0
+        )
+        override = RegistrationType.objects.create(
+            event=event,
+            name="Override",
+            slug="override",
+            sort_order=1,
+            close_date=now + timedelta(hours=1),
+        )
+
+        self.assertFalse(inherited.is_open_for_registration(now))
+        self.assertTrue(override.is_open_for_registration(now))
+
+        override.close_date = now
+        self.assertFalse(override.is_open_for_registration(now))
+
+        event.event_end = None
+        override.close_date = None
+        self.assertTrue(override.is_open_for_registration(now))
+
+        event.registration_open = False
+        override.close_date = now + timedelta(hours=1)
+        self.assertFalse(override.is_open_for_registration(now))
+
+    def test_inherited_deadline_uses_event_timezone(self):
+        from datetime import timezone as datetime_timezone
+        from events.models import RegistrationType
+
+        now = datetime(2030, 1, 1, 12, 0, tzinfo=datetime_timezone.utc)
+        event = self.make_event(
+            event_end=datetime(2030, 1, 1, 10, 0, tzinfo=datetime_timezone.utc),
+            time_zone="America/Los_Angeles",
+        )
+        reg_type = RegistrationType.objects.create(
+            event=event, name="General", slug="general", sort_order=0
+        )
+
+        self.assertEqual(
+            event.event_end_time_utc,
+            datetime(2030, 1, 1, 13, 0, tzinfo=datetime_timezone.utc),
+        )
+        self.assertTrue(reg_type.is_open_for_registration(now))
+
+    def test_event_end_hides_inherited_type_and_blocks_direct_post(self):
+        from events.models import RegistrationType, Registrant
+
+        event = self.make_event(event_end=timezone.now() - timedelta(minutes=1))
+        reg_type = RegistrationType.objects.create(
+            event=event, name="General", slug="general", sort_order=0, is_public=True
+        )
+
+        entry_response = self.client.get(f"{event.url}register/")
+        event_response = self.client.get(event.url)
+        post_response = self.client.post(
+            f"{event.url}register/type/{reg_type.slug}/",
+            data={
+                "first_name": "Late",
+                "last_name": "Registrant",
+                "email": "late@example.com",
+                "website": "",
+            },
+        )
+
+        self.assertTemplateUsed(entry_response, "events/registration_no_types.html")
+        self.assertContains(entry_response, "Registration for this event is closed.")
+        self.assertNotContains(event_response, "event-page-registration")
+        self.assertTemplateUsed(post_response, "events/registration_no_types.html")
+        self.assertFalse(Registrant.objects.filter(event=event).exists())
+
+    @patch("events.utils.verify_turnstile_token", return_value=True)
+    @patch("events.emailing.send_confirmation_email")
+    def test_close_date_after_event_end_overrides_event_deadline(self, _send_mock, _turnstile_mock):
+        from events.models import RegistrationType, Registrant
+
+        event = self.make_event(event_end=timezone.now() - timedelta(minutes=1))
+        reg_type = RegistrationType.objects.create(
+            event=event,
+            name="Late registration",
+            slug="late",
+            sort_order=0,
+            is_public=True,
+            close_date=timezone.now() + timedelta(hours=1),
+        )
+
+        response = self.client.get(f"{event.url}register/")
+        event_response = self.client.get(event.url)
+        post_response = self.client.post(
+            f"{event.url}register/type/{reg_type.slug}/",
+            data={
+                "first_name": "Late",
+                "last_name": "Allowed",
+                "email": "late-allowed@example.com",
+                "website": "",
+            },
+        )
+
+        self.assertRedirects(
+            response,
+            f"{event.url}register/type/{reg_type.slug}/",
+            fetch_redirect_response=False,
+        )
+        self.assertTrue(event.public_registration_available)
+        self.assertContains(event_response, "event-page-registration")
+        self.assertEqual(post_response.status_code, 302)
+        self.assertTrue(Registrant.objects.filter(event=event).exists())
+
+    def test_private_invite_honours_close_date_override(self):
+        from events.models import Invite, RegistrationType
+
+        event = self.make_event(
+            event_end=timezone.now() - timedelta(minutes=1),
+            is_private_registration=True,
+        )
+        reg_type = RegistrationType.objects.create(
+            event=event,
+            name="Invitee",
+            slug="invitee",
+            sort_order=0,
+            is_public=False,
+            close_date=timezone.now() + timedelta(hours=1),
+        )
+        invite = Invite.objects.create(event=event, allowed_type_slugs=reg_type.slug)
+
+        response = self.client.get(f"{event.url}register/?invite={invite.token}")
+
+        self.assertRedirects(
+            response,
+            f"{event.url}register/type/{reg_type.slug}/?invite={invite.token}",
+            fetch_redirect_response=False,
+        )
+
+    @patch("events.utils.verify_turnstile_token", return_value=True)
+    def test_deadline_is_rechecked_before_individual_creation(self, _turnstile_mock):
+        from events.models import EventPage, Invite, RegistrationType, Registrant
+
+        event = self.make_event()
+        reg_type = RegistrationType.objects.create(
+            event=event, name="General", slug="general", sort_order=0, is_public=True
+        )
+        invite = Invite.objects.create(event=event, max_uses=2)
+
+        with patch.object(EventPage, "is_registration_type_open", side_effect=[True, False, False]):
+            response = self.client.post(
+                f"{event.url}register/type/{reg_type.slug}/?invite={invite.token}",
+                data={
+                    "first_name": "Deadline",
+                    "last_name": "Crossed",
+                    "email": "deadline@example.com",
+                    "website": "",
+                },
+            )
+
+        self.assertTemplateUsed(response, "events/registration_no_types.html")
+        self.assertFalse(Registrant.objects.filter(event=event).exists())
+        invite.refresh_from_db()
+        self.assertEqual(invite.used_count, 0)
+
+    @patch("events.utils.verify_turnstile_token", return_value=True)
+    def test_deadline_is_rechecked_before_group_creation(self, _turnstile_mock):
+        from events.models import EventPage, RegistrationGroup, RegistrationType, Registrant
+
+        event = self.make_event()
+        reg_type = RegistrationType.objects.create(
+            event=event,
+            name="Group",
+            slug="group",
+            sort_order=0,
+            is_public=True,
+            allow_group_registrations=True,
+            max_guest_registrations=1,
+        )
+
+        with patch.object(EventPage, "is_registration_type_open", side_effect=[True, False, False]):
+            response = self.client.post(
+                f"{event.url}register/type/{reg_type.slug}/",
+                data={
+                    "first_name": "Primary",
+                    "last_name": "Registrant",
+                    "email": "primary@example.com",
+                    "website": "",
+                    "guests-TOTAL_FORMS": "1",
+                    "guests-INITIAL_FORMS": "0",
+                    "guests-MIN_NUM_FORMS": "0",
+                    "guests-MAX_NUM_FORMS": "1",
+                    "guests-0-first_name": "Guest",
+                    "guests-0-last_name": "Registrant",
+                },
+            )
+
+        self.assertTemplateUsed(response, "events/registration_no_types.html")
+        self.assertFalse(RegistrationGroup.objects.filter(event=event).exists())
+        self.assertFalse(Registrant.objects.filter(event=event).exists())
+
     def test_expired_registration_type_is_hidden_from_entry_flow(self):
         from wagtail.models import Site
         from events.models import EventPage, RegistrationType

@@ -68,7 +68,7 @@
     </section>
   {% endif %}
 
-  {% if self.registration_open and not self.is_private_registration or self.registration_open and invite %}
+  {% if registration_available %}
     <section class="event-page-registration">
       <div class="container">
         <div class="row justify-content-center">
