@@ -37,6 +37,7 @@ from streams.blocks import (
     AutoPlayVideoBlock,
     ButtonBlock,
     ImageFullBleedBlock,
+    InteractiveChartBlock,
     ChartBlock,
     PersonsListBlock,
     PublicationsListBlock,
@@ -281,6 +282,7 @@ class BasicPageAbstract(models.Model):
     body_accordion_block = ('accordion', AccordionBlock())
     body_autoplay_video_block = ('autoplay_video', AutoPlayVideoBlock())
     body_chart_block = ('chart', ChartBlock())
+    body_interactive_chart_block = ('interactive_chart', InteractiveChartBlock())
     body_embedded_tiktok_block = ('embedded_tiktok', blocks.URLBlock(
         help_text='Paste the link to the video here. It should look like this: https://www.tiktok.com/@who/video/6805515697175792901',
         required=True,
