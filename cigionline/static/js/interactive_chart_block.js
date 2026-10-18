@@ -29,6 +29,7 @@ const initializeChart = (element) => {
   const line = ['line', 'area'].includes(config.type);
   const area = config.type === 'area';
   const numberFormatter = new Intl.NumberFormat(document.documentElement.lang || 'en');
+  const datasetStyles = [];
 
   if (horizontal) {
     element.querySelector('.interactive-chart-canvas').style.height =
@@ -37,14 +38,22 @@ const initializeChart = (element) => {
 
   config.datasets.forEach((dataset, index) => {
     if (circular) {
-      dataset.backgroundColor = config.labels.map(
+      const backgroundColor = config.labels.map(
         (_, colorIndex) => COLORS[colorIndex % COLORS.length],
       );
+      dataset.backgroundColor = backgroundColor;
       dataset.hoverOffset = 12;
       dataset.borderColor = '#fff';
+      datasetStyles.push({
+        backgroundColor,
+        borderColor: config.labels.map(() => '#fff'),
+        fadedBackgroundColor: backgroundColor.map((color) => withAlpha(color, '22')),
+        fadedBorderColor: config.labels.map(() => '#ffffff33'),
+      });
     } else {
       const color = COLORS[index % COLORS.length];
-      dataset.backgroundColor = withAlpha(color, area ? '55' : 'cc');
+      const backgroundColor = withAlpha(color, area ? '55' : 'cc');
+      dataset.backgroundColor = backgroundColor;
       dataset.borderColor = color;
       dataset.borderWidth = line ? 3 : 2;
       dataset.fill = area;
@@ -54,6 +63,12 @@ const initializeChart = (element) => {
       dataset.pointHoverRadius = line ? 6 : 7;
       dataset.showLine = line;
       dataset.hoverBackgroundColor = color;
+      datasetStyles.push({
+        backgroundColor,
+        borderColor: color,
+        fadedBackgroundColor: withAlpha(color, '22'),
+        fadedBorderColor: withAlpha(color, '33'),
+      });
     }
   });
 
@@ -71,6 +86,41 @@ const initializeChart = (element) => {
         intersect: !line,
         mode: 'nearest',
       },
+      onHover: (_, activeElements, chart) => {
+        const focusedDatasetIndex = activeElements[0]?.datasetIndex ?? null;
+        const focusedDataIndex = circular ? (activeElements[0]?.index ?? null) : null;
+        if (
+          chart.$focusedDatasetIndex === focusedDatasetIndex &&
+          chart.$focusedDataIndex === focusedDataIndex
+        )
+          return;
+
+        chart.$focusedDatasetIndex = focusedDatasetIndex;
+        chart.$focusedDataIndex = focusedDataIndex;
+        chart.data.datasets.forEach((dataset, index) => {
+          const style = datasetStyles[index];
+          if (circular) {
+            dataset.backgroundColor = style.backgroundColor.map((color, dataIndex) =>
+              focusedDatasetIndex === null ||
+              (index === focusedDatasetIndex && dataIndex === focusedDataIndex)
+                ? color
+                : style.fadedBackgroundColor[dataIndex],
+            );
+            dataset.borderColor = style.borderColor.map((color, dataIndex) =>
+              focusedDatasetIndex === null ||
+              (index === focusedDatasetIndex && dataIndex === focusedDataIndex)
+                ? color
+                : style.fadedBorderColor[dataIndex],
+            );
+            return;
+          }
+
+          const faded = focusedDatasetIndex !== null && index !== focusedDatasetIndex;
+          dataset.backgroundColor = faded ? style.fadedBackgroundColor : style.backgroundColor;
+          dataset.borderColor = faded ? style.fadedBorderColor : style.borderColor;
+        });
+        chart.update('none');
+      },
       layout: {
         padding: 24,
       },
@@ -78,7 +128,16 @@ const initializeChart = (element) => {
         datalabels: {
           align: circular ? 'center' : 'end',
           anchor: circular ? 'center' : 'end',
-          color: circular ? '#fff' : '#222',
+          color: (context) => {
+            const focusedDatasetIndex = context.chart.$focusedDatasetIndex;
+            const faded =
+              focusedDatasetIndex !== null &&
+              focusedDatasetIndex !== undefined &&
+              (context.datasetIndex !== focusedDatasetIndex ||
+                (circular && context.dataIndex !== context.chart.$focusedDataIndex));
+            if (faded) return circular ? '#ffffff33' : '#22222233';
+            return circular ? '#fff' : '#222';
+          },
           display: (context) => !line && context.dataset.data[context.dataIndex] !== null,
           font: {
             weight: 600,
