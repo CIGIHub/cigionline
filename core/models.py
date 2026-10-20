@@ -913,6 +913,14 @@ class BasicPage(
 ):
     """Page with StreamField body"""
 
+    body = StreamField(
+        BasicPageAbstract.body_default_blocks + [
+            BasicPageAbstract.body_autoplay_video_block,
+        ],
+        blank=True,
+        use_json_field=True,
+    )
+
     related_files = StreamField(
         [
             ('file', DocumentChooserBlock()),

@@ -118,6 +118,11 @@ class PersonBlock(blocks.PageChooserBlock, ThemeableBlock):
 class AutoPlayVideoBlock(blocks.StructBlock, ThemeableBlock):
     video = VideoBlock(required=False)
     caption = blocks.CharBlock(required=False)
+    disable_autoplay = blocks.BooleanBlock(required=False, default=False)
+
+    implemented_themes = [
+        'dph_page',
+    ]
 
     def get_template(self, value, context, *args, **kwargs):
         standard_template = super(AutoPlayVideoBlock, self).get_template(value, context, *args, **kwargs)
