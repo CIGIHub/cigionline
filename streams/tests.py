@@ -28,6 +28,18 @@ class InteractiveChartBlockTests(SimpleTestCase):
         self.assertEqual(parsed['labels'], ['2024', '2025'])
         self.assertEqual(parsed['series'], [[12.5, 15], [8, 9]])
 
+    def test_parses_semicolon_delimited_data(self):
+        parsed = self.block.parse_csv('Region;Revenue\n"North, America";12.5\nEurope;15')
+
+        self.assertEqual(parsed['labels'], ['North, America', 'Europe'])
+        self.assertEqual(parsed['series'], [[12.5, 15]])
+
+    def test_parses_tab_delimited_data(self):
+        parsed = self.block.parse_csv('Year\tRevenue\tExpenses\n2024\t12.5\t8\n2025\t15\t9')
+
+        self.assertEqual(parsed['headers'], ['Year', 'Revenue', 'Expenses'])
+        self.assertEqual(parsed['series'], [[12.5, 15], [8, 9]])
+
     def test_allows_missing_data_points(self):
         parsed = self.block.parse_csv('Year,Revenue\n2024,\n2025,15')
 

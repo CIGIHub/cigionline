@@ -260,10 +260,15 @@ class InteractiveChartBlock(blocks.StructBlock):
 
     @staticmethod
     def parse_csv(csv_data):
+        csv_data = csv_data.strip()
         try:
+            try:
+                dialect = csv.Sniffer().sniff(csv_data, delimiters=',;\t')
+            except csv.Error:
+                dialect = csv.excel
             rows = [
                 [cell.strip() for cell in row]
-                for row in csv.reader(io.StringIO(csv_data.strip()))
+                for row in csv.reader(io.StringIO(csv_data), dialect)
                 if any(cell.strip() for cell in row)
             ]
         except csv.Error as error:

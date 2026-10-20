@@ -4,17 +4,25 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 Chart.register(ChartDataLabels);
 
 const COLORS = [
-  '#e02f2f',
-  '#1d6fa5',
-  '#e29e20',
-  '#27856f',
-  '#754668',
-  '#6b6b6b',
-  '#8b5a2b',
-  '#4f7c23',
-  '#724bc4',
-  '#007f8b',
+  '#E6023B',
+  '#000000',
+  '#747373',
+  '#A4A4A4',
+  '#DBDBDB',
+  '#67BF8F',
+  '#3F4F70',
+  '#957AA9',
+  '#D2B85E',
+  '#D84D4C',
 ];
+const COLORS_WITH_DARK_LABELS = new Set([
+  '#A4A4A4',
+  '#DBDBDB',
+  '#67BF8F',
+  '#957AA9',
+  '#D2B85E',
+  '#D84D4C',
+]);
 
 const withAlpha = (hex, alpha) => `${hex}${alpha}`;
 
@@ -130,13 +138,18 @@ const initializeChart = (element) => {
           anchor: circular ? 'center' : 'end',
           color: (context) => {
             const focusedDatasetIndex = context.chart.$focusedDatasetIndex;
+            const color =
+              circular && COLORS_WITH_DARK_LABELS.has(COLORS[context.dataIndex % COLORS.length])
+                ? '#000000'
+                : circular
+                  ? '#ffffff'
+                  : '#222222';
             const faded =
               focusedDatasetIndex !== null &&
               focusedDatasetIndex !== undefined &&
               (context.datasetIndex !== focusedDatasetIndex ||
                 (circular && context.dataIndex !== context.chart.$focusedDataIndex));
-            if (faded) return circular ? '#ffffff33' : '#22222233';
-            return circular ? '#fff' : '#222';
+            return faded ? withAlpha(color, '33') : color;
           },
           display: (context) => !line && context.dataset.data[context.dataIndex] !== null,
           font: {
