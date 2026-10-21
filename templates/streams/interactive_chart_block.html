@@ -1,0 +1,57 @@
+<div class="container">
+  <div class="row d-block">
+    {% if self.full_width %}
+      <div class="col col-md-10 offset-md-1 col-lg-10 offset-lg-1">
+    {% else %}
+      <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+    {% endif %}
+      <figure class="interactive-chart" data-chart-config-id="{{ chart_id }}">
+        <h3 id="{{ chart_id }}-title" class="interactive-chart-title">{{ self.title }}</h3>
+        <p id="{{ chart_id }}-description" class="interactive-chart-description">
+          {{ self.description|linebreaksbr }}
+        </p>
+        <div class="interactive-chart-canvas">
+          <canvas
+            aria-labelledby="{{ chart_id }}-title"
+            aria-describedby="{{ chart_id }}-description"
+            role="img"
+          ></canvas>
+        </div>
+        <noscript><p>Enable JavaScript to view the interactive chart.</p></noscript>
+        {% if self.show_chart_data %}
+          <details class="interactive-chart-data">
+            <summary>View chart data</summary>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    {% for header in table_headers %}
+                      <th scope="col">{{ header }}</th>
+                    {% endfor %}
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for row in table_rows %}
+                    <tr>
+                      {% for cell in row %}
+                        {% if forloop.first %}
+                          <th scope="row">{{ cell }}</th>
+                        {% else %}
+                          <td>{{ cell|default:"—" }}</td>
+                        {% endif %}
+                      {% endfor %}
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </details>
+        {% endif %}
+        {% if self.caption %}
+          <figcaption>{{ self.caption|linebreaksbr }}</figcaption>
+        {% endif %}
+      </figure>
+      {{ chart_data|json_script:chart_id }}
+    </div>
+  </div>
+</div>

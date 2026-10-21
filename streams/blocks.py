@@ -1,3 +1,8 @@
+import csv
+import io
+import math
+import uuid
+
 from bs4 import BeautifulSoup
 from django.conf import settings
 from django.db import models
@@ -228,6 +233,139 @@ class ChartBlock(blocks.StructBlock, ThemeableBlock):
         icon = 'image'
         label = 'Chart'
         template = 'streams/chart_block.html'
+
+
+class InteractiveChartBlock(blocks.StructBlock):
+    """Interactive chart generated from pasted CSV data."""
+
+    CHART_TYPES = [
+        ('bar', 'Vertical bar'),
+        ('horizontal_bar', 'Horizontal bar'),
+        ('line', 'Line'),
+        ('area', 'Area'),
+        ('pie', 'Pie'),
+        ('doughnut', 'Doughnut'),
+    ]
+
+    title = blocks.CharBlock(required=True)
+    description = blocks.TextBlock(
+        required=True,
+        help_text='Describe the chart and its main takeaway for all readers.',
+    )
+    caption = blocks.TextBlock(required=False)
+    chart_type = blocks.ChoiceBlock(choices=CHART_TYPES, default='bar')
+    csv_data = blocks.TextBlock(
+        required=True,
+        help_text=(
+            'Paste CSV with column headings. The first column contains category '
+            'labels; each remaining column is a numeric data series.'
+        ),
+    )
+    show_chart_data = blocks.BooleanBlock(
+        required=False,
+        default=True,
+        label='Show chart data table',
+    )
+    full_width = blocks.BooleanBlock(required=False)
+
+    @staticmethod
+    def parse_csv(csv_data):
+        csv_data = csv_data.strip()
+        try:
+            try:
+                dialect = csv.Sniffer().sniff(csv_data, delimiters=',;\t')
+            except csv.Error:
+                dialect = csv.excel
+            rows = [
+                [cell.strip() for cell in row]
+                for row in csv.reader(io.StringIO(csv_data), dialect)
+                if any(cell.strip() for cell in row)
+            ]
+        except csv.Error as error:
+            raise ValidationError(f'Invalid CSV: {error}') from error
+
+        if len(rows) < 2:
+            raise ValidationError('CSV must contain a header row and at least one data row.')
+
+        headers = rows[0]
+        headers[0] = headers[0].lstrip('\ufeff')
+        if len(headers) < 2:
+            raise ValidationError('CSV must contain a label column and at least one data series.')
+        if len(headers) > 11:
+            raise ValidationError('CSV cannot contain more than 10 data series.')
+        if any(not header for header in headers):
+            raise ValidationError('Every CSV column must have a heading.')
+        if len(set(headers)) != len(headers):
+            raise ValidationError('CSV column headings must be unique.')
+        if len(rows) > 1001:
+            raise ValidationError('CSV cannot contain more than 1,000 data rows.')
+
+        labels = []
+        series = [[] for _ in headers[1:]]
+        table_rows = []
+        for row_number, row in enumerate(rows[1:], start=2):
+            if len(row) != len(headers):
+                raise ValidationError(
+                    f'CSV row {row_number} has {len(row)} columns; expected {len(headers)}.'
+                )
+            if not row[0]:
+                raise ValidationError(f'CSV row {row_number} is missing its category label.')
+
+            labels.append(row[0])
+            table_rows.append(row)
+            for column_number, cell in enumerate(row[1:], start=2):
+                if not cell:
+                    series[column_number - 2].append(None)
+                    continue
+                try:
+                    number = float(cell)
+                except ValueError as error:
+                    raise ValidationError(
+                        f'CSV row {row_number}, column {column_number} must be a number.'
+                    ) from error
+                if not math.isfinite(number):
+                    raise ValidationError(
+                        f'CSV row {row_number}, column {column_number} must be a finite number.'
+                    )
+                series[column_number - 2].append(int(number) if number.is_integer() else number)
+
+        return {
+            'headers': headers,
+            'labels': labels,
+            'series': series,
+            'table_rows': table_rows,
+        }
+
+    def clean(self, value):
+        value = super().clean(value)
+        try:
+            self.parse_csv(value['csv_data'])
+        except ValidationError as error:
+            raise blocks.StructBlockValidationError({'csv_data': error}) from error
+        return value
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        parsed = self.parse_csv(value['csv_data'])
+        context.update({
+            'chart_id': f'interactive-chart-{uuid.uuid4().hex}',
+            'chart_data': {
+                'type': value['chart_type'],
+                'labels': parsed['labels'],
+                'datasets': [
+                    {'label': label, 'data': data}
+                    for label, data in zip(parsed['headers'][1:], parsed['series'])
+                ],
+            },
+            'table_headers': parsed['headers'],
+            'table_rows': parsed['table_rows'],
+        })
+        return context
+
+    class Meta:
+        icon = 'form'
+        label = 'Interactive Chart'
+        template = 'streams/interactive_chart_block.html'
 
 
 class ContactEmailBlock(blocks.EmailBlock):
