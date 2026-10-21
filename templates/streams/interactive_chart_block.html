@@ -18,33 +18,35 @@
           ></canvas>
         </div>
         <noscript><p>Enable JavaScript to view the interactive chart.</p></noscript>
-        <details class="interactive-chart-data">
-          <summary>View chart data</summary>
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  {% for header in table_headers %}
-                    <th scope="col">{{ header }}</th>
-                  {% endfor %}
-                </tr>
-              </thead>
-              <tbody>
-                {% for row in table_rows %}
+        {% if self.show_chart_data %}
+          <details class="interactive-chart-data">
+            <summary>View chart data</summary>
+            <div class="table-container">
+              <table>
+                <thead>
                   <tr>
-                    {% for cell in row %}
-                      {% if forloop.first %}
-                        <th scope="row">{{ cell }}</th>
-                      {% else %}
-                        <td>{{ cell|default:"—" }}</td>
-                      {% endif %}
+                    {% for header in table_headers %}
+                      <th scope="col">{{ header }}</th>
                     {% endfor %}
                   </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </details>
+                </thead>
+                <tbody>
+                  {% for row in table_rows %}
+                    <tr>
+                      {% for cell in row %}
+                        {% if forloop.first %}
+                          <th scope="row">{{ cell }}</th>
+                        {% else %}
+                          <td>{{ cell|default:"—" }}</td>
+                        {% endif %}
+                      {% endfor %}
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </details>
+        {% endif %}
         {% if self.caption %}
           <figcaption>{{ self.caption|linebreaksbr }}</figcaption>
         {% endif %}

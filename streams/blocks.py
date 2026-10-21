@@ -256,6 +256,11 @@ class InteractiveChartBlock(blocks.StructBlock):
             'labels; each remaining column is a numeric data series.'
         ),
     )
+    show_chart_data = blocks.BooleanBlock(
+        required=False,
+        default=True,
+        label='Show chart data table',
+    )
     full_width = blocks.BooleanBlock(required=False)
 
     @staticmethod

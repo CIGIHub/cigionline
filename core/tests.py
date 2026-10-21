@@ -107,6 +107,11 @@ class PurgeCloudflareCacheTests(WagtailPageTestCase):
 
 
 class BasicPageTests(WagtailPageTestCase):
+    def test_body_includes_interactive_chart(self):
+        body = BasicPage._meta.get_field('body')
+
+        self.assertIn('interactive_chart', body.stream_block.child_blocks)
+
     def test_basicpage_parent_page_types(self):
         """
         Verify allowed parent page types.

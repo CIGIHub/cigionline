@@ -200,7 +200,6 @@ class PublicationPage(
     body = StreamField(
         BasicPageAbstract.body_default_blocks + [
             BasicPageAbstract.body_chart_block,
-            BasicPageAbstract.body_interactive_chart_block,
         ],
         blank=True,
     )

@@ -184,7 +184,6 @@ class ArticlePage(
             BasicPageAbstract.body_accordion_block,
             BasicPageAbstract.body_autoplay_video_block,
             BasicPageAbstract.body_chart_block,
-            BasicPageAbstract.body_interactive_chart_block,
             BasicPageAbstract.body_embedded_tiktok_block,
             BasicPageAbstract.body_external_quote_block,
             BasicPageAbstract.body_external_video_block,

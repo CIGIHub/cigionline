@@ -81,4 +81,21 @@ class InteractiveChartBlockTests(SimpleTestCase):
         self.assertIn('class="interactive-chart"', html)
         self.assertIn('aria-labelledby=', html)
         self.assertIn('type="application/json"', html)
+        self.assertIn('View chart data', html)
         self.assertIn('<th scope="row">2024</th>', html)
+
+    def test_can_hide_chart_data_table(self):
+        value = self.block.to_python({
+            'title': 'Annual revenue',
+            'description': 'Revenue increased.',
+            'caption': '',
+            'chart_type': 'bar',
+            'csv_data': 'Year,Revenue\n2024,12',
+            'show_chart_data': False,
+            'full_width': False,
+        })
+
+        html = self.block.render(value)
+
+        self.assertNotIn('View chart data', html)
+        self.assertNotIn('<table>', html)
