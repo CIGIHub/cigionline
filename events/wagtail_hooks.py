@@ -422,6 +422,19 @@ class RegistrationReportViewSet(ViewSet):
             return redirect(request.get_full_path())
 
         q = (request.GET.get("q") or "").strip()
+        sort = (request.GET.get("sort") or "last_name").strip()
+        direction = (request.GET.get("dir") or "asc").strip().lower()
+        sort_map = {
+            "first_name": ("first_name", "last_name", "email"),
+            "last_name": ("last_name", "first_name", "email"),
+            "email": ("email", "last_name", "first_name"),
+            "registration_type": ("registration_type__name", "last_name", "first_name", "email"),
+        }
+        sort = sort if sort in sort_map else "last_name"
+        direction = "desc" if direction == "desc" else "asc"
+        prefix = "-" if direction == "desc" else ""
+        ordering = [f"{prefix}{field}" for field in (*sort_map[sort], "pk")]
+
         registrants = Registrant.objects.filter(event=event).select_related("registration_type")
         if q:
             registrants = registrants.filter(
@@ -430,7 +443,7 @@ class RegistrationReportViewSet(ViewSet):
                 | dj_models.Q(last_name__icontains=q)
             )
         page_obj = paginate_queryset(
-            registrants.order_by("last_name", "first_name", "email"),
+            registrants.order_by(*ordering),
             request=request,
             per_page=50,
         )
@@ -443,6 +456,8 @@ class RegistrationReportViewSet(ViewSet):
                 "event": event,
                 "page_obj": page_obj,
                 "q": q,
+                "sort": sort,
+                "dir": direction,
                 "can_change_registrant": request.user.has_perm("events.change_registrant"),
                 "detail_url_name": self.get_url_name("detail"),
             },

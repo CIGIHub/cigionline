@@ -402,15 +402,44 @@ class RegistrationAttendanceReportTests(TestCase):
     def test_report_lists_all_registration_types_and_searches(self):
         response = self.client.get(self.url)
 
-        self.assertContains(response, "Ada Lovelace")
+        self.assertContains(response, "Ada")
+        self.assertContains(response, "Lovelace")
         self.assertContains(response, "General")
-        self.assertContains(response, "Grace Hopper")
+        self.assertContains(response, "Grace")
+        self.assertContains(response, "Hopper")
         self.assertContains(response, "VIP")
         self.assertFalse(self.registrant.attended)
 
         response = self.client.get(self.url, {"q": "ada@example.com"})
-        self.assertContains(response, "Ada Lovelace")
-        self.assertNotContains(response, "Grace Hopper")
+        self.assertContains(response, "ada@example.com")
+        self.assertNotContains(response, "grace@example.com")
+
+    def test_report_sorts_registrants_by_selected_column(self):
+        from events.models import Registrant
+
+        Registrant.objects.create(
+            event=self.event,
+            registration_type=self.general,
+            first_name="Zoe",
+            last_name="Adams",
+            email="zoe@example.com",
+        )
+        expected_emails = {
+            "first_name": ["ada@example.com", "grace@example.com", "zoe@example.com"],
+            "last_name": ["zoe@example.com", "grace@example.com", "ada@example.com"],
+            "email": ["ada@example.com", "grace@example.com", "zoe@example.com"],
+            "registration_type": ["zoe@example.com", "ada@example.com", "grace@example.com"],
+        }
+
+        for sort, expected in expected_emails.items():
+            with self.subTest(sort=sort):
+                response = self.client.get(self.url, {"sort": sort, "dir": "asc"})
+                actual = [registrant.email for registrant in response.context["page_obj"]]
+                self.assertEqual(actual, expected)
+
+        response = self.client.get(self.url, {"sort": "email", "dir": "desc"})
+        actual = [registrant.email for registrant in response.context["page_obj"]]
+        self.assertEqual(actual, list(reversed(expected_emails["email"])))
 
     def test_attendance_can_be_toggled(self):
         response = self.client.post(
