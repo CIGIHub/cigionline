@@ -441,6 +441,17 @@ class RegistrationAttendanceReportTests(TestCase):
         actual = [registrant.email for registrant in response.context["page_obj"]]
         self.assertEqual(actual, list(reversed(expected_emails["email"])))
 
+    def test_report_filters_registrants_by_registration_type(self):
+        response = self.client.get(self.url, {"registration_type": self.general.pk})
+
+        self.assertContains(response, "ada@example.com")
+        self.assertNotContains(response, "grace@example.com")
+
+        response = self.client.get(self.url, {"registration_type": "invalid"})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "ada@example.com")
+        self.assertContains(response, "grace@example.com")
+
     def test_attendance_can_be_toggled(self):
         response = self.client.post(
             f"{self.url}?q=Ada",

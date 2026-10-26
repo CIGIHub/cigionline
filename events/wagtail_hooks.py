@@ -422,6 +422,10 @@ class RegistrationReportViewSet(ViewSet):
             return redirect(request.get_full_path())
 
         q = (request.GET.get("q") or "").strip()
+        registration_type_id = (request.GET.get("registration_type") or "").strip()
+        registration_types = list(event.registration_types.all())
+        if registration_type_id not in {str(rtype.pk) for rtype in registration_types}:
+            registration_type_id = ""
         sort = (request.GET.get("sort") or "last_name").strip()
         direction = (request.GET.get("dir") or "asc").strip().lower()
         sort_map = {
@@ -436,6 +440,8 @@ class RegistrationReportViewSet(ViewSet):
         ordering = [f"{prefix}{field}" for field in (*sort_map[sort], "pk")]
 
         registrants = Registrant.objects.filter(event=event).select_related("registration_type")
+        if registration_type_id:
+            registrants = registrants.filter(registration_type_id=registration_type_id)
         if q:
             registrants = registrants.filter(
                 dj_models.Q(email__icontains=q)
@@ -456,6 +462,8 @@ class RegistrationReportViewSet(ViewSet):
                 "event": event,
                 "page_obj": page_obj,
                 "q": q,
+                "registration_types": registration_types,
+                "registration_type_id": registration_type_id,
                 "sort": sort,
                 "dir": direction,
                 "can_change_registrant": request.user.has_perm("events.change_registrant"),
