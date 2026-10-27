@@ -1,0 +1,42 @@
+{% load wagtailcore_tags %}
+{% comment %}
+  Accordion Module — two-column: intro (heading + rich text + buttons) | items.
+  Native <details name="..."> for single-open behaviour; group_id from get_context.
+{% endcomment %}
+<div class="ds-surface ds-surface--{{ self.surface|default:'inherit' }}{% if self.accent %} ds-surface--accent-{{ self.accent }}{% endif %}">
+<div class="ds-container">
+  <div class="ds-accordion-module">
+    {% if self.heading or self.intro_text or self.buttons %}
+      <div class="ds-accordion-module__intro">
+        {% if self.heading %}<h2 class="ds-accordion-module__heading">{{ self.heading }}</h2>{% endif %}
+        {% if self.intro_text %}<div class="ds-accordion-module__intro-text">{{ self.intro_text|richtext }}</div>{% endif %}
+        {% if self.buttons %}
+          <div class="ds-accordion-module__buttons">
+            {% for button in self.buttons %}{% include_block button %}{% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="ds-accordion-module__items">
+      {% for item in self.items %}
+        <details class="ds-accordion-module__item" name="{{ group_id }}">
+          <summary class="ds-accordion-module__trigger" aria-expanded="false" aria-controls="{{ group_id }}-panel-{{ forloop.counter }}">
+            <span>{{ item.title }}</span>
+            <svg class="ds-accordion-module__chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+          </summary>
+          <div class="ds-accordion-module__panel" id="{{ group_id }}-panel-{{ forloop.counter }}">
+            {{ item.text|richtext }}
+            {% if item.buttons %}
+              {# Per-item button row (BugHerd #186). #}
+              <div class="ds-accordion-module__item-buttons">
+                {% for button in item.buttons %}{% include_block button %}{% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </details>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+</div>

@@ -1,31 +1,15 @@
 from __future__ import annotations
 
-import base64
 import html
-import mimetypes
-import os
 from typing import TYPE_CHECKING
 
 import pytz
 from django.conf import settings
 from django.template.loader import render_to_string
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import (
-    Attachment,
-    Disposition,
-    FileContent,
-    FileName,
-    FileType,
-    Mail,
-)
+from sendgrid.helpers.mail import Mail
 
 from .email_rendering import render_email_subject, render_streamfield_email_html
-from .forms import (
-    _answer_keys_for_template_field,
-    _split_condition_values,
-    _value_matches_condition,
-    is_non_answer_field_type,
-)
 
 if TYPE_CHECKING:
     from .models import Registrant
@@ -45,36 +29,6 @@ def _from_email() -> tuple[str, str]:
     address = settings.SENDGRID_FROM_EMAIL_EVENTS
     name = getattr(settings, "SENDGRID_FROM_NAME_EVENTS", "CIGI Events")
     return (address, name)
-
-
-def _attach_campaign_attachment(message: Mail, document) -> None:
-    if not document:
-        return
-
-    file_field = getattr(document, "file", None)
-    if not file_field:
-        return
-
-    file_field.open("rb")
-    try:
-        encoded_file = base64.b64encode(file_field.read()).decode()
-    finally:
-        file_field.close()
-
-    filename = (
-        getattr(document, "filename", None)
-        or os.path.basename(getattr(file_field, "name", ""))
-        or getattr(document, "title", "")
-        or "attachment"
-    )
-    content_type = mimetypes.guess_type(filename)[0] or "application/octet-stream"
-
-    message.attachment = Attachment(
-        FileContent(encoded_file),
-        FileName(filename),
-        FileType(content_type),
-        Disposition("attachment"),
-    )
 
 
 def _absolute_event_base(event) -> str:
@@ -297,8 +251,6 @@ def _render_registrant_answers(registrant) -> tuple[str, str]:
             tmpl = getattr(registrant.event, "registration_form_template", None)
             if tmpl:
                 for i, ff in enumerate(tmpl.fields.all().order_by("sort_order", "id"), start=1):
-                    if is_non_answer_field_type(getattr(ff, "field_type", "")):
-                        continue
                     # Stored answer keys look like: f_<uuid>
                     order_map[f"f_{ff.field_key}"] = i
         except Exception:
@@ -325,28 +277,9 @@ def _render_registrant_answers(registrant) -> tuple[str, str]:
 
         return sorted(keys, key=_sort_key)
 
-    hidden_answer_keys: set[str] = set()
-    try:
-        tmpl = getattr(registrant.event, "registration_form_template", None)
-        if tmpl:
-            for ff in tmpl.fields.select_related("conditional_parent").all():
-                trigger_values = _split_condition_values(getattr(ff, "conditional_parent_values", ""))
-                parent = getattr(ff, "conditional_parent", None)
-                if not parent or not trigger_values:
-                    continue
-
-                parent_key = _answer_keys_for_template_field(parent)[0]
-                if not _value_matches_condition(answers.get(parent_key), trigger_values):
-                    hidden_answer_keys.update(_answer_keys_for_template_field(ff))
-    except Exception:
-        hidden_answer_keys = set()
-
     # Drop internal keys + empties; resolve labels + format values.
     items: list[tuple[str, str]] = []
     for k in _sorted_answer_keys():
-        if str(k) in hidden_answer_keys:
-            continue
-
         v = answers.get(k)
         if _is_internal_key(str(k)):
             continue
@@ -433,7 +366,7 @@ def send_event_campaign_email(campaign, registrant) -> None:
     Creates an EmailCampaignSend row to ensure idempotency.
     """
 
-    from .models import EmailCampaignSend, Registrant
+    from .models import EmailCampaignSend
 
     api_key = settings.SENDGRID_API_KEY
 
@@ -480,7 +413,6 @@ def send_event_campaign_email(campaign, registrant) -> None:
         plain_text_content=text,
         html_content=html,
     )
-    _attach_campaign_attachment(message, campaign.attachment)
 
     sg = SendGridAPIClient(api_key)
     try:
@@ -1036,10 +968,24 @@ def send_group_duplicate_manage_email(group) -> None:
     base = _absolute_event_base(event)
     manage_url = f"{base}register/manage/group/?gid={group.pk}&t={raw_token}"
 
+    # The shared body template names the registrant in its header
+    # (`registrant.first_name|default:registrant.email` · type). A missing
+    # `registrant` raises inside that filter argument, so this email never
+    # sent for a re-registering group. Represent the group by its primary
+    # (first, non-cancelled) member, as the group confirmation email does.
+    representative = (
+        group.registrants.exclude(status=group.registrants.model.Status.CANCELLED)
+        .order_by("pk")
+        .first()
+        or group.registrants.order_by("pk").first()
+    )
+
     ctx = {
         "event": event,
         "manage_url": manage_url,
         "group": group,
+        "registrant": representative,
+        "registration_type": group.registration_type,
     }
     ctx.update(_event_email_merge_vars(event))
 

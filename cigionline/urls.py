@@ -12,7 +12,6 @@ from robots import views as robots_views
 from search import views as search_views
 from events import views as events_views
 from articles import views as article_views
-from publications import views as publications_views
 from annual_reports import views as annual_report_views
 from subscribe.views import (
     subscribe_digital_finance,
@@ -37,6 +36,12 @@ urlpatterns = urlpatterns + [
     path('api/annual-report/<int:page_id>/slides/', annual_report_views.get_ordered_slides_annual_report, name='ordered_slides_api'),
     path('api/strategic_plan/<int:page_id>/slides/', annual_report_views.get_ordered_slides_strategic_plan, name='ordered_slides_api'),
     path('oauth/callback/', core_views.oauth_callback, name='auth0_callback'),
+    path('venue-rental-inquiry/', core_views.venue_rental_inquiry, name='venue_rental_inquiry'),
+    path('general-inquiry/', core_views.general_inquiry, name='general_inquiry'),
+    path('csrf/', core_views.csrf_token, name='csrf_token'),
+    path('ds-test-pages/', core_views.ds_test_pages, name='ds_test_pages'),
+    path('ds-test-pages/cards/', core_views.ds_cards_preview, name='ds_cards_preview'),
+    path('ds-test-pages/heroes/', core_views.ds_heroes_preview, name='ds_heroes_preview'),
     re_path(r'^documents/', include(wagtaildocs_urls)),
     re_path(r'^search/$', search_views.search, name='search'),
     re_path(r'^api/experts/$', people_views.all_experts),
@@ -58,7 +63,6 @@ urlpatterns = urlpatterns + [
     re_path(r'^api/years/$', core_views.years),
     re_path(r'^api/article_series_article_pages/$', article_views.get_article_series_article_pages),
     re_path(r'^api/document_uploads/download/', DocumentZipAPIView.as_view(), name='document_zip_api'),
-    re_path(r'^api/topic_updates_verification/', research_views.topic_updates_verification),
     re_path(r'^subscribe_dph$', subscribe_dph, name='subscribe_dph'),
     re_path(r'^subscribe_think7$', subscribe_think7, name='subscribe_think7'),
     re_path(r'^subscribe_digital_finance$', subscribe_digital_finance, name='subscribe_digital_finance'),
@@ -76,16 +80,6 @@ urlpatterns = urlpatterns + [
     re_path(r'^favicon\.ico$', favicon_view),
     re_path(r'^robots\.txt$', robots_views.RobotsView.as_view(), name='robots'),
     re_path(r'^sitemap\.xml$', sitemap),
-    re_path(
-        r'^api/fellows-latest-output$',
-        people_views.fellows_latest_output,
-        name="fellows_latest_output",
-    ),
-    re_path(
-        r'^api/publications-by-type$',
-        publications_views.publications_by_type,
-        name="publications_by_type",
-    ),
 ]
 
 
@@ -93,8 +87,14 @@ if settings.DEBUG:  # pragma: no cover
     from django.conf.urls.static import static
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-    # Serve static and media files from development server
+    # Serve static and media files from development server. Media is served
+    # pull-through: files missing locally are fetched from the staging bucket
+    # on first request (core/dev_storage.py).
+    from core.dev_storage import serve_media_pull_through
     urlpatterns += staticfiles_urlpatterns()
+    urlpatterns += [
+        re_path(r'^staticmedia/(?P<path>.+)$', serve_media_pull_through),
+    ]
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
     import debug_toolbar

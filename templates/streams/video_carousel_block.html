@@ -1,0 +1,58 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+{% comment %}
+  Video Carousel — section title over a 3-up card carousel of click-to-load
+  video facades. Shared carousel ([data-ds-carousel]) + pagination + carousel-nav
+  + video-facade.js. Each card: facade (poster + play) + topic tag + title + desc.
+{% endcomment %}
+<div class="ds-video-carousel">
+  {% if self.heading or self.intro_text %}
+    <div class="ds-video-carousel__title ds-container">
+      {% if self.heading %}<h2 class="ds-video-carousel__heading">{{ self.heading }}</h2>{% endif %}
+      {% if self.intro_text %}<div class="ds-video-carousel__intro">{{ self.intro_text|richtext }}</div>{% endif %}
+    </div>
+  {% endif %}
+
+  {% comment %}Rail is full-bleed (edge to edge); title + controls keep the gutter. Peek → 3 full + 2 partial slides bleeding off the sides.{% endcomment %}
+  <div class="ds-carousel" data-ds-carousel data-ds-carousel-peek
+    data-ds-loop="{{ self.loop|yesno:'1,0' }}"
+    data-ds-autoplay="{{ self.autoplay|yesno:'1,0' }}"
+    data-ds-autoplay-delay="{{ self.autoplay_speed|default:5 }}"
+    data-ds-pagination="{{ self.show_pagination|yesno:'1,0' }}">
+    <div class="swiper ds-carousel__swiper">
+      <div class="swiper-wrapper">
+        {% for item in self.items %}
+          <div class="swiper-slide ds-video-carousel__card">
+            <div
+              class="ds-video ds-video-carousel__video"
+              data-ds-video
+              {% if item.video_file %}data-ds-video-file="{{ item.video_file.file.url }}"{% elif item.video_url %}data-ds-video-url="{{ item.video_url }}"{% endif %}
+              data-ds-video-title="{{ item.title|default:'Video' }}"
+            >
+              {% image item.poster_image width-800 class="ds-video__poster" %}
+              <span class="ds-video__overlay" aria-hidden="true"></span>
+              <button class="ds-video__play" data-ds-video-play type="button" aria-label="Play video">
+                <svg class="ds-video__play-icon" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+                  <circle cx="32" cy="32" r="32" fill="currentColor" />
+                  <path d="M26 21l18 11-18 11z" fill="#000" />
+                </svg>
+              </button>
+            </div>
+
+            <div class="ds-video-carousel__body">
+              {% include "includes/tag.html" with label=item.tag accent=item.accent %}
+              <h3 class="ds-video-carousel__card-title">{{ item.title }}</h3>
+              {% if item.description %}
+                <div class="ds-video-carousel__card-desc">{{ item.description|richtext }}</div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="ds-carousel__controls ds-container">
+      <div class="swiper-pagination ds-pagination"></div>
+      {% include "includes/carousel_nav.html" with prefix="carousel" autoplay=self.autoplay %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,879 @@
+// =============================================================================
+// Design System — Reading body ("Blog Post")
+// The shared single-page content area used by every CPT single (article,
+// publication, event, podcast, news): a light-grey-ruled container holding the
+// main prose column, a vertical divider, and the aside rail (About the
+// Author(s)). `.ds-prose` styles the legacy body StreamField output to the
+// Blog Post spec and neutralizes the Bootstrap grid the legacy block templates
+// wrap themselves in.
+// =============================================================================
+
+// Podcast section-heading treatment: series brand
+// accent + a thick rule ABOVE exactly as long as the heading text (the
+// heading hugs its content; the rule spans it). Replaces the article's
+// full-width hairline wherever the podcast shell shows a section heading.
+@mixin brand-section-heading {
+  color: var(--brand-accent, var(--accent));
+  width: fit-content;
+  border-top: 0;
+  padding-top: 0;
+
+  &::before {
+    content: '';
+    display: block;
+    width: 100%;
+    height: var(--border-rule);
+    background: var(--brand-accent, var(--accent));
+    margin-bottom: var(--space-16);
+  }
+}
+
+// Reading progress — thin brand-red line fixed to the top of the viewport,
+// scaleX-driven by reading-progress.js as the reader moves through the article
+// (guide: Publication + Long-form Reading). Sits above the sticky header.
+.ds-reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  z-index: 300;
+  background: var(--color-brand-red);
+  transform: scaleX(0);
+  transform-origin: left;
+  pointer-events: none;
+}
+
+// A reading section that opens the page sits flush under the hero, where its
+// divider reads as an underline ON the hero (BugHerd #160). Suppressed only in
+// that position — reading sections following other modules keep the divider.
+.ds-hero + .ds-surface > .ds-reading,
+.ds-hero + .ds-reading {
+  border-top: 0;
+}
+
+.ds-reading {
+  border-top: var(--border-divider) solid var(--color-brand-light-grey);
+  // Section rhythm token, not a literal 80: it narrows to 40px on mobile with
+  // every other module (BugHerd #151 reopen — the reading shell held 80 while
+  // its neighbours dropped, so top/bottom spacing read uneven).
+  padding-block: var(--space-section-y);
+  // Top half of the hero → content gap (Tia, BugHerd #501) — see the matching
+  // .ds-hero--content rule. The bottom keeps the section rhythm.
+  padding-top: var(--space-40);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-24);
+
+  &__main {
+    // 845 is the design-width basis (1440 frame); on wider viewports the
+    // content column grows so the layout spans gutter to gutter, matching
+    // the hero's margins at every width.
+    flex: 1 1 var(--width-845);
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-48);
+  }
+
+  &__divider {
+    align-self: stretch;
+    width: var(--border-divider);
+    flex-shrink: 0;
+    background: var(--surface-border);
+  }
+
+  &__aside {
+    // Fixed rail at its design measure; the main column absorbs extra width.
+    flex: 0 1 var(--width-394);
+    min-width: 0;
+    // Design annotation: the author rail stays in view while the article
+    // scrolls. Offset by the pinned header row so it doesn't slide under it.
+    // Every author shows — no inner scroll box (Tia/Juode, BugHerd #523): the
+    // #460 capped box hid rows past the fold with no cue they were there.
+    // #460's ask still holds — a rail taller than the screen must not wait
+    // for the end of the article — so its top goes negative: it scrolls with
+    // the page until its last row is in view, then pins by its bottom edge
+    // (bottom inset matches the top one). --ds-rail-h is the rail's height,
+    // published by reading-rail.js; without it the second term loses and the
+    // rail pins under the header as before.
+    position: sticky;
+    top: min(
+      calc(var(--ds-header-pinned-height, 0px) + var(--space-24)),
+      calc(100vh - var(--ds-rail-h, 0px) - var(--space-24))
+    );
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-48);
+  }
+
+  // --- Aside: About the Author(s) rail --------------------------------------
+  &__aside-heading {
+    @include header-5;
+    color: var(--surface-text);
+    margin: 0;
+    padding-bottom: var(--space-16);
+    border-bottom: var(--border-divider) solid var(--surface-border);
+  }
+
+  // Aside person rows (frame 1360:67753): EVERY row carries its own top rule
+  // + 24px padding — including the first under the group heading — with the
+  // group's 48px gap between them. (The old first-row-on-the-heading-rule
+  // collapse made the first gap read tighter than the rest.)
+  &__author {
+    border-top: var(--border-divider) solid var(--surface-border);
+    padding-top: var(--space-24);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+  }
+
+  // Collapsible aside group (<details>): the heading sits in <summary>. The
+  // 48px rhythm uses child margins, NOT flex gap — display:flex (and so gap)
+  // is ignored on <details>, which silently collapsed the spacing.
+  // Every boundary shows exactly ONE rule (frame 1360:67753): the optional
+  // intro sits between the heading's rule and the first row's rule; without
+  // an intro the first row sits directly on the heading's own rule.
+  &__aside-group {
+    > :not(summary) { margin-top: var(--space-48); }
+
+    // In a collapse group the heading shares its row with the chevron — the
+    // rule moves to the summary so it spans the full rail width (1360:67753),
+    // not just the heading text. (The bare heading keeps its own rule for
+    // non-collapsible rails, e.g. the person page's Connect/Downloads.)
+    > summary {
+      padding-bottom: var(--space-16);
+      border-bottom: var(--border-divider) solid var(--surface-border);
+
+      .ds-reading__aside-heading {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+    }
+
+    > .ds-reading__aside-intro { margin-top: var(--space-24); }
+
+    > summary + .ds-reading__author {
+      border-top: 0;
+      padding-top: 0;
+      margin-top: var(--space-24);
+    }
+
+    // Open, the rule reads as the group's bottom edge below the content —
+    // not an underline stuck under the title (BugHerd #153). Closed, the
+    // summary keeps it as the collapsed divider.
+    &[open] {
+      border-bottom: var(--border-divider) solid var(--surface-border);
+      padding-bottom: var(--space-24);
+
+      > summary { border-bottom: 0; }
+    }
+  }
+
+  // Optional short intro under the group heading (podcast rail).
+  &__aside-intro {
+    @include paragraph-2;
+    color: var(--surface-text);
+
+    p { margin: 0; }
+  }
+
+  // Podcast "Experts / Hosts" rail (1360:69160): accent heading with no rule
+  // (the first rule sits after the intro), intro sits 24 under the heading,
+  // and each expert-card row hangs 48 below its rule.
+  &__aside-group--expert {
+    .ds-reading__aside-intro { margin-top: var(--space-24); }
+
+    // No rule under the heading row here — the first rule sits after the intro.
+    > summary {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .ds-reading__aside-heading {
+      color: var(--brand-accent, var(--accent));
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .ds-reading__author { padding-top: var(--space-48); }
+
+    // The accent heading carries no rule here, so the first card keeps its
+    // own even with no intro between (else nothing separates them).
+    > summary + .ds-reading__author {
+      border-top: var(--border-divider) solid var(--surface-border);
+      padding-top: var(--space-48);
+      margin-top: var(--space-48);
+    }
+  }
+
+  // Long groups (Robert, BugHerd #523 revision): 5+ people show the first 3
+  // and fold the rest behind a "Show N more" toggle (split_aside_rows in
+  // core_tags; wired by reading-rail.js). The folded state keys on html.js —
+  // base.html swaps no-js → js before first paint — so it renders without a
+  // flash of every row. With no JS every row shows and the toggle stays hidden.
+  // The folded rows sit in a wrapper, so it restates the group's 48px row
+  // rhythm (the group's margins only reach its direct children).
+  &__aside-more {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-48);
+
+    html.js &:not([data-ds-open]) { display: none; }
+  }
+
+  &__aside-group > &__aside-toggle {
+    display: none;
+    position: relative; // anchors the focus ring below
+    margin-top: var(--space-24);
+
+    html.js & { display: inline-flex; }
+
+    // Same surface-aware ring as the group's <summary> above it (#376) — the
+    // tertiary underline alone is a thin focus cue. Drawn on ::after because
+    // the legacy bundle's `button:focus { outline: none !important }` strips
+    // it from the button itself (program-spotlight tiles do the same).
+    &:focus-visible::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      outline: 2px solid var(--surface-text, var(--color-text-black-white));
+      outline-offset: 2px;
+      pointer-events: none;
+    }
+
+    .ds-button__icon {
+      transform: rotate(90deg); // points down while folded
+      @include transition(transform var(--motion-duration-micro) var(--motion-ease-standard));
+    }
+
+    &[aria-expanded='true'] .ds-button__icon { transform: rotate(-90deg); }
+  }
+
+  // Print lists everyone, folded or not, and drops the toggle (audit F5).
+  @media print {
+    html.js &__aside-more:not([data-ds-open]) { display: flex; }
+    html.js &__aside-group > &__aside-toggle { display: none; }
+  }
+
+  &__author-head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-16);
+  }
+
+  &__author-meta {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  &__author-name {
+    @include header-5;
+    color: var(--surface-text);
+    text-decoration: none;
+    @include hover-underline;
+  }
+
+  &__author-title {
+    @include paragraph-1;
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  &__author-avatar {
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  &__author-bio {
+    @include paragraph-2;
+    color: var(--surface-text);
+
+    p { margin: 0; }
+    p + p { margin-top: var(--space-16); }
+  }
+
+  @media (max-width: 992px) {
+    flex-direction: column;
+
+    &__divider { display: none; }
+    &__main,
+    &__aside { flex: 1 1 auto; width: 100%; }
+    // Stacked: the rail sits in flow under the body, so it doesn't stick.
+    &__aside { position: static; }
+  }
+}
+
+// --- Prose: the body StreamField styled to the Blog Post spec ----------------
+// Prose run on a DS page shell (program pages): the reading measure without
+// the author rail. No section divider, and the main column stays at its
+// design basis instead of absorbing the rail's width.
+.ds-reading--section {
+  border-top: 0;
+
+  .ds-reading__main { flex-grow: 0; }
+}
+
+.ds-prose {
+  // Neutralize the Bootstrap grid the legacy block templates self-wrap in —
+  // inside the reading column the DS measure is the column itself.
+  .container {
+    max-width: none;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .row { display: block; margin: 0; }
+
+  // Bootstrap column classes only — token-precise. The old [class*='col']
+  // substring match also caught DS classes containing "col" (ds-text-columns__*,
+  // ds-collapse) and flattened the Text Columns module inside article bodies.
+  [class~='col'],
+  [class^='col-'],
+  [class*=' col-'] {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+    margin: 0;
+    flex: none;
+  }
+
+  // Blocks are spaced by the prose rhythm, not per-block section margins.
+  > * + *,
+  .container + .container { margin-top: var(--space-32); }
+
+  // A collapsible section opens on the 48px section rhythm its heading used to
+  // carry itself (that margin now sits on the summary's rule — BugHerd #206).
+  > .ds-prose__collapse + .ds-prose__collapse,
+  > * + .ds-prose__collapse { margin-top: var(--space-48); }
+
+  // Element-generic rules below style the reading content and the legacy
+  // block output — NOT the DS section modules an author can drop into the
+  // body stream (reading_body wraps those in .ds-prose__module). The
+  // :where() guard excludes module internals at zero extra specificity, so
+  // a module heading keeps its Futura sizing and a card title isn't
+  // underlined (staging module pass, 2026-07-14).
+  $module-guard: ':where(:not(.ds-prose__module *))';
+
+  p#{$module-guard} {
+    @include paragraph-2;
+    color: var(--surface-text);
+    margin: 0 0 var(--space-32);
+
+    &:last-child { margin-bottom: 0; }
+  }
+
+  // In-prose links read red with no underline, like the current site (Tim,
+  // BugHerd #322); the underline appears on hover as the state change Yang
+  // asked for (BugHerd #300).
+  a#{$module-guard} {
+    color: var(--accent-ui);
+    text-decoration: none;
+    text-underline-offset: 2px;
+    overflow-wrap: anywhere; // long unbroken URLs (citations) must not overflow
+
+    &:hover,
+    &:focus-visible { text-decoration: underline; }
+  }
+
+  // Footnote superscript links: red, no underline (Kay, BugHerd #266) — the
+  // underline under a lone superscript digit read as a stray mark. That
+  // holds on hover too, against the in-prose hover underline above (#300).
+  a:has(> sup)#{$module-guard} {
+    color: var(--accent-ui);
+
+    &, &:hover, &:focus-visible { text-decoration: none; }
+  }
+
+  // Section headings carry the 1px grey top rule (the section-separator motif).
+  h2#{$module-guard}, h3#{$module-guard}, h4#{$module-guard} {
+    color: var(--surface-text);
+    margin: var(--space-48) 0 var(--space-32);
+    padding-top: var(--space-24);
+    border-top: var(--border-divider) solid var(--surface-border);
+
+    &:first-child { margin-top: 0; }
+  }
+
+  h2#{$module-guard} { @include header-3; }
+  h3#{$module-guard} { @include header-4; }
+  h4#{$module-guard} { @include header-5; }
+
+  ul#{$module-guard}, ol#{$module-guard} {
+    @include paragraph-2;
+    color: var(--surface-text);
+    margin: 0 0 var(--space-32);
+    padding-left: var(--space-24);
+
+    li + li { margin-top: var(--space-8); }
+  }
+
+  // --- Image / video figures (legacy .stream-image-block etc.) --------------
+  figure#{$module-guard} {
+    margin: 0;
+
+    // width:auto + max-width overrides the global `img { width: 100% }`: an
+    // image displays at its own resolution, capped to the column — so a small
+    // source (e.g. a 400px figure) isn't upscaled to fill the measure; only
+    // images at least column-wide render full width.
+    img { width: auto; max-width: 100%; height: auto; display: block; }
+  }
+
+  figcaption#{$module-guard} {
+    @include paragraph-3;
+    color: var(--surface-text);
+    text-align: left;
+    border-left: var(--border-rule-banner) solid var(--surface-text);
+    padding-left: var(--space-16);
+    margin-top: var(--space-16);
+  }
+
+  // --- Podcast prose headings (Podcast Template) -----------------
+  // On the podcast surface, section headings (Mentioned / Further Reading /
+  // Credits / Transcript…) take the series brand accent and the SHORT thick
+  // rule above (module-title motif) instead of the full-width hairline.
+  // --brand-accent is set on <main> from MultimediaSeriesPage.brand_colour.
+  .ds-surface--pink & {
+    h2:where(:not(.ds-prose__module *)),
+    h3:where(:not(.ds-prose__module *)),
+    h4:where(:not(.ds-prose__module *)) {
+      @include brand-section-heading;
+    }
+  }
+
+  // --- Quotes (legacy block_quote + pull_quote_* blocks) --------------------
+  .stream-block-blockquote,
+  .stream-block-pull-quote {
+    // No red top rule — "Remove red from quotes" (Tia, BugHerd #428; Figma
+    // discrepancy John flagged). The quotation-mark glyph carries the motif.
+    padding: var(--space-32) 0 var(--space-24);
+    // Large quotation-mark glyph (frame 1360:67540), applied via mask so it
+    // takes the surface text colour.
+    --ds-quote-mask: url("data:image/svg+xml;charset=utf-8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 62 44.6211%22><path fill=%22black%22 d=%22M13.6708 21.2161C17.5217 21.2161 20.6667 22.3386 23.1056 24.5837C25.6729 26.7165 26.9565 29.4668 26.9565 32.8344C26.9565 36.0898 25.6729 38.8961 23.1056 41.2535C20.6667 43.4986 17.5217 44.6211 13.6708 44.6211C9.94824 44.6211 6.73913 43.4986 4.04348 41.2535C1.34783 38.8961 0 36.0898 0 32.8344C0 29.4668 1.34783 26.7165 4.04348 24.5837C6.73913 22.3386 9.94824 21.2161 13.6708 21.2161ZM27.3416 5.72497C25.4161 8.30682 23.7474 10.5519 22.3354 12.4602C20.9234 14.3686 19.7681 16.2208 18.8696 18.0168C18.0994 19.7006 17.5217 21.609 17.1366 23.7418C16.7516 25.7624 16.559 28.232 16.559 31.1506L0 32.8344C0 28.681 0.706005 24.8643 2.11801 21.3845C3.53002 17.7923 5.3913 14.2563 7.70186 10.7764C10.0124 7.29653 12.5797 3.70439 15.4037 0L27.3416 5.72497ZM48.3292 21.2161C52.1801 21.2161 55.3251 22.3386 57.764 24.5837C60.3313 26.7165 61.6149 29.4668 61.6149 32.8344C61.6149 36.0898 60.3313 38.8961 57.764 41.2535C55.3251 43.4986 52.1801 44.6211 48.3292 44.6211C44.6066 44.6211 41.3975 43.4986 38.7019 41.2535C36.0062 38.8961 34.6584 36.0898 34.6584 32.8344C34.6584 29.4668 36.0062 26.7165 38.7019 24.5837C41.3975 22.3386 44.6066 21.2161 48.3292 21.2161ZM62 5.72497C60.0745 8.30682 58.4058 10.5519 56.9938 12.4602C55.5818 14.3686 54.4265 16.2208 53.528 18.0168C52.7578 19.7006 52.1801 21.609 51.795 23.7418C51.4099 25.7624 51.2174 28.232 51.2174 31.1506L34.6584 32.8344C34.6584 28.681 35.3644 24.8643 36.7764 21.3845C38.1884 17.7923 40.0497 14.2563 42.3602 10.7764C44.6708 7.29653 47.2381 3.70439 50.0621 0L62 5.72497Z%22/></svg>");
+
+    // The legacy stylesheet still loads globally; strip its inner-quote
+    // chrome — the short 5em red bar (::before) and the 2em indent. Grid
+    // re-adds the DS glyph: the large quotation mark (62×44.6, currentColor
+    // via mask) sits left of the quote column at a 48px gutter.
+    .stream-block-blockquote-content {
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 62px 1fr;
+      column-gap: var(--space-48);
+
+      &::before {
+        content: '';
+        // The legacy sheet draws its short red bar as a 5px border-bottom on
+        // this same ::before; masked into the glyph it bled red inside the
+        // quotation marks (Tia, BugHerd #428). Clear it.
+        border: 0;
+        grid-column: 1;
+        grid-row: 1;
+        width: 62px;
+        height: 45px;
+        background: var(--surface-text, var(--color-brand-black));
+        mask: var(--ds-quote-mask) no-repeat center / contain;
+      }
+
+      > * { grid-column: 2; }
+    }
+
+    // Pull-quote variants have no -content wrapper; the blockquote itself
+    // hosts the same glyph + column grid.
+    &.stream-block-pull-quote > blockquote {
+      display: grid;
+      grid-template-columns: 62px 1fr;
+      column-gap: var(--space-48);
+
+      &::before {
+        content: '';
+        // The legacy sheet draws its short red bar as a 5px border-bottom on
+        // this same ::before; masked into the glyph it bled red inside the
+        // quotation marks (Tia, BugHerd #428). Clear it.
+        border: 0;
+        grid-column: 1;
+        grid-row: 1;
+        width: 62px;
+        height: 45px;
+        background: var(--surface-text, var(--color-brand-black));
+        mask: var(--ds-quote-mask) no-repeat center / contain;
+      }
+
+      > * { grid-column: 2; }
+    }
+
+    // Mobile: the glyph scales down so the text column keeps its measure.
+    @media (max-width: 768px) {
+      .stream-block-blockquote-content,
+      &.stream-block-pull-quote > blockquote {
+        grid-template-columns: 40px 1fr;
+        column-gap: var(--space-24);
+
+        &::before { width: 40px; height: 29px; }
+      }
+    }
+
+    blockquote {
+      @include header-4;
+      color: var(--surface-text);
+      margin: 0;
+    }
+
+    .stream-block-blockquote-author,
+    .stream-block-pull-quote-author {
+      @include eyebrow;
+      text-transform: uppercase;
+      color: var(--surface-text);
+      margin-top: var(--space-16);
+    }
+
+    .stream-block-pull-quote-author-title {
+      @include paragraph-3;
+      color: var(--surface-text);
+    }
+  }
+
+  // The legacy left/right floating pull-quote variants read as full-width
+  // quotes in the new single-column measure.
+  .stream-block-pull-quote {
+    &.left, &.right { float: none; width: 100%; }
+  }
+
+  // --- In-prose media & block-tail treatments (Blog Post figure spec) -------
+  iframe { max-width: 100%; }
+
+  // `& &__…` (0,2,0) so the margin BEATS the generic `figure:where(…)`
+  // reset above (0,1,1) — the plain class selector lost to it and the
+  // authored margin never applied (John, BugHerd #328, round 2).
+  & &__chart,
+  & &__media {
+    // Symmetric 32 — a media block right after a heading had no top gap
+    // (John, BugHerd #328); adjacent paragraph margins collapse, so the
+    // paragraph gap stays 32.
+    margin: var(--space-32) 0;
+
+    iframe, video { width: 100%; display: block; border: 0; }
+  }
+
+  // In-prose video embeds — the oEmbed iframe hardcodes a fixed height, so a
+  // full-width player squashes (BugHerd #269); force 16:9 on video hosts only
+  // (an audio embed, e.g. SoundCloud, must keep its own height).
+  &__media {
+    iframe[src*='youtube.com'],
+    iframe[src*='youtube-nocookie.com'],
+    iframe[src*='vimeo.com'],
+    video {
+      aspect-ratio: 16 / 9;
+      height: auto;
+    }
+  }
+
+  &__chart-title {
+    @include paragraph-2;
+    font-weight: 600;
+    color: var(--surface-text);
+    margin: 0 0 var(--space-16);
+  }
+
+  &__media figcaption a {
+    color: inherit;
+  }
+
+  // Tweets keep the embed's natural card width, centered in the measure.
+  &__tweet {
+    display: flex;
+    justify-content: center;
+    margin: 0 0 var(--space-32);
+  }
+
+  // Bordered callout (text_border blocks) — surface border, token spacing.
+  &__callout {
+    border: var(--border-divider) solid var(--surface-border);
+    padding: var(--space-24);
+    margin: 0 0 var(--space-32);
+
+    > :last-child { margin-bottom: 0; }
+  }
+
+  // --- Batch B generic treatments (small legacy block types) ----------------
+  // Extract: excerpt from a work — inset with the figcaption-style left rule.
+  &__extract {
+    border-left: var(--border-rule-banner) solid var(--surface-text);
+    padding-left: var(--space-24);
+    margin: 0 0 var(--space-32);
+    font-style: italic;
+  }
+
+  // Tooltip fallback source line + generic callout attribution.
+  &__callout-source {
+    @include paragraph-3;
+    margin: var(--space-16) 0 0;
+    font-weight: 600;
+  }
+
+  // External-video link list.
+  &__video-list {
+    list-style: none;
+    margin: 0 0 var(--space-32);
+    padding: 0;
+
+    li + li { margin-top: var(--space-8); }
+  }
+
+  // Tables (table_v2 renders Wagtail's default table markup).
+  table#{$module-guard} {
+    @include paragraph-3;
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 var(--space-32);
+
+    th, td {
+      border: var(--border-divider) solid var(--surface-border);
+      padding: var(--space-8) var(--space-12);
+      text-align: left;
+    }
+
+    th { font-family: var(--font-heading); font-weight: 500; }
+  }
+
+  // Collapsible prose section (Education, Past Roles…). Its heading shares the
+  // row with the chevron, so the heading's own rule stopped 58px short of the
+  // column edge — "this is running short… always to the width of the margins"
+  // (Kay, BugHerd #206). The rule moves to the <summary> so it spans the whole
+  // column, the same correction the aside groups took in #153.
+  &__collapse > summary {
+    padding-top: var(--space-24);
+    border-top: var(--border-divider) solid var(--surface-border);
+  }
+
+  &__collapse > summary > :is(h2, h3, h4) {
+    border-top: 0;
+    padding-top: 0;
+    margin-top: 0;
+  }
+
+  // Highlighted section title — mark treatment in the brand accent.
+  &__highlight-title span {
+    background: var(--color-brand-red);
+    color: var(--color-brand-white);
+    padding: 0 var(--space-8);
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+}
+
+// --- Optional main-column sections -------------------------------------------
+// Short italic note above the body (e.g. the publication disclaimer).
+.ds-reading__note {
+  @include paragraph-2;
+  color: var(--surface-text);
+  margin: 0;
+}
+
+// Event page: past-event video above the shell; agenda section below it.
+.ds-event-embed { margin-block: var(--space-48) 0; }
+.ds-event-agenda { padding-block: 0 var(--space-48); }
+
+// Multimedia single: chapters / transcript / companion-essay sections below
+// the shell. Chapter rows echo the footnote treatment (red numeral).
+.ds-mm-section { padding-block: 0 var(--space-48); }
+
+.ds-prose .chapter {
+  display: flex;
+  gap: var(--space-16);
+  align-items: baseline;
+  padding-block: var(--space-8);
+
+  > span {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    color: var(--color-brand-red);
+  }
+
+  .chapter-time { color: var(--surface-text); text-decoration: underline; flex-shrink: 0; }
+  .chapter-title p { margin: 0; }
+}
+
+// In-flow embed (e.g. the Issuu in-page PDF viewer) — fill the column.
+.ds-reading__embed {
+  iframe, embed, object, video {
+    width: 100%;
+    display: block;
+    border: 0;
+  }
+}
+
+// Video embed (e.g. the book trailer) — Wagtail's YouTube embed hardcodes a
+// fixed iframe height; force 16:9 so the full-width player keeps its ratio.
+.ds-reading__embed--video {
+  iframe, embed, object, video { aspect-ratio: 16 / 9; height: auto; }
+}
+
+// Lead embed — the video single's player, above the prose (1437:71269).
+// Wagtail's YouTube embed hardcodes a fixed iframe height; force 16:9 so the
+// full-width player keeps its ratio. Spaced from the prose that follows.
+.ds-reading__embed--lead {
+  margin-bottom: var(--space-32);
+
+  iframe, embed, object, video { aspect-ratio: 16 / 9; height: auto; }
+}
+
+// Reading shell with no aside rail: hold the main column at the width it takes
+// WITH a rail. First for the person single ("text in bio shouldnt span edge to
+// edge" — Juode, BugHerd #223), then every content page with no author — the
+// full-gutter body was hard to read, and Kay asked for "the same width as the
+// main content with an author (842 px)" (BugHerd #329).
+//
+// Rather than cap it at a measure of its own, a pseudo-element stands in for
+// the missing rail: as a flex item it reserves the rail measure plus the
+// divider and its gap, so the main column resolves through the same flex maths
+// either way (Evan). Desktop only; the shell stacks at 992px. The --section
+// and --video variants keep their own no-rail measures.
+@media (min-width: 993px) {
+  .ds-reading:not(.ds-reading--section):not(.ds-reading--video):not(:has(.ds-reading__aside))::after {
+    content: '';
+    // The rail's own basis, so shrink weights match to the pixel. The divider
+    // and its second gap ride along as a fixed margin, because flex shrink is
+    // weighted by basis: folding them into the basis made the bio 5px wider
+    // than the rail case at 1024.
+    flex: 0 1 var(--width-394);
+    min-width: 0;
+    margin-left: calc(var(--border-divider) + var(--space-24));
+  }
+}
+
+// Video single (Multimedia Template 1437:71519): with no author aside, the
+// player + body sit in a centred column at the design's 818/1280 measure (of
+// the container at the 1440 frame). When an aside renders, the standard
+// main+aside split applies instead. Desktop only — the shell stacks ≤992px.
+@media (min-width: 993px) {
+  .ds-reading--video:not(:has(.ds-reading__aside)) .ds-reading__main {
+    max-width: calc(818 / 1280 * 100%);
+    margin-inline: auto;
+  }
+}
+
+// "About the Work / Part of the [Series]".
+.ds-reading__series {
+  &-heading {
+    @include header-3;
+    color: var(--surface-text);
+    margin: 0 0 var(--space-32);
+    padding-top: var(--space-24);
+    border-top: var(--border-divider) solid var(--surface-border);
+
+    // Podcast shell: same brand heading treatment as the prose sections.
+    .ds-surface--pink & { @include brand-section-heading; }
+  }
+
+  &-note {
+    @include paragraph-2;
+    color: var(--surface-text);
+    margin: 0;
+
+    // Interactive red + underline on hover, like every other prose link
+    // (Tia, BugHerd #481 — this one read as plain underlined body copy).
+    a {
+      color: var(--accent-ui);
+      @include hover-underline;
+    }
+  }
+}
+
+// In the reading column the supporting-materials carousel is an in-flow
+// section, not a full module band — drop the module's section padding (the
+// column's 48px flow gap spaces it).
+.ds-reading__main .ds-supporting { padding-block: 0; }
+
+// --- End-matter: footnotes & works cited -------------------------------------
+.ds-reading__footnotes {
+  border-top: var(--border-divider) solid var(--surface-border);
+  padding-top: var(--space-24);
+  overflow-wrap: anywhere; // footnote URLs
+
+  // Legacy footnotes are a rich-text blob; the numbered-list treatment (red
+  // numeral + Futura text) applies to its paragraphs/list items. 14, not 16:
+  // footnotes must sit below the body size (Kay, BugHerd #267).
+  p, li {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: var(--font-size-14);
+    line-height: 1.5;
+    color: var(--surface-text);
+    margin: 0 0 var(--space-16);
+  }
+
+  ol, ul { margin: 0; padding-left: var(--space-24); }
+
+  li::marker {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    color: var(--color-brand-red);
+  }
+
+  a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+}
+
+.ds-reading__works-cited {
+  border-top: var(--border-divider) solid var(--surface-border);
+  padding-top: var(--space-24);
+  overflow-wrap: anywhere; // citation URLs
+
+  &-heading {
+    @include header-3;
+    color: var(--surface-text);
+    margin: 0 0 var(--space-32);
+  }
+
+  p {
+    @include paragraph-3; // 14 — references sit below the body size (Kay, #267)
+    color: var(--surface-text);
+    margin: 0 0 var(--space-24);
+  }
+
+  a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+}
+
+// Disclaimer / media-inquiry band (BugHerd #410): quiet left-aligned small
+// print in the reading measure, replacing the centred legacy block.
+.ds-disclaimer {
+  border-top: var(--border-divider) solid var(--surface-border);
+  padding-top: var(--space-24);
+
+  p {
+    @include paragraph-3; // 14
+    color: var(--surface-text-muted);
+    margin: 0 0 var(--space-8);
+
+    &:last-child { margin-bottom: 0; }
+  }
+
+  a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+}
+
+// Person single: Connect / Downloads rail rows (icon + label links under the
+// ruled aside headings — Leadership Bio Template).
+.ds-person-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+
+  li { @include paragraph-2; color: var(--surface-text); overflow-wrap: anywhere; }
+
+  // The label sits inside the atomic inline .ds-icon-label — the underline
+  // must target the inner text (guide: hover states on every link).
+  a { color: inherit; @include hover-underline-within; }
+
+  .ds-icon-label__icon { color: var(--accent); }
+}

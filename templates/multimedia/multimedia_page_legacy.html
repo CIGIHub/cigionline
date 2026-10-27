@@ -1,0 +1,130 @@
+{# Pre-redesign multimedia single base (restored 2026-09-22 from b2b690cf^, the last revision before the DS hero wiring): the series-skin forks under themes/<dir>/multimedia_page.html extend this, not the DS multimedia_page.html, so a reverted episode renders its full legacy layout (CIGI, sync 2026-09-21). #}
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+
+{% block meta_description %}
+  {% if self.social_description %}
+    <meta name="description" content="{{ self.social_description }}" />
+  {% elif self.subtitle %}
+    <meta name="description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_description %}
+  {% if self.social_description %}
+    <meta property="og:description" content="{{ self.social_description }}" />
+  {% elif self.subtitle %}
+    <meta property="og:description" content="{{ self.subtitle|striptags }}" />
+  {% endif %}
+{% endblock %}
+{% block og_type %}
+  <meta property="og:type" content="video.other" />
+{% endblock %}
+{% block og_image %}
+  {% if self.image_social %}
+    {% image self.image_social fill-1600x900 as og_image %}
+  {% elif self.image_hero %}
+    {% image self.image_hero fill-1600x900 as og_image %}
+  {% endif %}
+  {% if og_image %}
+    <meta property="og:image" content="{{ og_image.url }}" />
+  {% else %}
+    {% include "includes/og_image_default.html" %}
+  {% endif %}
+{% endblock %}
+{% block extra_og_meta %}
+  {% if self.publishing_date %}
+    <meta property="video:release_date" content="{{ self.publishing_date|date:'c' }}" />
+  {% endif %}
+{% endblock %}
+
+{% block extra_css %}
+  {% render_bundle 'multimediaPage' 'css' %}
+{% endblock %}
+{% block extra_js %}
+  {% render_bundle 'multimediaPage' 'js' attrs='defer' %}
+{% endblock %}
+
+{% block content %}
+  {% block hero %}
+    {% include "includes/heroes/hero_multimedia.html" %}
+  {% endblock %}
+
+  {% if self.from_the_archives and self.from_the_archives_blurb %}
+    {% include "includes/from_the_archives_blurb.html" with blurb=self.from_the_archives_blurb %}
+  {% endif %}
+
+  {% if self.article_series_description %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-md-10 col-lg-8">
+          <div class="article-series-description">
+            {{self.article_series_description|richtext}}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% include "includes/body.html" with body=self.body %}
+
+  {% if self.transcript %}
+    <section>
+      {% for block in self.transcript %}
+        {% include_block block with id=block.id %}
+      {% endfor %}
+    </section>
+  {% endif %}
+
+  {% if self.multimedia_series %}
+    <section class="multimedia-series-block">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col col-md-10 col-lg-8">
+            <article>
+              <h2>
+                Series:
+                <a href="{{self.multimedia_series.url}}">
+                  {{ self.multimedia_series.title }}
+                </a>
+              </h2>
+              <p>{{ self.multimedia_series.specific.subtitle|richtext }}</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% include 'includes/disclaimer.html' with multimedia_disclaimer=True %}
+
+  {% block recommended %}
+    {% if request.is_preview and self.recommended_content_preview %}
+      {% define self.recommended_content_preview as recommended_content %}
+    {% elif self.recommended_content %}
+      {% define self.recommended_content as recommended_content %}
+    {% endif %}
+    {% if recommended_content %}
+      <section class="recommended">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col col-md-10 col-lg-8">
+              <div class="flex-column align-items-center">
+                <div class="recommended-dot"></div>
+                <div class="recommended-vertical-line"></div>
+                <h2>Recommended</h2>
+                {% include "includes/footer_bracket.svg" %}
+              </div>
+              {% for page in recommended_content|slice:":3" %}
+                {% include "includes/recommended_article.html" with article=page.specific %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endif %}
+  {% endblock recommended %}
+
+  {% block in_the_series %}
+    {# Override this in templates to add series listing #}
+  {% endblock %}
+{% endblock content %}

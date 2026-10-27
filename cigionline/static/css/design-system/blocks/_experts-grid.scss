@@ -1,0 +1,93 @@
+// =============================================================================
+// Design System — Experts Grid block
+// A paginated 3-up grid of expert cards. Section title (heading-left / intro+CTA
+// right) over a grid separated by column + row dividers (surface-border, so it
+// adapts on dark). Cards stagger in on scroll; the headshot fades +150ms after
+// (animation-guide). Pager (.ds-pager) below, built client-side by
+// expert-grid.js. Surface-aware (dark default).
+// =============================================================================
+
+.ds-experts-grid {
+  padding-block: var(--space-section-y); // horizontal gutters from .ds-container
+
+  // Section title → shared includes/module_title.html (.ds-module-title).
+
+  // --- Grid + dividers ------------------------------------------------------
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  &__cell {
+    position: relative;
+    padding-inline: var(--space-24); // 24px each side of the centred divider
+    padding-top: var(--space-24);
+    border-top: var(--border-divider) solid var(--surface-border);
+  }
+
+  @media (min-width: 769px) {
+    // Row rule vertically centred between rows (BugHerd #86): the rows abut
+    // (no grid row-gap) and each cell pads 24px above AND below its border,
+    // so the rule sits mid-way between the two rows' content.
+    &__cell { padding-bottom: var(--space-24); }
+
+    // Vertical divider between columns: drawn as a pseudo so it starts 24px below
+    // the top (clears the row rule) and stops 24px above the row rule below;
+    // centred in the 48px gutter (cells abut, so left:0 sits mid-gutter).
+    &__cell:not(:nth-child(3n + 1))::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: var(--space-24);
+      bottom: var(--space-24);
+      width: var(--border-divider);
+      background: var(--surface-border);
+    }
+    &__cell:nth-child(3n + 1) { padding-left: 0; }
+    &__cell:nth-child(3n)     { padding-right: 0; }
+    // No rule above the first row — and with no rule to clear, the vertical
+    // divider starts flush with the headshot top (BugHerd #96).
+    &__cell:nth-child(-n + 3) { border-top: 0; padding-top: 0; }
+    &__cell:nth-child(-n + 3)::before { top: 0; }
+  }
+
+  // Headshot fades +150ms after the card settles (animation-guide expert entry).
+  // Pending is only ever set when motion is allowed (scroll-reveal.js), so this
+  // never hides the avatar under reduced motion / no-JS.
+  .ds-reveal-pending .ds-expert-card__avatar { opacity: 0; }
+  .ds-reveal-in .ds-expert-card__avatar {
+    opacity: 1;
+    transition: opacity var(--motion-duration-entry) var(--motion-ease-standard) 150ms;
+  }
+
+  &__pager { margin-top: var(--space-48); }
+
+  // Mobile "Load More" — the numbered pager's replacement under 769px (BugHerd
+  // #147). .ds-button is inline-flex, so `display: flex` + auto inline margins
+  // are what centre it; [hidden] has to beat that display for JS to hide it.
+  &__load-more {
+    display: flex;
+    width: fit-content;
+    margin: var(--space-48) auto 0;
+
+    &[hidden] { display: none; }
+  }
+
+  // --- Mobile: single column ------------------------------------------------
+  // (Built to spec; pinned-viewport automation can't visually verify ≤768px.)
+  @media (max-width: 768px) {
+    &__grid {
+      grid-template-columns: 1fr;
+      row-gap: 0;
+    }
+
+    &__cell {
+      padding-inline: 0;
+      // Symmetric 24px around each row rule (BugHerd #144): without this the
+      // Latest Activity line sat flush against the next card's top rule.
+      padding-bottom: var(--space-24);
+
+      &:first-child { border-top: 0; padding-top: 0; }
+    }
+  }
+}

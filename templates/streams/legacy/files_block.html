@@ -1,0 +1,20 @@
+<div class="container files-block">
+  <div class="row d-block">
+    <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+      <ul class="files-container">
+        {% for file in self.files %}
+          <li>
+            <a href="{{ file.value.file.url }}" target="_blank">
+              <i class="fa-solid fa-download"></i>
+              {% if file.value.title %}
+                {{ file.value.title }}
+              {% else %}
+                {{ file.value.file.title }}
+              {% endif %}
+            </a>
+          </li>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>

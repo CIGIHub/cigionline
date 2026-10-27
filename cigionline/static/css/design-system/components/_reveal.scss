@@ -1,0 +1,86 @@
+// =============================================================================
+// Design System — Scroll reveal (shared entry utility)
+// Driven by js/design-system/scroll-reveal.js (IntersectionObserver, trigger-once).
+// The hidden start state (`.ds-reveal-pending`) is added by JS only when motion is
+// allowed, so no-JS / reduced-motion shows content normally. Mark a container
+// `data-ds-reveal` and its staggered children `data-ds-reveal-item` (optional
+// `data-ds-reveal-stagger="80"`). Guide: fade + 16px rise, 600ms entry.
+// =============================================================================
+
+.ds-reveal-pending {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.ds-reveal-in {
+  opacity: 1;
+  transform: none;
+  @include transition(
+    opacity var(--motion-duration-entry) var(--motion-ease-standard),
+    transform var(--motion-duration-entry) var(--motion-ease-standard)
+  );
+}
+
+// Load-visible reveal (BugHerd #260): content inside the first viewport must
+// show on landing, not on scroll — it fades in right away at the media-fade
+// tier (400ms), quicker than the scroll-entry tier.
+.ds-reveal-load.ds-reveal-in {
+  @include transition(
+    opacity var(--motion-duration-media-fade) var(--motion-ease-standard),
+    transform var(--motion-duration-media-fade) var(--motion-ease-standard)
+  );
+}
+
+// Safety: if a pending state was set, reduced motion still shows content static
+// (the transition mixin already zeroes the transitions).
+@include reduce-motion-safe {
+  .ds-reveal-pending,
+  .ds-reveal-in {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+// --- Reading media fade ---------------------------------------------------------
+// Figures + pull quotes inside a [data-ds-reveal-media] body fade in place —
+// opacity only, no rise, so long-form reading stays physically still (guide:
+// Publication + Long-form Reading). Classes managed by scroll-reveal.js.
+.ds-reveal-media-pending { opacity: 0; }
+
+.ds-reveal-media-in {
+  opacity: 1;
+  @include transition(opacity var(--motion-duration-media-fade) var(--motion-ease-standard));
+}
+
+@include reduce-motion-safe {
+  .ds-reveal-media-pending,
+  .ds-reveal-media-in { opacity: 1; }
+}
+
+// --- Hero load entry ----------------------------------------------------------
+// Guide (Hero — Featured Content Block): on page load the hero text lockup fades
+// up from a 20px offset in sequence — headline, then subheading (+100ms), then
+// CTA (+200ms), 600ms each, no overshoot. Pure CSS (plays on load, not scroll):
+// mark each element `data-ds-hero-entry-item="0|1|2"`.
+[data-ds-hero-entry-item] {
+  animation: ds-hero-entry var(--motion-duration-entry) var(--motion-ease-standard) both;
+}
+
+[data-ds-hero-entry-item='1'] { animation-delay: 100ms; }
+[data-ds-hero-entry-item='2'] { animation-delay: 200ms; }
+
+@keyframes ds-hero-entry {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@include reduce-motion-safe {
+  [data-ds-hero-entry-item] { animation: none; }
+}

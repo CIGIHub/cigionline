@@ -1,0 +1,101 @@
+// =============================================================================
+// Design System — Typography
+//
+// One reusable definition per catalogued text style (consumes type tokens).
+// Use the mixins in component SCSS; use the .ds-* classes in templates.
+// Never restate font-family/size/weight inline — always a style here.
+// Weights: "Demi" = 500, "Medium" = 450, "Book"/"Regular" = 400.
+// All Futura PT headings share -3% tracking (var --tracking-heading).
+// =============================================================================
+
+@mixin _heading($size, $weight: 500) {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-#{$size});
+  font-weight: $weight;
+  line-height: 1; // 100%
+  letter-spacing: var(--tracking-heading);
+}
+
+@mixin _body($size) {
+  font-family: var(--font-body);
+  font-size: var(--font-size-#{$size});
+  font-weight: 400;
+  line-height: 1.5; // 150%
+}
+
+// Headings
+@mixin header-1 { @include _heading(56); }
+@mixin header-2 { @include _heading(48); }
+@mixin header-3 { @include _heading(40); }
+@mixin header-4 { @include _heading(32); }
+@mixin header-5 { @include _heading(24); }
+@mixin header-6 { @include _heading(18); }
+@mixin header-7  { @include _heading(16, 500); }
+@mixin header-7b { @include _heading(16, 400); }
+
+// Body
+@mixin paragraph-1 { @include _body(18); }
+@mixin paragraph-2 { @include _body(16); }
+@mixin paragraph-3 { @include _body(14); }
+
+// A richtext block whose last paragraph keeps its bottom margin ends BELOW its
+// own text, so whatever follows reads further away than the token says. Every
+// module title / intro that a button row can follow flushes that margin, so the
+// authored 32px measures 32px on screen (Kay, BugHerd #175).
+@mixin flush-last-paragraph {
+  > p:last-child,
+  > ul:last-child,
+  > ol:last-child { margin-bottom: 0; }
+}
+
+// Special
+@mixin button-small {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-16);
+  font-weight: 450;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+@mixin eyebrow {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-16);
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+@mixin stat-number { @include _heading(96); }
+
+// Legacy article typography (`global/typography`) adds a top margin to every
+// h2–h4 inside `.body` (and a `:first-child` variant), which outspecifies a
+// plain `.ds-…__heading { margin: 0 }` and pushes design-system module headings
+// down. Design-system blocks own their spacing, so neutralise it for any ds
+// heading. `.body hN[class*="ds-"]` matches the `:first-child` rule's
+// specificity and wins on load order (design system is imported afterwards).
+.body {
+  h1, h2, h3, h4, h5, h6 {
+    &[class*='ds-'] { margin-top: 0; }
+  }
+}
+
+// Utility classes (for use directly in templates)
+.ds-header-1 { @include header-1; }
+.ds-header-2 { @include header-2; }
+.ds-header-3 { @include header-3; }
+.ds-header-4 { @include header-4; }
+.ds-header-5 { @include header-5; }
+.ds-header-6 { @include header-6; }
+.ds-header-7 { @include header-7; }
+.ds-header-7b { @include header-7b; }
+.ds-paragraph-1 { @include paragraph-1; }
+.ds-paragraph-2 { @include paragraph-2; }
+.ds-paragraph-3 { @include paragraph-3; }
+.ds-button-small { @include button-small; }
+.ds-eyebrow { @include eyebrow; }
+.ds-stat-number { @include stat-number; }
+
+// Content lists indent (BugHerd #288). The global reset zeroes every list's
+// padding; the reading body restores it but module rich text (accordion
+// intros/items etc.) never got it back. :where() keeps specificity at zero,
+// so any component rule — chrome lists' own padding: 0 included — still wins.
+:where(ul, ol) { padding-left: var(--space-24); }

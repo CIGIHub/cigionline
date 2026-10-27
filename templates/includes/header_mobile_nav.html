@@ -1,0 +1,46 @@
+{% load wagtailcore_tags menu_tags icons %}
+{% comment %}
+  Mobile drawer nav. Each primary-nav item with a submenu is a native <details>
+  accordion (accessible, no JS for expand); the chevron rotates on open. Content
+  mirrors the desktop panels: Topics = live taxonomy, About = columns, others =
+  the submenu's links, then the submenu's optional bottom link (BugHerd #539).
+  Expects `primary_nav` in context.
+{% endcomment %}
+{% if primary_nav %}
+<ul class="ds-header__m-list">
+  {% for item in primary_nav.menu_items.all %}
+    <li>
+      {% if item.submenu %}
+        <details class="ds-header__m-item">
+          <summary class="ds-header__m-summary">
+            <span>{{ item.title }}</span>
+            {% ds_icon 'chevron-right-stroke' css_class='ds-header__m-chevron' %}
+          </summary>
+          <div class="ds-header__m-sub">
+            {% if item.submenu.slug == 'nav-topics' %}
+              {% get_topics_panel as topics %}
+              {% for t in topics %}
+                <a class="ds-header__m-group" href="{{ t.url }}">{{ t.title }}</a>
+                {% for p in t.programs %}<a class="ds-header__m-link ds-header__m-link--nested" href="{{ p.url }}">{{ p.title }}</a>{% endfor %}
+              {% endfor %}
+            {% elif item.submenu.menu_items.first.submenu %}
+              {% for col in item.submenu.menu_items.all %}
+                {% if col.link_page or col.link_url %}
+                  <a class="ds-header__m-group" href="{% if col.link_page %}{% pageurl col.link_page %}{% else %}{{ col.link_url }}{% endif %}">{{ col.title }}</a>
+                {% else %}
+                  <span class="ds-header__m-group">{{ col.title }}</span>
+                {% endif %}
+                {% for l in col.submenu.menu_items.all %}<a class="ds-header__m-link" href="{% if l.link_page %}{% pageurl l.link_page %}{% elif l.link_url %}{{ l.link_url }}{% else %}#{% endif %}">{{ l.title }}</a>{% endfor %}
+              {% endfor %}
+            {% else %}
+              {% for l in item.submenu.menu_items.all %}<a class="ds-header__m-link" href="{% if l.link_page %}{% pageurl l.link_page %}{% elif l.link_url %}{{ l.link_url }}{% else %}#{% endif %}">{{ l.title }}</a>{% endfor %}
+            {% endif %}{% include "includes/_nav_bottom_link.html" with menu=item.submenu variant='mobile' %}
+          </div>
+        </details>
+      {% else %}
+        <a class="ds-header__m-item ds-header__m-item--link" href="{% if item.link_page %}{% pageurl item.link_page %}{% elif item.link_url %}{{ item.link_url }}{% else %}#{% endif %}">{{ item.title }}</a>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>
+{% endif %}

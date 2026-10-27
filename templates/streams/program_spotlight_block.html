@@ -1,0 +1,134 @@
+{% load wagtailcore_tags wagtailimages_tags cards icons %}
+{% comment %}
+  Program Spotlight — dynamic module. Renders the live research taxonomy:
+  themes row (ThemePage, tree order, accents), program tablist (ThemeProgram,
+  editorial order + display labels) and the selected program's panel (feature
+  image, heading, description, two latest content pages with their topic pills).
+  Authored fields are the section heading + intro only; everything else is
+  queried (see ProgramSpotlightBlock.get_context). Without JS every panel is
+  visible.
+
+  Shared components consumed here: section_header (title + band eyebrows +
+  explore link), slider-arrow (.ds-slider-arrow scroll control), accent-media
+  (.ds-accent-media panel image), and the card (.ds-card via {% card %}) for the
+  latest-content cards.
+{% endcomment %}
+{# An empty module renders nothing (BugHerd #297). #}
+{% if spotlight_themes or spotlight_programs %}
+<div class="ds-surface ds-surface--dark">
+  <div class="ds-program-spotlight ds-container" data-ds-program-spotlight>
+    {% if self.heading or self.intro %}
+      {% include "includes/section_header.html" with heading=self.heading intro=self.intro %}
+    {% endif %}
+
+    <div class="ds-program-spotlight__band">
+      {% include "includes/section_header.html" with eyebrow=self.themes_eyebrow|default:"Research Themes" %}
+      {# Desktop themes grid (hidden on mobile — the carousel below takes over). #}
+      <ul class="ds-program-spotlight__themes" data-ds-reveal data-ds-reveal-stagger="80">
+        {% for theme in spotlight_themes %}
+          <li class="ds-program-spotlight__theme {{ theme.accent_surface_class }}" data-ds-reveal-item
+              data-ds-spotlight-theme data-ds-spotlight-theme-id="{{ theme.pk }}">
+            {% include "includes/spotlight_theme_tile.html" %}
+          </li>
+        {% endfor %}
+      </ul>
+      {% comment %}
+        Mobile themes carousel (BugHerd #150): the shared mobile-only rail
+        (data-ds-carousel-mobile — Swiper lives while <=768px, gallery-init).
+        Swiping is the filter: the active slide's theme drives the program
+        list below (program-spotlight.js listens for ds-carousel-slidechange).
+        Tapping a tile navigates to the theme page, as on desktop.
+      {% endcomment %}
+      <div class="ds-program-spotlight__themes-mobile ds-carousel" data-ds-carousel-mobile
+        data-ds-space="16" data-ds-loop="0" data-ds-pagination="1" data-ds-spotlight-themes-rail>
+        <div class="swiper ds-carousel__swiper">
+          <div class="swiper-wrapper">
+            {% for theme in spotlight_themes %}
+              <div class="swiper-slide ds-program-spotlight__theme {{ theme.accent_surface_class }}"
+                   data-ds-spotlight-theme data-ds-spotlight-theme-id="{{ theme.pk }}">
+                {% include "includes/spotlight_theme_tile.html" %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="ds-carousel__controls">
+          <div class="swiper-pagination ds-pagination"></div>
+          {% include "includes/carousel_nav.html" with prefix="carousel" %}
+        </div>
+      </div>
+    </div>
+
+    {% if spotlight_programs %}
+      <div class="ds-program-spotlight__band ds-program-spotlight__band--programs">
+        {% include "includes/section_header.html" with eyebrow=self.programs_eyebrow|default:"Research Program Topics" action_label="Explore" action_url=spotlight_programs.0.page.url action_attrs="data-ds-spotlight-explore" action_suffix=spotlight_programs.0.title action_suffix_attrs="data-ds-spotlight-explore-label" %}
+        <div class="ds-program-spotlight__columns">
+          <div class="ds-program-spotlight__list-wrap" data-ds-spotlight-list-wrap>
+            {# Mobile only: a styled dropdown trigger that toggles the program list (which becomes a popup). Hidden until JS enhances it; the tablist is the no-JS / desktop fallback. #}
+            <button type="button" class="ds-program-spotlight__dropdown" data-ds-spotlight-dropdown aria-haspopup="true" aria-expanded="false" hidden>
+              <span class="ds-program-spotlight__dropdown-label" data-ds-spotlight-dropdown-label>{{ spotlight_programs.0.title }}</span>
+              <svg class="ds-program-spotlight__dropdown-icon" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 10l5 5 5-5z" fill="currentColor" /></svg>
+            </button>
+            <div class="ds-program-spotlight__list" role="tablist" aria-orientation="vertical" aria-label="Research programs" data-ds-spotlight-list>
+              {% for p in spotlight_programs %}
+                <button
+                  type="button"
+                  role="tab"
+                  id="ds-spotlight-tab-{{ p.page.pk }}"
+                  aria-controls="ds-spotlight-panel-{{ p.page.pk }}"
+                  aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                  class="ds-program-spotlight__item {{ p.theme.accent_surface_class }}{% if forloop.first %} ds-program-spotlight__item--active{% endif %}"
+                  data-ds-spotlight-tab
+                  data-ds-spotlight-url="{% pageurl p.page %}"
+                  data-ds-spotlight-title="{{ p.title }}"
+                  {% comment %}
+                    Theme id drives the mobile theme filter (BugHerd #150). A
+                    hand-picked program with no ThemeProgram row has no id and
+                    stays visible under every theme — it belongs to none, and
+                    hiding it would drop authored content silently.
+                  {% endcomment %}
+                  data-ds-spotlight-theme-id="{% if p.theme %}{{ p.theme.pk }}{% endif %}"
+                >{{ p.title }}</button>
+              {% endfor %}
+            </div>
+            {# Slider arrow (shared .ds-slider-arrow) — scrolls the list to its bottom, then to top. Revealed by JS only when the list overflows. #}
+            <button type="button" class="ds-slider-arrow ds-program-spotlight__scroll" data-ds-spotlight-scroll aria-label="Scroll to bottom of program list" hidden>
+              <svg class="ds-slider-arrow__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
+          <div class="ds-program-spotlight__panels">
+            {% for p in spotlight_programs %}
+              <div
+                role="tabpanel"
+                id="ds-spotlight-panel-{{ p.page.pk }}"
+                aria-labelledby="ds-spotlight-tab-{{ p.page.pk }}"
+                class="ds-program-spotlight__panel {{ p.theme.accent_surface_class }}"
+                data-ds-spotlight-panel
+                {% if not forloop.first %}hidden{% endif %}
+              >
+                {% if p.page.image_feature %}
+                  {# The photo is a second entry point to the program page (Tim, BugHerd #417). #}
+                  <a class="ds-accent-media ds-program-spotlight__panel-media" href="{% pageurl p.page %}" aria-label="{{ p.title }}">{% image p.page.image_feature fill-1320x742 %}</a>
+                {% endif %}
+                <div class="ds-program-spotlight__panel-body">
+                  {# No program pill: the heading already names the program (BugHerd #519). #}
+                  <h3 class="ds-program-spotlight__panel-heading"><a href="{% pageurl p.page %}">{{ p.title }}</a></h3>
+                  {% if p.page.feature_subtitle %}<p class="ds-program-spotlight__panel-text">{{ p.page.feature_subtitle }}</p>{% endif %}
+                </div>
+                {% if p.content_pages %}
+                  <ul class="ds-program-spotlight__cards">
+                    {% for content, pills in p.cards %}
+                      <li class="ds-program-spotlight__card">{% card content variant="article-list-row" pills=pills %}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}

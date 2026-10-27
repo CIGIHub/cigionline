@@ -1,0 +1,125 @@
+// =============================================================================
+// Design System — Stats block
+// Section title (heading + intro + buttons) over an N-up row of stats.
+// Each stat: a large number with an accent underline, plus a label.
+// Lives on a .ds-surface, so all colours come from the surface/accent tokens.
+// =============================================================================
+
+.ds-stats {
+  padding-block: var(--space-section-y); // horizontal gutters come from the container
+
+  // --- Section title (heading left, intro/buttons right) --------------------
+  // The heading is held to a narrower width than its column so it wraps to a
+  // couple of lines; an auto right-margin opens a gap before the intro. The
+  // rule rides on the heading, so it matches the wrap width (as in the design).
+  &__title {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-24);
+    align-items: flex-start;
+    margin-bottom: var(--space-80);
+  }
+
+  &__heading {
+    @include header-2;
+    color: var(--surface-text);
+    flex: 0 1 auto;
+    // 461 is the KP wrap width the token was created for (BugHerd #169); the
+    // heading sat on 845 and the title column read too wide. The rule rides
+    // the heading, so it narrows with it.
+    max-width: var(--width-461);
+    min-width: 0;
+    margin: 0 auto 0 0; // auto right-margin → gap between heading and intro
+    padding-top: var(--space-16);
+    border-top: var(--border-rule) solid var(--surface-rule);
+  }
+
+  &__aside {
+    flex: 0 0 33.333%; // intro fills the last third → left edge just left of the rightmost stat
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-32);
+  }
+
+  &__intro {
+    @include flush-last-paragraph; // BugHerd #175
+    @include paragraph-2;
+    color: var(--surface-text);
+  }
+
+  &__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-24);
+  }
+
+  // --- Stats row ------------------------------------------------------------
+  &__items {
+    display: flex;
+    align-items: stretch; // so the vertical dividers run full height
+  }
+
+  &__item {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-32);
+    // 48px of breathing room each side of a divider → 96px between contents.
+    padding-inline: var(--space-48);
+    position: relative;
+
+    &:first-child { padding-left: 0; }
+    &:last-child { padding-right: 0; }
+
+    // Vertical divider centred in the inter-column gap.
+    &:not(:first-child)::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: var(--border-divider);
+      background: var(--surface-border);
+    }
+  }
+
+  &__number {
+    @include stat-number;
+    color: var(--surface-text);
+    border-bottom: var(--border-rule) solid var(--accent);
+    padding-bottom: var(--space-8);
+  }
+
+  &__label {
+    @include header-5;
+    // The heading mixin sets line-height 1; wrapped labels needed air
+    // (BugHerd #170).
+    line-height: 1.2;
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  // --- Mobile: stack --------------------------------------------------------
+  @media (max-width: 768px) {
+    &__title {
+      flex-direction: column;
+      margin-bottom: var(--space-48);
+    }
+
+    &__aside { flex-basis: auto; } // full width when stacked
+
+    &__items {
+      flex-direction: column;
+      gap: var(--space-48);
+    }
+
+    &__item {
+      padding-inline: 0;
+
+      &::before { display: none; } // no vertical dividers when stacked
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{% load wagtailcore_tags cards icons %}
+{% comment %}
+  Shared Resource Carousel rail — the swipeable resources module body, consumed
+  by the resource_carousel StreamField block and by page templates that place
+  the rail directly (e.g. the article single's "Explore Recommended" section). Params:
+    surface, accent    — surface classes (default light / red)
+    heading, intro     — first-cell section title
+    cta_url, cta_label, cta_scheme — optional "View All" in the title cell
+    feature            — the feature card page (image variant)
+    compact_cards      — flat list of compact-card pages, one per slide (BugHerd #68)
+    show_pagination    — truthy shows the dot/number pagination (default on)
+{% endcomment %}
+{# An empty rail renders nothing — no title cell, no surface band (BugHerd #297). #}
+{% if feature or compact_cards %}
+{# firstof (not |default:) — a missing variable as a filter *argument* raises VariableDoesNotExist; consumers like continue_listening don't provide main_accent_scheme #}
+<div class="ds-surface ds-surface--{{ surface|default:'light' }} ds-surface--accent-{% firstof accent main_accent_scheme 'red' %}">
+  <div class="ds-resource-carousel ds-container">
+    <div class="ds-carousel ds-resource-carousel__carousel" data-ds-carousel
+      {# 48 = 24 each side of the inter-slide rule (the ::before divider sits at -24) #}
+      data-ds-space="48"
+      data-ds-slides-lg="2"
+      data-ds-loop="{{ loop|yesno:'1,0' }}"
+      data-ds-pagination="{{ show_pagination|default_if_none:True|yesno:'1,0' }}">
+      {# Title column, NOT a slide — cards mask behind it (BugHerd #67); single-line comment (#75). #}
+      <div class="ds-resource-carousel__intro">
+        {% include "includes/module_title.html" with stacked=True heading=heading intro=intro cta_url=cta_url cta_label=cta_label|default:"View All" cta_scheme=cta_scheme %}
+      </div>
+      <div class="swiper ds-carousel__swiper">
+        <div class="swiper-wrapper" data-ds-reveal data-ds-reveal-stagger="80">
+          {% if feature %}
+            <div class="swiper-slide ds-resource-carousel__slide ds-resource-carousel__slide--feature" data-ds-reveal-item>
+              {% card feature variant="resource-feature" %}
+            </div>
+          {% endif %}
+          {% for resource in compact_cards %}
+            <div class="swiper-slide ds-resource-carousel__slide" data-ds-reveal-item>
+              {% card resource variant="resource-compact" %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="ds-carousel__controls">
+        <div class="swiper-pagination ds-pagination"></div>
+        {% include "includes/carousel_nav.html" with prefix="carousel" %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}

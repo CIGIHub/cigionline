@@ -1,0 +1,19 @@
+{% load cards wagtailcore_tags %}{% comment %}
+  News router item — CIGI News / In the News listings. Full listing-card stack
+  per the faceted-listing design card (1689:102185): pills · title · excerpt ·
+  byline (author, position) · date · type-of-content.
+{% endcomment %}
+<article class="ds-card ds-card--resource-compact ds-search-card">
+  <div class="ds-card__body">
+    {% include "includes/card/_pills.html" with pills=item.topics.all|topic_pills:item %}
+    <a class="ds-card__title" href="{% pageurl item %}">{{ item|display_title }}</a>
+    {% with excerpt=item|card_excerpt %}{% if excerpt %}<p class="ds-card__excerpt">{{ excerpt }}</p>{% endif %}{% endwith %}
+    {% if item.authors.all %}
+      <p class="ds-search-card__byline">
+        {% for a in item.authors.all %}{{ a.author.title }}{% if not forloop.last %}, {% endif %}{% endfor %}{% if item.authors.all|length == 1 and item.authors.first.author.specific.position %}, {{ item.authors.first.author.specific.position }}{% endif %}
+      </p>
+    {% endif %}
+    {% if item.publishing_date %}<p class="ds-card__date">{{ item.publishing_date|date:"F j, Y" }}</p>{% endif %}
+    {% type_of_content item %}
+  </div>
+</article>

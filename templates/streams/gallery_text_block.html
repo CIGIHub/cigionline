@@ -1,0 +1,52 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+{% comment %}
+  Gallery + Text — section title (heading + intro + optional buttons) over a
+  Swiper carousel (centred larger active slide, captions). Nav + pagination use
+  the shared carousel-nav. Swiper is dynamically imported (see gallery.js).
+{% endcomment %}
+{# Surface-aware wrapper (BugHerd #157): author-set light/dark; inherit keeps the page surface. #}
+<div class="ds-surface ds-surface--{{ self.surface }} ds-surface--accent-{{ self.accent }}">
+<div class="ds-gallery-text">
+  {% if self.heading or self.intro_text or self.buttons %}
+    <div class="ds-container">
+      <div class="ds-gallery-text__title">
+        {% if self.heading %}<h2 class="ds-gallery-text__heading">{{ self.heading }}</h2>{% endif %}
+        {% if self.intro_text or self.buttons %}
+          <div class="ds-gallery-text__content">
+            {% if self.intro_text %}<div class="ds-gallery-text__intro">{{ self.intro_text|richtext }}</div>{% endif %}
+            {% if self.buttons %}
+              <div class="ds-gallery-text__buttons">
+                {% for button in self.buttons %}{% include_block button %}{% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="ds-container">
+    <div class="ds-gallery" data-ds-gallery
+      data-ds-loop="{{ self.loop|yesno:'1,0' }}"
+      data-ds-autoplay="{{ self.autoplay|yesno:'1,0' }}"
+      data-ds-autoplay-delay="{{ self.autoplay_speed|default:5 }}"
+      data-ds-pagination="{{ self.show_pagination|yesno:'1,0' }}">
+      <div class="swiper ds-gallery__swiper">
+        <div class="swiper-wrapper">
+          {% for slide in self.slides %}
+            <figure class="swiper-slide ds-gallery__slide">
+              <div class="ds-gallery__img-wrap">{% image slide.image width-1200 class="ds-gallery__img" %}</div>
+              {% if slide.caption %}<figcaption class="ds-gallery__caption">{{ slide.caption }}</figcaption>{% endif %}
+            </figure>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="ds-gallery__controls">
+        <div class="swiper-pagination ds-pagination"></div>
+        {% include "includes/carousel_nav.html" with prefix="gallery" autoplay=self.autoplay %}
+      </div>
+    </div>
+  </div>
+</div>
+</div>

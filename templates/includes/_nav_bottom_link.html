@@ -1,0 +1,16 @@
+{% load wagtailcore_tags icons %}{% comment %}
+  A header dropdown's optional bottom link (menus.Menu.bottom_link, BugHerd #539).
+  Expects `menu` (the dropdown's Menu) and `variant`:
+    'full'    -> full-width row under a full panel's columns (desktop)
+    'compact' -> last row of a compact panel's column (desktop)
+    'mobile'  -> last link of the drawer section
+  Renders nothing when the label or link is blank. Kept free of whitespace
+  outside the tags (no trailing newline) so a blank link leaves the parent's
+  markup byte-identical.
+{% endcomment %}{% with link=menu.bottom_link %}{% if link %}{% if variant == 'mobile' %}
+<a class="ds-header__m-cta" href="{% if link.page %}{% pageurl link.page %}{% else %}{{ link.url }}{% endif %}">{{ link.label }}{% ds_icon 'chevron-right' css_class='ds-header__m-cta-icon' %}</a>
+{% else %}
+<div class="ds-header__panel-foot{% if variant == 'full' %} ds-container{% endif %}">
+  <a class="ds-button ds-button--tertiary ds-header__panel-cta" href="{% if link.page %}{% pageurl link.page %}{% else %}{{ link.url }}{% endif %}"><span class="ds-button__label">{{ link.label }}</span>{% ds_icon 'chevron-right' css_class='ds-button__icon' %}</a>
+</div>
+{% endif %}{% endif %}{% endwith %}

@@ -1,0 +1,47 @@
+{% load wagtailcore_tags %}
+{% comment %}
+  Text Card Grid — section title (heading + intro) over a grid of text cards
+  separated by divider rules. 3 or 4 per row; extra cards wrap to more rows.
+  Full-bleed surface (.ds-surface outside the container so a coloured background
+  spans edge to edge); light by default.
+{% endcomment %}
+<div class="ds-surface ds-surface--{{ self.surface }} ds-surface--accent-{{ self.accent }}">
+  <div class="ds-card-grid ds-card-grid--cols-{{ self.columns }} ds-container">
+    {% if self.heading or self.intro or self.buttons %}
+      <div class="ds-card-grid__title">
+        {# Inner span carries the top rule so it hugs the title text (BugHerd #82). #}
+        {% if self.heading %}<h2 class="ds-card-grid__heading"><span class="ds-card-grid__heading-text">{{ self.heading }}</span></h2>{% endif %}
+        {% comment %}
+          The button sits in the intro column, under the description and aligned
+          to it (Tia's frame on BugHerd #217). As a full-width sibling row it
+          hugged the container edge instead.
+        {% endcomment %}
+        {% if self.intro or self.buttons %}
+          <div class="ds-card-grid__aside">
+            {% if self.intro %}<div class="ds-card-grid__intro">{{ self.intro|richtext }}</div>{% endif %}
+            {% if self.buttons %}
+              <div class="ds-card-grid__buttons">
+                {% for button in self.buttons %}{% include_block button %}{% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="ds-card-grid__grid" data-ds-reveal data-ds-reveal-stagger="80">
+      {% for card in self.cards %}
+        <div class="ds-card-grid__card" data-ds-reveal-item>
+          <h3 class="ds-card-grid__card-heading">{{ card.heading }}</h3>
+          <div class="ds-card-grid__card-text">{{ card.text|richtext }}</div>
+          {% if card.buttons %}
+            {# Per-card button (BugHerd #185). #}
+            <div class="ds-card-grid__card-buttons">
+              {% for button in card.buttons %}{% include_block button %}{% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>

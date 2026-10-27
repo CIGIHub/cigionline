@@ -1,0 +1,34 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+{% comment %}
+  CTA (with image) — full-bleed background image + dark gradient, with the
+  heading pinned top and a red panel (text + buttons) pinned bottom. Full-bleed,
+  so it sits outside .container; horizontal inset comes from the block padding.
+{% endcomment %}
+{% comment %}
+  data-ds-reveal on the section (no items): the block clip-path-reveals downward
+  from its top edge, then the heading/panel fade in +200ms — see _cta.scss.
+{% endcomment %}
+<div class="ds-cta" data-ds-reveal>
+  <div class="ds-cta__media" aria-hidden="true">
+    {% image self.image width-1920 class="ds-cta__img" %}
+    <span class="ds-cta__overlay"></span>
+  </div>
+
+  <div class="ds-cta__inner ds-container">
+    {% if self.heading %}
+      <h2 class="ds-cta__heading">{{ self.heading }}</h2>
+    {% endif %}
+
+    {% if self.text or self.buttons %}
+      <div class="ds-cta__panel">
+        {% if self.text %}<div class="ds-cta__text">{{ self.text|richtext }}</div>{% endif %}
+        {% if self.buttons %}
+          {# The CTA panel is always red — auto-scheme buttons resolve to on-red. #}
+          <div class="ds-cta__buttons">
+            {% for button in self.buttons %}{% include_block button with button_surface='red' %}{% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>

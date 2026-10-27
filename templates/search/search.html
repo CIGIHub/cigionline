@@ -1,36 +1,96 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags webpack_loader %}
-
-{% block extra_css %}
-  {% render_bundle 'searchPage' 'css' %}
-{% endblock %}
-{% block extra_js %}
-  {% render_bundle 'searchPage' 'js' attrs='defer' %}
-{% endblock %}
+{% load humanize icons %}
+{% comment %}
+  Resources Router — DS faceted browse over Elasticsearch (search.views.search +
+  cigi_search). Lead-narrow title → filter bar → sidebar (search + TOPIC / TYPE /
+  YEAR facets) + 2-up resource cards → numbered pager. In-place filtering via the
+  shared router.js (partial swap); no-JS = GET-form full reload.
+{% endcomment %}
 
 {% block body_class %}template-searchresults{% endblock %}
-
 {% block title %}Search{% endblock %}
 
 {% block content %}
-    <section class="hero-plain">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h1>Search</h1>
-          </div>
-        </div>
+<div class="ds-surface ds-surface--light ds-surface--accent-red">
+  <div class="ds-router ds-container">
+    <div class="ds-section-header ds-section-header--lead-narrow">
+      <div class="ds-section-header__lead">
+        <h1 class="ds-section-header__heading">{{ page_title }}</h1>
       </div>
-    </section>
+    </div>
 
-    <section>
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <div id="search-table">
-            </div>
+    <div class="ds-router__bar">
+      <p class="ds-router__bar-filters">
+        <span class="ds-router__bar-label">Filters</span>
+        <span class="ds-router__bar-sep" aria-hidden="true">|</span>
+        <a class="ds-router__clear" href="{{ request.path }}" data-router-clear>Clear All</a>
+      </p>
+      <p class="ds-router__count" data-router-count>Showing {{ router_range_start|intcomma }}–{{ router_range_end|intcomma }} of {{ router_total|intcomma }}</p>
+    </div>
+
+    <div class="ds-router__body">
+      <form class="ds-router__sidebar" method="get" action="{{ request.path }}" data-ds-router-form>
+        <label class="ds-router__search">
+          <span class="ds-router__search-field">
+            <input type="search" name="q" value="{{ selected.q }}" placeholder="Search resources" aria-label="Search resources">
+            {% ds_icon 'search' css_class='ds-router__search-icon' %}
+          </span>
+        </label>
+
+        <details class="ds-router__facet" open>
+          <summary class="ds-router__facet-label">Topic</summary>
+          <div class="ds-router__facet-search">
+            <input type="text" data-router-facet-filter placeholder="Search" aria-label="Search topic options">
+            {% ds_icon 'search' css_class='ds-router__facet-search-icon' %}
           </div>
-        </div>
+          <ul class="ds-router__options">
+            {% for topic in facet_topics %}
+              <li><label class="ds-router__option">
+                <input type="checkbox" name="topic" value="{{ topic.id }}"{% if topic.id|stringformat:'s' in selected.topics %} checked{% endif %}>
+                <span>{{ topic.title }}</span>
+              </label></li>
+            {% endfor %}
+          </ul>
+        </details>
+        <ul class="ds-router__chips" data-router-chips data-router-facet="topic"></ul>
+
+        <details class="ds-router__facet">
+          <summary class="ds-router__facet-label">Type</summary>
+          <ul class="ds-router__options">
+            {% for t in facet_types %}
+              <li><label class="ds-router__option">
+                <input type="checkbox" name="contenttype" value="{{ t }}"{% if t in selected.types %} checked{% endif %}>
+                <span>{{ t }}</span>
+              </label></li>
+            {% endfor %}
+          </ul>
+        </details>
+        <ul class="ds-router__chips" data-router-chips data-router-facet="contenttype"></ul>
+
+        <details class="ds-router__facet">
+          <summary class="ds-router__facet-label">Year</summary>
+          <ul class="ds-router__options">
+            {% for y in facet_years %}
+              <li><label class="ds-router__option">
+                <input type="checkbox" name="year" value="{{ y }}"{% if y|stringformat:'s' in selected.years %} checked{% endif %}>
+                <span>{{ y }}</span>
+              </label></li>
+            {% endfor %}
+          </ul>
+        </details>
+        <ul class="ds-router__chips" data-router-chips data-router-facet="year"></ul>
+
+
+        <template data-router-chip-template>
+          <li><button type="button" class="ds-router__chip" data-router-chip> <span aria-hidden="true">&times;</span></button></li>
+        </template>
+        <noscript><button type="submit" class="ds-button ds-button--solid ds-button--on-light">Apply filters</button></noscript>
+      </form>
+
+      <div class="ds-router__results" data-router-results>
+        {% include "includes/router_results_partial.html" %}
       </div>
-    </section>
-{% endblock %}
+    </div>
+  </div>
+</div>
+{% endblock content %}

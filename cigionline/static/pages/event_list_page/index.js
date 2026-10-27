@@ -12,11 +12,12 @@ rootSearch.render(
     contenttypes={['Event']}
     fields={[
       'event_access',
+      'is_private_registration',
       'location_city',
       'location_country',
       'multimedia_url',
       'publishing_date',
-      'public_registration_available',
+      'registration_open',
       'registration_url',
       'topics',
     ]}

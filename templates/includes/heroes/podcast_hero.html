@@ -1,0 +1,67 @@
+{% load static wagtailcore_tags wagtailimages_tags wagtailembeds_tags cards %}
+{% comment %}
+  Podcast / Multimedia (audio) hero — PINK on Policy Prompt, light otherwise
+  (hero.surface, from the page's ds_surface — BugHerd #312). Left: series logo ·
+  topic pills · title · excerpt · audio player. Right (across a vertical rule):
+  cover art · #episode/season meta · byline · date · Share + Subscribe link
+  groups. `hero` = core.heroes.podcast_hero_data.
+  Subscribe = the series' podcast_subscribe_buttons. Follow group is omitted
+  pending a confirmed social-account source (see core/heroes.py).
+{% endcomment %}
+<header class="ds-hero ds-hero--podcast ds-surface ds-surface--{{ hero.surface|default:'pink' }} ds-surface--accent-red">
+  <div class="ds-hero__inner ds-container">
+    {% include "includes/breadcrumbs.html" with crumbs=hero.breadcrumb %}
+
+    <div class="ds-hero__podcast-cols">
+      <div class="ds-hero__podcast-main">
+        {# Series logo (authorable image_logo). The static Policy Prompt asset #}
+        {# is the fallback for the Policy Prompt series only — legacy episodes #}
+        {# carry no brand (BugHerd #312/#314). #}
+        {% if hero.logo %}
+          <div class="ds-hero__logo">{% image hero.logo width-480 %}</div>
+        {% elif hero.is_policy_prompt %}
+          <div class="ds-hero__logo"><img src="{% static 'assets/policy_prompt_logo_v2.png' %}" alt="Policy Prompt"></div>
+        {% endif %}
+        {% if hero.eyebrow %}
+          <div class="ds-hero__pills">
+            {# Theme accent per pill, grey fallback — was hardcoded red (BugHerd #326; mapping per #205). #}
+            {% for t in hero.eyebrow %}{% include "includes/tag.html" with label=t.title accent=t.accent %}{% endfor %}
+          </div>
+        {% endif %}
+        <h1 class="ds-hero__title">{{ hero.title }}</h1>
+        {% if hero.excerpt %}<p class="ds-hero__excerpt">{{ hero.excerpt }}</p>{% endif %}
+        {% if hero.audio.type == 'file' %}
+          <div class="ds-hero__audio">{% include "includes/audio_player.html" with src=hero.audio.src %}</div>
+        {% elif hero.audio.type == 'embed' %}
+          <div class="ds-hero__audio ds-hero__audio--embed">{% embed hero.audio.url max_width="1080" %}</div>
+        {% endif %}
+      </div>
+
+      <aside class="ds-hero__podcast-aside">
+        {% if hero.cover %}<div class="ds-hero__cover">{% image hero.cover fill-600x600 %}</div>{% endif %}
+        {% for m in hero.meta %}<p class="ds-hero__pod-meta">{{ m }}</p>{% endfor %}
+
+        <div class="ds-hero__pod-byline">
+          {# Byline names link to the bio page (BugHerd #324). #}
+          {% if hero.authors %}<p class="ds-hero__byline">By {% include "includes/heroes/_byline_names.html" with people=hero.authors %}</p>{% endif %}
+          {% if hero.date %}<p class="ds-hero__date">{{ hero.date|date:"F j, Y" }}</p>{% endif %}
+        </div>
+
+        {% if hero.share or hero.subscribe or hero.follow %}
+          <div class="ds-hero__pod-links">
+            {% if hero.share %}
+              <div class="ds-hero__linkgroup">{% share_buttons hero.share heading="Share" %}</div>
+            {% endif %}
+            {% if hero.subscribe %}
+              {# Same ruled-label + icon-row molecule as Share/Follow (frame 1360:68860). #}
+              <div class="ds-hero__linkgroup">{% share_buttons hero.subscribe heading="Subscribe" %}</div>
+            {% endif %}
+            {% if hero.follow %}
+              <div class="ds-hero__linkgroup">{% share_buttons hero.follow heading="Follow" %}</div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </aside>
+    </div>
+  </div>
+</header>

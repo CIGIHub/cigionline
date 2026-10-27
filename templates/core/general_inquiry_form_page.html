@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% comment %}
+  Standalone re-render of the General Inquiries form after an invalid POST
+  (BugHerd #163) — same shape as venue_rental_form_page.html: the module lives
+  on a composed page, so errors re-render here with the bound form preserved.
+{% endcomment %}
+
+{% block title %}General Inquiries{% endblock %}
+
+{% block content %}
+  <div class="ds-surface ds-surface--light">
+    <div class="ds-form-section ds-container">
+      <div class="ds-form-section__intro">
+        <h2 class="ds-form-section__heading">General Inquiries</h2>
+        <div class="ds-form-section__text"><p>Please correct the errors below and resubmit.</p></div>
+      </div>
+      {% url 'general_inquiry' as form_action %}
+      {% include "includes/venue_rental_form.html" with form_action=form_action %}
+    </div>
+  </div>
+{% endblock %}

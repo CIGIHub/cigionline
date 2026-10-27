@@ -1,0 +1,42 @@
+{% load wagtailcore_tags wagtailimages_tags icons %}
+{% comment %}
+  Shared expert/person card (.ds-expert-card) — rendered via
+  {% templatetag openblock %} expert_card person show_bio=… {% templatetag closeblock %}
+  (core.cards.expert_data). One base archetype + toggleable slots; avatar + name
+  are always on, the other slots render only when (toggle on) AND (data present).
+{% endcomment %}
+<div class="ds-expert-card">
+  <div class="ds-expert-card__identity">
+    <div class="ds-expert-card__name-title">
+      {% if url %}<a class="ds-expert-card__name" href="{{ url }}">{{ name }}</a>{% else %}<span class="ds-expert-card__name">{{ name }}</span>{% endif %}
+      {% if show_title and role %}<p class="ds-expert-card__role">{{ role }}</p>{% endif %}
+    </div>
+    {% if avatar %}<div class="ds-expert-card__avatar">{% image avatar fill-144x144 %}</div>{% endif %}
+  </div>
+
+  {% if show_bio and bio %}
+    <div class="ds-expert-card__bio">{{ bio|richtext }}</div>
+  {% endif %}
+
+  {% if show_expertise and expertise_tags %}
+    <div class="ds-expert-card__section">
+      <p class="ds-expert-card__subheader">Expertise</p>
+      {# Cap the card at 5 tags (primary + a couple secondary programs); the bio page hero renders the full set from the same expert_data (BugHerd #19). #}
+      <div class="ds-expert-card__tags">
+        {% for tag in expertise_tags|slice:":5" %}{% include "includes/tag.html" with label=tag.label accent=tag.accent %}{% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if show_latest_activity and latest_activity %}
+    <div class="ds-expert-card__section">
+      <p class="ds-expert-card__subheader">Latest Activity</p>
+      <a class="ds-expert-card__activity" href="{{ latest_activity.url }}">{{ latest_activity.title }}</a>
+    </div>
+  {% endif %}
+
+  {# Read Bio closes the card (1199:32852: the design's last slot). #}
+  {% if show_read_bio and url %}
+    <a class="ds-expert-card__bio-link" href="{{ url }}">Read Bio {% ds_icon 'chevron-right' css_class='ds-expert-card__bio-chevron' %}</a>
+  {% endif %}
+</div>

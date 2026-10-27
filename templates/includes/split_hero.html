@@ -1,0 +1,43 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+{% comment %}
+  Shared Split Hero — no background image. Text column (breadcrumb + title + body)
+  beside an optional image/logo column, divided by a vertical rule, on a coloured
+  surface. Rendered from the block and a page template; keep markup here.
+
+  Context:
+    surface, accent  — ds-surface modifiers (the host wrapper applies them)
+    crumbs           — breadcrumb list [{title, url, current}]
+    heading          — title string
+    heading_tag      — "h1" for a page hero, otherwise "h2"
+    description      — rich text value / HTML
+    image            — Wagtail Image (optional, the side column)
+    image_src        — static-asset src fallback when no Image (optional;
+                       image_alt with it) — e.g. the series hero's PP logo
+{% endcomment %}
+<div class="ds-surface ds-surface--{{ surface|default:'light' }} ds-surface--accent-{{ accent|default:'red' }}">
+  <div class="ds-split-hero ds-container">
+    <div class="ds-split-hero__text">
+      {% include "includes/breadcrumbs.html" with crumbs=crumbs %}
+      {% if heading %}
+        {% if heading_tag == "h1" %}
+          <h1 class="ds-split-hero__heading">{{ heading }}</h1>
+        {% else %}
+          <h2 class="ds-split-hero__heading">{{ heading }}</h2>
+        {% endif %}
+      {% endif %}
+      {% if description %}
+        <div class="ds-split-hero__description">{{ description|richtext }}</div>
+      {% endif %}
+    </div>
+
+    {% if image %}
+      <div class="ds-split-hero__media">
+        {% image image width-600 class="ds-split-hero__img" %}
+      </div>
+    {% elif image_src %}
+      <div class="ds-split-hero__media">
+        <img class="ds-split-hero__img" src="{{ image_src }}" alt="{{ image_alt|default:'' }}">
+      </div>
+    {% endif %}
+  </div>
+</div>

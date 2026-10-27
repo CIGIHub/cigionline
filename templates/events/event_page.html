@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailimages_tags wagtailembeds_tags webpack_loader %}
+{% load wagtailcore_tags wagtailimages_tags wagtailembeds_tags webpack_loader heroes cards icons %}
 
 {% block meta_description %}
   {% if self.social_description %}
@@ -30,99 +30,35 @@
     {% include "includes/og_image_default.html" %}
   {% endif %}
 {% endblock %}
-{% block extra_css %}
-  {% render_bundle 'eventPage' 'css' %}
-{% endblock %}
-
 {% block content %}
-  {% include "includes/heroes/hero_event.html" with topics=self.topics_sorted title=self.title date=self.publishing_date end_date=self.event_end event_type=self.get_event_type_display event_access=self.get_event_access_display authors=self.authors.all author_count=self.author_count registration_url=self.registration_url time_zone=self.time_zone time_zone_label=self.time_zone_label is_past=self.is_past %}
+  {# invite (EventPage.serve session handling) lets private events show the #}
+  {# on-site Register action in the hero, token preserved. #}
+  {% page_hero self invite=invite %}
 
   {% if self.multimedia_page and self.multimedia_page.specific.multimedia_url %}
-    <section class="event-multimedia-embed-section">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-12 col-md-10 col-lg-8">
-            <div class="event-multimedia-embed">
-              {% embed self.multimedia_page.specific.multimedia_url max_width="1080" %}
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  {% elif self.image_hero %}
-    <section>
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-md-10 col-lg-8">
-            <figure class="event-image-hero">
-              {% image self.image_hero width-1280 %}
-              {% if self.image_hero.caption %}
-                <figcaption>
-                  {{ self.image_hero.caption }}
-                </figcaption>
-              {% endif %}
-            </figure>
-          </div>
-        </div>
-      </div>
-    </section>
+    {# Past-event video — DS in-measure embed above the body. #}
+    <div class="ds-container ds-reading__embed ds-event-embed">
+      {% embed self.multimedia_page.specific.multimedia_url max_width=1280 %}
+    </div>
   {% endif %}
 
-  {% if registration_available %}
-    <section class="event-page-registration">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-md-10 col-lg-8">
-            <a href="{{ self.url }}register/{% if invite %}?invite={{ invite.token }}{% endif %}">
-              <button class="button-action track-cta event-registration-button">
-                <i class="fal fa-calendar-plus"></i>
-                Register
-              </button>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endif %}
-
-  {% include "includes/body.html" with body=self.body %}
+  {# Reading shell (Event Template): body + About the Speaker(s) #}
+  {# aside; related_files surface via the shell's Supporting Materials hook. #}
+  {# No Subscribe band on events (Evan, 2026-07-03). #}
+  {% include "includes/reading_body.html" with page=self body=self.body authors=self.authors.all author_count=self.author_count authors_heading="About the Speaker" suppress_subscribe=True %}
 
   {% if self.event_agenda %}
-    <section class="body event-agenda">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-md-10 col-lg-8">
-            <h2 class="paragraph-heading"><i class="fal fa-calendar-alt" aria-hidden="true"></i> Agenda</h2>
-            <p>
-              <a href="{{ self.event_agenda.url }}" target="_blank" rel="noopener noreferrer">
-                <i class="far fa-file-pdf" aria-hidden="true"></i>
-                {{ self.event_agenda.title }}
-              </a>
-            </p>
-          </div>
-        </div>
+    {# event_agenda is a document (the agenda PDF), not rich text. #}
+    <div class="ds-surface ds-surface--light">
+      <div class="ds-container ds-event-agenda">
+        <a class="ds-button ds-button--tertiary ds-button--on-light" href="{{ self.event_agenda.url }}" download>
+          <span class="ds-button__label">Download the event agenda</span>
+          {% ds_icon 'chevron-right' css_class='ds-button__icon' %}
+        </a>
       </div>
-    </section>
+    </div>
   {% endif %}
 
-  {% if self.author_count > 0 %}
-    {% include "includes/about_the_author.html" with authors=self.authors.all author_count=self.author_count title_override="Event Speaker"%}
-  {% endif %}
-
-  {% if self.related_files %}
-    <section class="related-files">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-md-10 col-lg-8">
-            {% include "includes/core_related_files_table.html" with file_blocks=self.related_files %}
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endif %}
-  {% if request.is_preview and self.recommended_content_preview %}
-    {% include 'includes/recommended.html' with recommended=self.recommended_content_preview %}
-  {% elif self.recommended_content %}
-    {% include 'includes/recommended.html' with recommended=self.recommended_content %}
-  {% endif %}
+  {# 'More events' rail — the design's related section for events. #}
+  {% more_events_carousel self %}
 {% endblock content %}

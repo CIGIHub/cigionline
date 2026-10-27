@@ -1,0 +1,21 @@
+{% comment %}
+  Shared swappable router results — the INNER content of [data-router-results].
+  Rendered both on full page load and (alone, as JSON) for in-place filtering via
+  router.js. Each router supplies:
+    router_results          — the page of items to render
+    router_results_template — per-item template (gets `item` in context)
+    router_page / router_querystring / router_page_range — for the pager
+    router_empty            — empty-state message
+    router_clear_url        — href that clears all filters
+{% endcomment %}
+{% if router_results %}
+  <div class="ds-router__grid{% if router_grid_modifier %} {{ router_grid_modifier }}{% endif %}">
+    {% for item in router_results %}
+      <div class="ds-router__cell">{% include router_results_template %}</div>
+    {% endfor %}
+  </div>
+  {% include "includes/router_pager.html" with page=router_page querystring=router_querystring page_range=router_page_range page_param=router_page_param %}
+{% else %}
+  <p class="ds-router__empty">{{ router_empty|default:"No results match your filters." }}
+    <a href="{{ router_clear_url }}" data-router-clear>Clear all filters</a>.</p>
+{% endif %}

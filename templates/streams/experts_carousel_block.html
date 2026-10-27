@@ -1,0 +1,44 @@
+{% load wagtailcore_tags cards icons %}
+{% comment %}
+  Experts Carousel — dynamic module. A section title (heading + intro + "View All
+  Experts") sits as a fixed first column beside a swipeable rail of expert cards
+  (the rail sibling of the Experts Grid). On mobile the title stacks on top, the
+  controls sit above the first expert card, and the rail follows (BugHerd #57).
+  Experts: auto (all live, A–Z) or manual. Cards stagger in on scroll
+  (data-ds-reveal) and crop the headshot on hover.
+
+  Shared infra: the carousel shell + Swiper init ([data-ds-carousel] in
+  gallery-init.js), carousel_nav, pagination, and the expert card. Surface-aware
+  (dark default). The title is NOT a slide — the rail holds only expert cards.
+{% endcomment %}
+{# An empty module renders nothing (BugHerd #297). #}
+{% if experts %}
+<div class="ds-surface ds-surface--{{ self.surface }} ds-surface--accent-{{ self.accent }}">
+  <div class="ds-experts-carousel ds-container">
+    <div class="ds-carousel ds-experts-carousel__carousel" data-ds-carousel
+      data-ds-space="48"
+      data-ds-slides-lg="2"
+      data-ds-loop="{{ self.loop|yesno:'1,0' }}"
+      data-ds-pagination="{{ self.show_pagination|yesno:'1,0' }}">
+      {# Title column (fixed on desktop, stacked on top on mobile) — not a slide. #}
+      <div class="ds-experts-carousel__intro">
+        {% include "includes/module_title.html" with stacked=True heading=self.heading intro=self.intro cta_url=cta_url cta_label=self.cta_label|default:"View All Experts" cta_scheme=cta_scheme %}
+      </div>
+      <div class="swiper ds-carousel__swiper">
+        <div class="swiper-wrapper" data-ds-reveal data-ds-reveal-stagger="80">
+          {% for person in experts %}
+            <div class="swiper-slide ds-experts-carousel__slide" data-ds-reveal-item>
+              {% expert_card person slots=self.card_slots %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="ds-carousel__controls">
+        <div class="swiper-pagination ds-pagination"></div>
+        {% include "includes/carousel_nav.html" with prefix="carousel" %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}

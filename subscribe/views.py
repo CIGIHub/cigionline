@@ -9,7 +9,6 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from django_countries.fields import CountryField, Country
 from mailchimp_marketing.api_client import ApiClientError
 
 logger = logging.getLogger('cigionline')
@@ -37,24 +36,6 @@ class EmailOnlySubscribeForm(forms.Form):
     email = forms.EmailField(max_length=254, required=True, widget=forms.EmailInput(attrs={
         'placeholder': 'Enter your email'
     }))
-
-
-class DphSubscribeForm(EmailOnlySubscribeForm):
-    first_name = forms.CharField(max_length=128, widget=forms.TextInput(attrs={'placeholder': 'First Name'}))
-    last_name = forms.CharField(max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Last Name'}))
-    job_title = forms.CharField(max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Job Title'}))
-    company = forms.CharField(max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Company'}))
-    country = CountryField(blank=True).formfield(
-        required=True,
-        empty_label='Country',
-        widget=forms.Select(),
-    )
-    consent = forms.BooleanField(
-        required=True,
-        label='',
-        help_text='I consent to receiving electronic communications from the Digital Policy Hub including updates, newsletters and event invitations. I understand that I may withdraw my consent at any time by clicking the unsubscribe link in any email.',
-        widget=forms.CheckboxInput(),
-    )
 
 
 class SecondCenturyCommissionSubscribeForm(forms.Form):
@@ -232,46 +213,19 @@ def subscribe_second_century_commission(request):
 def subscribe_dph(request):
     status = None
     email = None
-    if request.method != 'POST':
-        form = DphSubscribeForm(
-            initial={
-                'email': request.GET.get('email', ''),
-            }
-        )
-        return render(
-            request,
-            'themes/dph/subscribe_page.html',
-            {'form': form},
-        )
+    form = EmailOnlySubscribeForm(request.POST)
+    if form.is_valid():
+        email = form.cleaned_data['email']
+        member_info = {
+            'email_address': email,
+            'status': 'pending'
+        }
 
-    form = DphSubscribeForm(request.POST)
-    if not form.is_valid():
-        return render(request, 'themes/dph/subscribe_page.html', {'form': form})
-
-    email = form.cleaned_data['email']
-    member_info = {
-        'email_address': email,
-        'status_if_new': 'subscribed',
-        'merge_fields': {
-            'FNAME': form.cleaned_data['first_name'],
-            'LNAME': form.cleaned_data['last_name'],
-            'JOBTITLE': form.cleaned_data['job_title'],
-            'COMPANY': form.cleaned_data['company'],
-            'COUNTRY': Country(form.cleaned_data['country']).name,
-            'CONSENT': 'true',
-        },
-    }
+    if not email:
+        return JsonResponse({'error': 'Email is required'}, status=400)
 
     try:
-        if not (api_key and server and list_id):
-            logger.error(
-                'DPH Mailchimp configuration is missing: api_key=%s server=%s list_id=%s',
-                bool(api_key),
-                bool(server),
-                bool(list_id),
-            )
-            status = 'error'
-        else:
+        if api_key and server and list_id:
             client = MailchimpMarketing.Client()
             client.set_config({
                 'api_key': api_key,
@@ -279,23 +233,25 @@ def subscribe_dph(request):
             })
 
             member_id = hashlib.md5(email.lower().encode('utf-8')).hexdigest()
-            try:
-                response = client.lists.get_list_member(list_id, member_id)
-                logger.info('DPH Mailchimp get_list_member response: %s', response)
-                status = response.get('status')
-            except ApiClientError as error:
-                if error.status_code != 404:
-                    raise
+            response = client.lists.get_list_member(list_id, member_id)
 
-            if status != 'subscribed':
-                response = client.lists.set_list_member(list_id, member_id, member_info)
-                logger.info('DPH Mailchimp set_list_member response: %s', response)
-                status = response.get('status')
-                if status == 'subscribed':
-                    status = 'subscribed_success'
+            if response['status'] == 'unsubscribed':
+                status = 'unsubscribed'
+            elif response['status'] == 'subscribed':
+                status = 'subscribed'
+            elif response['status'] == 'pending':
+                status = 'pending'
     except ApiClientError as error:
-        logger.error('DPH Mailchimp error: %s', error.text)
-        status = 'error'
+        error_text = (error.text)
+        logger.error('An error occurred with Mailchimp: {}'.format(error_text))
+
+        if '404' in error_text:
+            try:
+                response = client.lists.add_list_member(list_id, member_info)
+            except ApiClientError as error:
+                logger.error('An error occurred with Mailchimp: {}'.format(error.text))
+                status = 'error'
+            status = 'subscribed_success'
 
     return render(request, 'subscribe/subscribe_page_landing.html', {'status': status, 'subscription_type': 'dph'})
 

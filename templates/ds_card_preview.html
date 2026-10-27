@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load cards %}
+{% comment %}
+  Dev/QA preview of shared card variants (.ds-card) rendered from real pages via
+  {% templatetag openblock %} card {% templatetag closeblock %}. Served at
+  /ds-test-pages/cards/ by core.views.ds_cards_preview. Not a Wagtail page.
+{% endcomment %}
+{% block content %}
+<div class="ds-container" style="padding-block: var(--space-section-y, 80px); display:flex; flex-direction:column; gap:4rem;">
+  <div>
+    <h1 class="ds-header-2">Card variants — preview</h1>
+    <p class="ds-paragraph-1" style="max-width: var(--width-628, 628px);">
+      Real pages rendered through the shared <code>{% templatetag openblock %} card {% templatetag closeblock %}</code> tag. Dev/QA only.
+    </p>
+  </div>
+
+  <section style="display:flex; flex-direction:column; gap:var(--space-24);">
+    <h2 class="ds-header-4" style="border-top:2px solid var(--surface-border); padding-top:var(--space-8);">media-vertical</h2>
+    <div style="display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:var(--space-24);">
+      {% for c in media_cards %}
+        <div class="ds-surface ds-surface--light {{ c.accent_class }}">{% card c.page variant="media-vertical" cta_label="Learn More" %}</div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section style="display:flex; flex-direction:column; gap:var(--space-24);">
+    <h2 class="ds-header-4" style="border-top:2px solid var(--surface-border); padding-top:var(--space-8);">media-compact</h2>
+    <div style="display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:var(--space-24); max-width:var(--width-1320, 1320px);">
+      {% for p in list_pages %}
+        <div class="ds-surface ds-surface--light ds-surface--accent-red" style="border-bottom:1px solid var(--surface-border); padding-bottom:var(--space-24);">{% card p variant="media-compact" %}</div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section style="display:flex; flex-direction:column; gap:var(--space-24);">
+    <h2 class="ds-header-4" style="border-top:2px solid var(--surface-border); padding-top:var(--space-8);">molecules — share-buttons / icon-label / type-of-content</h2>
+    <div class="ds-surface ds-surface--light" style="display:flex; flex-direction:column; gap:var(--space-24); align-items:flex-start;">
+      {% share_buttons share_demo_links heading="Follow" %}
+      <span style="font-family:var(--font-heading); font-size:var(--font-size-14);">{% include "includes/icon_label.html" with icon="fa-calendar-alt" label="June 20, 2026, 7:00PM" %}</span>
+      <span style="font-family:var(--font-heading); font-size:var(--font-size-14);">{% include "includes/icon_label.html" with icon="fa-map-marker-alt" label="Ottawa, Canada" %}</span>
+      {% include "includes/type_of_content.html" with icon="fa-bullhorn" label="News Release" %}
+    </div>
+  </section>
+
+  <section style="display:flex; flex-direction:column; gap:var(--space-24);">
+    <h2 class="ds-header-4" style="border-top:2px solid var(--surface-border); padding-top:var(--space-8);">person / expert — toggleable slots</h2>
+    {% if expert %}
+      <div class="ds-surface ds-surface--light" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 356px)); gap:var(--space-48);">
+        <div><p class="ds-paragraph-3" style="margin-bottom:var(--space-8); opacity:.6;">name + avatar</p>{% expert_card expert show_title=False %}</div>
+        <div><p class="ds-paragraph-3" style="margin-bottom:var(--space-8); opacity:.6;">+ role</p>{% expert_card expert show_title=True %}</div>
+        <div><p class="ds-paragraph-3" style="margin-bottom:var(--space-8); opacity:.6;">+ bio</p>{% expert_card expert show_title=True show_bio=True %}</div>
+        <div><p class="ds-paragraph-3" style="margin-bottom:var(--space-8); opacity:.6;">+ expertise + latest activity</p>{% expert_card expert show_title=True show_expertise=True show_latest_activity=True %}</div>
+        <div><p class="ds-paragraph-3" style="margin-bottom:var(--space-8); opacity:.6;">all slots</p>{% expert_card expert show_title=True show_bio=True show_expertise=True show_latest_activity=True %}</div>
+      </div>
+    {% else %}<p class="ds-paragraph-2">No expert with all slots populated found.</p>{% endif %}
+  </section>
+
+  <section style="display:flex; flex-direction:column; gap:var(--space-24);">
+    <h2 class="ds-header-4" style="border-top:2px solid var(--surface-border); padding-top:var(--space-8);">event</h2>
+    <div style="display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:var(--space-24);">
+      {% for e in event_pages %}
+        <div class="ds-surface ds-surface--light">{% card e variant="event" %}</div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section style="display:flex; flex-direction:column; gap:var(--space-24);">
+    <h2 class="ds-header-4" style="border-top:2px solid var(--surface-border); padding-top:var(--space-8);">article-list-row</h2>
+    <div style="display:flex; flex-direction:column; gap:var(--space-16); max-width:var(--width-628, 628px);">
+      {% for p in list_pages %}
+        <div class="ds-surface ds-surface--light ds-surface--accent-red" style="border-bottom:1px solid var(--surface-border); padding-bottom:var(--space-16);">{% card p variant="article-list-row" %}</div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

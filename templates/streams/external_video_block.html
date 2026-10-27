@@ -1,16 +1,12 @@
-{% load wagtailcore_tags core_tags %}
-
-<div class="container">
-  <div class="row d-block">
-    <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-      <ol class="external-video-block">
-        {% for external_video in self %}
-          <li>
-            <a class="button" href="{{ external_video.video_url }}" target="_blank" rel="noopener noreferrer">Watch <i class="fas fa-video"></i></a>
-            <div>{{ external_video.title }}</div>
-          </li>
-        {% endfor %}
-      </ol>
-    </div>
-  </div>
-</div>
+{% comment %}External video links — plain prose list with tertiary link buttons.{% endcomment %}
+{% load icons %}
+<ol class="ds-prose__video-list">
+  {% for external_video in self %}
+    <li>
+      <a class="ds-button ds-button--tertiary ds-button--on-light" href="{{ external_video.video_url }}" target="_blank" rel="noopener noreferrer">
+        <span class="ds-button__label">Watch: {{ external_video.title }}</span>
+        {% ds_icon 'chevron-right' css_class='ds-button__icon' %}
+      </a>
+    </li>
+  {% endfor %}
+</ol>

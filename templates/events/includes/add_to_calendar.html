@@ -1,20 +1,25 @@
-<ul class="event-add-to-calendar inline-list">
-  <li class="dropdown-button-list">
-    <button class="button" type="button" aria-haspopup="true">
-      Add to Calendar <i class="fas fa-chevron-down"></i>
-    </button>
-    <ul>
-      <li>
-        <a
-          href="{{ event.google_calendar_url }}"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="cal_google">
-          Google
-        </a>
-      </li>
-      <li><a href="{{ event.calendar_feed_url }}">Outlook</a></li>
-      <li><a href="{{ event.calendar_feed_url }}">iCal</a></li>
-    </ul>
-  </li>
-</ul>
+{% load icons %}{% comment %}
+  Add-to-calendar links (registration result + email-confirm pages): label and
+  three tertiary DS buttons — Google's template URL and the site's .ics feed
+  for Outlook and iCal. Replaces the legacy dropdown (`.dropdown-button-list`
+  + FontAwesome), which had no DS counterpart. Params: event.
+{% endcomment %}
+<div class="ds-calendar-links">
+  <p class="ds-calendar-links__label">Add to Calendar</p>
+  <div class="ds-calendar-links__list">
+    <a class="ds-button ds-button--tertiary"
+       href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ event.title|urlencode }}&amp;dates={{ event.publishing_date|date:'Ymd His' }}/{{ event.event_end|date:'Ymd His' }}&amp;ctz={{ event.time_zone|urlencode }}&amp;details=More%20Event%20Information%3A%20{{ event.full_url|default:event.url|urlencode }}&amp;location=&amp;trp=false&amp;sprop=www.cigionline.org&amp;pli=1&amp;sf=true&amp;output=xml"
+       target="_blank" rel="noopener noreferrer">
+      <span class="ds-button__label">Google</span>
+      {% ds_icon 'chevron-right' css_class='ds-button__icon' %}
+    </a>
+    <a class="ds-button ds-button--tertiary" href="/events/feed.ics?id={{ event.id }}">
+      <span class="ds-button__label">Outlook</span>
+      {% ds_icon 'download' css_class='ds-button__icon' %}
+    </a>
+    <a class="ds-button ds-button--tertiary" href="/events/feed.ics?id={{ event.id }}">
+      <span class="ds-button__label">iCal</span>
+      {% ds_icon 'download' css_class='ds-button__icon' %}
+    </a>
+  </div>
+</div>

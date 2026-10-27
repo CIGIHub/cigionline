@@ -1,76 +1,38 @@
 {% extends "base.html" %}
-{% load wagtailimages_tags webpack_loader %}
-{% block extra_css %}
-  {% render_bundle 'eventPage' 'css' %}
-{% endblock %}
+{% load wagtailcore_tags heroes icons %}
+{% comment %}
+  Registration unavailable — closed, private without an invite, no open type,
+  or an unknown/closed type slug. Same shell as the form page (Event Form
+  1705:20332). The legacy page also printed an "Event details" card from
+  fields the model does not have (date_time, location, contact_email); the
+  hero now carries date, type and location.
+{% endcomment %}
 {% block title %}Registration Unavailable — {{ event.title }}{% endblock %}
 
 {% block content %}
-{% include "includes/heroes/hero_event.html" with topics=event.topics_sorted title=event.title date=event.publishing_date end_date=event.event_end event_type=event.get_event_type_display event_access=event.get_event_access_display authors=event.authors.all author_count=event.author_count registration_url=event.registration_url time_zone=event.time_zone time_zone_label=event.time_zone_label is_past=event.is_past %}
+{% page_hero event variant='registration' %}
 
-<section class="event-registration-no-types-section">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <a href="{{ event.url }}" class="btn mb-3"><i class="far fa-arrow-left"></i> Back to event</a>
-
-        <div class="registration-banner-image">
-          {% if event.registration_image_banner %}
-            {% image event.registration_image_banner width-1280 %}
-          {% endif %}
-        </div>
-
-        <h1 class="mb-3">Registration isn’t available</h1>
-        <p class="lead mb-4">
-          We couldn’t find any registration options for <strong>{{ event.title }}</strong>.
-        </p>
-
-        {# Helpful, situation-specific messages #}
+<div class="ds-surface ds-surface--light">
+  <div class="ds-container ds-registration">
+    <div class="ds-registration__main">
+      <h2 class="ds-registration__heading">Registration isn’t available</h2>
+      <div class="ds-registration__text">
+        <p>We couldn’t find any registration options for <strong>{{ event.title }}</strong>.</p>
         {% if not event.registration_open %}
-        <div class="alert alert-warning">
-          Registration for this event is currently closed.
-        </div>
-        {% elif registration_closed %}
-        <div class="alert alert-warning">
-          Registration for this event is closed.
-        </div>
+          <p>Registration for this event is currently closed.</p>
         {% elif event.is_private_registration %}
-        <div class="alert alert-info">
-          This event uses private invitations. Please open the registration link from your
-          invitation email. If you believe this is an error, contact the organizer.
-        </div>
+          <p>This event uses private invitations. Please open the registration link from your invitation email. If you believe this is an error, contact the organizer.</p>
         {% else %}
-        <div class="alert alert-secondary">
-          There are no registration types available at the moment. Please check back later.
-        </div>
+          <p>There are no registration types available at the moment. Please check back later.</p>
         {% endif %}
-
-        {# Event quick facts (optional niceties) #}
-        <div class="card my-4">
-          <div class="card-body">
-            <h2 class="h5 mb-3">Event details</h2>
-            <dl class="row mb-0">
-              <dt class="col-sm-3">Date &amp; time</dt>
-              <dd class="col-sm-9">{{ event.date_time|date:"F j, Y · g:ia T" }}</dd>
-
-              {% if event.location %}
-              <dt class="col-sm-3">Location</dt>
-              <dd class="col-sm-9">{{ event.location }}</dd>
-              {% endif %}
-            </dl>
-          </div>
-        </div>
-
-        {# Optional organizer contact if you have one on the model (safe to leave; won’t render if blank) #}
-        {% if event.contact_email %}
-        <p class="mb-4">
-          Questions? Email <a href="mailto:{{ event.contact_email }}">{{ event.contact_email }}</a>.
-        </p>
-        {% endif %}
-
-        <a href="{{ event.url }}" class="btn btn-primary"><i class="far fa-arrow-left"></i> Back to event</a>
+      </div>
+      <div class="ds-registration__actions">
+        <a class="ds-button ds-button--outline" href="{% pageurl event %}">
+          {% ds_icon 'chevron-left' css_class='ds-button__icon' %}
+          <span class="ds-button__label">Back to event</span>
+        </a>
       </div>
     </div>
   </div>
-</section>
+</div>
 {% endblock %}

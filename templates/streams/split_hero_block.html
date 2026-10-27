@@ -1,0 +1,5 @@
+{% comment %}
+  Split Hero (StreamField block). Markup lives in the shared partial so the block
+  and page-template versions stay in sync. crumbs from get_context.
+{% endcomment %}
+{% include "includes/split_hero.html" with surface=self.surface accent=self.accent crumbs=crumbs heading=self.heading description=self.description image=self.image %}

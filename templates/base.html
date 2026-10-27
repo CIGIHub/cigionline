@@ -2,6 +2,9 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en">
   <head>
+    {# no-js → js before first paint, so CSS can set JS-dependent initial #}
+    {# state without a flash (e.g. the folded aside rows, BugHerd #523). #}
+    <script>document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/, 'js');</script>
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -39,6 +42,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {# Fonts #}
     <link rel="stylesheet" href="https://use.typekit.net/two4qwo.css">
+    {# Source Serif 4 (design-system body type). Futura PT ships via the typekit kit above. #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&display=swap">
     {% block extra_fonts %}
       {# Override this in templates to add extra fonts #}
     {% endblock %}
@@ -77,19 +84,36 @@
       };
     </script>
 
+    {# First tab stop on every page (WCAG 2.4.1) — hidden until keyboard focus. #}
+    <a class="ds-skip-link" href="#main-content">Skip to main content</a>
+
     {% wagtailuserbar %}
 
     {% block header %}
-      {% include "includes/top_bar.html" %}
+      {% include "includes/header.html" %}
     {% endblock %}
 
-    <main>
+    {% comment %}The bare ds-surface fallback (last branch) gives an unthemed
+    main the base light tokens on a transparent ground. Without it, a module
+    set to "Inherit from page" had nothing to inherit — its rules, red dates
+    and pill tokens all collapsed (homepage bento, BugHerd #454).{% endcomment %}
+    <main id="main-content" tabindex="-1"{% if main_surface or main_accent_scheme %} class="ds-surface ds-surface--{{ main_surface|default:'inherit' }}{% if main_accent_scheme %} ds-surface--accent-{{ main_accent_scheme }}{% endif %}"{% elif page.surface %} class="ds-surface ds-surface--{{ page.surface }}"{% else %} class="ds-surface"{% endif %}{% if main_accent %} style="--brand-accent: {{ main_accent }};"{% endif %}>
+      {% if messages %}
+        <div class="ds-messages ds-container" role="status" aria-live="polite">
+          {% for message in messages %}
+            <p class="ds-messages__item ds-messages__item--{{ message.tags|default:'info' }}">{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
       {% block content %}{% endblock %}
     </main>
 
     {% block footer %}
       {% include "includes/footer.html" %}
     {% endblock %}
+
+    {# Hidden markup fragments cloned by design-system JS (keeps markup out of .js). #}
+    {% include "includes/ds_js_templates.html" %}
     
     {% if self.get_site.site_name == "Centre for International Governance Innovation" %}
       <div id="cigi-cookie-consent-container"></div>

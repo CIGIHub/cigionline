@@ -1,18 +1,7 @@
-<div class="stream-block-autoplay-video">
-  <div class="container">
-    <div class="row">
-      <div class="col">
-        <video playsinline{% if not self.disable_autoplay %} autoplay{% endif %} muted controls>
-          <source src="{{ self.video.url }}" type="video/mp4">
-        </video>
-      </div>
-    </div>
-    <div class="row d-block">
-      <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-        <div class="caption">
-          {{ self.caption }}
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+{% comment %}Autoplay video — prose media treatment with the standard caption.{% endcomment %}
+<figure class="ds-prose__media">
+  <video playsinline autoplay muted controls loop>
+    <source src="{{ self.video.url }}" type="video/mp4">
+  </video>
+  {% if self.caption %}<figcaption>{{ self.caption }}</figcaption>{% endif %}
+</figure>

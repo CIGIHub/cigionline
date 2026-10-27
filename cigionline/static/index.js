@@ -6,6 +6,8 @@ import CookieConsent from './js/components/CookieConsent';
 import './css/cigionline.scss';
 
 import addInlineVideoActions from './js/inline_video_block';
+import initAll from './js/design-system/init-all';
+import initHeader from './js/design-system/header';
 
 $(function () {
   // MAIN NAVIGATION SCROLL
@@ -144,15 +146,23 @@ $(function () {
       toggleButton.setAttribute('aria-expanded', !paragraph.classList.contains('collapsed'));
     });
   });
+
+  // DESIGN SYSTEM — run every DS init scoped to the document (idempotent).
+  initAll(document);
+
+  // DESIGN SYSTEM — primary header mega-menus (page chrome, document-scoped).
+  initHeader();
+
+  // DESIGN SYSTEM — when a composable tab panel is first shown, re-run inits
+  // scoped to it: lazily-injected router results get wired, carousels that were
+  // measured while hidden re-measure. (tabs.js dispatches ds:panel-shown.)
+  document.addEventListener('ds:panel-shown', (e) => {
+    const panel = e.detail && e.detail.panel;
+    if (panel) initAll(panel);
+  });
 });
 
 addInlineVideoActions();
-
-if (document.querySelector('.interactive-chart')) {
-  import('./js/interactive_chart_block').then(({ default: initializeInteractiveCharts }) => {
-    initializeInteractiveCharts();
-  });
-}
 
 const cookieConsentContainer = document.getElementById('cigi-cookie-consent-container');
 if (

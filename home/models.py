@@ -13,7 +13,39 @@ from features.models import (
     HomePageFeaturedHighlightsList,
     HomePageFeaturedEventsList,
 )
-from streams.blocks import ParagraphBlock, PersonsListBlock, T7CommuniqueBlock
+from streams.blocks import (
+    ParagraphBlock,
+    PersonsListBlock,
+    T7CommuniqueBlock,
+    PrimaryHeroBlock,
+    AltHeroBlock,
+    SplitHeroBlock,
+    BannerBlock,
+    NewsCarouselBlock,
+    NewsGridBlock,
+    ExpertsGridBlock,
+    ExpertsCarouselBlock,
+    ProgramSpotlightBlock,
+    ProgramGridBlock,
+    ProgramsCarouselBlock,
+    EventsCarouselBlock,
+    ResourceCarouselBlock,
+    ResourceBentoBlock,
+    CTAImageBlock,
+    ImageTextBlock,
+    TextCardGridBlock,
+    StatsBlock,
+    VideoTextBlock,
+    GalleryTextBlock,
+    TrendingIssuesBlock,
+    JobsListBlock,
+    AccordionModuleBlock,
+    ComposableTabsBlock,
+    NewsletterSubscriptionBlock,
+    NewsletterSignupCTABlock,
+    SupportingMaterialsBlock,
+    VideoCarouselBlock,
+)
 from wagtail.admin.panels import (
     InlinePanel,
     MultiFieldPanel,
@@ -23,7 +55,6 @@ from wagtail.admin.panels import (
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from django.utils import timezone
-from django.utils.cache import add_never_cache_headers
 from people.models import PersonPage
 from multimedia.models import MultimediaPage
 import random
@@ -40,77 +71,52 @@ class HomePage(Page):
         verbose_name='Banner Text',
     )
 
+    # Design-system homepage body. Composed of DS modules; the dynamic modules
+    # (Program Spotlight, Experts Grid, Events Carousel, News Grid) auto-query, so
+    # a seeded default renders populated without hand-entry. The legacy panels
+    # below are retained for backwards compatibility but are no longer rendered.
+    body = StreamField(
+        [
+            ('primary_hero', PrimaryHeroBlock()),
+            ('alt_hero', AltHeroBlock()),
+            ('split_hero', SplitHeroBlock()),
+            ('banner', BannerBlock()),
+            ('news_grid', NewsGridBlock()),
+            ('news_carousel', NewsCarouselBlock()),
+            ('experts_grid', ExpertsGridBlock()),
+            ('experts_carousel', ExpertsCarouselBlock()),
+            ('program_spotlight', ProgramSpotlightBlock()),
+            ('program_grid', ProgramGridBlock()),
+            ('programs_carousel', ProgramsCarouselBlock()),
+            ('events_carousel', EventsCarouselBlock()),
+            ('resource_carousel', ResourceCarouselBlock()),
+            ('resource_bento', ResourceBentoBlock()),
+            ('cta_image', CTAImageBlock()),
+            ('image_text', ImageTextBlock()),
+            ('text_card_grid', TextCardGridBlock()),
+            ('stats', StatsBlock()),
+            ('video_text', VideoTextBlock()),
+            ('gallery_text', GalleryTextBlock()),
+            ('trending_issues', TrendingIssuesBlock()),
+            ('jobs_list', JobsListBlock()),
+            ('accordion_module', AccordionModuleBlock()),
+            ('composable_tabs', ComposableTabsBlock()),
+            ('supporting_materials', SupportingMaterialsBlock()),
+            ('video_carousel', VideoCarouselBlock()),
+            ('newsletter_subscription', NewsletterSubscriptionBlock()),
+            ('newsletter_signup_cta', NewsletterSignupCTABlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
+
+    # Legacy panels removed from the editor (Tim + Tia, BugHerd #448): the DS
+    # homepage renders `body` only, so Banner, Featured Content, Highlights,
+    # Featured Multimedia, Featured Experts and Promotion Blocks fed nothing
+    # and confused editors. The relations and their data stay untouched —
+    # only the admin panels are gone.
     content_panels = Page.content_panels + [
-        MultiFieldPanel(
-            [
-                FieldPanel(
-                    'banner_text',
-                ),
-            ],
-            heading='Banner',
-            classname='collapsible collapsed',
-        ),
-        MultiFieldPanel(
-            [
-                InlinePanel(
-                    'featured_pages',
-                    max_num=9,
-                    min_num=0,
-                    label='Page',
-                ),
-            ],
-            heading='Featured Content',
-            classname='collapsible collapsed',
-            help_text='1: large | 2-4: medium | 5-9: small'
-        ),
-        MultiFieldPanel(
-            [
-                InlinePanel(
-                    'highlight_pages',
-                    max_num=12,
-                    min_num=0,
-                    label='Page',
-                ),
-            ],
-            heading='Highlights',
-            classname='collapsible collapsed',
-        ),
-        MultiFieldPanel(
-            [
-                InlinePanel(
-                    'featured_multimedia',
-                    max_num=12,
-                    min_num=0,
-                    label='Multimedia',
-                ),
-            ],
-            heading='Featured Multimedia',
-            classname='collapsible collapsed',
-        ),
-        MultiFieldPanel(
-            [
-                InlinePanel(
-                    'featured_experts',
-                    max_num=3,
-                    min_num=0,
-                    label='Expert',
-                ),
-            ],
-            heading='Featured Experts',
-            classname='collapsible collapsed',
-        ),
-        MultiFieldPanel(
-            [
-                InlinePanel(
-                    'promotion_blocks',
-                    max_num=4,
-                    min_num=0,
-                    label='Promotion Block',
-                ),
-            ],
-            heading='Promotion Blocks',
-            classname='collapsible collapsed',
-        ),
+        FieldPanel('body'),
     ]
 
     def get_featured_pages(self):
@@ -145,7 +151,7 @@ class HomePage(Page):
             archive=0
         ).exclude(id__in=exclude_ids).distinct().values_list('id', flat=True))
         random_additional_experts_id_list = random.sample(additional_experts_id_list, min(len(additional_experts_id_list), 3))
-        featured_experts = list(featured_experts) + list(PersonPage.objects.filter(id__in=random_additional_experts_id_list))[:3 - len(featured_experts)]
+        featured_experts = list(featured_experts) + list(PersonPage.objects.live().public().filter(id__in=random_additional_experts_id_list))[:3 - len(featured_experts)]
 
         return featured_experts
 
@@ -298,12 +304,9 @@ class HomePage(Page):
         context['featured_publications'] = self.get_featured_publications()
         context['featured_events'] = self.get_featured_events()
         context['promotion_blocks'] = self.get_promotion_blocks()
+        # DS homepage leads with the dark primary hero, so the nav is dark too.
+        context['header_surface'] = 'dark'
         return context
-
-    def serve(self, request, *args, **kwargs):
-        response = super().serve(request, *args, **kwargs)
-        add_never_cache_headers(response)
-        return response
 
     max_count = 1
     subpage_types = [
@@ -317,7 +320,6 @@ class HomePage(Page):
         'contact.ContactPage',
         'core.BasicPage',
         'core.PrivacyNoticePage',
-        'core.TwentyFifthPageSingleton',
         'events.EventListPage',
         'features.FeaturesListPage',
         'multimedia.MultimediaListPage',

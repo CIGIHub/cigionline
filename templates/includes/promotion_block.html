@@ -14,11 +14,11 @@
       <img class="ad-block-bt-logo-sm" src="/static/assets/ad_block_bt_logo_sm.svg" alt="Big Tech">
       <p class="logo-text">Is big tech going to save humanity or destroy it? Host Taylor Owen thinks it's more complicated than that.</p>
     </a>
-    <a href="{{episode.url}}" class="podcast-image" aria-label="{{ episode.title }}">
+    <a href="{% pageurl episode %}" class="podcast-image" aria-label="{{ episode.title }}">
       {% image episode.image_square fill-400x400 %}
     </a>
     <div class="podcast-info">
-      <a href="{{episode.url}}" class="podcast-title">{{episode.title}}</a>
+      <a href="{% pageurl episode %}" class="podcast-title">{{episode.title}}</a>
       <div class="podcast-description">{{episode.subtitle|richtext}}</div>
       {% include "includes/simplecast_embed.html" with simplecast_url=episode.multimedia_url %}
     </div>

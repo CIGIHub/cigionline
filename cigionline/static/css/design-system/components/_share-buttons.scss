@@ -1,0 +1,61 @@
+// =============================================================================
+// Design System — Share / follow buttons
+// A label ("Follow"/"Share") + a row of circular social icon links. Brand icons
+// are Font Awesome (fa-brands). Surface-aware: circular outline that fills with
+// the in-scope accent on hover/focus. Across article/publication/podcast heroes.
+// =============================================================================
+
+.ds-share-buttons {
+  // Frame 1360:68860 (Share / Subscribe / Follow groups): ruled label over an
+  // icon row — a column, not the old label-beside-icons row.
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-24);
+
+  &__label {
+    @include header-6; // 18px Futura Demi
+    border-top: 3px solid var(--surface-text); // group-header rule (frame: 3px)
+    padding-top: var(--space-8);
+    color: var(--surface-text);
+  }
+
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-8);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  // 32px solid circle: filled with the on-surface text colour, glyph knocked
+  // out in the surface colour.
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--surface-text);
+    color: var(--surface-bg, var(--color-brand-white));
+    font-size: 16px; // glyph measure inside the 32px circle
+    text-decoration: none;
+    @include transition(background-color, color);
+
+    &:hover,
+    &:focus-visible {
+      background: var(--accent);
+      color: var(--accent-on);
+    }
+  }
+
+  // Platform without a brand glyph — plain text link at the same row height.
+  &__text-link {
+    @include paragraph-2;
+    color: var(--surface-text);
+    @include hover-underline;
+  }
+}

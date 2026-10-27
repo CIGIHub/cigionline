@@ -1,0 +1,11 @@
+{% load wagtailembeds_tags %}
+
+<div class="container">
+  <div class="row d-block">
+    <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+      <div class="embedded-multimedia-block">
+        {% embed self.multimedia_url max_width=705 %}
+      </div>
+    </div>
+  </div>
+</div>

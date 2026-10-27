@@ -1,0 +1,27 @@
+{% load wagtailcore_tags icons %}
+{% comment %}
+  Shared dynamic-module title — heading + intro + optional button CTA. One source
+  for the module header reused across the carousels/grids/bento. Two layouts:
+    default  — band: heading left (narrow, 5px top-rule) · intro/CTA right (wide)
+    stacked  — heading (short 80px rule) · intro · CTA stacked (carousel intro cell)
+  Params: heading, intro (richtext), cta_url, cta_label, cta_scheme (default
+  on-light), level (heading level, default 2), stacked, wide_lead (heading is the
+  wide column, intro/CTA narrow — the reversed band layout).
+{% endcomment %}
+{% if heading or intro or cta_url %}
+  <div class="ds-module-title{% if stacked %} ds-module-title--stacked{% endif %}{% if wide_lead %} ds-module-title--lead-wide{% endif %}">
+    {# Inner span carries the top rule so it hugs the title text (BugHerd #72). #}
+    {% if heading %}<h{{ level|default:2 }} class="ds-module-title__heading"><span class="ds-module-title__heading-text">{{ heading }}</span></h{{ level|default:2 }}>{% endif %}
+    {% if intro or cta_url %}
+      <div class="ds-module-title__aside">
+        {% if intro %}<div class="ds-module-title__intro">{{ intro|richtext }}</div>{% endif %}
+        {% if cta_url %}
+          <a class="ds-button ds-button--outline ds-button--{{ cta_scheme|default:'on-light' }} ds-module-title__cta" href="{{ cta_url }}">
+            <span class="ds-button__label">{{ cta_label }}</span>
+            {% ds_icon 'chevron-right' css_class='ds-button__icon' %}
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+{% endif %}

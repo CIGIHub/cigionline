@@ -1,0 +1,159 @@
+// =============================================================================
+// Subscribe CTA — red newsletter band.
+// Photo underlay with a hard-light red wash; heading left, email form right.
+// Rendered mid-body inside .ds-prose (reading shell) and by the author-placed
+// newsletter_subscription block.
+// =============================================================================
+
+.ds-subscribe {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: var(--space-24);
+  color: var(--color-brand-white);
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+  }
+
+  &__wash {
+    position: absolute;
+    inset: 0;
+    background: var(--color-brand-red);
+    mix-blend-mode: hard-light;
+    z-index: -1;
+  }
+
+  // DPH scheme (About design, CTA/15 1595:80988): same photo underlay + white
+  // chrome, green wash. Authored via the newsletter block's scheme choice.
+  &--green &__wash { background: var(--color-accent-green); }
+
+  &__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-24);
+  }
+
+  &__heading {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--font-size-24);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    flex: 0 1 auto;
+    // The design breaks "Subscribe to / Our Newsletter" over two lines at a
+    // 375px column; cap the measure rather than hard-wrapping the copy.
+    max-width: 46%;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+    flex: 0 1 auto;
+    width: min(100%, 375px);
+  }
+
+  &__form {
+    display: flex;
+    gap: var(--space-16);
+    align-items: stretch;
+    width: 100%;
+  }
+
+  &__field {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: var(--space-12);
+    background: transparent;
+    border: 0;
+    border-bottom: 3px solid var(--color-brand-white);
+    border-radius: 0;
+    color: var(--color-brand-white);
+    font-size: var(--font-size-16);
+    line-height: 1.5;
+
+    &::placeholder { color: var(--color-brand-white); opacity: 1; }
+    &:focus { outline: 2px solid var(--color-brand-white); outline-offset: 2px; }
+  }
+
+  &__submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-8);
+    padding: var(--space-16) var(--space-24);
+    background: var(--color-brand-white);
+    border: 1px solid var(--color-brand-white);
+    color: var(--color-brand-black);
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: var(--font-size-16);
+    line-height: 1.5;
+    text-transform: uppercase;
+    cursor: pointer;
+    @include transition(background-color, color, border-color);
+
+    // Same inversion as a white button on the red band
+    // (.ds-button--outline.ds-button--on-red) — BugHerd #276.
+    &:hover,
+    &:focus-visible {
+      background: var(--color-brand-black);
+      border-color: var(--color-brand-black);
+      color: var(--color-brand-white);
+    }
+  }
+
+  &__submit-icon {
+    width: 1em;
+    height: 1em;
+  }
+
+  &__consent {
+    font-family: var(--font-body);
+    font-size: var(--font-size-14);
+    line-height: 1.5;
+
+    p { margin: 0; }
+    a { color: inherit; text-decoration: underline; }
+  }
+
+  @media (max-width: 767px) {
+    &__heading { max-width: none; }
+    &__actions { width: 100%; }
+  }
+}
+
+// Standalone band after the reading area (news singles — the design places
+// CTA/15 between the body and Additional Materials, not mid-body).
+.ds-subscribe-band {
+  margin-block: var(--space-80);
+}
+
+// Inside the reading shell the prose column supplies vertical rhythm; the band
+// spans the 818px media measure like figures do. The prose element styles
+// (ruled h2 top border, surface text colour on headings/paragraphs) outrank
+// the band's inherited white — re-assert the band's own treatment.
+.ds-prose .ds-subscribe {
+  margin-block: var(--space-48);
+
+  .ds-subscribe__heading {
+    margin: 0;
+    padding-top: 0;
+    border-top: 0;
+    color: var(--color-brand-white);
+  }
+
+  p,
+  a {
+    color: var(--color-brand-white);
+  }
+}

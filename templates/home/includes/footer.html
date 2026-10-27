@@ -5,11 +5,9 @@
     <div class="container">
       <div class="row">
         <div class="col">
-          <a href="/25/">
-            <div class="logo-container twentififth">
-              {% include 'includes/CIGI_25_logo_small.svg' %}
-            </div>
-          </a>
+          <div class="logo-container">
+            {% include 'includes/footer_cigi_logo.svg' %}
+          </div>
           {% include 'includes/footer_bracket.svg' %}
           {% highlighted_topics %}
         </div>
@@ -48,16 +46,10 @@
               <a href="https://www.instagram.com/cigionline/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Instagram Profile"><i class="fa-brands fa-instagram"></i></a>
             </li>
             <li>
-              <a href="https://cigionlineorg.substack.com/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Substack page"><i class="fa-brands fa-substack"></i></a>
+              <a href="https://cigionlineorg.substack.com/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Substack page">{% include 'includes/substack-logo.svg' %}</a>
             </li>
             <li>
-              <a href="https://medium.com/centre-for-international-governance-innovation" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Medium page"><i class="fa-brands fa-medium"></i></a>
-            </li>
-            <li>
-              <a href="https://podcasts.apple.com/ca/podcast/policy-prompt/id1766773261" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Policy Prompt on Apple Podcasts"><i class="fa-solid fa-podcast"></i></a>
-            </li>
-            <li>
-              <a href="https://open.spotify.com/show/2ta9ZymSqzJpoHdy59kLSd" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Policy Prompt on Spotify"><i class="fa-brands fa-spotify"></i></a>
+              <a href="https://medium.com/centre-for-international-governance-innovation" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Medium page">{% include 'includes/medium-logo.svg' %}</a>
             </li>
           </ul>
           <div class="copyright">&copy; {% now "Y" %} Centre for International Governance Innovation</div>

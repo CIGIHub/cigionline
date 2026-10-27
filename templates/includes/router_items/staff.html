@@ -1,0 +1,23 @@
+{% load wagtailimages_tags wagtailcore_tags icons %}{% comment %}
+  Staff router item — staff-card variant for the Staff Directory (Leadership page
+  Staff tab). name · position · phone · email · avatar + Read Bio. Uses existing
+  PersonPage.position / email / phone_number (no new field). No photo → a default
+  person glyph fills the circle, so every row keeps the avatar offset and the
+  text columns align (Kay, BugHerd #334).
+{% endcomment %}
+<article class="ds-staff-card">
+  {% if item.image_square %}
+    <a class="ds-staff-card__avatar" href="{% pageurl item %}">{% image item.image_square fill-160x160 %}</a>
+  {% else %}
+    <a class="ds-staff-card__avatar ds-staff-card__avatar--default" href="{% pageurl item %}" aria-hidden="true" tabindex="-1">{% ds_icon 'person' %}</a>
+  {% endif %}
+  <div class="ds-staff-card__body">
+    <a class="ds-staff-card__name" href="{% pageurl item %}">{{ item.title }}</a>
+    {% if item.position %}<p class="ds-staff-card__position">{{ item.position }}</p>{% endif %}
+    <ul class="ds-staff-card__contact">
+      {% if item.phone_number %}<li><a href="tel:{{ item.phone_number }}">{{ item.phone_number }}</a></li>{% endif %}
+      {% if item.email %}<li><a href="mailto:{{ item.email }}">{{ item.email }}</a></li>{% endif %}
+    </ul>
+    <a class="ds-staff-card__bio-link" href="{% pageurl item %}">Read Bio</a>
+  </div>
+</article>

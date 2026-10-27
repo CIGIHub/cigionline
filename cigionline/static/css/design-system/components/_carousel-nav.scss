@@ -1,0 +1,32 @@
+// =============================================================================
+// Design System — Carousel nav
+// Row of circular prev / (pause) / next buttons for carousels (gallery,
+// supporting-materials, video). The button visual is the shared .ds-slider-arrow;
+// this file only adds the row layout, the 24px chevron icon fill, and the pause
+// toggle's play/pause icon swap.
+// =============================================================================
+
+.ds-carousel-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+
+  // Carousel chevrons are filled paths (the standalone slider-arrow uses a
+  // stroked glyph), so set the fill here rather than on the shared icon class.
+  &__icon {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+  }
+
+  // Pause toggle (autoplay only) — pause icon while playing, play icon while
+  // paused. Centred between prev/next; same .ds-slider-arrow button as the rest.
+  &__pause {
+    .ds-carousel-nav__play-icon { display: none; }
+
+    &[aria-pressed='true'] {
+      .ds-carousel-nav__pause-icon { display: none; }
+      .ds-carousel-nav__play-icon { display: block; }
+    }
+  }
+}

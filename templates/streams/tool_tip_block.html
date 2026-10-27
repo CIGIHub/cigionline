@@ -1,13 +1,9 @@
-{% load wagtailimages_tags %}
-<div class="tool-tip-block {{ self.anchor }}">
+{% comment %}
+  Tooltip — legacy interactive person tooltip rendered as a static inline
+  callout (generic Batch B treatment; the hover JS and portrait are dropped —
+  5 instances on one page).
+{% endcomment %}
+<div class="ds-prose__callout ds-prose__callout--tooltip">
   {{ self.text }}
-  <div class="person-info">
-    {% image self.image width-100 %}
-    <div>
-      <div class="person-name">{{ self.name }}</div>
-      <div class="person-title">{{ self.title }}</div>
-    </div>
-  </div>
-  <div class="triangle"></div>
-  <div class="tooltip-close"><i class="fa fa-times-circle"></i></div>
+  {% if self.name %}<p class="ds-prose__callout-source">{{ self.name }}{% if self.title %}, {{ self.title }}{% endif %}</p>{% endif %}
 </div>

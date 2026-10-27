@@ -1,0 +1,90 @@
+// =============================================================================
+// Design System — Jobs List block
+// Section title (heading left / intro right) over a list of job-posting rows:
+// [closing date + title] | [description] | [View Opportunity link], divided by
+// rules. Surface-aware.
+// =============================================================================
+
+.ds-jobs {
+  padding-block: var(--space-section-y);
+
+  // Author-set button row between the section header and the list
+  // (BugHerd #184 — cta_label alone gave the author no button).
+  &__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-24);
+    margin-bottom: var(--space-48);
+  }
+
+  &__list {
+    list-style: none;
+    margin: var(--space-48) 0 0;
+    padding: 0;
+    border-top: var(--border-divider) solid var(--surface-border);
+  }
+
+  &__item {
+    display: grid;
+    grid-template-columns: minmax(12rem, 18rem) 1fr auto;
+    gap: var(--space-48);
+    align-items: start;
+    padding-block: var(--space-24);
+    border-bottom: var(--border-divider) solid var(--surface-border);
+  }
+
+  &__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  &__closing {
+    @include paragraph-3;
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  &__job-title {
+    @include header-5;
+    color: var(--surface-text);
+    text-decoration: none;
+    @include hover-underline;
+  }
+
+  &__desc {
+    @include paragraph-2;
+    color: var(--surface-text);
+
+    p { margin: 0 0 var(--space-8); &:last-child { margin-bottom: 0; } }
+  }
+
+  // "View Opportunity" — uppercase accent link + chevron (tertiary action).
+  &__cta {
+    @include button-small;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
+    align-self: center;
+    white-space: nowrap;
+    color: var(--accent);
+    text-decoration: none;
+    @include hover-underline;
+  }
+
+  &__cta-icon {
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+  }
+
+  // --- Mobile: stack each row -----------------------------------------------
+  @media (max-width: 768px) {
+    &__item {
+      grid-template-columns: 1fr;
+      gap: var(--space-16);
+    }
+
+    &__cta { align-self: flex-start; }
+  }
+}

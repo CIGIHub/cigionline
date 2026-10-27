@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% comment %}
+  Dev/QA preview of the CPT heroes (core.heroes → includes/heroes/*.html),
+  rendered from real pages. Served at /ds-test-pages/heroes/ by
+  core.views.ds_heroes_preview. STAGED — not wired into live page templates.
+{% endcomment %}
+{% block content %}
+<div class="ds-container" style="padding-block: var(--space-section-y, 80px);">
+  <h1 class="ds-header-2">CPT heroes — preview</h1>
+  <p class="ds-paragraph-1" style="max-width: var(--width-628, 628px);">
+    Page-model-specific heroes rendered from real pages. Staged for review before
+    wiring into the live page templates. Dev/QA only.
+  </p>
+</div>
+
+{% for item in heroes %}
+  <div style="margin-block: var(--space-48, 48px);">
+    <p class="ds-container ds-paragraph-3" style="text-transform:uppercase; letter-spacing:0.04em; opacity:0.6; margin-bottom:var(--space-8);">{{ item.label }}</p>
+    {% include "includes/heroes/hero.html" with hero=item.hero %}
+  </div>
+{% endfor %}
+{% endblock %}

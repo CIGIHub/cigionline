@@ -1,0 +1,25 @@
+{% load wagtailcore_tags wagtailembeds_tags core_tags %}
+{% comment %}
+  Publication reading-body tail — rendered inside .ds-reading__main so it shares
+  the body's reading column (same margins + width, aside beside it). Data stays
+  in its own page fields (embed_youtube / editorial_reviews); nothing is moved
+  into the body StreamField.
+    Book Trailer   — DS embed treatment (16:9)
+    Editorial Reviews — DS block-quote treatment (.stream-block-blockquote in .ds-prose)
+{% endcomment %}
+{% if page.publication_type.title == "Books" and page.embed_youtube %}
+  <div class="ds-prose"><h2>Book Trailer</h2></div>
+  <div class="ds-reading__embed ds-reading__embed--video">{% titled_embed page.embed_youtube page.title %}</div>
+{% endif %}
+{% if page.editorial_reviews|length > 0 %}
+  <div class="ds-prose">
+    <h2>Editorial Reviews</h2>
+    {% for review in page.editorial_reviews %}
+      <div class="stream-block-blockquote">
+        <div class="stream-block-blockquote-content">
+          <blockquote>{{ review }}</blockquote>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}

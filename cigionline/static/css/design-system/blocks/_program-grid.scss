@@ -1,0 +1,89 @@
+// =============================================================================
+// Design System — Program Grid block
+// A grid of content cards belonging to one program. Section title (heading-left
+// + intro-right) over a grid of shared media-vertical cards. Light-grey rules
+// divide the columns and sit above each row (incl. the first — separating the
+// grid from the title). Lives on a light .ds-surface; each card carries the
+// program's theme-accent class so .ds-accent-media resolves its top-rule colour.
+// =============================================================================
+
+.ds-program-grid {
+  padding-block: var(--space-section-y); // horizontal gutters from .ds-container
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: var(--space-48); // separation when items wrap to further rows
+    // Content width per card once the asymmetric divider padding is taken out
+    // (outer cards pad one side, the middle pads both — see the track calc
+    // below). Equal content widths keep the same-ratio images the same
+    // height across the row (Tia, BugHerd #283).
+    --pg-content: calc((100% - 2 * var(--space-48)) / 3);
+    margin: var(--space-80) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  // Each cell hosts a media-vertical .ds-card. 24px inline padding → 24px on
+  // either side of the centred vertical divider (cards gap-24 around the
+  // 0-width divider); 24px above the row rule before the card content. Horizontal
+  // rules (top + between rows) are the brand light-grey.
+  &__card {
+    position: relative;
+    padding-inline: var(--space-24);
+    padding-top: var(--space-24);
+    border-top: var(--border-divider) solid var(--color-brand-light-grey);
+  }
+
+  // Vertical dividers between columns + trim the outer inline padding. Scoped to
+  // ≥769px so the mobile single-column rules win cleanly.
+  @media (min-width: 769px) {
+    // Drawn as a pseudo-element (not border-left) so it starts 24px below the top
+    // — clearing the horizontal row rule with a gap between the two — and runs to
+    // the row bottom. Distinct colour: border-grey-white, vs the light-grey rows.
+    &__card:not(:nth-child(3n + 1))::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: var(--space-24);
+      bottom: 0;
+      width: var(--border-divider);
+      background: var(--color-border-grey-white);
+    }
+    &__card:nth-child(3n + 1) { padding-left: 0; }
+    &__card:nth-child(3n)     { padding-right: 0; }
+
+    // Tracks compensate for the asymmetric padding (outer cards pad one side,
+    // the middle both), so every card's CONTENT is --pg-content wide and the
+    // same-ratio images match heights (BugHerd #283).
+    &__grid {
+      grid-template-columns:
+        calc(var(--pg-content) + var(--space-24))
+        calc(var(--pg-content) + var(--space-48))
+        calc(var(--pg-content) + var(--space-24));
+    }
+
+    // Two-card grids render 2-up so no empty third column remains (BugHerd #131).
+    // Card 1 keeps the base first-column reset; card 2 becomes the last column.
+    // Both pad one side only, so equal halves already give equal content.
+    &__grid--two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    &__grid--two &__card:nth-child(2) { padding-right: 0; }
+  }
+
+  // --- Mobile: single column, stacked, horizontal rules only ------------------
+  // (Built to spec; pinned-viewport automation can't visually verify ≤768px.)
+  @media (max-width: 768px) {
+    &__grid {
+      grid-template-columns: 1fr;
+      row-gap: 0;
+      margin-top: var(--space-48);
+    }
+
+    &__card {
+      padding-inline: 0;
+      // Stacked cards share one rule, so the CTA sat against the next card's
+      // top rule. Hold the button clear of it (BugHerd #141).
+      padding-bottom: var(--space-32);
+    }
+  }
+}

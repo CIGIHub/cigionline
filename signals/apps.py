@@ -235,11 +235,30 @@ def clear_experts_page_cache(sender, **kwargs):
         error(traceback.format_exc())
 
 
+def clear_footer_cache(sender, **kwargs):
+    # The design-system footer is a {% cache %} fragment that now depends on
+    # FooterSettings + the footer Menu objects, so drop it whenever those change.
+    from django.core.cache.utils import make_template_fragment_key
+
+    try:
+        cache.delete(make_template_fragment_key('ds_footer'))
+    except Exception:
+        error(traceback.format_exc())
+
+
 class SignalsConfig(AppConfig):
     name = 'signals'
     verbose_name = "Signals"
 
     def ready(self):
+        from django.db.models.signals import post_save, post_delete
+        from menus.models import Menu, MenuItem
+        from core.models_settings import FooterSettings
+
+        for model in (FooterSettings, Menu, MenuItem):
+            post_save.connect(clear_footer_cache, sender=model)
+            post_delete.connect(clear_footer_cache, sender=model)
+
         from articles.models import ArticlePage, ArticleSeriesPage
         from publications.models import PublicationPage
         from multimedia.models import MultimediaPage

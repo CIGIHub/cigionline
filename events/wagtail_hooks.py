@@ -39,20 +39,11 @@ logger = logging.getLogger(__name__)
 from .reporting import (
     attach_answer_cells,
     build_answer_columns,
-    build_choice_summary_rows,
     build_type_rows,
     filter_registrants_queryset,
     paginate_queryset,
     registrants_csv_response,
 )
-
-
-def registration_form_template_title(obj):
-    return format_html(
-        '<a href="{}">{}</a>',
-        reverse("wagtailsnippets_events_registrationformtemplate:edit", args=[obj.pk]),
-        obj.title,
-    )
 
 
 class EventPageIndexView(ModelIndexView):
@@ -156,14 +147,13 @@ class RegistrantViewSet(ModelViewSet):
         "event",
         "registration_type",
         "status",
-        "attended",
         "created_at",
     )
     search_fields = ("email", "event__title", "registration_type__name")
     ordering = "-created_at"
 
     # Helpful filter columns (keep simple for reliability)
-    list_filter = ("status", "registration_type", "attended")  # editors can drill down fast
+    list_filter = ("status", "registration_type")  # editors can drill down fast
 
     # Fields you want editable in admin (answers are usually read-only)
     form_fields = [
@@ -173,7 +163,6 @@ class RegistrantViewSet(ModelViewSet):
         "first_name",
         "last_name",
         "status",
-        "attended",
         "answers",
         "uploaded_document_ids",
         "invite",
@@ -181,13 +170,7 @@ class RegistrantViewSet(ModelViewSet):
 
     def edit_answers_view(self, request, pk: int):
         """Admin view to edit a registrant's dynamic form answers with labelled fields."""
-        from django.db import transaction
-        from .forms import (
-            add_choice_limit_errors,
-            build_dynamic_form,
-            strip_non_answer_data,
-            validate_choice_limits,
-        )
+        from .forms import build_dynamic_form
         from .utils import _jsonable
         from wagtail.documents.models import Document
 
@@ -209,7 +192,6 @@ class RegistrantViewSet(ModelViewSet):
             registrant.invite,
             require_email=False,
             include_honeypot=False,
-            current_registrant=registrant,
         )
 
         if request.method == "POST":
@@ -222,51 +204,39 @@ class RegistrantViewSet(ModelViewSet):
                 registrant.first_name = cleaned.pop("first_name", registrant.first_name)
                 registrant.last_name = cleaned.pop("last_name", registrant.last_name)
                 cleaned.pop("email", None)  # email not changed here; keep existing
-                strip_non_answer_data(event, cleaned)
 
-                with transaction.atomic():
-                    EventPage.objects.select_for_update().get(pk=event.pk)
-                    quota_errors = validate_choice_limits(
-                        event,
-                        reg_type,
-                        [cleaned],
-                        current_registrant=registrant,
-                    )
-                    if quota_errors:
-                        add_choice_limit_errors(form, quota_errors)
-                    else:
-                        # Handle file fields only after quota validation, so failed edits
-                        # do not create orphaned Document rows.
-                        existing = registrant.answers if isinstance(registrant.answers, dict) else {}
-                        uploaded_doc_ids = list(registrant.uploaded_document_ids or [])
-                        file_answer_keys = set()
-                        tpl = getattr(event, "registration_form_template", None)
-                        if tpl:
-                            file_answer_keys = {
-                                f"f_{ff.field_key}"
-                                for ff in tpl.fields.all().only("field_key", "field_type")
-                                if getattr(ff, "field_type", "") == "file"
-                            }
+                # Handle file fields: if no new file was uploaded for a key, preserve
+                # the existing stored value so we don't silently wipe document refs.
+                existing = registrant.answers if isinstance(registrant.answers, dict) else {}
+                uploaded_doc_ids = list(registrant.uploaded_document_ids or [])
+                file_answer_keys = set()
+                tpl = getattr(event, "registration_form_template", None)
+                if tpl:
+                    file_answer_keys = {
+                        f"f_{ff.field_key}"
+                        for ff in tpl.fields.all().only("field_key", "field_type")
+                        if getattr(ff, "field_type", "") == "file"
+                    }
 
-                        for key, val in list(cleaned.items()):
-                            if hasattr(val, "read"):
-                                doc = Document.objects.create(
-                                    title=getattr(val, "name", "upload"),
-                                    file=val,
-                                )
-                                uploaded_doc_ids.append(doc.id)
-                                cleaned[key] = {"document_id": doc.id, "name": getattr(val, "name", "upload")}
-                            elif key in file_answer_keys and val in (None, ""):
-                                # Keep the existing stored value rather than overwriting with blank.
-                                if key in existing:
-                                    cleaned[key] = existing[key]
+                for key, val in list(cleaned.items()):
+                    if hasattr(val, "read"):
+                        doc = Document.objects.create(
+                            title=getattr(val, "name", "upload"),
+                            file=val,
+                        )
+                        uploaded_doc_ids.append(doc.id)
+                        cleaned[key] = {"document_id": doc.id, "name": getattr(val, "name", "upload")}
+                    elif key in file_answer_keys and val in (None, ""):
+                        # Keep the existing stored value rather than overwriting with blank.
+                        if key in existing:
+                            cleaned[key] = existing[key]
 
-                        registrant.answers = _jsonable(cleaned)
-                        registrant.uploaded_document_ids = uploaded_doc_ids
-                        registrant.save(update_fields=["first_name", "last_name", "answers", "uploaded_document_ids"])
+                registrant.answers = _jsonable(cleaned)
+                registrant.uploaded_document_ids = uploaded_doc_ids
+                registrant.save(update_fields=["first_name", "last_name", "answers", "uploaded_document_ids"])
 
-                        messages.success(request, f"Answers updated for {registrant.email}.")
-                        return redirect(reverse("registrants:edit", args=[pk]))
+                messages.success(request, f"Answers updated for {registrant.email}.")
+                return redirect(reverse("registrants:edit", args=[pk]))
         else:
             # Pre-populate from stored answers + core identity.
             initial = dict(registrant.answers) if isinstance(registrant.answers, dict) else {}
@@ -343,7 +313,7 @@ class RegistrationReportViewSet(ViewSet):
         sort_field = sort_map.get(sort, "publishing_date")
         prefix = "-" if direction != "asc" else ""
 
-        events_qs = EventPage.objects.filter(registrants__isnull=False).distinct()
+        events_qs = EventPage.objects.live().filter(registration_open=True)
         if q:
             events_qs = events_qs.filter(title__icontains=q)
 
@@ -382,7 +352,6 @@ class RegistrationReportViewSet(ViewSet):
         event = get_object_or_404(EventPage.objects.specific(), pk=pk)
 
         type_rows = build_type_rows(event)
-        choice_summary_rows = build_choice_summary_rows(event)
 
         return TemplateResponse(
             request,
@@ -391,83 +360,10 @@ class RegistrationReportViewSet(ViewSet):
                 "view": self,
                 "event": event,
                 "type_rows": type_rows,
-                "choice_summary_rows": choice_summary_rows,
                 "index_url_name": self.get_url_name("index"),
                 "detail_url_name": self.get_url_name("detail"),
                 "export_csv_url_name": self.get_url_name("export_csv"),
                 "type_url_name": self.get_url_name("type_registrants"),
-                "registrants_url_name": self.get_url_name("registrants"),
-            },
-        )
-
-    def registrants_view(self, request, pk: int):
-        event = get_object_or_404(EventPage.objects.specific(), pk=pk)
-
-        if request.method == "POST":
-            if not request.user.has_perm("events.change_registrant"):
-                return HttpResponse("Forbidden", status=403)
-
-            try:
-                registrant_id = int(request.POST["registrant_id"])
-            except (KeyError, TypeError, ValueError):
-                return HttpResponse("Bad Request", status=400)
-
-            registrant = get_object_or_404(Registrant, pk=registrant_id, event=event)
-            registrant.attended = not registrant.attended
-            registrant.save(update_fields=["attended"])
-            messages.success(
-                request,
-                f"Attendance updated for {registrant.first_name} {registrant.last_name} ({registrant.email}).",
-            )
-            return redirect(request.get_full_path())
-
-        q = (request.GET.get("q") or "").strip()
-        registration_type_id = (request.GET.get("registration_type") or "").strip()
-        registration_types = list(event.registration_types.all())
-        if registration_type_id not in {str(rtype.pk) for rtype in registration_types}:
-            registration_type_id = ""
-        sort = (request.GET.get("sort") or "last_name").strip()
-        direction = (request.GET.get("dir") or "asc").strip().lower()
-        sort_map = {
-            "first_name": ("first_name", "last_name", "email"),
-            "last_name": ("last_name", "first_name", "email"),
-            "email": ("email", "last_name", "first_name"),
-            "registration_type": ("registration_type__name", "last_name", "first_name", "email"),
-        }
-        sort = sort if sort in sort_map else "last_name"
-        direction = "desc" if direction == "desc" else "asc"
-        prefix = "-" if direction == "desc" else ""
-        ordering = [f"{prefix}{field}" for field in (*sort_map[sort], "pk")]
-
-        registrants = Registrant.objects.filter(event=event).select_related("registration_type")
-        if registration_type_id:
-            registrants = registrants.filter(registration_type_id=registration_type_id)
-        if q:
-            registrants = registrants.filter(
-                dj_models.Q(email__icontains=q)
-                | dj_models.Q(first_name__icontains=q)
-                | dj_models.Q(last_name__icontains=q)
-            )
-        page_obj = paginate_queryset(
-            registrants.order_by(*ordering),
-            request=request,
-            per_page=50,
-        )
-
-        return TemplateResponse(
-            request,
-            "events/admin/registration_report_registrants.html",
-            {
-                "view": self,
-                "event": event,
-                "page_obj": page_obj,
-                "q": q,
-                "registration_types": registration_types,
-                "registration_type_id": registration_type_id,
-                "sort": sort,
-                "dir": direction,
-                "can_change_registrant": request.user.has_perm("events.change_registrant"),
-                "detail_url_name": self.get_url_name("detail"),
             },
         )
 
@@ -487,7 +383,6 @@ class RegistrationReportViewSet(ViewSet):
                 "id",
                 "created_at",
                 "status",
-                "attended",
                 "first_name",
                 "last_name",
                 "email",
@@ -504,7 +399,6 @@ class RegistrationReportViewSet(ViewSet):
             event=event,
             registrants_qs=registrants,
             filename_prefix=event.title,
-            include_attendance=True,
         )
 
     def type_registrants_view(self, request, pk: int, type_id: int):
@@ -604,7 +498,6 @@ class RegistrationReportViewSet(ViewSet):
         return [
             path("", self.index_view, name="index"),
             path("<int:pk>/", self.detail_view, name="detail"),
-            path("<int:pk>/registrants/", self.registrants_view, name="registrants"),
             path("<int:pk>/export.csv", self.export_csv_view, name="export_csv"),
             path("<int:pk>/type/<int:type_id>/", self.type_registrants_view, name="type_registrants"),
             path("<int:pk>/unregister/<int:registrant_id>/", self.unregister_registrant_view, name="unregister"),
@@ -618,7 +511,7 @@ class RegistrationFormTemplate(ModelViewSet):
     menu_order = 105
     name = "registrationformtemplate"
     list_display = [
-        Column(registration_form_template_title, label="Title", sort_key="title"),
+        'title',
         Column(
             "created_at",
             label="Created",

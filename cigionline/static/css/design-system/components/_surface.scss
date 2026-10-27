@@ -1,0 +1,186 @@
+// =============================================================================
+// Design System — Surface (modes + accents)
+//
+// A module wrapper opts into a coloured surface by adding `.ds-surface` plus a
+// mode modifier (`--dark`, `--green`, …) and, optionally, an accent modifier
+// (`--accent-teal`, …). Modes set the background and the on-surface text/border
+// tokens; accents set only the highlight colour. Components inside the surface
+// consume the surface tokens — never hardcoded colours — so the same markup
+// works on any surface:
+//
+//   --surface-text    primary text colour on this surface
+//   --surface-border  thin divider/hairline colour on this surface
+//   --surface-rule    strong rule colour (the 5px top-rule motif)
+//   --accent          highlight colour (stat underline, etc.)
+//
+// Modes and accents are orthogonal: e.g. `ds-surface ds-surface--dark
+// ds-surface--accent-teal`. Light surface + red accent are the defaults.
+// =============================================================================
+
+.ds-surface {
+  --surface-text:   var(--color-brand-black);
+  --surface-text-muted: var(--color-text-grey-white); // secondary text (closed accordion titles etc.)
+  --surface-border: var(--color-brand-grey);
+  --surface-rule:   var(--color-brand-black);
+  --accent:         var(--color-brand-red);
+
+  // Red-on-light / white-on-dark text (event dates, date stamps). NOTE: the
+  // --color-*-* pair tokens do NOT flip per section — they only flip under
+  // <html data-theme="dark"> — so surface-aware colour must come from a
+  // --surface-* var like this one (BugHerd #34).
+  --surface-red-text: var(--color-brand-red);
+
+  // Inverted fill for hover states that flip against the surface (e.g. the
+  // circular slider arrow): black fill + white glyph on light surfaces,
+  // white fill + black glyph on dark/colour ones (BugHerd #32).
+  --surface-invert-bg:   var(--color-brand-black);
+  --surface-invert-text: var(--color-brand-white);
+
+  // Outline-CTA promotion (BugHerd #215): a surface can promote its outline
+  // buttons to the accent-filled primary (KP 1595:93820 — the DPH charcoal
+  // bands run the bright-green fill with black text). Defaults reproduce the
+  // plain outline, and every surface class resets them, so a light band nested
+  // inside the hub keeps its black outline.
+  --button-primary-bg:     transparent;
+  --button-primary-text:   var(--surface-red-text);
+  --button-primary-border: var(--surface-rule);
+
+  // Outline-button hover. BugHerd #121 set "hover: red fill, text flips to
+  // white"; Kay superseded the text colour a day later in #203, for both
+  // surfaces at once:
+  //   1. White background — red text, black outline. Hover: red fill, BLACK text.
+  //   2. Black background — white text/outline.      Hover: red fill, BLACK text.
+  // So the label is black on either surface, and the fill reads --accent-ui:
+  // brand red on a theme/topic band (#203 says red, #244 keeps the topic colour
+  // out of interactive chrome) and green on the DPH hub (#200 — nothing there
+  // hovers red). NOTE for Kay/Juode: black on brand red measures 4.43:1, just
+  // under the 4.5 AA floor for normal text; white measures 4.74:1 (#187).
+  --button-primary-hover-bg:     var(--accent-ui);
+  --button-primary-hover-text:   var(--color-brand-black);
+  --button-primary-hover-border: var(--accent-ui);
+
+  // Interactive accent (BugHerd #241–#244). Kay: the theme/topic colours are
+  // decorative. They must not drive interactive chrome — "should stay red, not
+  // the topics colour … needs to carry forward on all topics pages" (#244).
+  // So link hovers, the breadcrumb separator and the carousel's active number
+  // read from --accent-ui, not --accent. The five theme accents pin it to brand
+  // red below; brand red and the DPH green carry through (#241 — the hub hovers
+  // green, never red). --brand-accent still wins where a series sets one.
+  --accent-ui: var(--brand-accent, var(--accent));
+
+  // Tag/pill tokens — a filled pill that auto-themes to the surface. Default
+  // (light): white fill, black text + outline. Dark/colour modes drop the
+  // outline (the white fill already separates it). The dot stays --accent.
+  --tag-bg:         var(--color-brand-white);
+  --tag-text:       var(--color-brand-black);
+  --tag-border:     var(--color-brand-black);
+
+  background-color: var(--surface-bg, transparent);
+  color: var(--surface-text);
+
+  // --- Modes: background + on-surface text/border ---------------------------
+  &--light {
+    --surface-bg: var(--color-brand-white);
+  }
+
+  // Inherit the ancestor surface (the page `<main>` wrapper) instead of resetting.
+  // This is the default per-block surface, so a module follows the page light/dark
+  // unless the author overrides it. Re-inherits every on-surface token + stays
+  // transparent so the page background shows through.
+  &--inherit {
+    --surface-bg:     transparent;
+    --surface-text:   inherit;
+    --surface-text-muted: inherit;
+    --surface-border: inherit;
+    --surface-rule:   inherit;
+    --accent:         inherit;
+    --accent-ui:      inherit;
+    --tag-bg:         inherit;
+    --tag-text:       inherit;
+    --tag-border:     inherit;
+    --surface-red-text: inherit;
+    --surface-invert-bg: inherit;
+    --surface-invert-text: inherit;
+    --button-primary-bg: inherit;
+    --button-primary-text: inherit;
+    --button-primary-border: inherit;
+    --button-primary-hover-bg: inherit;
+    --button-primary-hover-text: inherit;
+    --button-primary-hover-border: inherit;
+    background-color: transparent;
+  }
+
+  // Shared on-dark/on-colour treatment: white text, translucent dividers,
+  // white strong rule.
+  &--dark,
+  &--charcoal,
+  &--red,
+  &--green,
+  &--teal,
+  &--blue,
+  &--olive,
+  &--mauve {
+    --surface-text:   var(--color-brand-white);
+    --surface-text-muted: var(--color-brand-white);
+    --surface-border: var(--color-brand-white); // solid #fff dividers on dark/colour surfaces
+    --surface-rule:   var(--color-brand-white);
+    --tag-border:     transparent; // white fill separates it; no outline needed
+    --surface-red-text: var(--color-brand-white); // date text goes white here (#34)
+    --surface-invert-bg:   var(--color-brand-white); // hover fill inverts (#32)
+    --surface-invert-text: var(--color-brand-black);
+    // No hover ring here any more: the double-border hover read as
+    // inconsistent with the other buttons (Tia, BugHerd #203).
+  }
+
+  &--dark  { --surface-bg: var(--color-brand-black); }
+  &--charcoal {
+    --surface-bg: var(--color-surface-charcoal);
+    // The tab band follows the charcoal page instead of the default black
+    // (BugHerd #168, DPH hub).
+    --ds-tabs-bar-bg: var(--color-surface-charcoal);
+    // DPH primary: outline CTAs fill with the accent (green) and take its
+    // contrasting text (KP 1595:93820; BugHerd #215).
+    --button-primary-bg:     var(--accent);
+    --button-primary-text:   var(--accent-on);
+    --button-primary-border: var(--accent);
+    // The rest state is already the accent fill here, so #121's accent hover
+    // would be a no-op. Keep the inversion this surface has always used.
+    --button-primary-hover-bg:     var(--surface-invert-bg);
+    --button-primary-hover-text:   var(--surface-invert-text);
+    --button-primary-hover-border: var(--surface-invert-bg);
+  }
+  &--red   { --surface-bg: var(--color-brand-red); }
+  &--green { --surface-bg: var(--color-surface-green); }
+  &--teal  { --surface-bg: var(--color-surface-teal); }
+  &--blue  { --surface-bg: var(--color-surface-blue); }
+  &--olive { --surface-bg: var(--color-surface-olive); }
+  &--mauve { --surface-bg: var(--color-surface-mauve); }
+
+  // Podcast brand surface — a LIGHT tint, so it keeps the base light tokens
+  // (black text/chrome, red accent); deliberately NOT in the on-colour white-text group.
+  &--pink  { --surface-bg: var(--color-surface-pink); }
+
+  // --- Accents: highlight colour + its contrasting text ---------------------
+  // --accent drives rules/underlines; --accent-on is the text colour to use on
+  // a solid accent fill. Every theme accent takes BLACK, which is the higher
+  // contrast on all five and the only one that clears WCAG AA for normal text
+  // (BugHerd #187 — measured against the fill, black : white):
+  //   green 10.69 : 1.96   teal 5.39 : 3.89   blue 6.17 : 3.40
+  //   olive  5.32 : 3.95   mauve 5.10 : 4.12
+  // Brand red is the exception and keeps white: it inverts (black 4.44, white
+  // 4.73), and black would drop it below the 4.5 AA floor.
+  //
+  // Red and green also carry into the interactive chrome (--accent-ui). The
+  // four theme colours do not: they stay decorative and their UI accent pins to
+  // brand red (BugHerd #242–#244).
+  &--accent-red   { --accent: var(--color-brand-red);            --accent-on: var(--color-brand-white); }
+  &--accent-green { --accent: var(--color-accent-green);         --accent-on: var(--color-brand-black); }
+  &--accent-teal  { --accent: var(--color-accent-data-economy);  --accent-on: var(--color-brand-black); --accent-ui: var(--color-brand-red); }
+  &--accent-blue  { --accent: var(--color-accent-ai-tech);       --accent-on: var(--color-brand-black); --accent-ui: var(--color-brand-red); }
+  &--accent-olive { --accent: var(--color-accent-security);      --accent-on: var(--color-brand-black); --accent-ui: var(--color-brand-red); }
+  &--accent-mauve { --accent: var(--color-accent-governance);    --accent-on: var(--color-brand-black); --accent-ui: var(--color-brand-red); }
+  // Neutral fallback for pills with no theme/program mapping — grey #4d4d4d,
+  // never brand red (Kay, BugHerd #326). Decorative like the theme colours,
+  // so the UI accent pins to brand red.
+  &--accent-grey  { --accent: var(--color-brand-grey);           --accent-on: var(--color-brand-white); --accent-ui: var(--color-brand-red); }
+}

@@ -1,0 +1,42 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+{% comment %}
+  Image + Text — image beside a content column. Content distributes top→bottom:
+  heading (with the 10px top-rule motif) at top, a one/two-column body with an
+  optional button row at the bottom. image_position flips the image side.
+{% endcomment %}
+<div class="ds-container">
+  <div class="ds-image-text ds-image-text--image-{{ self.image_position }}" data-ds-reveal data-ds-reveal-stagger="80">
+    <div class="ds-image-text__media" data-ds-reveal-item>
+      {% image self.image width-1200 class="ds-image-text__img" %}
+    </div>
+
+    <div class="ds-image-text__content" data-ds-reveal-item>
+      {% if self.heading %}
+        <div class="ds-image-text__title">
+          <h2 class="ds-image-text__heading">{{ self.heading }}</h2>
+        </div>
+      {% endif %}
+
+      {% if self.body or self.body_secondary %}
+        <div class="ds-image-text__body">
+          {% if self.body %}
+            <div class="ds-image-text__body-col">
+              <div class="ds-image-text__text">{{ self.body|richtext }}</div>
+            </div>
+          {% endif %}
+          {% if self.body_secondary %}
+            <div class="ds-image-text__body-col">
+              <div class="ds-image-text__text">{{ self.body_secondary|richtext }}</div>
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if self.buttons %}
+        <div class="ds-image-text__buttons">
+          {% for button in self.buttons %}{% include_block button %}{% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

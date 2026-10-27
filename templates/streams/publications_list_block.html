@@ -7,7 +7,7 @@
         {% for publication in publications_by_author %}
           <article class="publications-list__publication row">
             <div class="publications-list__publication__img d-none d-md-block col-md-6 col-lg-4">
-              <a href="{{ publication.url }}">
+              <a href="{% pageurl publication %}">
                 <div class="img-wrapper">
                   {% image publication.image_cover fill-695x900 %}
                 </div>
@@ -16,7 +16,7 @@
             <div class="publications-list__publication__right col-md-6 col-lg-8">
               <div>
                 <h2 class="publications-list__publication__title">
-                  <a href="{{ publication.url }}">{{ publication.title }}</a>
+                  <a href="{% pageurl publication %}">{{ publication.title }}</a>
                 </h2>
                 <div class="publications-list__publication__description">
                   {{ publication.short_description|safe }}
@@ -52,7 +52,7 @@
             <div class="publications-list__publication__right col-md-6 col-lg-8">
               <div>
                 <h2 class="publications-list__publication__title">
-                  <a href="{{ publication.value.url }}">{{ publication.value.title }}</a>
+                  <a href="{% pageurl publication.value %}">{{ publication.value.title }}</a>
                 </h2>
                 <div class="publications-list__publication__description">
                   {{ publication.value.short_description|safe }}

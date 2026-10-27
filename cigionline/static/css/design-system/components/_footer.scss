@@ -1,0 +1,283 @@
+// =============================================================================
+// Design System — Footer (global chrome)
+// Dark surface. Top row: brand + address | newsletter form. Then 4 link columns,
+// then a bottom bar (copyright + legal | social). Full-bleed dark; the gutter
+// comes from .ds-container on the inner wrapper. Colours from surface tokens.
+// =============================================================================
+
+.ds-footer {
+  // Neutralise the legacy global `footer {}` rule (static/css/includes/_footer.scss,
+  // still imported into cigionline.scss) that bleeds onto the DS footer: it set a
+  // 4rem top margin — the white body-background gap (BugHerd #38) — plus its own
+  // padding on top of __inner. The DS footer owns its spacing via __inner.
+  margin-top: 0;
+  padding: 0;
+
+  &__inner {
+    // 68px above the footer content, kept INSIDE the dark footer (not an external
+    // margin, which showed the white page background as a blank gap — BugHerd #38).
+    padding-top: 68px;
+    padding-bottom: var(--space-section-y);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-48);
+  }
+
+  // --- Top: brand + newsletter ----------------------------------------------
+  &__top {
+    display: flex;
+    gap: var(--space-80);
+    align-items: flex-start;
+  }
+
+  &__brand {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+  }
+
+  &__logo {
+    display: inline-block;
+    color: var(--color-brand-white);
+    text-decoration: none;
+
+    // Inline SVG fallback: paths have no fill (default black) — inherit the
+    // white logo colour and scale to 144px (BugHerd #40).
+    svg { display: block; width: 144px; height: auto; fill: currentColor; }
+
+    // No hover treatment on the logo (BugHerd #91): pin the colour and
+    // decoration through hover so no global link style can add one.
+    &:hover,
+    &:focus-visible {
+      color: var(--color-brand-white);
+      text-decoration: none;
+    }
+  }
+
+  &__address {
+    @include paragraph-3; // 14
+    color: var(--surface-text);
+    font-style: italic;
+    margin: 0;
+
+    // RichText output: reset the inner paragraph margin; links are underlined.
+    p { margin: 0; }
+    a { color: inherit; text-decoration: underline; }
+  }
+
+  &__newsletter {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+
+  &__newsletter-heading {
+    @include header-5; // 24
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  &__newsletter-intro {
+    @include paragraph-2; // 16
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  // --- Newsletter form ------------------------------------------------------
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+    margin-top: var(--space-8);
+  }
+
+  &__form-row {
+    display: flex;
+    gap: var(--space-24);
+  }
+
+  &__field {
+    flex: 1 1 0;
+    min-width: 0;
+    @include paragraph-2;
+    color: var(--surface-text);
+    background: transparent;
+    border: 0;
+    border-bottom: var(--border-divider) solid var(--color-border-red-white);
+    padding: var(--space-8) 0;
+
+    &::placeholder { color: var(--surface-text); opacity: 0.7; }
+    &:focus { outline: none; border-bottom-width: var(--border-2, 2px); }
+  }
+
+  &__submit {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
+    @include button-small; // Futura, uppercase
+    color: var(--color-brand-black);
+    background: var(--color-brand-white);
+    border: 0;
+    padding: var(--space-16) var(--space-24);
+    cursor: pointer;
+    @include transition(background-color, color);
+
+    &:hover,
+    &:focus-visible {
+      background: var(--accent);    // red on the dark surface
+      color: var(--accent-on);
+    }
+  }
+
+  &__submit-icon { width: 1em; height: 1em; fill: currentColor; flex-shrink: 0; } // match .ds-button__icon (BugHerd #42)
+
+  &__consent {
+    @include paragraph-3; // 14
+    color: var(--surface-text);
+    margin: 0;
+
+    a { color: var(--surface-text); text-decoration: underline; }
+  }
+
+  // --- Rule (hairline divider) ----------------------------------------------
+  &__rule {
+    width: 100%;
+    height: var(--border-divider);
+    background: var(--surface-border);
+    border: 0;
+    margin: 0;
+  }
+
+  // --- Link columns ---------------------------------------------------------
+  &__columns {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-48);
+  }
+
+  &__col-heading {
+    @include header-6; // 18
+    font-weight: 400; // Book, not Demi (BugHerd #109)
+    color: var(--surface-text);
+    margin: 0 0 var(--space-24);
+  }
+
+  &__links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+
+    a {
+      @include button-small; // Futura, uppercase
+      position: relative;
+      display: inline-flex;
+      flex-direction: column;
+      align-self: flex-start;
+      color: var(--surface-text);
+      text-decoration: none;
+      @include transition(color);
+
+      // Hover is the red underline only, sliding in from the left. The bold
+      // weight swap from the primary nav (BugHerd #154) is gone — it widened
+      // the element (Tia, BugHerd #479: "footer underline links only remove
+      // the bolding"), so the width-reserving ::after went with it.
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: calc(-1 * var(--space-4));
+        height: 2px;
+        background: var(--accent);
+        transform: scaleX(0);
+        transform-origin: left;
+        @include transition(transform var(--motion-duration-micro) var(--motion-ease-standard));
+      }
+
+      &:hover,
+      &:focus-visible {
+        &::before { transform: scaleX(1); }
+      }
+    }
+  }
+
+  // --- Bottom bar -----------------------------------------------------------
+  &__bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-24);
+    flex-wrap: wrap;
+  }
+
+  &__legal {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+
+  &__copyright {
+    @include paragraph-3;
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  &__legal-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-24);
+
+    a {
+      @include button-small;
+      @include hover-underline;
+      color: var(--surface-text);
+      text-decoration: none;
+    }
+  }
+
+  &__social {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-24);
+
+    a {
+      color: var(--surface-text);
+      font-size: 18px;
+      display: inline-flex;
+      @include transition(color);
+
+      &:hover,
+      &:focus-visible { color: var(--color-brand-red); }
+
+      svg { width: 18px; height: 18px; fill: currentColor; }
+    }
+  }
+
+  // --- Mobile ---------------------------------------------------------------
+  @media (max-width: 768px) {
+    &__top { flex-direction: column; gap: var(--space-48); }
+    &__form-row { flex-direction: column; }
+    &__columns { grid-template-columns: 1fr 1fr; gap: var(--space-32); }
+    &__bottom { flex-direction: column; gap: var(--space-32); }
+
+    // Mobile hierarchy (BugHerd #142): the uppercase links out-weighed their
+    // 18px column headings, so the heading steps up to 20 — Kay's number.
+    // The links keep their base weight: she withdrew the unbolden request,
+    // because BugHerd #154 makes them match the primary nav instead.
+    &__col-heading { font-size: var(--font-size-20); }
+  }
+}

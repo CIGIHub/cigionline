@@ -1,0 +1,25 @@
+{% comment %}
+  Shared share/follow buttons molecule (.ds-share-buttons) — a label + a row of
+  circular social icon links. Rendered via
+  {% templatetag openblock %} share_buttons links heading="Follow" {% templatetag closeblock %};
+  the tag resolves each platform to a Font Awesome brand glyph. Surface-aware.
+{% endcomment %}
+{% if links %}
+  <div class="ds-share-buttons">
+    {% if heading %}<span class="ds-share-buttons__label">{{ heading }}</span>{% endif %}
+    <ul class="ds-share-buttons__list">
+      {% for link in links %}
+        <li>
+          {% if link.icon %}
+            <a class="ds-share-buttons__link" href="{{ link.url }}" target="_blank" rel="noopener noreferrer" aria-label="{{ link.label }}">
+              <i class="fa-brands {{ link.icon }}" aria-hidden="true"></i>
+            </a>
+          {% else %}
+            {# No brand glyph for this platform — plain text link. #}
+            <a class="ds-share-buttons__text-link" href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.label }}</a>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}

@@ -1,0 +1,46 @@
+{% load wagtailcore_tags icons %}
+{% comment %}
+  Multimedia single tail — Chapters / Transcript / companion essay, rendered
+  inside the reading shell's main column (reading_body's tail_template slot)
+  so the hosts/guests rail stays sticky beside them. No ds-container here:
+  the shell's main column already sets the measure.
+{% endcomment %}
+
+{% if self.podcast_chapters %}
+  <div class="ds-prose ds-mm-section">
+    <details class="ds-collapse" open id="chapters">
+      <summary>
+        <h2>Chapters</h2>
+        {% ds_icon 'chevron-right' css_class='ds-collapse__chevron' %}
+      </summary>
+      {% for chapter in self.podcast_chapters %}
+        {% include_block chapter with chapter_num=forloop.counter %}
+      {% endfor %}
+    </details>
+  </div>
+{% endif %}
+
+{% if self.transcript %}
+  <div class="ds-prose ds-mm-section">
+    <details class="ds-collapse" id="transcript">
+      <summary>
+        <h2>Transcript</h2>
+        {% ds_icon 'chevron-right' css_class='ds-collapse__chevron' %}
+      </summary>
+      {# The transcript body renders as prose directly under the section #}
+      {# collapse — the authored blocks (legacy accordion / read-more or the #}
+      {# DS transcript block) all carry the transcript in a `text` richtext #}
+      {# field, so we unwrap it rather than nest a second accordion. #}
+      {% for block in self.transcript %}{{ block.value.text|richtext }}{% endfor %}
+    </details>
+  </div>
+{% endif %}
+
+{% if self.companion_essay and self.companion_essay.live %}
+  <div class="ds-mm-section">
+    <a class="ds-button ds-button--tertiary ds-button--on-light" href="{% pageurl self.companion_essay %}">
+      <span class="ds-button__label">Read the companion essay: {{ self.companion_essay.title }}</span>
+      {% ds_icon 'chevron-right' css_class='ds-button__icon' %}
+    </a>
+  </div>
+{% endif %}
