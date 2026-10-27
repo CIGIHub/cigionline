@@ -1,0 +1,25 @@
+// =============================================================================
+// Design System — Type of content
+// Content-type icon + uppercase label (e.g. a megaphone + "OP-EDS"). A small
+// monochrome molecule used on resource cards/rows. Icon glyph is resolved per
+// content type (core.cards.type_of_content_data); colour follows currentColor.
+// Card-form treatment + the icon legend.
+// =============================================================================
+
+.ds-type {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  color: var(--surface-text);
+
+  &__icon {
+    font-size: var(--font-size-16);
+    line-height: 1;
+  }
+
+  &__label {
+    @include button-small; // Futura, uppercase
+    font-weight: 500; // Demi + slight positive tracking per 1689:102184
+    letter-spacing: 0.02em;
+  }
+}

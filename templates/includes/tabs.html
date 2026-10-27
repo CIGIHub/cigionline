@@ -1,0 +1,44 @@
+{% load wagtailcore_tags %}
+{% comment %}
+  Shared Tabs component — horizontal tab strip + content panels (WAI-ARIA
+  tablist, enhanced by tabs.js; all panels visible without JS). Consumed by the
+  Horizontal Tabs block and the Secondary Hero. Keep markup here so both stay in
+  sync.
+
+  Context:
+    tabs      — list of {label, content} (content = rich text value/HTML)
+    group_id  — unique id prefix for tab/panel a11y wiring
+    label     — accessible tablist label (optional)
+{% endcomment %}
+{% if tabs %}
+  <div class="ds-tabs" data-ds-tabs>
+    <div class="ds-tabs__bar">
+      <div class="ds-tabs__list ds-container" role="tablist" aria-label="{{ label|default:'Section' }} tabs">
+        {% for tab in tabs %}
+          <button
+            class="ds-tabs__tab{% if forloop.first %} ds-tabs__tab--active{% endif %}"
+            id="{{ group_id }}-tab-{{ forloop.counter0 }}"
+            role="tab"
+            aria-controls="{{ group_id }}-panel-{{ forloop.counter0 }}"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+            tabindex="{% if forloop.first %}0{% else %}-1{% endif %}"
+            type="button"
+          >{{ tab.label }}</button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="ds-tabs__panels ds-container">
+      {% for tab in tabs %}
+        <div
+          class="ds-tabs__panel"
+          id="{{ group_id }}-panel-{{ forloop.counter0 }}"
+          role="tabpanel"
+          aria-labelledby="{{ group_id }}-tab-{{ forloop.counter0 }}"
+          tabindex="0"
+          {% if not forloop.first %}hidden{% endif %}
+        >{{ tab.content|richtext }}</div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}

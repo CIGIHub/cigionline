@@ -1,0 +1,14 @@
+// =============================================================================
+// Design System — Container / site gutter
+// The single source of horizontal gutters. Per the design team, blocks must NOT
+// hardcode left/right padding: they wrap content in .ds-container, which supplies
+// the `margin-left-right` gutter (--space-section-x, responsive 80/48/24). The
+// gutter is the ONLY inset — no max-width cap and no centring margin (the
+// design blocks show a gutter only, with no centred margin at any width).
+// Replaces Bootstrap's .container for design-system blocks.
+// =============================================================================
+
+.ds-container {
+  width: 100%;
+  padding-inline: var(--space-section-x);
+}

@@ -3,50 +3,12 @@ from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 from .models import _split_slugs, _match
 
-NON_ANSWER_FIELD_TYPES = {"rich_text"}
-CHOICE_LIMIT_FIELD_TYPES = {
-    "dropdown",
-    "radio",
-    "checkboxes",
-    "multiselect",
-    "conditional_dropdown_other",
-    "conditional_multiselect_other",
-}
-
 BASE_INPUT_CLASS = "cigi-input"
 BASE_SELECT_CLASS = "cigi-select"
 BASE_GROUP_CLASS = "cigi-group"       # radios/checkbox groups
 BASE_FILE_CLASS = "cigi-file-input"
 BASE_DATE_CLASS = "cigi-date-input"  # date + datetime
 ERROR_CLASS = "has-errors"
-
-
-class LimitedChoiceMixin:
-    sold_out_values = set()
-
-    def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
-        option = super().create_option(name, value, label, selected, index, subindex=subindex, attrs=attrs)
-        if value and str(value) in self.sold_out_values:
-            option["attrs"]["disabled"] = "disabled"
-            option["attrs"]["aria-disabled"] = "true"
-            option["label"] = f"{option['label']} (Sold out)"
-        return option
-
-
-class LimitedSelect(LimitedChoiceMixin, forms.Select):
-    pass
-
-
-class LimitedSelectMultiple(LimitedChoiceMixin, forms.SelectMultiple):
-    pass
-
-
-class LimitedRadioSelect(LimitedChoiceMixin, forms.RadioSelect):
-    pass
-
-
-class LimitedCheckboxSelectMultiple(LimitedChoiceMixin, forms.CheckboxSelectMultiple):
-    pass
 
 
 def _parse_exts(text: str) -> list[str]:
@@ -116,183 +78,10 @@ CONDITIONAL_OTHER_FIELD_TYPES = (
 )
 
 
-def is_non_answer_field_type(field_type: str) -> bool:
-    return field_type in NON_ANSWER_FIELD_TYPES
-
-
 def _selected_contains_trigger(selected, trigger_value: str) -> bool:
     if isinstance(selected, (list, tuple, set)):
         return trigger_value in {str(value).strip() for value in selected}
     return (selected or "").strip() == trigger_value
-
-
-def parse_choice_limits(ff) -> dict[str, int]:
-    limits = {}
-    for line in (getattr(ff, "choice_limits", "") or "").splitlines():
-        line = line.strip()
-        if not line or "|" not in line:
-            continue
-        label, limit = [part.strip() for part in line.split("|", 1)]
-        try:
-            limits[label] = int(limit)
-        except ValueError:
-            continue
-    return {label: limit for label, limit in limits.items() if limit > 0}
-
-
-def _as_values(value) -> list[str]:
-    if value in (None, "", False):
-        return []
-    if isinstance(value, (list, tuple, set)):
-        return [str(v).strip() for v in value if str(v).strip()]
-    return [str(value).strip()]
-
-
-def _split_condition_values(value: str) -> set[str]:
-    return {
-        part.strip().lower()
-        for line in (value or "").splitlines()
-        for part in line.split(",")
-        if part.strip()
-    }
-
-
-def _value_matches_condition(value, trigger_values: set[str]) -> bool:
-    if isinstance(value, bool):
-        selected = {"Yes" if value else "No", "true" if value else "false", "1" if value else "0"}
-    else:
-        selected = set(_as_values(value))
-    selected = {str(item).strip().lower() for item in selected}
-    return bool(selected & trigger_values)
-
-
-def _is_empty(value) -> bool:
-    return value in (None, "", [], (), {}, False)
-
-
-def _limited_fields(event, reg_type, *, is_guest_form=False):
-    form_template = getattr(event, "registration_form_template", None)
-    if not form_template:
-        return []
-    fields = []
-    for ff in form_template.fields.all():
-        if not _template_field_visible(ff, reg_type.slug, is_guest_form=is_guest_form):
-            continue
-        if ff.field_type in CHOICE_LIMIT_FIELD_TYPES and parse_choice_limits(ff):
-            fields.append(ff)
-    return fields
-
-
-def _count_choice_usage(event, field_key: str, value: str, *, exclude_registrant=None) -> int:
-    from .models import Registrant
-
-    qs = Registrant.objects.filter(event=event).exclude(status=Registrant.Status.CANCELLED)
-    if exclude_registrant is not None and getattr(exclude_registrant, "pk", None):
-        qs = qs.exclude(pk=exclude_registrant.pk)
-
-    key = f"f_{field_key}"
-    count = 0
-    for answers in qs.values_list("answers", flat=True):
-        selected = (answers or {}).get(key)
-        if value in _as_values(selected):
-            count += 1
-    return count
-
-
-def _current_values(current_registrant, key: str) -> set[str]:
-    answers = getattr(current_registrant, "answers", None)
-    if not isinstance(answers, dict):
-        return set()
-    return set(_as_values(answers.get(key)))
-
-
-def _sold_out_values(event, ff, current_registrant=None) -> set[str]:
-    if not getattr(event, "pk", None):
-        return set()
-
-    sold_out = set()
-    key = f"f_{ff.field_key}"
-    current = _current_values(current_registrant, key)
-    for value, limit in parse_choice_limits(ff).items():
-        if value in current:
-            continue
-        if _count_choice_usage(event, str(ff.field_key), value, exclude_registrant=current_registrant) >= limit:
-            sold_out.add(value)
-    return sold_out
-
-
-def validate_choice_limits(event, reg_type, cleaned_data_list, *, current_registrant=None) -> dict[str, str]:
-    errors = {}
-    for ff in _limited_fields(event, reg_type):
-        key = f"f_{ff.field_key}"
-        selected_counts = {}
-        for cleaned in cleaned_data_list:
-            for value in _as_values((cleaned or {}).get(key)):
-                selected_counts[value] = selected_counts.get(value, 0) + 1
-
-        for value, selected_count in selected_counts.items():
-            limit = parse_choice_limits(ff).get(value)
-            if not limit:
-                continue
-            used = _count_choice_usage(event, str(ff.field_key), value, exclude_registrant=current_registrant)
-            if used + selected_count > limit:
-                errors[key] = f'"{value}" is sold out.'
-                break
-    return errors
-
-
-def add_choice_limit_errors(form, errors):
-    for key, message in errors.items():
-        if key in form.fields:
-            form.add_error(key, message)
-        else:
-            form.add_error(None, message)
-
-
-def _template_field_visible(ff, current_slug: str, *, is_guest_form: bool) -> bool:
-    if is_guest_form and getattr(ff, "exclude_from_guest_forms", False):
-        return False
-
-    vis_slugs = _split_slugs(ff.visible_type_slugs)
-    return _match(ff.visible_rule, vis_slugs, current_slug)
-
-
-def _answer_keys_for_template_field(ff) -> list[str]:
-    base = f"f_{ff.field_key}"
-    if ff.field_type == "conditional_text":
-        return [f"{base}__enabled", f"{base}__details"]
-    if ff.field_type in CONDITIONAL_OTHER_FIELD_TYPES:
-        return [base, f"{base}__other"]
-    return [base]
-
-
-def _conditional_parent_key(ff) -> str:
-    parent = getattr(ff, "conditional_parent", None)
-    if not parent:
-        return ""
-    return _answer_keys_for_template_field(parent)[0]
-
-
-def _add_conditional_visibility_attrs(field_obj, parent_key: str, trigger_values: set[str]):
-    if not parent_key or not trigger_values:
-        return
-    field_obj.widget.attrs["data-visibility-parent"] = parent_key
-    field_obj.widget.attrs["data-visibility-values"] = "|".join(sorted(trigger_values))
-    field_obj.widget.attrs["data_visibility_parent"] = parent_key
-    field_obj.widget.attrs["data_visibility_values"] = "|".join(sorted(trigger_values))
-
-
-def strip_non_answer_data(event, data: dict) -> dict:
-    """Remove display-only template rows from data before answer storage."""
-
-    form_template = getattr(event, "registration_form_template", None)
-    if not form_template:
-        return data
-
-    for ff in form_template.fields.all().only("field_key", "field_type"):
-        if is_non_answer_field_type(getattr(ff, "field_type", "")):
-            data.pop(f"f_{ff.field_key}", None)
-    return data
 
 
 def build_dynamic_form(
@@ -303,8 +92,6 @@ def build_dynamic_form(
     require_email: bool = True,
     include_honeypot: bool = True,
     is_guest_form: bool = False,
-    current_registrant=None,
-    include_invisible_fields: bool = False,
 ):
     """
     Build a dynamic Form class from RegistrationFormField rules (no admin/panels tricks).
@@ -312,7 +99,6 @@ def build_dynamic_form(
 
     fields = []
     conditional_rules = []
-    visibility_rules = []
 
     email_initial = invite.email if getattr(invite, "email", None) else None
 
@@ -327,43 +113,30 @@ def build_dynamic_form(
 
     fields_qs = event.registration_form_template.fields.all()
 
-    ordered_template_fields = list(fields_qs.order_by("sort_order"))
-
-    for ff in ordered_template_fields:
-        if not include_invisible_fields and not _template_field_visible(ff, current_slug, is_guest_form=is_guest_form):
+    for ff in fields_qs.order_by("sort_order"):
+        if is_guest_form and getattr(ff, "exclude_from_guest_forms", False):
             continue
 
-        if is_non_answer_field_type(ff.field_type):
+        vis_slugs = _split_slugs(ff.visible_type_slugs)
+        if not _match(ff.visible_rule, vis_slugs, current_slug):
             continue
 
         req_slugs = _split_slugs(ff.required_type_slugs)
-        is_required = bool(ff.required) and _match(ff.required_rule, req_slugs, current_slug)
-        parent_key = _conditional_parent_key(ff)
-        trigger_values = _split_condition_values(getattr(ff, "conditional_parent_values", ""))
-        has_visibility_condition = bool(parent_key and trigger_values)
-        field_required = False if has_visibility_condition else is_required
+        is_required = bool(ff.required) or _match(ff.required_rule, req_slugs, current_slug)
 
         key = f"f_{ff.field_key}"
         FieldClass = WAGTAIL_FIELD_MAP.get(ff.field_type, forms.CharField)
-        kwargs = {"label": ff.label, "help_text": ff.help_text, "required": field_required}
+        kwargs = {"label": ff.label, "help_text": ff.help_text, "required": is_required}
 
         if ff.field_type == "mailchimp_optin":
             field_obj = forms.ChoiceField(
                 label=ff.label,
                 help_text=ff.help_text,
-                required=field_required,
+                required=is_required,
                 choices=[("Yes", "Yes"), ("No", "No")],
                 widget=forms.RadioSelect(attrs={"class": BASE_GROUP_CLASS}),
             )
-            _add_conditional_visibility_attrs(field_obj, parent_key, trigger_values)
             fields.append((key, field_obj))
-            if has_visibility_condition:
-                visibility_rules.append({
-                    "parent_key": parent_key,
-                    "trigger_values": trigger_values,
-                    "child_keys": [key],
-                    "required_keys": [key] if is_required else [],
-                })
             continue
 
         if ff.field_type in ("dropdown", "radio", "checkboxes", "multiselect", "date", "datetime", "file"):
@@ -371,23 +144,12 @@ def build_dynamic_form(
             if ff.field_type == "dropdown":
                 choices = [("", "Select an option…")] + choices
             kwargs["choices"] = choices
-            sold_out = _sold_out_values(event, ff, current_registrant)
-            if ff.field_type == "dropdown":
-                widget = LimitedSelect()
-                widget.sold_out_values = sold_out
-                kwargs["widget"] = widget
             if ff.field_type == "checkboxes":
-                widget = LimitedCheckboxSelectMultiple()
-                widget.sold_out_values = sold_out
-                kwargs["widget"] = widget
+                kwargs["widget"] = forms.CheckboxSelectMultiple()
             if ff.field_type == "radio":
-                widget = LimitedRadioSelect()
-                widget.sold_out_values = sold_out
-                kwargs["widget"] = widget
+                kwargs["widget"] = forms.RadioSelect()
             if ff.field_type == "multiselect":
-                widget = LimitedSelectMultiple()
-                widget.sold_out_values = sold_out
-                kwargs["widget"] = widget
+                kwargs["widget"] = forms.SelectMultiple()
             if ff.field_type == "date":
                 kwargs["widget"] = forms.DateInput(attrs={"type": "date"})
                 kwargs.pop("choices", None)  # DateField does not take choices
@@ -428,7 +190,6 @@ def build_dynamic_form(
             needs_field.widget.attrs["data_conditional_checkbox_label"] = (
                 ff.conditional_label.strip() if getattr(ff, "conditional_label", "") else "Yes"
             )
-            _add_conditional_visibility_attrs(needs_field, parent_key, trigger_values)
 
             details_field = forms.CharField(
                 label=details_label,
@@ -443,17 +204,9 @@ def build_dynamic_form(
                     "data_conditional_details_for": needs_key,
                 }),
             )
-            _add_conditional_visibility_attrs(details_field, parent_key, trigger_values)
 
             fields.append((needs_key, needs_field))
             fields.append((details_key, details_field))
-            if has_visibility_condition:
-                visibility_rules.append({
-                    "parent_key": parent_key,
-                    "trigger_values": trigger_values,
-                    "child_keys": [needs_key, details_key],
-                    "required_keys": [],
-                })
 
             conditional_rules.append({
                 "needs_key": needs_key,
@@ -480,16 +233,12 @@ def build_dynamic_form(
             select_field_class = forms.MultipleChoiceField if is_multiselect else forms.ChoiceField
             select_kwargs = {
                 "label": ff.label,
-                "required": field_required,
+                "required": is_required,
                 "help_text": ff.help_text,
                 "choices": choices,
             }
             if is_multiselect:
-                widget = LimitedSelectMultiple()
-            else:
-                widget = LimitedSelect()
-            widget.sold_out_values = _sold_out_values(event, ff, current_registrant)
-            select_kwargs["widget"] = widget
+                select_kwargs["widget"] = forms.SelectMultiple()
             select_field = select_field_class(**select_kwargs)
             if is_multiselect:
                 select_field.widget.attrs["class"] = f"{BASE_SELECT_CLASS} {BASE_SELECT_CLASS}--multiple".strip()
@@ -499,7 +248,6 @@ def build_dynamic_form(
             select_field.widget.attrs["data-conditional-select"] = "1"
             select_field.widget.attrs["data-conditional-target"] = other_key
             select_field.widget.attrs["data-conditional-trigger-value"] = other_value
-            _add_conditional_visibility_attrs(select_field, parent_key, trigger_values)
 
             other_field = forms.CharField(
                 label=other_label,
@@ -511,17 +259,9 @@ def build_dynamic_form(
             other_field.widget.attrs["data-conditional-details-for"] = select_key
             # Duplicate key for Django template-friendly access.
             other_field.widget.attrs["data_conditional_details_for"] = select_key
-            _add_conditional_visibility_attrs(other_field, parent_key, trigger_values)
 
             fields.append((select_key, select_field))
             fields.append((other_key, other_field))
-            if has_visibility_condition:
-                visibility_rules.append({
-                    "parent_key": parent_key,
-                    "trigger_values": trigger_values,
-                    "child_keys": [select_key, other_key],
-                    "required_keys": [select_key] if is_required else [],
-                })
 
             conditional_rules.append({
                 "kind": "select_other",
@@ -553,15 +293,7 @@ def build_dynamic_form(
             # default text-ish
             w.attrs["class"] = f"{cls} {BASE_INPUT_CLASS}".strip()
 
-        _add_conditional_visibility_attrs(field_obj, parent_key, trigger_values)
         fields.append((key, field_obj))
-        if has_visibility_condition:
-            visibility_rules.append({
-                "parent_key": parent_key,
-                "trigger_values": trigger_values,
-                "child_keys": [key],
-                "required_keys": [key] if is_required else [],
-            })
 
     # Honeypot (off-screen in template CSS, but keep it a real input)
     if include_honeypot:
@@ -570,7 +302,9 @@ def build_dynamic_form(
             forms.CharField(
                 required=False,
                 label="website",
-                widget=forms.TextInput(attrs={"autocomplete": "off"}),
+                # Offscreen and aria-hidden in the templates; out of the tab
+                # order too, so keyboard users never land on it.
+                widget=forms.TextInput(attrs={"autocomplete": "off", "tabindex": "-1"}),
             ),
         ))
 
@@ -580,38 +314,8 @@ def build_dynamic_form(
     bases = (HoneypotMixin, forms.Form) if include_honeypot else (forms.Form,)
     DynamicForm = type("EventDynamicForm", bases, attrs)
 
-    def _layout_items(self):
-        items = []
-        for ff in ordered_template_fields:
-            if not include_invisible_fields and not _template_field_visible(ff, current_slug, is_guest_form=is_guest_form):
-                continue
-
-            if ff.field_type == "rich_text":
-                content = getattr(ff, "rich_text", "")
-                if content:
-                    items.append({"kind": "rich_text", "content": content})
-                continue
-
-            for key in _answer_keys_for_template_field(ff):
-                if key in self.fields:
-                    items.append({"kind": "field", "field": self[key]})
-        return items
-
     def _dynamic_clean(self):
         cleaned = super(DynamicForm, self).clean()
-
-        for rule in visibility_rules:
-            is_visible = _value_matches_condition(
-                cleaned.get(rule["parent_key"]),
-                rule["trigger_values"],
-            )
-            if not is_visible:
-                for child_key in rule["child_keys"]:
-                    cleaned[child_key] = [] if isinstance(cleaned.get(child_key), list) else ""
-                continue
-            for required_key in rule["required_keys"]:
-                if _is_empty(cleaned.get(required_key)):
-                    self.add_error(required_key, "This field is required.")
 
         for rule in conditional_rules:
             if rule.get("kind") == "select_other":
@@ -642,18 +346,7 @@ def build_dynamic_form(
                 "Some questions need additional details. Please fill in the fields marked 'Please specify.'",
             )
 
-        add_choice_limit_errors(
-            self,
-            validate_choice_limits(
-                event,
-                reg_type,
-                [cleaned],
-                current_registrant=current_registrant,
-            ),
-        )
-
         return cleaned
 
     DynamicForm.clean = _dynamic_clean
-    DynamicForm.layout_items = _layout_items
     return DynamicForm

@@ -1,0 +1,48 @@
+// =============================================================================
+// Design System — News Grid ("In the News") block
+// Section title (heading-left / intro right) over a 2-up grid of media-compact
+// cards, divided by column + row rules (--surface-border, surface-adapting; no
+// rule above the first row). The redesigned News Carousel (now a grid).
+// the "Explore" / "In the News" grid.
+// =============================================================================
+
+.ds-news-grid {
+  padding-block: var(--space-section-y); // horizontal gutters from .ds-container
+
+  .ds-section-header { margin-bottom: var(--space-80); }
+
+  // Author-set button row between the section header and the grid
+  // (BugHerd #164). Same flex row every other block uses.
+  &__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-24);
+    margin-bottom: var(--space-48);
+  }
+
+  // Node 1677:92331 geometry: cards stack flush in two columns (no row-gap;
+  // each cell's symmetric block padding puts 24px on BOTH sides of the row
+  // rules), and each row rule spans its column only. Horizontal rules only —
+  // no vertical rules anywhere.
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-24);
+  }
+
+  &__cell {
+    padding-block: var(--space-24);
+    border-top: var(--border-divider) solid var(--surface-border);
+  }
+
+  // --- Mobile: single column -------------------------------------------------
+  @media (max-width: 768px) {
+    .ds-section-header { margin-bottom: var(--space-32); }
+
+    &__grid { grid-template-columns: 1fr; }
+
+    // News headlines run long, so they take a step down beside the thumb on a
+    // phone: "let's go with 20px please" (Kay, BugHerd #209).
+    .ds-card__title { font-size: var(--font-size-20); }
+  }
+}

@@ -1,0 +1,91 @@
+{% load wagtailcore_tags cards icons %}
+{% comment %}
+  Resource Bento — dynamic module. Two layouts:
+    split    — optional header (heading left + intro/CTA right) over a feature
+               card beside one compact column.
+    centered — no header by default; the feature card centred between two compact
+               columns.
+    duo      — two feature cards beside one compact column (homepage light
+               bento).
+  Header shown when show_header is on. Resources auto (most recent) or manual.
+{% endcomment %}
+{# An empty module renders nothing (BugHerd #297). #}
+{% if feature %}
+<div class="ds-surface ds-surface--{{ self.surface }} ds-surface--accent-{{ self.accent }}">
+  <div class="ds-resource-bento ds-container">
+    {% if self.show_header %}
+      {% include "includes/module_title.html" with wide_lead=True heading=self.heading intro=self.intro cta_url=cta_url cta_label=self.cta_label|default:"View All" cta_scheme=cta_scheme %}
+    {% endif %}
+
+    <div class="ds-resource-bento__desktop">
+    {% if self.layout == 'duo' %}
+      {% if features or compact_cards %}
+        <div class="ds-resource-bento__grid ds-resource-bento__grid--duo" data-ds-reveal data-ds-reveal-stagger="80">
+          {% for f in features %}
+            <div class="ds-resource-bento__feature{% if not forloop.first %} ds-resource-bento__feature--ruled{% endif %}" data-ds-reveal-item>{% card f variant="resource-feature" show_date=self.show_date show_author=self.show_author tall_media=True %}</div>
+          {% endfor %}
+          {% if compact_cards %}
+            <div class="ds-resource-bento__list" data-ds-reveal-item>
+              {% for resource in compact_cards %}{% card resource variant="media-compact" show_date=self.show_date show_author=self.show_author %}{% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% elif self.layout == 'centered' %}
+      {% if feature or compact_cards %}
+        <div class="ds-resource-bento__grid ds-resource-bento__grid--centered" data-ds-reveal data-ds-reveal-stagger="80">
+          {% if compact_left %}
+            <div class="ds-resource-bento__list ds-resource-bento__list--stacked ds-resource-bento__list--right-rule" data-ds-reveal-item>
+              {# Only the CENTRE card keeps its description (BugHerd #155, supersedes #107's left-column copy). #}
+              {% for resource in compact_left %}{% card resource variant="media-stacked" show_excerpt=False show_date=self.show_date show_author=self.show_author %}{% endfor %}
+            </div>
+          {% endif %}
+          {% if feature %}
+            <div class="ds-resource-bento__feature" data-ds-reveal-item>{% card feature variant="resource-feature" show_date=self.show_date show_author=self.show_author %}</div>
+          {% endif %}
+          {% if compact_right %}
+            <div class="ds-resource-bento__list" data-ds-reveal-item>
+              {% for resource in compact_right %}{% card resource variant="media-compact" show_date=self.show_date show_author=self.show_author %}{% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% else %}
+      {% if feature or compact_cards %}
+        <div class="ds-resource-bento__grid" data-ds-reveal data-ds-reveal-stagger="80">
+          {% if feature %}
+            <div class="ds-resource-bento__feature" data-ds-reveal-item>{% card feature variant="resource-feature" show_date=self.show_date show_author=self.show_author %}</div>
+          {% endif %}
+          {% if compact_cards %}
+            <div class="ds-resource-bento__list" data-ds-reveal-item>
+              {% for resource in compact_cards %}{% card resource variant="media-compact" show_date=self.show_date show_author=self.show_author %}{% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endif %}
+    </div>{# /.ds-resource-bento__desktop #}
+
+    {% comment %}Mobile (<=768): the same cards as a swipe rail with the controls
+    above (BugHerd #56). Swiper is enabled only at this breakpoint (gallery-init),
+    so it never inits hidden and resizing across 768px is safe.{% endcomment %}
+    {% if mobile_cards %}
+      <div class="ds-resource-bento__mobile ds-carousel" data-ds-carousel-mobile
+        data-ds-space="16" data-ds-loop="0" data-ds-pagination="1">
+        <div class="ds-carousel__controls">
+          <div class="swiper-pagination ds-pagination"></div>
+          {% include "includes/carousel_nav.html" with prefix="carousel" %}
+        </div>
+        <div class="swiper ds-carousel__swiper">
+          <div class="swiper-wrapper">
+            {% for resource in mobile_cards %}
+              {# Mobile card per Figma 1363-124701: image top, pill, title, excerpt, type-of-content. #}
+              <div class="swiper-slide">{% card resource variant="media-stacked" show_excerpt=True show_date=self.show_date show_author=self.show_author %}</div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}

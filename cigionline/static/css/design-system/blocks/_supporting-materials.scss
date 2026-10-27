@@ -1,0 +1,84 @@
+// =============================================================================
+// Design System — Supporting Material Carousel
+// Section title over a 3-up card carousel of downloadables. Cards: title +
+// content-type eyebrow (with icon) + tertiary "Read More" link. Always visible.
+// Carousel shell/nav/pagination are shared components.
+// =============================================================================
+
+.ds-supporting {
+  padding-block: var(--space-section-y);
+
+  // <details> ignores display:flex (and so gap) — child margins carry the
+  // 48px rhythm instead.
+  > :not(summary) { margin-top: var(--space-48); }
+
+  // The design closes the block with a hairline beneath the controls row,
+  // matching the section title's rule weight/colour. The shared carousel
+  // controls sit inside the container, so the rule aligns with the title rule.
+  .ds-carousel__controls {
+    padding-bottom: var(--space-24);
+    border-bottom: var(--border-divider) solid var(--color-border-black-white);
+  }
+
+  // --- Section title --------------------------------------------------------
+  // One rule above the section header only (template: the shared section
+  // divider). No rule under the heading — the cards carry their own top
+  // hairlines.
+  &__title {
+    padding-block: var(--space-24);
+    border-top: var(--border-divider) solid var(--color-border-black-white);
+  }
+
+  &__heading {
+    @include header-3;
+    color: var(--color-text-black-white);
+    margin: 0;
+  }
+
+  &__intro {
+    @include paragraph-2;
+    color: var(--color-text-black-white);
+    margin-top: var(--space-24);
+    max-width: var(--width-628);
+  }
+
+  // --- Card --------------------------------------------------------------
+  // Compound with .swiper-slide so display:flex out-specifies Swiper's
+  // `.swiper-slide{display:block}` (its CSS loads after, equal specificity).
+  &__card.swiper-slide {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-16);
+    height: auto;
+    border-top: var(--border-divider) solid var(--color-border-black-white);
+    padding-top: var(--space-24);
+  }
+
+  &__card-title {
+    @include header-5;
+    color: var(--color-text-black-white);
+    margin: 0;
+  }
+
+  &__card-type {
+    @include eyebrow;
+    text-transform: uppercase;
+    color: var(--color-text-black-white);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
+    margin: 0;
+  }
+
+  &__card-icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    flex-shrink: 0;
+  }
+
+  &__card-link {
+    margin-top: auto; // pin Read More to the card bottom
+  }
+}

@@ -1,0 +1,40 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+{% comment %}
+  Shared Alt Hero markup — the single source of truth for the hero, rendered
+  from BOTH the StreamField block (templates/streams/alt_hero_block.html) and a
+  page template. Keep all hero markup here so the two stay in sync.
+
+  Context variables:
+    image        — Wagtail Image (required)
+    crumbs       — list of breadcrumb strings (optional); joined with a red ">"
+    heading      — title string (optional)
+    heading_tag  — "h1" for a page hero, otherwise "h2" (default)
+    description  — rich text value or HTML string (optional)
+    show_overlay — False hides the photo vignette gradient (BugHerd #401; the
+                   program page's "Show photo vignette" toggle). Omitted = shown.
+
+  Page-template usage example:
+    {% include "includes/alt_hero.html" with image=page.hero_image heading=page.title heading_tag="h1" crumbs=hero_crumbs description=page.hero_description %}
+{% endcomment %}
+<div class="ds-alt-hero">
+  <div class="ds-alt-hero__media" aria-hidden="true">
+    {% image image width-1920 class="ds-alt-hero__img" %}
+    {% if show_overlay is None or show_overlay %}<span class="ds-alt-hero__overlay"></span>{% endif %}
+  </div>
+
+  <div class="ds-alt-hero__content ds-container">
+    <div class="ds-alt-hero__header">
+      {% include "includes/breadcrumbs.html" with crumbs=crumbs %}
+      {% if heading %}
+        {% if heading_tag == "h1" %}
+          <h1 class="ds-alt-hero__heading">{{ heading }}</h1>
+        {% else %}
+          <h2 class="ds-alt-hero__heading">{{ heading }}</h2>
+        {% endif %}
+      {% endif %}
+    </div>
+    {% if description %}
+      <div class="ds-alt-hero__description">{{ description|richtext }}</div>
+    {% endif %}
+  </div>
+</div>

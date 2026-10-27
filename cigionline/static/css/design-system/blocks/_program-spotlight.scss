@@ -1,0 +1,474 @@
+// =============================================================================
+// Design System — Program Spotlight block (dynamic)
+// Dark section: shared section-header (title + band eyebrows + explore), themes
+// row (white tiles + accent dot; each tile is a filter for the program list —
+// BugHerd #381 — and fills with its accent while active or hovered), then a
+// vertical program tablist beside the selected program's panel. Shared pieces
+// live in components/: section-header, slider-arrow, accent-media, card. This
+// file holds only the layout + the spotlight-local theme-tile/tablist/panel.
+// Each item carries its theme's `.ds-surface--accent-*` class, so
+// `--accent`/`--accent-on` resolve per item.
+// =============================================================================
+
+.ds-program-spotlight {
+  padding-block: var(--space-section-y);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-80); // section header / themes row / programs band (BugHerd #25)
+
+  // The block renders inside `.body` (article rich text), which indents lists
+  // (`.body ul` → padding-left 1.75em, specificity 0,1,1). Self-nest (0,2,0) to
+  // beat it so the module's own lists sit flush — theme tiles to the margin, the
+  // panel cards aligned with the image above them.
+  & &__themes,
+  & &__cards {
+    padding-inline-start: 0;
+  }
+
+  // --- Bands -----------------------------------------------------------------
+  // Title + band eyebrows + explore link use the shared .ds-section-header.
+  &__band {
+    border-top: var(--border-divider) solid var(--surface-border);
+    padding-top: var(--space-8);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+  }
+
+  // Programs band carries the Explore button; gap to its content is 56px
+  // (Figma 1557-53304, BugHerd #27).
+  &__band--programs {
+    gap: var(--space-56);
+  }
+
+  // --- Themes row (theme-tile — Spotlight-local for now) ---------------------
+  &__themes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-32);
+  }
+
+  // The tile hugs its content at every width (BugHerd #381 — Juode: reduce the
+  // card height so the filtered program list sits in the same viewport). The
+  // 270px desktop tile is gone; the mobile compact tile is the tile.
+  &__tile {
+    position: relative; // containing block for the stretched toggle / link
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: var(--space-24);
+    height: 100%;
+    padding: var(--space-24);
+    // Default: white tile, black title + dot in the theme accent. The accent
+    // FILL means one thing only — this theme is selected (--accent /
+    // --accent-on from the tile's .ds-surface--accent-* class). Hover used to
+    // paint the same fill (Kay, BugHerd #119/#187), which was fine while the
+    // swipe drove selection. Once the tile became a click filter (#381) the two
+    // states were indistinguishable, so deselecting looked like nothing
+    // happened (Evan). Hover now keeps the lift + shadow and nothing else.
+    background: var(--color-brand-white);
+    color: var(--color-brand-black);
+    // No border (BugHerd #197) — the white fill and drop-shadow separate the tile.
+    box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.25); // drop-shadow
+    @include transition(
+      background-color var(--motion-duration-hover) var(--motion-ease-standard),
+      color var(--motion-duration-hover) var(--motion-ease-standard),
+      transform var(--motion-duration-micro) var(--motion-ease-standard),
+      box-shadow var(--motion-duration-micro) var(--motion-ease-standard)
+    );
+
+    // Hover / focus: lift + deepen the shadow. No fill — see above.
+    &:hover,
+    &:focus-within {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    @include reduce-motion-safe {
+      &:hover,
+      &:focus-within { transform: none; }
+    }
+  }
+
+  // The theme title is the filter control (BugHerd #381): click to select,
+  // click again to clear. Its stretched pseudo-element makes the whole tile the
+  // target on desktop; Learn More sits above it (z-index) so the theme page
+  // stays one click away.
+  &__theme-toggle {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
+
+    // The fill is reserved for the selected state, so the keyboard needs its
+    // own cue. Ring the stretched target, which is the whole tile.
+    &:focus-visible {
+      outline: none;
+
+      &::after {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+    }
+  }
+
+  // Title + accent dot share the top row; the dot sits top-right of the title.
+  &__theme-head {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-24);
+    width: 100%;
+  }
+
+  &__theme-title {
+    @include header-5;
+    display: block;
+  }
+
+  &__theme-dot {
+    flex-shrink: 0;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: var(--accent); // accent-coloured dot on the default white tile
+    @include transition(opacity var(--motion-duration-micro) var(--motion-ease-standard));
+  }
+
+
+  &__learn-more {
+    @include button-small;
+    position: relative;
+    z-index: 1; // raised above the stretched theme toggle
+    align-self: flex-start;
+    color: inherit;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
+    // Underline on (tile) hover only — was permanent (BugHerd #24). Colour unchanged.
+    border-bottom: 2px solid transparent;
+    padding-bottom: var(--space-4);
+    @include transition(border-color);
+
+    svg { width: 1em; height: 1em; flex-shrink: 0; fill: currentColor; }
+  }
+
+  &__tile:hover &__learn-more,
+  &__tile:focus-within &__learn-more {
+    border-bottom-color: currentColor;
+  }
+
+  // Selected tile — it is filtering the program list (BugHerd #150, every width
+  // since #381). The accent fill belongs to this state alone; hover only lifts.
+  &__theme--active &__tile {
+    background: var(--accent);
+    color: var(--accent-on);
+  }
+
+  &__theme--active &__theme-dot { opacity: 0; }
+
+  &__theme--active &__learn-more { border-bottom-color: currentColor; }
+
+  // --- Program tablist + panels ----------------------------------------------
+  &__columns {
+    display: grid;
+    // minmax(0, 1fr) — a bare 1fr is minmax(auto, 1fr), letting the track grow to
+    // the active panel's min-content (long unbreakable program titles/card titles
+    // differ per panel), which widened the width:100% panel image and, via its
+    // fixed aspect-ratio, made it taller on some programs. minmax(0, …) pins the
+    // track to the available space so every panel's image renders identically.
+    grid-template-columns: var(--width-410, 410px) minmax(0, 1fr);
+    gap: var(--space-24);
+    align-items: start;
+  }
+
+  &__list-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+
+  // Mobile dropdown trigger — replaces the program tablist on small screens.
+  // Hidden on desktop (the tablist shows); revealed by JS + shown in the mobile
+  // media query below. White rounded field + active-program label + chevron.
+  &__dropdown {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-12);
+    width: 100%;
+    padding: var(--space-12);
+    background: var(--color-brand-white);
+    color: var(--color-brand-black);
+    border: var(--border-divider) solid var(--surface-border);
+    border-radius: 4px;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  &__dropdown-label {
+    @include header-6;
+  }
+
+  &__dropdown-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    @include transition(transform var(--motion-duration-micro) var(--motion-ease-standard));
+  }
+
+  &__dropdown[aria-expanded='true'] &__dropdown-icon {
+    transform: rotate(180deg);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    // No desktop height cap — the list shows every program at its natural height
+    // (all programs visible, list taller than the panel). The slider arrow
+    // reveals itself only if the content actually overflows; the mobile dropdown
+    // popup sets its own max-height.
+    overflow-y: auto;
+
+    // Hide the native scrollbar — scrolling is driven by the slider arrow.
+    scrollbar-width: none; // Firefox
+    -ms-overflow-style: none; // legacy Edge/IE
+
+    &::-webkit-scrollbar {
+      display: none; // Chrome/Safari
+    }
+  }
+
+  // Visual is the shared .ds-slider-arrow; here we only position it.
+  &__scroll {
+    align-self: flex-end;
+  }
+
+  &__item {
+    @include header-5;
+    text-align: left;
+    background: none;
+    border: 0;
+    border-bottom: var(--border-divider) solid var(--surface-border);
+    color: var(--surface-text);
+    padding: var(--space-24) var(--space-16);
+    cursor: pointer;
+    @include transition(background-color, color);
+
+    &--active,
+    &:hover,
+    &:focus-visible {
+      background: var(--accent);
+      color: var(--accent-on);
+    }
+  }
+
+  &__panels {
+    min-width: 0; // grid child defaults to min-width:auto; allow it to shrink
+    border-left: var(--border-divider) solid var(--surface-border);
+    padding-left: var(--space-24);
+  }
+
+  &__panel {
+    display: flex;
+    flex-direction: column;
+    // 48px between the panel description and the border above its content
+    // cards (BugHerd #29). #22's 80px is NOT here — it's the module-level gap
+    // between the section intro and the themes band (the root container gap).
+    gap: var(--space-48);
+  }
+
+  // Entry motion (added by program-spotlight.js on a user tab switch). Guide:
+  // the panel cross-fades 300ms; the two latest-content cards stagger 80ms.
+  // The panel photo is a link now (BugHerd #417) — as an <a> it needs the
+  // block box the old div had.
+  &__panel-media { display: block; }
+
+  &__panel--enter {
+    animation: ds-spotlight-panel-in var(--motion-duration-hover) var(--motion-ease-standard) both;
+  }
+
+  &__panel--enter &__card {
+    animation: ds-spotlight-card-in var(--motion-duration-entry) var(--motion-ease-standard) both;
+  }
+
+  &__panel--enter &__card:nth-child(2) {
+    animation-delay: 80ms;
+  }
+
+  @include reduce-motion-safe {
+    &__panel--enter,
+    &__panel--enter &__card { animation: none; }
+  }
+
+  // Panel image uses the shared .ds-accent-media, but at a shorter ratio than the
+  // component default (1320/742, 16:9). The design panel banner is 821×356, so the
+  // height is constrained to ~2.31:1 of its width — same 1320 reference width as
+  // the default, reduced height. Width is fixed by the grid track, so this ratio
+  // acts as the panel image's height constraint.
+  &__panel .ds-accent-media {
+    --accent-media-ratio: 1320 / 572;
+  }
+
+  &__panel-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-16);
+  }
+
+  &__panel-heading {
+    @include header-3;
+    color: var(--surface-text);
+    margin: 0;
+    overflow-wrap: anywhere; // long unbreakable titles wrap instead of overflowing
+
+    // Heading links to the program's router page (BugHerd #28).
+    a {
+      color: inherit;
+      text-decoration: none;
+      @include hover-underline;
+    }
+  }
+
+  &__panel-text {
+    @include paragraph-1;
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  // --- Latest content cards (grid of shared .ds-card) ------------------------
+  &__cards {
+    list-style: none;
+    margin: 0;
+    padding-top: var(--space-48); // border → cards (BugHerd #29)
+    border-top: var(--border-divider) solid var(--surface-rule);
+    display: grid;
+    // minmax(0), never bare 1fr — the nowrap pills set the cards' min-content,
+    // and a track that can't shrink below it blows the page out sideways.
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    // Both cards sit flush in their half; the column gap (2× the token) carries
+    // a centred divider with equal space each side — no per-card indent.
+    column-gap: calc(var(--space-24) * 2);
+    row-gap: var(--space-24);
+  }
+
+  // Cell only — card content is rendered by .ds-card.
+  &__card {
+    position: relative;
+    min-width: 0;
+
+    // Centred vertical divider in the column gap between the two cards.
+    & + &::before {
+      content: '';
+      position: absolute;
+      left: calc(var(--space-24) * -1);
+      top: 0;
+      bottom: 0;
+      border-left: var(--border-divider) solid var(--surface-border);
+    }
+  }
+
+  // --- Tablet: 2-up themes so the 4th tile isn't cut off (BugHerd #55) --------
+  @media (max-width: 1024px) {
+    &__themes { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  // --- Mobile ------------------------------------------------------------------
+  // Mobile themes carousel (BugHerd #150): hidden on desktop, where the grid
+  // renders; under 769px it replaces the grid and its active slide drives the
+  // program filter (program-spotlight.js). Rail slides stretch to equal
+  // height so every tile's accent fill covers the same box.
+  &__themes-mobile {
+    display: none;
+
+    .swiper-wrapper { align-items: stretch; }
+    .swiper-slide { height: auto; }
+  }
+
+  @media (max-width: 768px) {
+    &__themes { display: none; }
+    &__themes-mobile { display: flex; flex-direction: column; gap: var(--space-24); }
+
+    // In the rail the swipe is the filter and a tap navigates (Evan, BugHerd
+    // #150 follow-up): Learn More takes the stretched target, the toggle gives
+    // it up.
+    &__theme-toggle::after { content: none; }
+
+    &__learn-more::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
+    &__columns { grid-template-columns: 1fr; }
+
+    &__panels {
+      border-left: 0;
+      padding-left: 0;
+    }
+
+    &__cards { grid-template-columns: 1fr; }
+
+    &__card + &__card {
+      border-top: var(--border-divider) solid var(--surface-border);
+      padding-top: var(--space-24);
+
+      &::before { display: none; } // no vertical divider when cards stack
+    }
+
+    // Mobile panel image is taller — a clean 3:2 (the desktop ratio is wide/short).
+    &__panel .ds-accent-media {
+      --accent-media-ratio: 3 / 2;
+    }
+
+    // --- Program dropdown (replaces the tablist) -----------------------------
+    // The "Research Program Topics" eyebrow goes full width (no Explore link on
+    // mobile), with a gap-56 above + below the dropdown (band gap = above the
+    // dropdown, columns gap = below it, between the dropdown and the panel).
+    &__band--programs { gap: var(--space-56); }
+    &__columns { gap: var(--space-56); }
+
+    // Hide the Explore action on mobile (only the programs band has one).
+    .ds-section-header__action { display: none; }
+
+    &__list-wrap { position: relative; }
+
+    // --- Theme-filtered program list (BugHerd #150) --------------------------
+    // The themes row drives the list, so the dropdown popup is retired: filtered
+    // to one theme, the list is short enough to sit inline on the dark surface.
+    // program-spotlight.js animates its height on each switch.
+    &__dropdown { display: none; }
+
+    // Slider arrow isn't needed — the filtered list doesn't overflow.
+    &__scroll { display: none; }
+
+    &__list { display: flex; }
+
+    &__item:last-child { border-bottom: 0; }
+  }
+}
+
+// Entry keyframes (program-spotlight.js toggles the .--enter class on switch).
+@keyframes ds-spotlight-panel-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes ds-spotlight-card-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}

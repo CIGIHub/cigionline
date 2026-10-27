@@ -1,24 +1,21 @@
 {% extends "base.html" %}
-{% load webpack_loader %}
+{% load heroes %}
+{% comment %}
+  Job posting single, on the design system's reading shell — the same
+  "3/4 page" layout every other post type uses (Kay + Tia, BugHerd #366; the
+  page was still on the legacy hero + Bootstrap body).
 
-{% block extra_css %}
-  {% render_bundle 'jobPostingPage' 'css' %}
-{% endblock %}
+  `description` is the posting's prose; `related_files` feeds the shared
+  supporting-materials carousel through reading_body's {% templatetag openblock %} supporting_materials {% templatetag closeblock %}
+  tag, so the old bespoke files table goes. suppress_subscribe matches the
+  other singles — none of them run the red band mid-body.
+{% endcomment %}
 
 {% block body_class %}job-posting-page{% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.closing_date_text %}
-  {% include "includes/body.html" with body=self.description %}
-  {% if self.related_files %}
-    <section class="related-files">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-md-10 col-lg-8">
-            {% include "includes/core_related_files_table.html" with file_blocks=self.related_files %}
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endif %}
+  <article>
+    {% page_hero self %}
+    {% include "includes/reading_body.html" with page=self body=self.description suppress_subscribe=True %}
+  </article>
 {% endblock content %}

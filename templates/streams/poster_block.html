@@ -11,7 +11,7 @@
           <div class="meta">{{ self.publication_type }}</div>
           {% include "includes/topics.html" with topics=self.topics %}
           <h3>
-            <a href="{{ self.url }}">{{ self.title }}</a>
+            <a href="{% pageurl self %}">{{ self.title }}</a>
           </h3>
           <div class="meta date">{{ self.publishing_date|date:"F j, Y" }}</div>
           <div class="short-description">{{ self.short_description|richtext }}</div>

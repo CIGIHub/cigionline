@@ -1,0 +1,77 @@
+{% load static wagtailcore_tags wagtailimages_tags menu_tags icons %}
+{% comment %}
+  Design-system primary header.
+  Two rows: a utility row (search + Newsletter Sign-Up) and the brand/nav row
+  (logo + primary nav). Nav items + mega-menu panels are authored via the
+  `primary-nav` Menu (Snippets -> Menus); panel layout is inferred from the menu
+  structure (see header_panel.html). Phase 1 = bar + triggers; panels in Phase 2.
+{% endcomment %}
+{% get_menu 'primary-nav' as primary_nav %}
+{% comment %}
+  Surface-aware: a page sets `header_surface` in its context (e.g. 'dark' for
+  dark-hero singles, 'accent-<colour>' for branded series); defaults to 'light'.
+{% endcomment %}
+{# header_accent_scheme recolours the nav underline/hover accents (DPH green — BugHerd #200). #}
+{% firstof header_surface page.surface 'light' as header_mode %}
+{% comment %} The utility row is a SIBLING of the sticky header, not a child (BugHerd #233). It scrolls away in normal flow, so the sticky box holds the brand row alone and pins at top 0. The old markup kept both rows inside the sticky element and pulled it up by a JS-measured negative `top`; iOS Safari kept the pre-JS offset of 0, pinned all 203px, and buried the hero title. {% endcomment %}
+<div class="ds-header__band ds-surface ds-surface--{{ header_mode }}{% if header_accent_scheme %} ds-surface--accent-{{ header_accent_scheme }}{% endif %}" data-ds-header-band>
+  <div class="ds-header__utility ds-container">
+    {% include "includes/header_search.html" %}
+    <span class="ds-header__utility-divider" aria-hidden="true"></span>
+    <a class="ds-header__newsletter" href="{{ settings.core.HeaderSettings.newsletter_link|default:'/subscribe/' }}">{{ settings.core.HeaderSettings.newsletter_label|default:'Newsletter Sign-Up' }}{% ds_icon 'chevron-right' css_class='ds-header__newsletter-icon' %}</a>
+  </div>
+</div>
+<header class="ds-header ds-surface ds-surface--{{ header_mode }}{% if header_accent_scheme %} ds-surface--accent-{{ header_accent_scheme }}{% endif %}" data-ds-header>
+  <div class="ds-header__inner ds-container">
+
+    <div class="ds-header__bar">
+      {% include "includes/header_logo.html" %}
+
+      <nav class="ds-header__nav" aria-label="Primary">
+        {% if primary_nav %}
+        <ul class="ds-header__menu">
+          {% for item in primary_nav.menu_items.all %}
+            <li class="ds-header__item" data-ds-header-item>
+              {% if item.submenu %}
+                {# The trigger is a real link to the section landing page (BugHerd #282); the panel opens on hover/focus instead of click. An unauthored destination falls back to "#" and the JS keeps click-to-toggle for it. #}
+                <a class="ds-header__link ds-header__link--has-panel" href="{% if item.link_page %}{% pageurl item.link_page %}{% elif item.link_url %}{{ item.link_url }}{% else %}#{% endif %}" aria-haspopup="true" aria-expanded="false" aria-controls="ds-nav-panel-{{ forloop.counter }}">
+                  <span class="ds-header__link-label" data-label="{{ item.title }}">{{ item.title }}</span>
+                  <svg class="ds-header__caret" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2" d="m6 9 6 6 6-6"/></svg>
+                </a>
+                {% include "includes/header_panel.html" with item=item panel_n=forloop.counter %}
+              {% else %}
+                {% nav_is_active item as is_active %}
+                <a class="ds-header__link{% if is_active %} ds-header__link--active{% endif %}"{% if is_active %} aria-current="page"{% endif %} href="{% if item.link_page %}{% pageurl item.link_page %}{% elif item.link_url %}{{ item.link_url }}{% else %}#{% endif %}"><span class="ds-header__link-label" data-label="{{ item.title }}">{{ item.title }}</span></a>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </nav>
+
+      <button class="ds-header__burger" type="button" aria-expanded="false" aria-label="Open menu" aria-controls="ds-header-drawer" data-ds-drawer-open>
+        <span class="ds-header__burger-bar"></span>
+        <span class="ds-header__burger-bar"></span>
+        <span class="ds-header__burger-bar"></span>
+      </button>
+    </div>
+
+  </div>
+
+  <div class="ds-header__drawer" id="ds-header-drawer" data-ds-drawer hidden>
+    {# Search rides its own row above the logo/close row (BugHerd #97). #}
+    <div class="ds-header__drawer-search ds-container">
+      {% include "includes/header_search.html" %}
+    </div>
+    <div class="ds-header__drawer-top ds-container">
+      {% include "includes/header_logo.html" %}
+      <button class="ds-header__drawer-close" type="button" aria-label="Close menu" data-ds-drawer-close>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2" d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <div class="ds-header__drawer-body ds-container">
+      {% include "includes/header_mobile_nav.html" %}
+      <a class="ds-header__newsletter" href="{{ settings.core.HeaderSettings.newsletter_link|default:'/subscribe/' }}">{{ settings.core.HeaderSettings.newsletter_label|default:'Newsletter Sign-Up' }}{% ds_icon 'chevron-right' css_class='ds-header__newsletter-icon' %}</a>
+    </div>
+  </div>
+</header>

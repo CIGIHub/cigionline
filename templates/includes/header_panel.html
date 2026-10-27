@@ -1,0 +1,76 @@
+{% load wagtailcore_tags menu_tags icons %}
+{% comment %}
+  One mega-menu panel for a primary-nav item that has a submenu. Layout is
+  inferred from the data:
+    - submenu slug 'nav-topics'  -> full-width, live research taxonomy
+    - submenu items have submenus -> full-width columns (e.g. About)
+    - otherwise                   -> compact single-section dropdown
+  Every branch ends with the submenu's optional bottom link (BugHerd #539).
+  Expects `item` (the nav MenuItem) and `panel_id` in context.
+{% endcomment %}
+{% with first_child=item.submenu.menu_items.first %}
+
+{% if item.submenu.slug == 'nav-topics' %}
+  <div class="ds-header__panel ds-header__panel--full" id="ds-nav-panel-{{ panel_n }}" data-ds-header-panel hidden>
+    <div class="ds-header__panel-inner ds-container">
+      {% get_topics_panel as topics %}
+      {% for t in topics %}
+        <div class="ds-header__panel-col">
+          <a class="ds-header__panel-heading" href="{{ t.url }}">{{ t.title }}</a>
+          {% if t.description %}<p class="ds-header__panel-desc">{{ t.description|truncatewords:14 }}</p>{% endif %}
+          {% if t.programs %}
+            <ul class="ds-header__panel-links">
+              {% for p in t.programs %}<li><a href="{{ p.url }}">{{ p.title }}</a></li>{% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>{% include "includes/_nav_bottom_link.html" with menu=item.submenu variant='full' %}
+  </div>
+
+{% elif first_child.submenu %}
+  <div class="ds-header__panel ds-header__panel--full" id="ds-nav-panel-{{ panel_n }}" data-ds-header-panel hidden>
+    <div class="ds-header__panel-inner ds-container">
+      {% for col in item.submenu.menu_items.all %}
+        <div class="ds-header__panel-col">
+          {% if col.link_page or col.link_url %}
+            <a class="ds-header__panel-heading" href="{% if col.link_page %}{% pageurl col.link_page %}{% else %}{{ col.link_url }}{% endif %}">{{ col.title }}</a>
+          {% else %}
+            <span class="ds-header__panel-heading">{{ col.title }}</span>
+          {% endif %}
+          {% if col.description %}<p class="ds-header__panel-desc">{{ col.description }}</p>{% endif %}
+          {% if col.submenu %}
+            <ul class="ds-header__panel-links">
+              {% for l in col.submenu.menu_items.all %}<li>{% include "includes/_nav_link.html" with link=l %}</li>{% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>{% include "includes/_nav_bottom_link.html" with menu=item.submenu variant='full' %}
+  </div>
+
+{% else %}
+  <div class="ds-header__panel ds-header__panel--compact" id="ds-nav-panel-{{ panel_n }}" data-ds-header-panel hidden>
+    <div class="ds-header__panel-inner">
+      <div class="ds-header__panel-col">
+        {# 1694:109556 / 1694:120582: eyebrow label + serif description, then the divider-topped link list. #}
+        <div class="ds-header__panel-head">
+          {# Eyebrow links to the item's router page (replaces the removed Learn More, BugHerd #11); plain label when the item has no target. #}
+          {% if item.link_page or item.link_url %}
+            <a class="ds-header__panel-label" href="{% if item.link_page %}{% pageurl item.link_page %}{% else %}{{ item.link_url }}{% endif %}">{{ item.title }}</a>
+          {% else %}
+            <span class="ds-header__panel-label">{{ item.title }}</span>
+          {% endif %}
+          {% if item.description %}<p class="ds-header__panel-desc">{{ item.description }}</p>{% endif %}
+        </div>
+        {% if item.submenu.menu_items.all %}
+          <ul class="ds-header__panel-links">
+            {% for l in item.submenu.menu_items.all %}<li>{% include "includes/_nav_link.html" with link=l %}</li>{% endfor %}
+          </ul>
+        {% endif %}{% include "includes/_nav_bottom_link.html" with menu=item.submenu variant='compact' %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% endwith %}

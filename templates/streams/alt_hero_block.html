@@ -1,0 +1,6 @@
+{% comment %}
+  Alt Hero (StreamField block). Markup lives in the shared partial so the block
+  and page-template heroes stay in sync. `crumbs` is built in get_context from
+  the eyebrow string (split on ">").
+{% endcomment %}
+{% include "includes/alt_hero.html" with image=self.image crumbs=crumbs heading=self.heading description=self.description %}

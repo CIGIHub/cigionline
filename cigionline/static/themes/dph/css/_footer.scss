@@ -18,44 +18,29 @@ footer {
 
     form {
       display: flex;
-      height: 2em;
-      margin-bottom: 1rem;
-    }
 
-    input {
-      &[type='email'] {
-        background: $dph-dark-green;
-        border-bottom: 1px solid $white;
-        border-left: 0;
-        border-right: 0;
-        border-top: 0;
-        color: $white;
-        margin: 0;
-        margin-right: 5px;
-        width: calc(100% - 105px);
+      input[type='email'] {
+        background-color: $dph-dark-green;
+        border: 0;
+        border-bottom: 3px solid white;
+        margin-right: 0.5rem;
+        width: 75%;
+        padding-left: 1rem;
 
-        &:focus {
-          outline: none;
+        &::placeholder {
+          color: $white;
         }
       }
 
-      &::placeholder {
-        color: $white;
-      }
-    }
+      input[type='submit'] {
+        padding: 0.25rem 1rem;
+        border: 1px solid $white;
+        border-radius: 2rem;
+        transition: background-color ease 0.2s;
 
-    button {
-      border: 1px solid $white;
-      border-radius: 2rem;
-      color: $white;
-      display: inline-block;
-      padding: 0.25rem 1rem;
-      transition: background-color ease 0.2s;
-
-      &:hover {
-        background-color: $dph-green;
-        color: $cigi-dark-pink;
-        text-decoration: none;
+        &:hover {
+          background-color: $dph-green;
+        }
       }
     }
 

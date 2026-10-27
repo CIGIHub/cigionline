@@ -1,0 +1,31 @@
+{% load wagtailcore_tags icons %}
+{% comment %}
+  Trending Issues — dynamic module. A slim banner spotlighting one piece of
+  content between accent rules: date, title, excerpt, then the author, with a
+  tertiary "Read More" link on the right. Item is manual (chosen) or auto (most
+  recent). Surface-aware (light default).
+
+{% endcomment %}
+{# An empty module renders nothing — the guard sits outside the surface band (BugHerd #297). #}
+{% if trending %}
+  <div class="ds-surface ds-surface--{{ self.surface }} ds-surface--accent-{{ self.accent }}">
+    <div class="ds-trending ds-container">
+      <div class="ds-trending__banner">
+        <div class="ds-trending__content">
+          <a class="ds-trending__title" href="{{ trending.url }}">{{ trending.title }}</a>
+          {% if trending.excerpt %}<p class="ds-trending__excerpt">{{ trending.excerpt }}</p>{% endif %}
+          {% if trending.author or trending.date %}
+            <p class="ds-trending__meta">
+              {% if trending.author %}<span class="ds-trending__author">{{ trending.author }}</span>{% endif %}
+              {% if trending.date %}<span class="ds-trending__date">{{ trending.date|date:"m.d.y" }}</span>{% endif %}
+            </p>
+          {% endif %}
+        </div>
+        <a class="ds-button ds-button--tertiary ds-button--{{ cta_scheme }} ds-trending__cta" href="{{ trending.url }}">
+          <span class="ds-button__label">{{ self.cta_label|default:"Read More" }}</span>
+          {% ds_icon 'chevron-right' css_class='ds-button__icon' %}
+        </a>
+      </div>
+    </div>
+  </div>
+{% endif %}

@@ -1,28 +1,20 @@
-import base64
+import importlib
 from datetime import datetime, timedelta, timezone as datetime_timezone
+from django.contrib.auth import get_user_model
+from django.db import connection
+from django.db.migrations.loader import MigrationLoader
 from django.template.loader import render_to_string
-from django.test import RequestFactory, SimpleTestCase, TestCase
-from django.urls import reverse
+from django.test import SimpleTestCase, TestCase
 from django.utils import timezone
 from home.models import HomePage, Think7HomePage
 from types import SimpleNamespace
-from urllib.parse import parse_qs, urlparse
+from wagtail.models import Revision
 from wagtail.test.utils import WagtailPageTestCase
 
-from .models import EventListPage, EventPage, EventRegistrationReportPage
+from .models import EventListPage, EventPage
 from .email_rendering import render_streamfield_email_html
 
 from unittest.mock import patch
-
-
-def test_owner():
-    from django.contrib.auth import get_user_model
-
-    user, _ = get_user_model().objects.get_or_create(
-        username="events-test-owner",
-        defaults={"email": "events-test-owner@example.com"},
-    )
-    return user
 
 
 class EventCalendarTemplateTests(SimpleTestCase):
@@ -60,11 +52,6 @@ class EventCalendarTemplateTests(SimpleTestCase):
             publishing_date=datetime(2030, 1, 1, 13, 0, tzinfo=datetime_timezone.utc),
             event_end=datetime(2030, 1, 1, 14, 0, tzinfo=datetime_timezone.utc),
             time_zone="America/Toronto",
-            google_calendar_url=(
-                "https://www.google.com/calendar/render?"
-                "action=TEMPLATE&dates=20300101T130000Z/20300101T140000Z"
-            ),
-            calendar_feed_url="/events/feed.ics?id=123",
             full_url="https://www.cigionline.org/events/template-event/",
             url="/events/template-event/",
         )
@@ -76,140 +63,19 @@ class EventCalendarTemplateTests(SimpleTestCase):
         self.assertIn("/events/feed.ics?id=123", html)
 
 
-class EventCalendarLinkTests(TestCase):
-    def make_event(self, **kwargs):
-        from wagtail.models import Site
-
-        root = Site.objects.get(is_default_site=True).root_page
-        event = EventPage(
-            title=kwargs.pop("title", "Calendar Test Event"),
-            slug=kwargs.pop("slug", "calendar-test-event"),
-            publishing_date=kwargs.pop(
-                "publishing_date",
-                datetime(2030, 1, 1, 13, 0, tzinfo=datetime_timezone.utc),
-            ),
-            event_end=kwargs.pop(
-                "event_end",
-                datetime(2030, 1, 1, 14, 30, tzinfo=datetime_timezone.utc),
-            ),
-            time_zone=kwargs.pop("time_zone", "America/Toronto"),
-            event_format=kwargs.pop("event_format", EventPage.EventFormats.IN_PERSON),
-            location_name=kwargs.pop("location_name", "CIGI Campus"),
-            location_address1=kwargs.pop("location_address1", "67 Erb Street West"),
-            location_city=kwargs.pop("location_city", "Waterloo"),
-            location_province=kwargs.pop("location_province", "ON"),
-            location_country=kwargs.pop("location_country", "Canada"),
-            owner=test_owner(),
-            **kwargs,
-        )
-        root.add_child(instance=event)
-        event.save_revision(user=test_owner()).publish()
-        return event
-
-    def test_google_calendar_url_uses_google_datetime_format_and_event_details(self):
-        event = self.make_event()
-
-        params = parse_qs(urlparse(event.google_calendar_url).query)
-
-        self.assertEqual(params["action"], ["TEMPLATE"])
-        self.assertEqual(params["text"], ["Calendar Test Event"])
-        self.assertEqual(params["dates"], ["20300101T130000Z/20300101T143000Z"])
-        self.assertEqual(params["ctz"], ["America/Toronto"])
-        self.assertEqual(params["location"], ["67 Erb Street West, Waterloo, ON, Canada"])
-        self.assertIn(event.full_url, params["details"][0])
-
-    def test_calendar_feed_contains_usable_event_fields(self):
-        event = self.make_event(slug="calendar-feed-test-event")
-
-        response = self.client.get(event.calendar_feed_url)
-        content = response.content.decode()
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response["Content-Disposition"], 'attachment; filename="calendar-test-event.ics"')
-        self.assertIn("SUMMARY:Calendar Test Event", content)
-        self.assertIn("DTSTART;VALUE=DATE-TIME:20300101T130000Z", content)
-        self.assertIn("DTEND;VALUE=DATE-TIME:20300101T143000Z", content)
-        self.assertIn("LOCATION:67 Erb Street West\\, Waterloo\\, ON\\, Canada", content)
-        self.assertIn(event.full_url, content)
-
-    def test_calendar_links_still_work_without_event_end(self):
-        event = self.make_event(slug="calendar-no-end-test-event", event_end=None)
-
-        params = parse_qs(urlparse(event.google_calendar_url).query)
-
-        self.assertEqual(params["dates"], ["20300101T130000Z/20300101T140000Z"])
-        self.assertEqual(event.calendar_end_time_utc, event.event_start_time_utc + timedelta(hours=1))
-
-    def test_calendar_feed_ignores_invalid_id(self):
-        response = self.client.get("/events/feed.ics?id=not-an-id")
-
-        self.assertEqual(response.status_code, 200)
-        self.assertNotIn("BEGIN:VEVENT", response.content.decode())
-
-
-class EmailCampaignAttachmentTests(SimpleTestCase):
-    def test_attach_campaign_attachment_adds_wagtail_document_to_sendgrid_message(self):
-        from sendgrid.helpers.mail import Mail
-
-        from events.emailing import _attach_campaign_attachment
-
-        class DummyFile:
-            name = "event-campaigns/agenda.pdf"
-
-            def __init__(self):
-                self.opened = False
-                self.closed = False
-
-            def open(self, mode):
-                self.opened = mode == "rb"
-
-            def read(self):
-                return b"%PDF-1.4"
-
-            def close(self):
-                self.closed = True
-
-        dummy_file = DummyFile()
-        document = SimpleNamespace(file=dummy_file, title="Agenda")
-        message = Mail(
-            from_email="events@example.com",
-            to_emails="recipient@example.com",
-            subject="Campaign",
-            plain_text_content="Body",
-        )
-
-        _attach_campaign_attachment(message, document)
-
-        attachment = message.get()["attachments"][0]
-        self.assertTrue(dummy_file.opened)
-        self.assertTrue(dummy_file.closed)
-        self.assertEqual(attachment["content"], base64.b64encode(b"%PDF-1.4").decode())
-        self.assertEqual(attachment["filename"], "agenda.pdf")
-        self.assertEqual(attachment["type"], "application/pdf")
-        self.assertEqual(attachment["disposition"], "attachment")
-
-
 class DuplicateRegistrationTests(TestCase):
     """Duplicate email registrations should not create multiple active rows."""
 
-    @patch("events.utils.verify_turnstile_token", return_value=True)
-    @patch("events.emailing.send_duplicate_registration_manage_email")
-    def test_duplicate_registration_does_not_create_second_registrant(self, send_mock, _turnstile_mock):
-        from events.models import EventPage, RegistrationType, RegistrationFormTemplate, Registrant
+    @patch("events.models.send_confirmation_email")
+    def test_duplicate_registration_does_not_create_second_registrant(self, send_mock):
+        from events.models import EventPage, RegistrationType, Registrant
         from wagtail.models import Site
 
         # Minimal Site/Page setup so the EventPage route can resolve.
         root = Site.objects.get(is_default_site=True).root_page
-        event = EventPage(
-            title="Dup Test Event",
-            registration_open=True,
-            publishing_date=timezone.now(),
-            owner=test_owner(),
-        )
+        event = EventPage(title="Dup Test Event")
         root.add_child(instance=event)
-        event.save_revision(user=test_owner()).publish()
-        event.registration_form_template = RegistrationFormTemplate.objects.create(title="Dup Test Template")
-        event.save(update_fields=["registration_form_template"])
+        event.save_revision().publish()
 
         reg_type = RegistrationType(event=event, name="General", slug="general", sort_order=0, is_public=True)
         reg_type.save()
@@ -242,23 +108,15 @@ class DuplicateRegistrationTests(TestCase):
         self.assertEqual(before, after)
         self.assertTrue(send_mock.called)
 
-    @patch("events.utils.verify_turnstile_token", return_value=True)
-    @patch("events.emailing.send_confirmation_email")
-    def test_duplicate_registration_allows_if_cancelled(self, send_mock, _turnstile_mock):
-        from events.models import EventPage, RegistrationType, RegistrationFormTemplate, Registrant
+    @patch("events.models.send_confirmation_email")
+    def test_duplicate_registration_allows_if_cancelled(self, send_mock):
+        from events.models import EventPage, RegistrationType, Registrant
         from wagtail.models import Site
 
         root = Site.objects.get(is_default_site=True).root_page
-        event = EventPage(
-            title="Dup Cancelled Event",
-            registration_open=True,
-            publishing_date=timezone.now(),
-            owner=test_owner(),
-        )
+        event = EventPage(title="Dup Cancelled Event")
         root.add_child(instance=event)
-        event.save_revision(user=test_owner()).publish()
-        event.registration_form_template = RegistrationFormTemplate.objects.create(title="Dup Cancelled Template")
-        event.save(update_fields=["registration_form_template"])
+        event.save_revision().publish()
 
         reg_type = RegistrationType(event=event, name="General", slug="general", sort_order=0, is_public=True)
         reg_type.save()
@@ -310,226 +168,111 @@ class EventPageTests(WagtailPageTestCase):
     def test_eventpage_child_page_types(self):
         self.assertAllowedSubpageTypes(
             EventPage,
-            {EventRegistrationReportPage},
+            {},
         )
 
-    def test_registration_reports_list_events_with_registrants(self):
-        from events.models import Registrant, RegistrationType
-        from events.wagtail_hooks import RegistrationReportViewSet
-        from wagtail.models import Site
 
-        root = Site.objects.get(is_default_site=True).root_page
-        closed_event = EventPage(
-            title="Closed Event with Registrants",
-            registration_open=False,
-            publishing_date=timezone.now(),
-            owner=test_owner(),
-        )
-        root.add_child(instance=closed_event)
-        empty_open_event = EventPage(
-            title="Open Event without Registrants",
-            registration_open=True,
-            publishing_date=timezone.now(),
-            owner=test_owner(),
-        )
-        root.add_child(instance=empty_open_event)
-        registration_type = RegistrationType.objects.create(
-            event=closed_event,
-            name="General",
-            slug="general",
-            sort_order=0,
-        )
-        Registrant.objects.create(
-            event=closed_event,
-            registration_type=registration_type,
-            email="registered@example.com",
-        )
+class EventHeroBannerRevisionTests(TestCase):
+    """0085 writes the table's banner-on into the latest and live revisions
+    that predate the field. The editor reads the revision only for events with
+    unpublished changes (drafts, unpublished events), so those opened unticked;
+    for live events the keyless live revision drops the banner on revert,
+    unpublish-then-edit or copy. Explicit editor values, table-off events and
+    older revisions are left alone."""
 
-        response = RegistrationReportViewSet().index_view(RequestFactory().get("/"))
-        listed_events = [row["event"] for row in response.context_data["rows"]]
+    @classmethod
+    def setUpTestData(cls):
+        cls.home = HomePage.objects.get()
+        # Publishing fires the notification signal, which reads the owner's name.
+        cls.owner = get_user_model().objects.create_user(
+            username='editor', email='editor@example.com', first_name='Ed', last_name='Itor')
 
-        self.assertEqual(listed_events, [closed_event])
+    def event(self, slug, banner, publish=True):
+        """An event whose table says ``banner`` and whose revisions all predate
+        the field (no show_hero_banner key), like the events 0059 touched."""
+        page = self.home.add_child(instance=EventPage(
+            title=slug, slug=slug, publishing_date=timezone.now(), owner=self.owner,
+            show_hero_banner=banner, live=publish))
+        revision = page.save_revision(user=self.owner)
+        if publish:
+            revision.publish()
+        self.strip_key(revision)
+        page.refresh_from_db()
+        return page
 
+    def strip_key(self, revision):
+        del revision.content['show_hero_banner']
+        revision.save(update_fields=['content'])
 
-class RegistrationAttendanceReportTests(TestCase):
-    def setUp(self):
-        from django.contrib.auth import get_user_model
-        from events.models import RegistrationType, Registrant
-        from wagtail.models import Site
+    def banner(self, revision_id):
+        return Revision.objects.get(pk=revision_id).content.get('show_hero_banner')
 
-        self.user = get_user_model().objects.create_superuser(
-            username="attendance-admin",
-            email="attendance-admin@example.com",
-            password="password",
-        )
-        self.client.force_login(self.user)
+    def drafted_event(self):
+        """Live with an unpublished draft on top, plus an older revision."""
+        page = self.event('drafted', True)
+        self.older = page.save_revision(user=self.owner)
+        self.strip_key(self.older)
+        live = page.save_revision(user=self.owner)
+        live.publish()
+        self.strip_key(live)
+        page.refresh_from_db()
+        page.title = 'drafted draft'
+        self.strip_key(page.save_revision(user=self.owner))
+        page.refresh_from_db()
+        self.assertNotEqual(page.latest_revision_id, page.live_revision_id)
+        return page
 
-        root = Site.objects.get(is_default_site=True).root_page
-        self.event = EventPage(
-            title="Attendance Event",
-            publishing_date=timezone.now(),
-            owner=self.user,
-        )
-        root.add_child(instance=self.event)
-        self.general = RegistrationType.objects.create(
-            event=self.event,
-            name="General",
-            slug="general",
-            sort_order=0,
-        )
-        self.vip = RegistrationType.objects.create(
-            event=self.event,
-            name="VIP",
-            slug="vip",
-            sort_order=1,
-        )
-        self.registrant = Registrant.objects.create(
-            event=self.event,
-            registration_type=self.general,
-            first_name="Ada",
-            last_name="Lovelace",
-            email="ada@example.com",
-        )
-        Registrant.objects.create(
-            event=self.event,
-            registration_type=self.vip,
-            first_name="Grace",
-            last_name="Hopper",
-            email="grace@example.com",
-        )
-        self.url = reverse("registration_reports:registrants", args=[self.event.pk])
+    def run_migration(self):
+        # The migration's own historical models, as `migrate` would pass them.
+        state = MigrationLoader(connection).project_state(('events', '0085_eventpage_hero_banner_revisions'))
+        migration = importlib.import_module('events.migrations.0085_eventpage_hero_banner_revisions')
+        migration.write_banner_into_revisions(state.apps, None)
+        migration.write_banner_into_revisions(state.apps, None)  # idempotent
 
-    def test_report_lists_all_registration_types_and_searches(self):
-        response = self.client.get(self.url)
+    def test_migration_writes_banner_into_latest_and_live_revisions(self):
+        published = self.event('published', True)
+        drafted = self.drafted_event()
+        unpublished = self.event('unpublished', True, publish=False)
+        self.assertIsNone(unpublished.live_revision_id)
+        self.assertTrue(drafted.has_unpublished_changes and unpublished.has_unpublished_changes)
 
-        self.assertContains(response, "Ada")
-        self.assertContains(response, "Lovelace")
-        self.assertContains(response, "General")
-        self.assertContains(response, "Grace")
-        self.assertContains(response, "Hopper")
-        self.assertContains(response, "VIP")
-        self.assertFalse(self.registrant.attended)
+        self.run_migration()
 
-        response = self.client.get(self.url, {"q": "ada@example.com"})
-        self.assertContains(response, "ada@example.com")
-        self.assertNotContains(response, "grace@example.com")
+        # Every assertion here fails if the migration does nothing.
+        self.assertIs(self.banner(published.live_revision_id), True)
+        self.assertIs(self.banner(drafted.latest_revision_id), True)
+        self.assertIs(self.banner(drafted.live_revision_id), True)
+        self.assertIs(self.banner(unpublished.latest_revision_id), True)
+        # The editor reads the revision for pages with unpublished changes...
+        for page in (drafted, unpublished):
+            page.refresh_from_db()
+            self.assertTrue(page.get_latest_revision_as_object().show_hero_banner)
+        # ...and revert/review loads the live revision itself.
+        self.assertTrue(Revision.objects.get(pk=published.live_revision_id).as_object().show_hero_banner)
 
-    def test_report_sorts_registrants_by_selected_column(self):
-        from events.models import Registrant
+    def test_migration_leaves_explicit_values_history_and_table_off_alone(self):
+        drafted = self.drafted_event()
+        off = self.event('off', False)
+        # Editor saved an explicit off as a draft over a table-on page.
+        explicit = self.event('explicit', True)
+        explicit.show_hero_banner = False
+        explicit.save_revision(user=self.owner)
+        explicit.refresh_from_db()
+        revision_count = Revision.objects.count()
+        latest_created_at = drafted.latest_revision_created_at
 
-        Registrant.objects.create(
-            event=self.event,
-            registration_type=self.general,
-            first_name="Zoe",
-            last_name="Adams",
-            email="zoe@example.com",
-        )
-        expected_emails = {
-            "first_name": ["ada@example.com", "grace@example.com", "zoe@example.com"],
-            "last_name": ["zoe@example.com", "grace@example.com", "ada@example.com"],
-            "email": ["ada@example.com", "grace@example.com", "zoe@example.com"],
-            "registration_type": ["zoe@example.com", "ada@example.com", "grace@example.com"],
-        }
+        self.run_migration()
 
-        for sort, expected in expected_emails.items():
-            with self.subTest(sort=sort):
-                response = self.client.get(self.url, {"sort": sort, "dir": "asc"})
-                actual = [registrant.email for registrant in response.context["page_obj"]]
-                self.assertEqual(actual, expected)
-
-        response = self.client.get(self.url, {"sort": "email", "dir": "desc"})
-        actual = [registrant.email for registrant in response.context["page_obj"]]
-        self.assertEqual(actual, list(reversed(expected_emails["email"])))
-
-    def test_report_filters_registrants_by_registration_type(self):
-        response = self.client.get(self.url, {"registration_type": self.general.pk})
-
-        self.assertContains(response, "ada@example.com")
-        self.assertNotContains(response, "grace@example.com")
-
-        response = self.client.get(self.url, {"registration_type": "invalid"})
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "ada@example.com")
-        self.assertContains(response, "grace@example.com")
-
-    def test_attendance_can_be_toggled(self):
-        response = self.client.post(
-            f"{self.url}?q=Ada",
-            {"registrant_id": self.registrant.pk},
-        )
-
-        self.assertRedirects(response, f"{self.url}?q=Ada", fetch_redirect_response=False)
-        self.registrant.refresh_from_db()
-        self.assertTrue(self.registrant.attended)
-
-        self.client.post(self.url, {"registrant_id": self.registrant.pk})
-        self.registrant.refresh_from_db()
-        self.assertFalse(self.registrant.attended)
-
-    def test_attendance_cannot_change_a_registrant_from_another_event(self):
-        from events.models import RegistrationType, Registrant
-        from wagtail.models import Site
-
-        other_event = EventPage(
-            title="Other Event",
-            publishing_date=timezone.now(),
-            owner=self.user,
-        )
-        Site.objects.get(is_default_site=True).root_page.add_child(instance=other_event)
-        other_type = RegistrationType.objects.create(
-            event=other_event,
-            name="Other",
-            slug="other",
-            sort_order=0,
-        )
-        other_registrant = Registrant.objects.create(
-            event=other_event,
-            registration_type=other_type,
-            email="other@example.com",
-        )
-
-        response = self.client.post(self.url, {"registrant_id": other_registrant.pk})
-
-        self.assertEqual(response.status_code, 404)
-        other_registrant.refresh_from_db()
-        self.assertFalse(other_registrant.attended)
-
-    def test_attendance_rejects_an_invalid_registrant_id(self):
-        response = self.client.post(self.url, {"registrant_id": "invalid"})
-
-        self.assertEqual(response.status_code, 400)
-        self.registrant.refresh_from_db()
-        self.assertFalse(self.registrant.attended)
-
-    def test_attendance_change_requires_registrant_permission(self):
-        from django.contrib.auth import get_user_model
-        from events.wagtail_hooks import RegistrationReportViewSet
-
-        request = RequestFactory().post(self.url, {"registrant_id": self.registrant.pk})
-        request.user = get_user_model().objects.create_user(
-            username="attendance-viewer",
-            password="password",
-            is_staff=True,
-        )
-
-        response = RegistrationReportViewSet().registrants_view(request, self.event.pk)
-
-        self.assertEqual(response.status_code, 403)
-        self.registrant.refresh_from_db()
-        self.assertFalse(self.registrant.attended)
-
-    def test_admin_csv_includes_attendance(self):
-        self.registrant.attended = True
-        self.registrant.save(update_fields=["attended"])
-        url = reverse("registration_reports:export_csv", args=[self.event.pk])
-
-        response = self.client.get(url)
-        content = response.content.decode("utf-8-sig")
-
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Attended?", content.splitlines()[0])
-        self.assertIn("ada@example.com", content)
-        self.assertIn(",Yes,General,", content)
+        # Guards against overreach: each fails if the migration also rewrites
+        # older revisions, table-off pages or explicit values, or creates
+        # revisions or touches the page row.
+        self.assertNotIn('show_hero_banner', Revision.objects.get(pk=self.older.pk).content)
+        self.assertNotIn('show_hero_banner', Revision.objects.get(pk=off.latest_revision_id).content)
+        self.assertIs(self.banner(explicit.latest_revision_id), False)
+        self.assertEqual(Revision.objects.count(), revision_count)
+        drafted.refresh_from_db()
+        self.assertEqual(drafted.latest_revision_created_at, latest_created_at)
+        self.assertEqual(Revision.objects.get(pk=drafted.latest_revision_id).content['title'], 'drafted draft')
 
 
 class GuestRegistrationQuestionExclusionTests(TestCase):
@@ -539,11 +282,11 @@ class GuestRegistrationQuestionExclusionTests(TestCase):
         from events.guest_registration import build_primary_and_guest_forms
 
         root = Site.objects.get(is_default_site=True).root_page
-        event = EventPage(title="Guest Exclusion Event", publishing_date=timezone.now(), owner=test_owner())
+        event = EventPage(title="Guest Exclusion Event")
         root.add_child(instance=event)
-        event.save_revision(user=test_owner()).publish()
+        event.save_revision().publish()
 
-        tmpl = RegistrationFormTemplate.objects.create(title="Guest Exclusion Template")
+        tmpl = RegistrationFormTemplate.objects.create(name="Guest Exclusion Template")
         event.registration_form_template = tmpl
         event.save(update_fields=["registration_form_template"])
 
@@ -581,827 +324,18 @@ class GuestRegistrationQuestionExclusionTests(TestCase):
         )
 
 
-class RegistrationChoiceLimitTests(TestCase):
-    def _event_with_limited_choice(self, *, field_type="radio", limit=1, allow_groups=False):
-        from wagtail.models import Site
-        from events.models import EventPage, RegistrationType, RegistrationFormTemplate, RegistrationFormField
-
-        root = Site.objects.get(is_default_site=True).root_page
-        event = EventPage(
-            title="Choice Limit Event",
-            registration_open=True,
-            publishing_date=timezone.now(),
-        )
-        root.add_child(instance=event)
-
-        tmpl = RegistrationFormTemplate.objects.create(
-            title=f"Choice Limit Template {field_type} {RegistrationFormTemplate.objects.count()}"
-        )
-        event.registration_form_template = tmpl
-        event.save(update_fields=["registration_form_template"])
-
-        reg_type = RegistrationType.objects.create(
-            event=event,
-            name="General",
-            slug="general",
-            sort_order=0,
-            is_public=True,
-            allow_group_registrations=allow_groups,
-            max_guest_registrations=2,
-        )
-        field = RegistrationFormField.objects.create(
-            template=tmpl,
-            label="Session",
-            field_type=field_type,
-            choices="Workshop A\nWorkshop B",
-            choice_limits=f"Workshop A | {limit}",
-            required=False,
-            sort_order=0,
-        )
-        return event, reg_type, field
-
-    def test_choice_limits_model_validation_rejects_bad_mapping(self):
-        from django.core.exceptions import ValidationError
-        from events.models import RegistrationFormField, RegistrationFormTemplate
-
-        tmpl = RegistrationFormTemplate.objects.create(title="Validation Template")
-        field = RegistrationFormField(
-            template=tmpl,
-            label="Name",
-            field_type="singleline",
-            choices="Workshop A",
-            choice_limits="Workshop A | 1",
-        )
-
-        with self.assertRaises(ValidationError):
-            field.full_clean()
-
-        field.field_type = "radio"
-        field.choice_limits = "Missing | 1\nWorkshop A | nope\nWorkshop A | 2"
-        with self.assertRaises(ValidationError):
-            field.full_clean()
-
-    def test_sold_out_choice_is_disabled_and_rejected(self):
-        from events.forms import build_dynamic_form
-        from events.models import Registrant
-
-        event, reg_type, field = self._event_with_limited_choice()
-        key = f"f_{field.field_key}"
-        Registrant.objects.create(
-            event=event,
-            registration_type=reg_type,
-            email="taken@example.com",
-            answers={key: "Workshop A"},
-            status=Registrant.Status.CONFIRMED,
-        )
-
-        form_class = build_dynamic_form(event, reg_type)
-        html = str(form_class()[key])
-        self.assertIn("disabled", html)
-        self.assertIn("Workshop A (Sold out)", html)
-
-        form = form_class(
-            data={
-                "first_name": "Test",
-                "last_name": "User",
-                "email": "test@example.com",
-                "website": "",
-                key: "Workshop A",
-            }
-        )
-        self.assertFalse(form.is_valid())
-        self.assertIn(key, form.errors)
-
-    def test_sold_out_dropdown_choice_is_disabled_and_rejected(self):
-        from events.forms import build_dynamic_form
-        from events.models import Registrant
-
-        event, reg_type, field = self._event_with_limited_choice(field_type="dropdown")
-        key = f"f_{field.field_key}"
-        Registrant.objects.create(
-            event=event,
-            registration_type=reg_type,
-            email="taken@example.com",
-            answers={key: "Workshop A"},
-            status=Registrant.Status.CONFIRMED,
-        )
-
-        form_class = build_dynamic_form(event, reg_type)
-        html = str(form_class()[key])
-        self.assertIn("disabled", html)
-        self.assertIn("Workshop A (Sold out)", html)
-
-        form = form_class(
-            data={
-                "first_name": "Test",
-                "last_name": "User",
-                "email": "test@example.com",
-                "website": "",
-                key: "Workshop A",
-            }
-        )
-        self.assertFalse(form.is_valid())
-        self.assertIn(key, form.errors)
-
-    def test_checkboxes_allow_available_choice_and_reject_sold_out_choice(self):
-        from events.forms import build_dynamic_form
-        from events.models import Registrant
-
-        event, reg_type, field = self._event_with_limited_choice(field_type="checkboxes")
-        key = f"f_{field.field_key}"
-        Registrant.objects.create(
-            event=event,
-            registration_type=reg_type,
-            email="taken@example.com",
-            answers={key: ["Workshop A"]},
-            status=Registrant.Status.CONFIRMED,
-        )
-
-        form_class = build_dynamic_form(event, reg_type)
-        available_form = form_class(
-            data={
-                "first_name": "Test",
-                "last_name": "User",
-                "email": "test@example.com",
-                "website": "",
-                key: ["Workshop B"],
-            }
-        )
-        self.assertTrue(available_form.is_valid(), available_form.errors)
-
-        sold_out_form = form_class(
-            data={
-                "first_name": "Test",
-                "last_name": "User",
-                "email": "test@example.com",
-                "website": "",
-                key: ["Workshop A"],
-            }
-        )
-        self.assertFalse(sold_out_form.is_valid())
-        self.assertIn(key, sold_out_form.errors)
-
-    def test_conditional_dropdown_choice_limits_selected_value(self):
-        from events.forms import build_dynamic_form
-        from events.models import Registrant
-
-        event, reg_type, field = self._event_with_limited_choice(field_type="conditional_dropdown_other")
-        key = f"f_{field.field_key}"
-        other_key = f"{key}__other"
-        Registrant.objects.create(
-            event=event,
-            registration_type=reg_type,
-            email="taken@example.com",
-            answers={key: "Workshop A", other_key: ""},
-            status=Registrant.Status.CONFIRMED,
-        )
-
-        form_class = build_dynamic_form(event, reg_type)
-        form = form_class(
-            data={
-                "first_name": "Test",
-                "last_name": "User",
-                "email": "test@example.com",
-                "website": "",
-                key: "Workshop A",
-                other_key: "",
-            }
-        )
-        self.assertFalse(form.is_valid())
-        self.assertIn(key, form.errors)
-
-    def test_current_registrant_can_keep_full_choice(self):
-        from events.forms import build_dynamic_form
-        from events.models import Registrant
-
-        event, reg_type, field = self._event_with_limited_choice()
-        key = f"f_{field.field_key}"
-        registrant = Registrant.objects.create(
-            event=event,
-            registration_type=reg_type,
-            email="holder@example.com",
-            first_name="Existing",
-            last_name="Holder",
-            answers={key: "Workshop A"},
-            status=Registrant.Status.CONFIRMED,
-        )
-
-        form_class = build_dynamic_form(event, reg_type, require_email=False, current_registrant=registrant)
-        form = form_class(
-            data={
-                "first_name": "Existing",
-                "last_name": "Holder",
-                "website": "",
-                key: "Workshop A",
-            }
-        )
-
-        self.assertTrue(form.is_valid(), form.errors)
-
-    def test_current_registrant_cannot_switch_into_different_full_choice(self):
-        from events.forms import build_dynamic_form
-        from events.models import Registrant
-
-        event, reg_type, field = self._event_with_limited_choice()
-        field.choice_limits = "Workshop A | 1\nWorkshop B | 1"
-        field.save(update_fields=["choice_limits"])
-        key = f"f_{field.field_key}"
-        registrant = Registrant.objects.create(
-            event=event,
-            registration_type=reg_type,
-            email="holder-a@example.com",
-            first_name="Holder",
-            last_name="A",
-            answers={key: "Workshop A"},
-            status=Registrant.Status.CONFIRMED,
-        )
-        Registrant.objects.create(
-            event=event,
-            registration_type=reg_type,
-            email="holder-b@example.com",
-            answers={key: "Workshop B"},
-            status=Registrant.Status.CONFIRMED,
-        )
-
-        form_class = build_dynamic_form(event, reg_type, require_email=False, current_registrant=registrant)
-        form = form_class(
-            data={
-                "first_name": "Holder",
-                "last_name": "A",
-                "website": "",
-                key: "Workshop B",
-            }
-        )
-
-        self.assertFalse(form.is_valid())
-        self.assertIn(key, form.errors)
-
-    def test_pending_and_waitlisted_registrants_consume_choice_limit(self):
-        from events.forms import build_dynamic_form
-        from events.models import Registrant
-
-        event, reg_type, field = self._event_with_limited_choice(limit=2)
-        key = f"f_{field.field_key}"
-        for status, email in (
-            (Registrant.Status.PENDING, "pending@example.com"),
-            (Registrant.Status.WAITLISTED, "waitlisted@example.com"),
-        ):
-            Registrant.objects.create(
-                event=event,
-                registration_type=reg_type,
-                email=email,
-                answers={key: "Workshop A"},
-                status=status,
-            )
-
-        form_class = build_dynamic_form(event, reg_type)
-        form = form_class(
-            data={
-                "first_name": "New",
-                "last_name": "User",
-                "email": "new@example.com",
-                "website": "",
-                key: "Workshop A",
-            }
-        )
-
-        self.assertFalse(form.is_valid())
-        self.assertIn(key, form.errors)
-
-    def test_choice_summary_counts_active_registrants_and_limits(self):
-        from events.models import Registrant
-        from events.reporting import build_choice_summary_rows
-
-        event, reg_type, field = self._event_with_limited_choice(field_type="checkboxes", limit=3)
-        key = f"f_{field.field_key}"
-        for status, email, answers in (
-            (Registrant.Status.PENDING, "pending@example.com", ["Workshop A", "Workshop B"]),
-            (Registrant.Status.CONFIRMED, "confirmed@example.com", ["Workshop A"]),
-            (Registrant.Status.WAITLISTED, "waitlisted@example.com", ["Workshop B"]),
-            (Registrant.Status.CANCELLED, "cancelled@example.com", ["Workshop A"]),
-        ):
-            Registrant.objects.create(
-                event=event,
-                registration_type=reg_type,
-                email=email,
-                answers={key: answers},
-                status=status,
-            )
-
-        rows = build_choice_summary_rows(event)
-
-        self.assertEqual(len(rows), 1)
-        self.assertEqual(rows[0]["label"], "Session")
-        options = {option["label"]: option for option in rows[0]["options"]}
-        self.assertEqual(options["Workshop A"]["count"], 2)
-        self.assertEqual(options["Workshop A"]["limit"], 3)
-        self.assertEqual(options["Workshop B"]["count"], 2)
-        self.assertIsNone(options["Workshop B"]["limit"])
-
-    def test_cancelled_registrant_does_not_consume_choice_limit(self):
-        from events.forms import build_dynamic_form
-        from events.models import Registrant
-
-        event, reg_type, field = self._event_with_limited_choice()
-        key = f"f_{field.field_key}"
-        Registrant.objects.create(
-            event=event,
-            registration_type=reg_type,
-            email="cancelled@example.com",
-            answers={key: "Workshop A"},
-            status=Registrant.Status.CANCELLED,
-        )
-
-        form_class = build_dynamic_form(event, reg_type)
-        form = form_class(
-            data={
-                "first_name": "New",
-                "last_name": "User",
-                "email": "new@example.com",
-                "website": "",
-                key: "Workshop A",
-            }
-        )
-
-        self.assertTrue(form.is_valid(), form.errors)
-
-    def test_group_registration_cannot_exceed_remaining_choice_limit(self):
-        from events.forms import validate_choice_limits
-
-        event, reg_type, field = self._event_with_limited_choice(limit=1, allow_groups=True)
-        key = f"f_{field.field_key}"
-
-        errors = validate_choice_limits(
-            event,
-            reg_type,
-            [
-                {key: "Workshop A"},
-                {key: "Workshop A"},
-            ],
-        )
-
-        self.assertEqual(errors[key], '"Workshop A" is sold out.')
-
-
-class RegistrationConditionalVisibilityTests(TestCase):
-    def _event_with_conditional_field(self, *, child_required=True):
-        from wagtail.models import Site
-        from events.models import EventPage, RegistrationType, RegistrationFormField, RegistrationFormTemplate
-
-        root = Site.objects.get(is_default_site=True).root_page
-        event = EventPage(
-            title="Conditional Visibility Event",
-            registration_open=True,
-            publishing_date=timezone.now(),
-        )
-        root.add_child(instance=event)
-
-        tmpl = RegistrationFormTemplate.objects.create(title="Conditional Visibility Template")
-        event.registration_form_template = tmpl
-        event.save(update_fields=["registration_form_template"])
-
-        reg_type = RegistrationType.objects.create(
-            event=event,
-            name="General",
-            slug="general",
-            sort_order=0,
-            is_public=True,
-        )
-        parent = RegistrationFormField.objects.create(
-            template=tmpl,
-            label="Do you require travel assistance?",
-            field_type="radio",
-            choices="Yes\nNo",
-            required=True,
-            sort_order=0,
-        )
-        child = RegistrationFormField.objects.create(
-            template=tmpl,
-            label="Departure city",
-            field_type="singleline",
-            required=child_required,
-            conditional_parent=parent,
-            conditional_parent_values="Yes",
-            sort_order=1,
-        )
-        return event, reg_type, parent, child
-
-    def test_hidden_conditional_field_is_not_required_and_is_cleared(self):
-        from events.forms import build_dynamic_form
-
-        event, reg_type, parent, child = self._event_with_conditional_field()
-        parent_key = f"f_{parent.field_key}"
-        child_key = f"f_{child.field_key}"
-        form_class = build_dynamic_form(event, reg_type)
-        form = form_class(
-            data={
-                "first_name": "Test",
-                "last_name": "User",
-                "email": "test@example.com",
-                "website": "",
-                parent_key: "No",
-                child_key: "stale city",
-            }
-        )
-
-        self.assertTrue(form.is_valid(), form.errors)
-        self.assertEqual(form.cleaned_data[child_key], "")
-
-    def test_field_is_optional_when_required_is_unchecked_with_default_rule(self):
-        from events.forms import build_dynamic_form
-        from events.models import RegistrationFormField
-
-        event, reg_type, parent, child = self._event_with_conditional_field()
-        child.delete()
-        optional_field = RegistrationFormField.objects.create(
-            template=event.registration_form_template,
-            label="Optional organization",
-            field_type="singleline",
-            required=False,
-            sort_order=1,
-        )
-        form_class = build_dynamic_form(event, reg_type)
-        form = form_class(
-            data={
-                "first_name": "Test",
-                "last_name": "User",
-                "email": "test@example.com",
-                "website": "",
-                f"f_{parent.field_key}": "Yes",
-                f"f_{optional_field.field_key}": "",
-            }
-        )
-
-        self.assertTrue(form.is_valid(), form.errors)
-
-    def test_checked_required_field_honours_matching_requiredness_rule(self):
-        from events.forms import build_dynamic_form
-        from events.models import RegistrationFormField
-
-        event, reg_type, parent, child = self._event_with_conditional_field()
-        child.delete()
-        required_field = RegistrationFormField.objects.create(
-            template=event.registration_form_template,
-            label="Speaker affiliation",
-            field_type="singleline",
-            required=True,
-            required_rule="only",
-            required_type_slugs="general",
-            sort_order=1,
-        )
-        form_class = build_dynamic_form(event, reg_type)
-        form = form_class(
-            data={
-                "first_name": "Test",
-                "last_name": "User",
-                "email": "test@example.com",
-                "website": "",
-                f"f_{parent.field_key}": "Yes",
-                f"f_{required_field.field_key}": "",
-            }
-        )
-
-        self.assertFalse(form.is_valid())
-        self.assertIn(f"f_{required_field.field_key}", form.errors)
-
-    def test_checked_required_field_honours_non_matching_requiredness_rule(self):
-        from events.forms import build_dynamic_form
-        from events.models import RegistrationFormField
-
-        event, reg_type, parent, child = self._event_with_conditional_field()
-        child.delete()
-        optional_field = RegistrationFormField.objects.create(
-            template=event.registration_form_template,
-            label="Speaker affiliation",
-            field_type="singleline",
-            required=True,
-            required_rule="only",
-            required_type_slugs="speaker",
-            sort_order=1,
-        )
-        form_class = build_dynamic_form(event, reg_type)
-        form = form_class(
-            data={
-                "first_name": "Test",
-                "last_name": "User",
-                "email": "test@example.com",
-                "website": "",
-                f"f_{parent.field_key}": "Yes",
-                f"f_{optional_field.field_key}": "",
-            }
-        )
-
-        self.assertTrue(form.is_valid(), form.errors)
-
-    def test_visible_conditional_field_keeps_required_validation(self):
-        from events.forms import build_dynamic_form
-
-        event, reg_type, parent, child = self._event_with_conditional_field()
-        parent_key = f"f_{parent.field_key}"
-        child_key = f"f_{child.field_key}"
-        form_class = build_dynamic_form(event, reg_type)
-        form = form_class(
-            data={
-                "first_name": "Test",
-                "last_name": "User",
-                "email": "test@example.com",
-                "website": "",
-                parent_key: "Yes",
-                child_key: "",
-            }
-        )
-
-        self.assertFalse(form.is_valid())
-        self.assertIn(child_key, form.errors)
-
-    def test_visible_conditional_field_is_optional_when_required_is_unchecked(self):
-        from events.forms import build_dynamic_form
-
-        event, reg_type, parent, child = self._event_with_conditional_field(child_required=False)
-        parent_key = f"f_{parent.field_key}"
-        child_key = f"f_{child.field_key}"
-        form_class = build_dynamic_form(event, reg_type)
-        form = form_class(
-            data={
-                "first_name": "Test",
-                "last_name": "User",
-                "email": "test@example.com",
-                "website": "",
-                parent_key: "Yes",
-                child_key: "",
-            }
-        )
-
-        self.assertTrue(form.is_valid(), form.errors)
-
-    def test_conditional_field_widget_exposes_visibility_attrs(self):
-        from events.forms import build_dynamic_form
-
-        event, reg_type, parent, child = self._event_with_conditional_field()
-        parent_key = f"f_{parent.field_key}"
-        child_key = f"f_{child.field_key}"
-        form_class = build_dynamic_form(event, reg_type)
-        attrs = form_class.base_fields[child_key].widget.attrs
-
-        self.assertEqual(attrs["data-visibility-parent"], parent_key)
-        self.assertEqual(attrs["data-visibility-values"], "yes")
-
-    def test_conditional_parent_must_be_same_template(self):
-        from django.core.exceptions import ValidationError
-        from events.models import RegistrationFormField, RegistrationFormTemplate
-
-        tmpl = RegistrationFormTemplate.objects.create(title="Conditional Validation Template")
-        other_tmpl = RegistrationFormTemplate.objects.create(title="Other Conditional Validation Template")
-        parent = RegistrationFormField.objects.create(
-            template=other_tmpl,
-            label="Parent",
-            field_type="radio",
-            choices="Yes\nNo",
-            sort_order=0,
-        )
-        child = RegistrationFormField(
-            template=tmpl,
-            label="Child",
-            field_type="singleline",
-            conditional_parent=parent,
-            conditional_parent_values="Yes",
-            sort_order=1,
-        )
-
-        with self.assertRaises(ValidationError):
-            child.full_clean()
-
-    def test_conditional_parent_can_have_unreliable_inline_sort_order(self):
-        from events.models import RegistrationFormField, RegistrationFormTemplate
-
-        tmpl = RegistrationFormTemplate.objects.create(title="Conditional Inline Sort Template")
-        parent = RegistrationFormField.objects.create(
-            template=tmpl,
-            label="Letter of invitation",
-            field_type="radio",
-            choices="Yes\nNo",
-            sort_order=1,
-        )
-        child = RegistrationFormField(
-            template=tmpl,
-            label="Legal name",
-            field_type="singleline",
-            conditional_parent=parent,
-            conditional_parent_values="Yes",
-            sort_order=0,
-        )
-
-        child.full_clean()
-
-
-class RegistrationFormTemplatePreviewTests(TestCase):
-    def test_registration_form_template_preview_renders_fields(self):
-        from events.models import RegistrationFormField, RegistrationFormTemplate
-
-        tmpl = RegistrationFormTemplate.objects.create(title="Previewable Registration Template")
-        RegistrationFormField.objects.create(
-            template=tmpl,
-            label="Organization",
-            field_type="singleline",
-            required=False,
-            sort_order=0,
-        )
-
-        response = tmpl.serve_preview(RequestFactory().get("/"), "form")
-        response.render()
-        html = response.content.decode()
-
-        self.assertIn("cigionline", html)
-        self.assertIn("eventPage", html)
-        self.assertIn("Organization", html)
-        self.assertIn("Submit registration", html)
-
-    def test_registration_form_template_events_listing_links_to_snippet_edit(self):
-        from events.models import RegistrationFormTemplate
-        from events.wagtail_hooks import registration_form_template_title
-
-        tmpl = RegistrationFormTemplate.objects.create(title="Snippet Edit Target")
-
-        html = str(registration_form_template_title(tmpl))
-
-        self.assertIn(f"/admin/snippets/events/registrationformtemplate/edit/{tmpl.pk}/", html)
-        self.assertIn("Snippet Edit Target", html)
-
-
-class RegistrationRichTextBlockTests(TestCase):
-    def _event_with_template(self):
-        from wagtail.models import Site
-        from django.contrib.auth import get_user_model
-        from events.models import EventPage, RegistrationType, RegistrationFormTemplate
-
-        root = Site.objects.get(is_default_site=True).root_page
-        owner = get_user_model().objects.create_user(
-            username="richtext-owner",
-            email="owner@example.com",
-            password="password",
-        )
-        event = EventPage(
-            title="Rich Text Event",
-            registration_open=True,
-            publishing_date=timezone.now(),
-            owner=owner,
-        )
-        root.add_child(instance=event)
-        event.save_revision(user=owner).publish()
-
-        tmpl = RegistrationFormTemplate.objects.create(title="Rich Text Template")
-        event.registration_form_template = tmpl
-        event.save(update_fields=["registration_form_template"])
-
-        reg_type = RegistrationType.objects.create(
-            event=event,
-            name="General",
-            slug="general",
-            sort_order=0,
-            is_public=True,
-            allow_group_registrations=True,
-            max_guest_registrations=2,
-        )
-        return event, reg_type, tmpl
-
-    def test_rich_text_block_renders_on_registration_form_between_fields(self):
-        from events.models import RegistrationFormField
-
-        event, reg_type, tmpl = self._event_with_template()
-        RegistrationFormField.objects.create(
-            template=tmpl,
-            label="Organization",
-            field_type="singleline",
-            required=False,
-            sort_order=0,
-        )
-        RegistrationFormField.objects.create(
-            template=tmpl,
-            label="Arrival instructions",
-            field_type="rich_text",
-            rich_text="<p>Please arrive early.</p>",
-            sort_order=1,
-        )
-        RegistrationFormField.objects.create(
-            template=tmpl,
-            label="Role",
-            field_type="singleline",
-            required=False,
-            sort_order=2,
-        )
-
-        resp = self.client.get(f"{event.url}register/type/{reg_type.slug}/")
-
-        self.assertEqual(resp.status_code, 200)
-        html = resp.content.decode()
-        self.assertIn("<p>Please arrive early.</p>", html)
-        self.assertLess(html.index("Organization"), html.index("Please arrive early."))
-        self.assertLess(html.index("Please arrive early."), html.index("Role"))
-
-    def test_rich_text_block_is_not_form_field_or_saved_answer_or_report_output(self):
-        from events.emailing import _render_registrant_answers
-        from events.forms import build_dynamic_form
-        from events.models import RegistrationFormField
-        from events.reporting import build_answer_columns, registrants_csv_response
-        from events.utils import save_registrant_from_form
-
-        event, reg_type, tmpl = self._event_with_template()
-        answer_field = RegistrationFormField.objects.create(
-            template=tmpl,
-            label="Organization",
-            field_type="singleline",
-            required=False,
-            sort_order=0,
-        )
-        rich_block = RegistrationFormField.objects.create(
-            template=tmpl,
-            label="Arrival instructions",
-            field_type="rich_text",
-            rich_text="<p>Please arrive early.</p>",
-            sort_order=1,
-        )
-
-        form_class = build_dynamic_form(event, reg_type)
-        rich_key = f"f_{rich_block.field_key}"
-        answer_key = f"f_{answer_field.field_key}"
-        self.assertNotIn(rich_key, form_class.base_fields)
-
-        form = form_class(
-            data={
-                "first_name": "Test",
-                "last_name": "Registrant",
-                "email": "test@example.com",
-                "website": "",
-                answer_key: "CIGI",
-                rich_key: "posted junk",
-            }
-        )
-        self.assertTrue(form.is_valid(), form.errors)
-        self.assertNotIn(rich_key, form.cleaned_data)
-
-        form.cleaned_data[rich_key] = "posted junk"
-        registrant = save_registrant_from_form(event, reg_type, form)
-        self.assertEqual(registrant.answers, {answer_key: "CIGI"})
-
-        columns = build_answer_columns(event)
-        self.assertEqual([column.label for column in columns], ["Organization"])
-
-        csv_resp = registrants_csv_response(
-            request=RequestFactory().get("/"),
-            event=event,
-            registrants_qs=event.registrants.select_related("registration_type", "invite"),
-            filename_prefix="rich-text",
-        )
-        csv_text = csv_resp.content.decode("utf-8-sig")
-        self.assertIn("Organization", csv_text)
-        self.assertNotIn("Arrival instructions", csv_text)
-        self.assertNotIn("Please arrive early", csv_text)
-
-        answers_html, answers_text = _render_registrant_answers(registrant)
-        self.assertIn("Organization", answers_text)
-        self.assertNotIn("Arrival instructions", answers_text)
-        self.assertNotIn("Please arrive early", answers_html)
-
-    def test_rich_text_block_respects_guest_exclusion_in_layout(self):
-        from events.models import RegistrationFormField
-        from events.guest_registration import build_primary_and_guest_forms
-
-        event, reg_type, tmpl = self._event_with_template()
-        RegistrationFormField.objects.create(
-            template=tmpl,
-            label="Primary instructions",
-            field_type="rich_text",
-            rich_text="<p>Primary only.</p>",
-            sort_order=0,
-            exclude_from_guest_forms=True,
-        )
-
-        forms_obj = build_primary_and_guest_forms(event=event, reg_type=reg_type, invite=None)
-        primary_items = forms_obj.primary_form.layout_items()
-        guest_items = forms_obj.guest_formset.forms[0].layout_items()
-
-        self.assertIn("Primary only.", str(primary_items[0]["content"]))
-        self.assertEqual(guest_items, [])
-
-
 class GroupRegistrationConfirmTests(TestCase):
-    @patch("events.utils.verify_turnstile_token", return_value=True)
-    @patch("events.emailing.send_group_confirmation_email")
-    def test_group_registration_immediately_confirms_and_sends_confirmation_email(self, send_mock, _turnstile_mock):
+    @patch("events.models.send_group_confirmation_email")
+    def test_group_registration_immediately_confirms_and_sends_confirmation_email(self, send_mock):
         from wagtail.models import Site
         from events.models import EventPage, RegistrationType, RegistrationFormTemplate
 
         root = Site.objects.get(is_default_site=True).root_page
-        event = EventPage(
-            title="Group Confirm Event",
-            registration_open=True,
-            publishing_date=timezone.now(),
-            owner=test_owner(),
-        )
+        event = EventPage(title="Group Confirm Event", registration_open=True)
         root.add_child(instance=event)
-        event.save_revision(user=test_owner()).publish()
+        event.save_revision().publish()
 
-        tmpl = RegistrationFormTemplate.objects.create(title="Group Template")
+        tmpl = RegistrationFormTemplate.objects.create(name="Group Template")
         event.registration_form_template = tmpl
         event.save(update_fields=["registration_form_template"])
 
@@ -1446,290 +380,14 @@ class GroupRegistrationConfirmTests(TestCase):
 
 
 class RegistrationTypeCloseDateTests(TestCase):
-    def make_event(self, **kwargs):
-        from wagtail.models import Site
-        from events.models import EventPage, RegistrationFormTemplate
-
-        root = Site.objects.get(is_default_site=True).root_page
-        event = EventPage(
-            title=kwargs.pop("title", "Registration Deadline Event"),
-            registration_open=kwargs.pop("registration_open", True),
-            publishing_date=kwargs.pop("publishing_date", timezone.now()),
-            event_end=kwargs.pop("event_end", None),
-            time_zone=kwargs.pop("time_zone", ""),
-            owner=test_owner(),
-            **kwargs,
-        )
-        root.add_child(instance=event)
-        event.save_revision(user=test_owner()).publish()
-        event.registration_form_template = RegistrationFormTemplate.objects.create(
-            title=f"{event.title} Form"
-        )
-        event.save(update_fields=["registration_form_template"])
-        return event
-
-    def test_registration_pages_are_not_cached(self):
-        from events.models import RegistrationType
-
-        event = self.make_event()
-        reg_type = RegistrationType.objects.create(
-            event=event, name="General", slug="general", sort_order=0, is_public=True
-        )
-
-        for url in (event.url, f"{event.url}register/", f"{event.url}register/type/{reg_type.slug}/"):
-            with self.subTest(url=url):
-                response = self.client.get(url)
-                self.assertIn("no-store", response["Cache-Control"])
-                self.assertIn("max-age=0", response["Cache-Control"])
-
-    def test_direct_form_url_enforces_public_and_invite_type_access(self):
-        from events.models import Invite, RegistrationType, Registrant
-
-        event = self.make_event()
-        hidden_type = RegistrationType.objects.create(
-            event=event, name="Hidden", slug="hidden", sort_order=0, is_public=False
-        )
-        public_type = RegistrationType.objects.create(
-            event=event, name="Public", slug="public", sort_order=1, is_public=True
-        )
-
-        hidden_url = f"{event.url}register/type/{hidden_type.slug}/"
-        denied_get = self.client.get(hidden_url)
-        denied_post = self.client.post(
-            hidden_url,
-            data={
-                "first_name": "Uninvited",
-                "last_name": "Registrant",
-                "email": "uninvited@example.com",
-                "website": "",
-            },
-        )
-
-        self.assertTemplateUsed(denied_get, "events/registration_no_types.html")
-        self.assertTemplateUsed(denied_post, "events/registration_no_types.html")
-        self.assertFalse(Registrant.objects.filter(event=event).exists())
-
-        invite = Invite.objects.create(event=event, allowed_type_slugs=hidden_type.slug)
-        allowed_get = self.client.get(f"{hidden_url}?invite={invite.token}")
-        restricted_get = self.client.get(
-            f"{event.url}register/type/{public_type.slug}/?invite={invite.token}"
-        )
-
-        self.assertTemplateNotUsed(allowed_get, "events/registration_no_types.html")
-        self.assertTemplateUsed(restricted_get, "events/registration_no_types.html")
-
-    def test_effective_deadline_rules(self):
-        from events.models import RegistrationType
-
-        now = timezone.now()
-        event = self.make_event(event_end=now)
-        inherited = RegistrationType.objects.create(
-            event=event, name="Inherited", slug="inherited", sort_order=0
-        )
-        override = RegistrationType.objects.create(
-            event=event,
-            name="Override",
-            slug="override",
-            sort_order=1,
-            close_date=now + timedelta(hours=1),
-        )
-
-        self.assertFalse(inherited.is_open_for_registration(now))
-        self.assertTrue(override.is_open_for_registration(now))
-
-        override.close_date = now
-        self.assertFalse(override.is_open_for_registration(now))
-
-        event.event_end = None
-        override.close_date = None
-        self.assertTrue(override.is_open_for_registration(now))
-
-        event.registration_open = False
-        override.close_date = now + timedelta(hours=1)
-        self.assertFalse(override.is_open_for_registration(now))
-
-    def test_inherited_deadline_uses_event_timezone(self):
-        from datetime import timezone as datetime_timezone
-        from events.models import RegistrationType
-
-        now = datetime(2030, 1, 1, 12, 0, tzinfo=datetime_timezone.utc)
-        event = self.make_event(
-            event_end=datetime(2030, 1, 1, 10, 0, tzinfo=datetime_timezone.utc),
-            time_zone="America/Los_Angeles",
-        )
-        reg_type = RegistrationType.objects.create(
-            event=event, name="General", slug="general", sort_order=0
-        )
-
-        self.assertEqual(
-            event.event_end_time_utc,
-            datetime(2030, 1, 1, 13, 0, tzinfo=datetime_timezone.utc),
-        )
-        self.assertTrue(reg_type.is_open_for_registration(now))
-
-    def test_event_end_hides_inherited_type_and_blocks_direct_post(self):
-        from events.models import RegistrationType, Registrant
-
-        event = self.make_event(event_end=timezone.now() - timedelta(minutes=1))
-        reg_type = RegistrationType.objects.create(
-            event=event, name="General", slug="general", sort_order=0, is_public=True
-        )
-
-        entry_response = self.client.get(f"{event.url}register/")
-        event_response = self.client.get(event.url)
-        post_response = self.client.post(
-            f"{event.url}register/type/{reg_type.slug}/",
-            data={
-                "first_name": "Late",
-                "last_name": "Registrant",
-                "email": "late@example.com",
-                "website": "",
-            },
-        )
-
-        self.assertTemplateUsed(entry_response, "events/registration_no_types.html")
-        self.assertContains(entry_response, "Registration for this event is closed.")
-        self.assertNotContains(event_response, "event-page-registration")
-        self.assertTemplateUsed(post_response, "events/registration_no_types.html")
-        self.assertFalse(Registrant.objects.filter(event=event).exists())
-
-    @patch("events.utils.verify_turnstile_token", return_value=True)
-    @patch("events.emailing.send_confirmation_email")
-    def test_close_date_after_event_end_overrides_event_deadline(self, _send_mock, _turnstile_mock):
-        from events.models import RegistrationType, Registrant
-
-        event = self.make_event(event_end=timezone.now() - timedelta(minutes=1))
-        reg_type = RegistrationType.objects.create(
-            event=event,
-            name="Late registration",
-            slug="late",
-            sort_order=0,
-            is_public=True,
-            close_date=timezone.now() + timedelta(hours=1),
-        )
-
-        response = self.client.get(f"{event.url}register/")
-        event_response = self.client.get(event.url)
-        post_response = self.client.post(
-            f"{event.url}register/type/{reg_type.slug}/",
-            data={
-                "first_name": "Late",
-                "last_name": "Allowed",
-                "email": "late-allowed@example.com",
-                "website": "",
-            },
-        )
-
-        self.assertRedirects(
-            response,
-            f"{event.url}register/type/{reg_type.slug}/",
-            fetch_redirect_response=False,
-        )
-        self.assertTrue(event.public_registration_available)
-        self.assertContains(event_response, "event-page-registration")
-        self.assertEqual(post_response.status_code, 302)
-        self.assertTrue(Registrant.objects.filter(event=event).exists())
-
-    def test_private_invite_honours_close_date_override(self):
-        from events.models import Invite, RegistrationType
-
-        event = self.make_event(
-            event_end=timezone.now() - timedelta(minutes=1),
-            is_private_registration=True,
-        )
-        reg_type = RegistrationType.objects.create(
-            event=event,
-            name="Invitee",
-            slug="invitee",
-            sort_order=0,
-            is_public=False,
-            close_date=timezone.now() + timedelta(hours=1),
-        )
-        invite = Invite.objects.create(event=event, allowed_type_slugs=reg_type.slug)
-
-        response = self.client.get(f"{event.url}register/?invite={invite.token}")
-
-        self.assertRedirects(
-            response,
-            f"{event.url}register/type/{reg_type.slug}/?invite={invite.token}",
-            fetch_redirect_response=False,
-        )
-
-    @patch("events.utils.verify_turnstile_token", return_value=True)
-    def test_deadline_is_rechecked_before_individual_creation(self, _turnstile_mock):
-        from events.models import EventPage, Invite, RegistrationType, Registrant
-
-        event = self.make_event()
-        reg_type = RegistrationType.objects.create(
-            event=event, name="General", slug="general", sort_order=0, is_public=True
-        )
-        invite = Invite.objects.create(event=event, max_uses=2)
-
-        with patch.object(EventPage, "is_registration_type_open", side_effect=[True, False, False]):
-            response = self.client.post(
-                f"{event.url}register/type/{reg_type.slug}/?invite={invite.token}",
-                data={
-                    "first_name": "Deadline",
-                    "last_name": "Crossed",
-                    "email": "deadline@example.com",
-                    "website": "",
-                },
-            )
-
-        self.assertTemplateUsed(response, "events/registration_no_types.html")
-        self.assertFalse(Registrant.objects.filter(event=event).exists())
-        invite.refresh_from_db()
-        self.assertEqual(invite.used_count, 0)
-
-    @patch("events.utils.verify_turnstile_token", return_value=True)
-    def test_deadline_is_rechecked_before_group_creation(self, _turnstile_mock):
-        from events.models import EventPage, RegistrationGroup, RegistrationType, Registrant
-
-        event = self.make_event()
-        reg_type = RegistrationType.objects.create(
-            event=event,
-            name="Group",
-            slug="group",
-            sort_order=0,
-            is_public=True,
-            allow_group_registrations=True,
-            max_guest_registrations=1,
-        )
-
-        with patch.object(EventPage, "is_registration_type_open", side_effect=[True, False, False]):
-            response = self.client.post(
-                f"{event.url}register/type/{reg_type.slug}/",
-                data={
-                    "first_name": "Primary",
-                    "last_name": "Registrant",
-                    "email": "primary@example.com",
-                    "website": "",
-                    "guests-TOTAL_FORMS": "1",
-                    "guests-INITIAL_FORMS": "0",
-                    "guests-MIN_NUM_FORMS": "0",
-                    "guests-MAX_NUM_FORMS": "1",
-                    "guests-0-first_name": "Guest",
-                    "guests-0-last_name": "Registrant",
-                },
-            )
-
-        self.assertTemplateUsed(response, "events/registration_no_types.html")
-        self.assertFalse(RegistrationGroup.objects.filter(event=event).exists())
-        self.assertFalse(Registrant.objects.filter(event=event).exists())
-
     def test_expired_registration_type_is_hidden_from_entry_flow(self):
         from wagtail.models import Site
         from events.models import EventPage, RegistrationType
 
         root = Site.objects.get(is_default_site=True).root_page
-        event = EventPage(
-            title="Close Date Event",
-            registration_open=True,
-            publishing_date=timezone.now(),
-            owner=test_owner(),
-        )
+        event = EventPage(title="Close Date Event", registration_open=True)
         root.add_child(instance=event)
-        event.save_revision(user=test_owner()).publish()
+        event.save_revision().publish()
 
         RegistrationType.objects.create(
             event=event,
@@ -1758,14 +416,9 @@ class RegistrationTypeCloseDateTests(TestCase):
         from events.models import EventPage, RegistrationType, Registrant
 
         root = Site.objects.get(is_default_site=True).root_page
-        event = EventPage(
-            title="Closed Direct Event",
-            registration_open=True,
-            publishing_date=timezone.now(),
-            owner=test_owner(),
-        )
+        event = EventPage(title="Closed Direct Event", registration_open=True)
         root.add_child(instance=event)
-        event.save_revision(user=test_owner()).publish()
+        event.save_revision().publish()
 
         reg_type = RegistrationType.objects.create(
             event=event,
@@ -1835,19 +488,6 @@ class EventsAPITests(WagtailPageTestCase):
         self.assertEqual(response_2['meta']['total_count'], 4)
         self.assertEqual(len(response_2['items']), 4)
 
-    def test_events_api_excludes_events_not_added_to_calendar(self):
-        EventPage.objects.filter(title="Test Event 2").update(add_to_calendar=False)
-
-        response = self.get_api_response(1, 2020)
-
-        self.assertEqual(response['meta']['total_count'], 2)
-        self.assertNotIn("Test Event 2", [item["title"] for item in response["items"]])
-
-    def test_events_api_is_not_cached(self):
-        response = self.client.get('/api/events/?month=1&year=2020')
-
-        self.assertIn("no-store", response.headers["Cache-Control"])
-
 
 class EmailTemplateRenderingTests(WagtailPageTestCase):
     def test_streamfield_email_rendering_outputs_email_safe_wrapper(self):
@@ -1896,9 +536,9 @@ class EmailTemplateRenderingTests(WagtailPageTestCase):
         from events.email_rendering import render_streamfield_email_html
 
         root = Site.objects.get(is_default_site=True).root_page
-        event = EventPage(title="Answers Event", publishing_date=timezone.now(), owner=test_owner())
+        event = EventPage(title="Answers Event")
         root.add_child(instance=event)
-        event.save_revision(user=test_owner()).publish()
+        event.save_revision().publish()
 
         reg_type = RegistrationType(event=event, name="General", slug="general", sort_order=0, is_public=True)
         reg_type.save()
@@ -1949,9 +589,9 @@ class EmailTemplateRenderingTests(WagtailPageTestCase):
         from events.emailing import _render_registrant_answers
 
         root = Site.objects.get(is_default_site=True).root_page
-        event = EventPage(title="Answers UUID Event", publishing_date=timezone.now(), owner=test_owner())
+        event = EventPage(title="Answers UUID Event")
         root.add_child(instance=event)
-        event.save_revision(user=test_owner()).publish()
+        event.save_revision().publish()
 
         reg_type = RegistrationType(event=event, name="General", slug="general", sort_order=0, is_public=True)
         reg_type.save()
@@ -1980,58 +620,6 @@ class EmailTemplateRenderingTests(WagtailPageTestCase):
         self.assertIn("Additional question", text)
         # Other non-uuid keys still render.
         self.assertIn("CIGI", text)
-
-    def test_registrant_answers_skip_hidden_conditional_children(self):
-        from wagtail.models import Site
-        from events.models import EventPage, RegistrationType, Registrant, RegistrationFormField, RegistrationFormTemplate
-        from events.emailing import _render_registrant_answers
-
-        root = Site.objects.get(is_default_site=True).root_page
-        event = EventPage(title="Conditional Email Event", publishing_date=timezone.now(), owner=test_owner())
-        root.add_child(instance=event)
-        event.save_revision(user=test_owner()).publish()
-
-        tmpl = RegistrationFormTemplate.objects.create(title="Conditional Email Template")
-        event.registration_form_template = tmpl
-        event.save(update_fields=["registration_form_template"])
-
-        reg_type = RegistrationType.objects.create(event=event, name="General", slug="general", sort_order=0, is_public=True)
-        parent = RegistrationFormField.objects.create(
-            template=tmpl,
-            label="Letter of invitation",
-            field_type="radio",
-            choices="Yes\nNo",
-            required=False,
-            sort_order=0,
-        )
-        child = RegistrationFormField.objects.create(
-            template=tmpl,
-            label="Legal name",
-            field_type="singleline",
-            required=False,
-            conditional_parent=parent,
-            conditional_parent_values="Yes",
-            sort_order=1,
-        )
-
-        registrant = Registrant.objects.create(
-            event=event,
-            registration_type=reg_type,
-            email="a@example.com",
-            first_name="A",
-            last_name="B",
-            answers={
-                f"f_{parent.field_key}": "No",
-                f"f_{child.field_key}": "Stale Legal Name",
-            },
-        )
-
-        _html, text = _render_registrant_answers(registrant)
-
-        self.assertIn("Letter of invitation", text)
-        self.assertIn("No", text)
-        self.assertNotIn("Legal name", text)
-        self.assertNotIn("Stale Legal Name", text)
 
 # class EventPageViewSetTests(WagtailPageTestCase):
 #     fixtures = ['events_search_table.json']

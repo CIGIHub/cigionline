@@ -1,0 +1,158 @@
+{% load humanize icons %}
+{% comment %}
+  Faceted-listing module — the shared .ds-router filter + cards + pager shell as a
+  placeable block. One reusable module; the block value supplies card type, scope,
+  facets and a stable per-instance `prefix`. Field names are namespaced
+  `<prefix>-<facet>` / `<prefix>-page` (decision D2) so multiple listings on one
+  page never collide. In-place filtering + AJAX partial-swap + lazy panels handled
+  by router.js + tabs.js; with JS off the GET form full-reloads.
+
+  `router_show_filters` off → plain card grid + pager (no sidebar), e.g. DPH
+  Speakers. `router_lazy` → results deferred to first tab activation (D3).
+{% endcomment %}
+{# An empty SOURCE renders nothing (BugHerd #297); a filtered-to-zero result still shows the no-results + clear state. #}
+{% if not router_empty_source %}
+<div class="ds-surface ds-surface--{{ router_surface|default:'inherit' }}{% if router_accent %} ds-surface--accent-{{ router_accent }}{% endif %}">
+{# id = the deep-link anchor a topic pill targets (core/router_links.py builds #router-<prefix>); router.js lands here on load. #}
+<div id="router-{{ router_prefix }}" class="ds-router ds-faceted-listing{% if not router_show_filters %} ds-faceted-listing--plain{% endif %} ds-container"
+     data-router-prefix="{{ router_prefix }}"{% if router_lazy %} data-router-lazy{% endif %}>
+
+  {% if router_heading %}
+    {% include "includes/section_header.html" with heading=router_heading heading_level=2 intro=router_intro lead_narrow=True %}
+  {% endif %}
+
+  {% if router_show_filters %}
+    <div class="ds-router__bar">
+      {% comment %}
+        No facets → no facet chrome. A listing whose card type has no facets (or
+        whose authored picks don't apply to it) drew a bare "Filters | Clear All"
+        with nothing under it — BugHerd #231. Search alone keeps the bar.
+      {% endcomment %}
+      {% if router_facets %}
+      <p class="ds-router__bar-filters">
+        <span class="ds-router__bar-label">Filters</span>
+        <span class="ds-router__bar-sep" aria-hidden="true">|</span>
+        <a class="ds-router__clear" href="{{ router_clear_url }}" data-router-clear>Clear All</a>
+      </p>
+      {% endif %}
+      <p class="ds-router__count" data-router-count>{% if router_total %}Showing {{ router_range_start|intcomma }}–{{ router_range_end|intcomma }} of {{ router_total|intcomma }}{% endif %}</p>
+    </div>
+
+    <div class="ds-router__body">
+      <form class="ds-router__sidebar" method="get" action="{{ request.path }}" data-ds-router-form>
+        {% if router_tab %}<input type="hidden" name="tab" value="{{ router_tab }}">{% endif %}
+        {% if router_show_search %}
+          {# Single-row search: uppercase placeholder + magnifier over the accent rule. #}
+          <label class="ds-router__search">
+            <span class="ds-router__search-field">
+              <input type="search" name="{{ router_prefix }}-q" value="{{ router_search_value }}" placeholder="Search" aria-label="Search">
+              {% ds_icon 'search' css_class='ds-router__search-icon' %}
+            </span>
+          </label>
+        {% endif %}
+
+        {% comment %}
+          Mobile filters drawer (BugHerd #213): under 769px the facets live in a
+          panel opened by this trigger, beside the search. Both buttons are
+          mobile-only (CSS); router.js toggles --open on the form. Facet changes
+          apply live over AJAX, so Close is the only action the drawer needs.
+        {% endcomment %}
+        {% if router_facets %}
+        <button type="button" class="ds-button ds-button--outline ds-router__drawer-toggle" data-router-drawer-toggle aria-expanded="false">
+          <span class="ds-button__label">Filters</span>
+        </button>
+        <button type="button" class="ds-router__drawer-close" data-router-drawer-close aria-label="Close filters">&times;</button>
+        {% endif %}
+
+        {% for facet in router_facets %}
+          {% if facet.kind == 'calendar' %}
+            {% include "includes/router_calendar_facet.html" %}
+          {% else %}
+          <details class="ds-router__facet"{% if facet.open %} open{% endif %}>
+            <summary class="ds-router__facet-label">{{ facet.label }}</summary>
+            {% if facet.options|length > 10 %}
+              {# Search-within-facet for long option lists (1366:129503 annotation). Unnamed → never submitted; client-side filter in router.js. #}
+              <div class="ds-router__facet-search">
+                <input type="text" data-router-facet-filter placeholder="Search" aria-label="Search {{ facet.label }} options">
+                {% ds_icon 'search' css_class='ds-router__facet-search-icon' %}
+              </div>
+            {% endif %}
+            <ul class="ds-router__options">
+              {% for opt in facet.options %}
+                <li>
+                  <label class="ds-router__option">
+                    <input type="{% if facet.single %}radio{% else %}checkbox{% endif %}" name="{{ router_prefix }}-{{ facet.key }}" value="{{ opt.value }}"{% if opt.checked %} checked{% endif %}{% if opt.children %} data-router-parent{% endif %}>
+                    <span{% if opt.accent %} style="--option-accent: {{ opt.accent }}"{% endif %}>{{ opt.label }}</span>
+                  </label>
+                  {% if opt.children %}
+                    {# Indented child tags under a parent option (1680:96033); parent input selects all. #}
+                    <ul class="ds-router__children">
+                      {% for child in opt.children %}
+                        <li><label class="ds-router__option">
+                          <input type="checkbox" name="{{ router_prefix }}-{{ facet.key }}" value="{{ child.value }}"{% if child.checked %} checked{% endif %}>
+                          <span{% if child.accent %} style="--option-accent: {{ child.accent }}"{% endif %}>{{ child.label }}</span>
+                        </label></li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          </details>
+          {% if not facet.single %}
+            {# Applied-filter chips (server-rendered initial state; router.js keeps in sync). #}
+            <ul class="ds-router__chips" data-router-chips data-router-facet="{{ router_prefix }}-{{ facet.key }}">
+              {% for opt in facet.options %}{% if opt.checked %}
+                <li><button type="button" class="ds-router__chip" data-router-chip data-chip-value="{{ opt.value }}">{{ opt.label }} <span aria-hidden="true">&times;</span></button></li>
+              {% endif %}{% endfor %}
+            </ul>
+          {% endif %}
+          {% endif %}
+        {% endfor %}
+
+        <template data-router-chip-template>
+          <li><button type="button" class="ds-router__chip" data-router-chip> <span aria-hidden="true">&times;</span></button></li>
+        </template>
+
+        {% comment %}
+          Panel footer (Juode, BugHerd #213). Facet changes already apply live,
+          so Apply confirms and dismisses the panel — it reuses the drawer-close
+          control. Clear reuses the bar's own reset (data-router-clear). Both are
+          mobile-only; CSS reveals the row with the open panel.
+        {% endcomment %}
+        {% if router_facets %}
+        <div class="ds-router__drawer-actions">
+          <button type="button" class="ds-button ds-button--outline" data-router-clear>
+            <span class="ds-button__label">Clear Filters</span>
+          </button>
+          <button type="button" class="ds-button ds-button--solid" data-router-drawer-close>
+            <span class="ds-button__label">Apply Filters</span>
+          </button>
+        </div>
+        {% endif %}
+
+        <noscript><button type="submit" class="ds-button ds-button--solid ds-button--on-light">Apply filters</button></noscript>
+      </form>
+
+      <div class="ds-router__results" data-router-results>
+        {% if router_lazy %}
+          <p class="ds-router__loading" aria-live="polite">Loading…</p>
+        {% else %}
+          {% include "includes/router_results_partial.html" %}
+        {% endif %}
+      </div>
+    </div>
+
+  {% else %}
+    {# No-filter variant: a plain paginated card grid (e.g. DPH Speakers). #}
+    <div class="ds-router__results" data-router-results>
+      {% if router_lazy %}
+        <p class="ds-router__loading" aria-live="polite">Loading…</p>
+      {% else %}
+        {% include "includes/router_results_partial.html" %}
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+</div>
+{% endif %}

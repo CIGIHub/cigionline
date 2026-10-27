@@ -1,0 +1,70 @@
+// =============================================================================
+// Design System — Tag / pill (shared)
+// Outlined pill: an accent dot + an uppercase label. Used across many modules
+// (video carousel, cards, resource tiles, …). The accent dot colour comes from
+// `--accent` — set a `.ds-surface--accent-*` class on the element to choose it.
+// Fill / text / border come from surface tokens (--tag-bg/--tag-text/
+// --tag-border, set per surface mode in _surface.scss), so the pill auto-themes
+// to whatever surface it renders in (filled white on dark/colour, outlined on
+// light) without the caller doing anything.
+// =============================================================================
+
+.ds-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  // Compact pill (BugHerd #149, Kay's spec): tags aren't clickable, so they
+  // scale down — 14px label, 2px block / 8px inline padding.
+  padding: 2px var(--space-8);
+  background: var(--tag-bg, var(--color-brand-white));
+  border: var(--border-divider) solid var(--tag-border, var(--color-brand-black));
+  border-radius: 999px; // full pill
+  @include eyebrow;
+  font-size: var(--font-size-14); // overrides the eyebrow's 16 (BugHerd #149)
+  text-transform: uppercase;
+  color: var(--tag-text, var(--color-brand-black));
+  white-space: nowrap;
+  // A pill never escapes its column: long labels truncate inside the pill
+  // instead of running under a card thumb/image (narrow bento and Programs
+  // columns; the pill row itself already wraps).
+  max-width: 100%;
+  min-width: 0;
+
+  &__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  // Linked pill (topic → its router page with the topic pre-selected; program →
+  // the program page). Same resting look as the static pill; hover/focus fills
+  // with the accent like the spotlight tiles, so the dot reads as the cue.
+  &--link {
+    // Cards stretch their title link over the whole card (.ds-card__title::after,
+    // z-index 1). A linked pill must sit above that overlay or the card swallows
+    // the click (Evan, pill deep links QA).
+    position: relative;
+    z-index: 2;
+    text-decoration: none;
+    @include transition(background-color, color, border-color);
+
+    &:hover,
+    &:focus-visible {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--accent-on);
+    }
+
+    &:hover .ds-tag__dot,
+    &:focus-visible .ds-tag__dot {
+      background: var(--accent-on);
+    }
+  }
+}

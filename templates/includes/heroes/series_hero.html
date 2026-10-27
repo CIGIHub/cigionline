@@ -1,0 +1,15 @@
+{% load static %}
+{% comment %}
+  Series home hero (frame 1360:113331) — the shared BRANDED (split) hero on
+  the pink podcast surface: breadcrumb · title · series description | vertical
+  rule | series logo. Markup/spacing live in includes/split_hero.html (shared
+  with the Split Hero block). The Policy Prompt brand asset is the fallback
+  for the Policy Prompt series only (BugHerd #312/#314); other series brand
+  via their authored image_logo, and video series get no logo.
+  `hero` = core.heroes.podcast_series_hero_data.
+{% endcomment %}
+{# No <header> wrapper: the legacy global `header { position: fixed }` rule #}
+{# (includes/_top_bar.scss, still bundled) hijacks any bare header element. #}
+{% if not hero.logo and hero.is_policy_prompt %}{% static 'assets/policy_prompt_logo_v2.png' as logo_fallback %}{% endif %}
+{# Pink is Policy Prompt only (BugHerd #312); other series homes render on the light surface. #}
+{% include "includes/split_hero.html" with surface=hero.is_policy_prompt|yesno:'pink,light' accent='red' crumbs=hero.breadcrumb heading=hero.title heading_tag='h1' description=hero.description image=hero.logo image_src=logo_fallback image_alt='Policy Prompt' %}

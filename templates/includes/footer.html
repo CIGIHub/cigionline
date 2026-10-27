@@ -1,74 +1,104 @@
-{% load wagtailcore_tags topic_tags menu_tags cache %}
+{% load static cache wagtailcore_tags wagtailimages_tags menu_tags icons core_tags %}
+{% comment %}
+  Design-system footer (dark). Sections: brand + address / newsletter form (top),
+  4 link columns, bottom bar (copyright + legal | social).
 
-{% cache 86400 footer %}
-  <footer>
-    <div class="container">
-      <div class="row">
-        <div class="col">
-          <a href="/25/">
-            <div class="logo-container twentififth">
-              {% include 'includes/CIGI_25_logo_small.svg' %}
-            </div>
-          </a>
-          {% include "./footer_bracket.svg" %}
-          {% highlighted_topics %}
-        </div>
+  Authoring:
+    - Brand chrome (logo, address, org name, social URLs, newsletter copy) lives in
+      Settings -> Footer (core.FooterSettings).
+    - The 4 link columns + legal links are menus.Menu objects, edited under
+      Snippets -> Menus (slugs: footer-research, footer-experts-events,
+      footer-digital-policy-hub, footer-about, footer-legal). Column heading = Menu name.
+    - Newsletter posts email to /subscribe/ (legacy). The First/Last name fields
+      are visual only — /subscribe/ reads just the email; wire them up if the
+      subscribe flow ever accepts names.
+
+  Cache: fragment invalidated on FooterSettings / Menu / MenuItem save (signals app).
+{% endcomment %}
+{% cache 86400 ds_footer %}
+<footer class="ds-footer ds-surface ds-surface--dark">
+  <div class="ds-footer__inner ds-container">
+
+    <div class="ds-footer__top">
+      <div class="ds-footer__brand">
+        <a class="ds-footer__logo" href="/" aria-label="CIGI home">
+          {% if settings.core.FooterSettings.logo %}
+            {% image settings.core.FooterSettings.logo width-260 alt="CIGI" class="ds-footer__logo-img" %}
+          {% else %}
+            {% include "includes/footer_cigi_logo.svg" %}
+          {% endif %}
+        </a>
+        {% if settings.core.FooterSettings.address %}
+          {# The map link opens in a new tab (BugHerd #238); Wagtail's editor has no target option for an external link. #}
+          <div class="ds-footer__address">{{ settings.core.FooterSettings.address|richtext|links_new_tab }}</div>
+        {% endif %}
       </div>
-      <div class="row justify-content-center footer-content">
-        <div class="col-md-6">
-          <p>Get regular updates on our research and events in your inbox.</p>
-          <form class="cigi-newsletter-subscription-form" title="Newsletter Sign Up" action="/subscribe/" method="GET">
-            <input type="email" name="email" value="" size="60" maxlength="128" placeholder="Your email"
-              class="form-email required" required="required" aria-required="true">
-            <button type="submit" class="button-submit"><i class="fal fa-envelope"></i>SIGN UP</button>
-          </form>
-          {% get_menu_items 'footer' as footer_menu_items %}
-          <ul class="footer-menu">
-            {% for menu_item in footer_menu_items %}
-              {% if menu_item.link_page %}
-                <li>
-                  <a href="{% pageurl menu_item.link_page %}">
-                    {{ menu_item.title }}
-                  </a>
-                </li>
-              {% elif menu_item.link_url %}
-                <li>
-                  <a href="{{ menu_item.link_url }}">
-                    {{ menu_item.title }}
-                  </a>
-                </li>
-              {% endif %}
-            {% endfor %}
-          </ul>
-          <ul class="social-links">
-            <li>
-              <a href="https://x.com/cigionline" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's X profile"><i class="fa-brands fa-x-twitter"></i></a>
-            </li>
-            <li>
-              <a href="https://www.linkedin.com/company/cigionline/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's LinkedIn profile"><i class="fa-brands fa-linkedin-in"></i></a>
-            </li>
-            <li>
-              <a href="https://www.youtube.com/user/cigivideos" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Youtube channel"><i class="fa-brands fa-youtube"></i></a>
-            </li>
-            <li>
-              <a href="https://www.instagram.com/cigionline/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Instagram Profile"><i class="fa-brands fa-instagram"></i></a>
-            </li>
-            <li>
-              <a href="https://cigionlineorg.substack.com/" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Substack page"><i class="fa-brands fa-substack"></i></a>
-            </li>
-            <li>
-              <a href="https://medium.com/centre-for-international-governance-innovation" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Medium page"><i class="fa-brands fa-medium"></i></a>
-            </li>
-            <li>
-              <a href="https://podcasts.apple.com/ca/podcast/policy-prompt/id1766773261" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Policy Prompt on Apple Podcasts"><i class="fa-solid fa-podcast"></i></a>
-            </li>
-            <li>
-              <a href="https://open.spotify.com/show/2ta9ZymSqzJpoHdy59kLSd" target="_blank" rel="noopener noreferrer" aria-label="Link to CIGI's Policy Prompt on Spotify"><i class="fa-brands fa-spotify"></i></a>
-            </li>
-          </ul>
-          <div class="copyright">&copy; {% now "Y" %} Centre for International Governance Innovation</div>
-        </div>
+
+      <div class="ds-footer__newsletter">
+        <h2 class="ds-footer__newsletter-heading">{{ settings.core.FooterSettings.newsletter_heading }}</h2>
+        {% if settings.core.FooterSettings.newsletter_intro %}
+          <p class="ds-footer__newsletter-intro">{{ settings.core.FooterSettings.newsletter_intro }}</p>
+        {% endif %}
+        {# data-ds-subscribe: submit swaps the label for a spinner (subscribe-form.js + _spinner.scss) #}
+        {# POST hand-off: subscriber PII stays out of URLs/logs. prefill=1 marks #}
+        {# this as a stateless prefill render (CSRF-exempted in middleware.py). #}
+        <form class="ds-footer__form" title="Newsletter Sign Up" action="/subscribe/" method="post" data-ds-subscribe>
+          <input type="hidden" name="prefill" value="1">
+          <div class="ds-footer__form-row">
+            <input class="ds-footer__field" type="text" name="first_name" placeholder="First Name" aria-label="First name">
+            <input class="ds-footer__field" type="text" name="last_name" placeholder="Last Name" aria-label="Last name">
+          </div>
+          <div class="ds-footer__form-row ds-footer__form-row--submit">
+            <input class="ds-footer__field" type="email" name="email" placeholder="Enter your email" aria-label="Email" required="required" aria-required="true">
+            <button class="ds-footer__submit" type="submit">
+              <span class="ds-footer__submit-label">Subscribe</span>
+              {% ds_icon 'chevron-right' css_class='ds-footer__submit-icon' %}
+              <span class="ds-spinner" aria-hidden="true"></span>
+            </button>
+          </div>
+          {% if settings.core.FooterSettings.newsletter_consent %}
+            <div class="ds-footer__consent">{{ settings.core.FooterSettings.newsletter_consent|richtext }}</div>
+          {% endif %}
+        </form>
       </div>
     </div>
-  </footer>
+
+    <hr class="ds-footer__rule" aria-hidden="true">
+
+    <nav class="ds-footer__columns" aria-label="Footer">
+      {% get_menu 'footer-research' as col %}{% include "includes/footer_column.html" %}
+      {% get_menu 'footer-experts-events' as col %}{% include "includes/footer_column.html" %}
+      {% get_menu 'footer-digital-policy-hub' as col %}{% include "includes/footer_column.html" %}
+      {% get_menu 'footer-about' as col %}{% include "includes/footer_column.html" %}
+    </nav>
+
+    <hr class="ds-footer__rule" aria-hidden="true">
+
+    <div class="ds-footer__bottom">
+      <div class="ds-footer__legal">
+        <p class="ds-footer__copyright">&copy; {% now "Y" %} {{ settings.core.FooterSettings.organization_name }}. All rights reserved.</p>
+        <ul class="ds-footer__legal-links">
+          {% get_menu 'footer-legal' as legal_menu %}
+          {% if legal_menu %}
+            {% for link in legal_menu.menu_items.all %}
+              <li><a href="{% if link.link_page %}{% pageurl link.link_page %}{% elif link.link_url %}{{ link.link_url }}{% else %}#{% endif %}">{{ link.title }}</a></li>
+            {% endfor %}
+          {% endif %}
+        </ul>
+      </div>
+
+      <ul class="ds-footer__social">
+        {% with fs=settings.core.FooterSettings %}
+        {% if fs.twitter_url %}<li><a href="{{ fs.twitter_url }}" target="_blank" rel="noopener noreferrer" aria-label="CIGI on X"><i class="fa-brands fa-x-twitter"></i></a></li>{% endif %}
+        {% if fs.linkedin_url %}<li><a href="{{ fs.linkedin_url }}" target="_blank" rel="noopener noreferrer" aria-label="CIGI on LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a></li>{% endif %}
+        {% if fs.youtube_url %}<li><a href="{{ fs.youtube_url }}" target="_blank" rel="noopener noreferrer" aria-label="CIGI on YouTube"><i class="fa-brands fa-youtube"></i></a></li>{% endif %}
+        {% if fs.instagram_url %}<li><a href="{{ fs.instagram_url }}" target="_blank" rel="noopener noreferrer" aria-label="CIGI on Instagram"><i class="fa-brands fa-instagram"></i></a></li>{% endif %}
+        {% if fs.substack_url %}<li><a href="{{ fs.substack_url }}" target="_blank" rel="noopener noreferrer" aria-label="CIGI on Substack">{% include "includes/substack-logo.svg" %}</a></li>{% endif %}
+        {% if fs.medium_url %}<li><a href="{{ fs.medium_url }}" target="_blank" rel="noopener noreferrer" aria-label="CIGI on Medium">{% include "includes/medium-logo.svg" %}</a></li>{% endif %}
+        {% endwith %}
+      </ul>
+    </div>
+
+  </div>
+</footer>
 {% endcache %}

@@ -1,0 +1,37 @@
+{% load icons %}{% comment %}
+  Shared router pager (.ds-pager) for server-side paginated routers. Numbered
+  page links + prev/next arrows, preserving the active filters. Params:
+    page        — a Django Page (paginator page)
+    querystring — the current GET params minus the page cursor, urlencoded
+    page_range  — paginator.get_elided_page_range(...) (numbers + ELLIPSIS)
+    page_param  — the page cursor param name (default 'page'; a faceted-listing
+                  block passes '<prefix>-page' so two listings page independently)
+{% endcomment %}
+{% with pp=page_param|default:'page' %}
+{% if page.paginator.num_pages > 1 %}
+  <nav class="ds-pager ds-router__pager" aria-label="Pagination">
+    {% if page.has_previous %}
+      <a class="ds-slider-arrow ds-pager__prev" href="?{{ querystring }}&{{ pp }}={{ page.previous_page_number }}" aria-label="Previous page">{% ds_icon 'chevron-left-stroke' css_class='ds-carousel-nav__icon' %}</a>
+    {% else %}
+      {# Decorative when disabled — no name, so hidden from AT (wcag-audit.md). #}
+      <span class="ds-slider-arrow ds-pager__prev" aria-hidden="true">{% ds_icon 'chevron-left-stroke' css_class='ds-carousel-nav__icon' %}</span>
+    {% endif %}
+    <span class="ds-pager__pages">
+      {% for p in page_range %}
+        {% if p == page.paginator.ELLIPSIS %}
+          <span class="ds-pager__ellipsis">{{ p }}</span>
+        {% elif p == page.number %}
+          <span class="ds-pager__page ds-pager__page--active" aria-current="page">{{ p }}</span>
+        {% else %}
+          <a class="ds-pager__page" href="?{{ querystring }}&{{ pp }}={{ p }}">{{ p }}</a>
+        {% endif %}
+      {% endfor %}
+    </span>
+    {% if page.has_next %}
+      <a class="ds-slider-arrow ds-pager__next" href="?{{ querystring }}&{{ pp }}={{ page.next_page_number }}" aria-label="Next page">{% ds_icon 'chevron-right-stroke' css_class='ds-carousel-nav__icon' %}</a>
+    {% else %}
+      <span class="ds-slider-arrow ds-pager__next" aria-hidden="true">{% ds_icon 'chevron-right-stroke' css_class='ds-carousel-nav__icon' %}</span>
+    {% endif %}
+  </nav>
+{% endif %}
+{% endwith %}

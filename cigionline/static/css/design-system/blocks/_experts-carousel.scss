@@ -1,0 +1,85 @@
+// =============================================================================
+// Design System — Experts Carousel block
+// A section title as a fixed first column beside a swipeable rail of expert cards
+// (the rail sibling of the Experts Grid). Built on the shared .ds-carousel shell
+// + Swiper init (gallery-init.js, data-ds-space=48 → 24px each side of the
+// centred divider). Surface-aware (dark default); dividers use --surface-border.
+// Headshot hover-crop lives on .ds-expert-card.
+// =============================================================================
+
+.ds-experts-carousel {
+  padding-block: var(--space-section-y); // horizontal gutters from .ds-container
+
+  // Desktop: title fixed in the first column, the expert rail scrolling beside
+  // it, controls spanning the full width below (Figma 1672-63982). The shared
+  // shell is a flex column — override to a grid here.
+  &__carousel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    grid-template-areas:
+      "intro rail"
+      "controls controls";
+    column-gap: var(--space-48);
+    row-gap: var(--space-48);
+  }
+
+  // Every grid child needs min-width: 0. The rail's .swiper carries
+  // `overflow: visible` (shared shell, so cards bleed the gutter), which makes its
+  // min-content the SUM of all slides — a track that can shrink below that is the
+  // only thing keeping the grid inside the viewport.
+  &__intro,
+  .ds-carousel__swiper,
+  .ds-carousel__controls { min-width: 0; }
+
+  &__intro { grid-area: intro; }
+  .ds-carousel__swiper { grid-area: rail; }
+  .ds-carousel__controls { grid-area: controls; }
+
+  // Mask the rail's LEFT edge only (BugHerd #20, Kay 2026-07-29): advancing
+  // slides must disappear rather than paint over the static intro column. The
+  // right side stays open so cards keep bleeding to the viewport edge (the
+  // section-level overflow-x clip crops them there). Generous vertical slack so
+  // the reveal-entry translate is never cut.
+  .ds-carousel__swiper.swiper {
+    clip-path: inset(-100px -100vw -100px 0);
+  }
+
+  // 32px between the intro and the "View All Experts" CTA (Figma 1672-63982,
+  // BugHerd #30) — overrides the stacked default of 24px.
+  .ds-module-title--stacked .ds-module-title__aside { gap: var(--space-32); }
+
+  // --- Card cells + vertical dividers ---------------------------------------
+  &__slide {
+    position: relative;
+
+    // Divider centred in the 48px gutter to the slide's left (Swiper's
+    // spaceBetween sits as margin to the right of the previous slide, so -24px
+    // lands mid-gutter). Full slide height; surface-aware colour. On the first
+    // expert this rule lands in the gap between the title column and the rail.
+    &::before {
+      content: '';
+      position: absolute;
+      left: calc(-1 * var(--space-24));
+      top: 0;
+      bottom: 0;
+      width: var(--border-divider);
+      background: var(--surface-border);
+    }
+  }
+
+  // --- Mobile: stack. Content on top, then the controls (arrows + pagination)
+  //     ABOVE the first expert card, then the rail (BugHerd #57). -------------
+  @media (max-width: 768px) {
+    &__carousel {
+      // minmax(0, 1fr), never a bare `1fr` — `1fr` is minmax(AUTO, 1fr), so the
+      // track floors at the rail's min-content (all 12 slides) and blew the grid
+      // out to ~38400px, dragging the intro and slides off-screen.
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas:
+        "intro"
+        "controls"
+        "rail";
+      row-gap: var(--space-24);
+    }
+  }
+}

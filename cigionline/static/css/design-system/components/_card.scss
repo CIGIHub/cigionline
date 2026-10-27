@@ -1,0 +1,357 @@
+// =============================================================================
+// Design System — Card
+// Shared content card, rendered from core.cards.card_data via {% card %}. Holds
+// a page's project pills + title; archetype/slot variants (media-vertical,
+// media-compact, person, event) extend this as modules need them. Surface-aware.
+// =============================================================================
+
+.ds-card {
+  position: relative; // containing block for the stretched title link
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-16);
+
+  &__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-8);
+    // The body is align-items: flex-start, so this row sizes to content and
+    // would carry a long pill past the column edge (under the thumb) — cap it
+    // so the pill's own max-width/ellipsis can bite.
+    max-width: 100%;
+  }
+
+  &__title {
+    @include header-5;
+    color: var(--surface-text);
+    text-decoration: none; // no hover underline on card titles (BugHerd #9)
+    @include transition(color);
+  }
+
+  // Hover lights the title in the interactive accent, matching the expert card
+  // (BugHerd #178). Stated explicitly because the legacy global `a:hover` sets
+  // its own red and outranks the base `.ds-card__title` rule — on the DPH hub
+  // that leaked red where the hub hovers green (BugHerd #241). Driven from the
+  // card so the whole stretched target lights the title.
+  &:hover &__title,
+  &__title:focus-visible {
+    color: var(--accent-ui);
+  }
+
+  // Whole card, one destination (guide hard guardrail, Figma 1423:47357): the
+  // title link stretches over the card so the image/excerpt/date click through
+  // to the page. Accepted trade-off: card text is no longer selectable. Adds no
+  // tab stops — only the existing title anchor's hit area grows.
+  &__title:is(a)::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1; // above the media-compact thumb's positioned img (later in DOM)
+  }
+
+  // The media-vertical CTA points at the same destination (core/cards.py);
+  // keep it independently clickable/focusable above the stretched overlay.
+  &__cta {
+    position: relative;
+    z-index: 2;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-16);
+    width: 100%;
+  }
+
+  // --- Hover (card rails) -----------------------------------------------------
+  // Guide (card rail hover): the image scales to 1.03 and a bordered card's
+  // hairline strengthens. Photography-led cards only — concept-card contexts
+  // (Program Grid) switch it off where they import this component.
+  &__media img,
+  &__thumb img {
+    // Entry tier, not hover: the zoom should ease in subtly (BugHerd #258 —
+    // "slow down the scale up on the photo"); the scale amount is unchanged.
+    @include transition(transform var(--motion-duration-entry) var(--motion-ease-out));
+  }
+
+  // Ratio lock (BugHerd #283/#284): Wagtail's fill-* rendition never upscales,
+  // so an undersized original rendered short and broke row alignment. The CSS
+  // ratio matches each slot's rendition; object-fit covers the difference.
+  &__media--wide img   { width: 100%; height: auto; aspect-ratio: 740 / 416; object-fit: cover; }
+  &__media--square img { width: 100%; height: auto; aspect-ratio: 1;         object-fit: cover; }
+  // (__thumb already locks 1:1 via its absolutely-filled container below.)
+
+  &:hover &__media img,
+  &:focus-within &__media img,
+  &:hover &__thumb img,
+  &:focus-within &__thumb img {
+    transform: scale(1.03);
+  }
+
+  @include reduce-motion-safe {
+    &:hover &__media img,
+    &:focus-within &__media img,
+    &:hover &__thumb img,
+    &:focus-within &__thumb img { transform: none; }
+  }
+
+  // --- media-vertical --------------------------------------------------------
+  // Accent-topped image + pill(s) + title + serif excerpt + CTA. Used by the
+  // Programs Grid/Carousel and resource feature/card.
+  &--media-vertical {
+    gap: var(--space-24); // image -> body
+
+    .ds-card__media { width: 100%; }
+
+    // Gaps: pills->title 24, title->excerpt 16, excerpt->cta 32. Body gap
+    // is 16; nudge the two larger gaps with margins off the shared rhythm.
+    .ds-card__pills { margin-bottom: var(--space-8); }
+    .ds-card__cta { margin-top: var(--space-16); }
+  }
+
+  &__excerpt {
+    @include paragraph-1;
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  // --- media-stacked ---------------------------------------------------------
+  // Image on top + taxonomy pill(s) + title + type-of-content. Resource Bento
+  // left column (KP 1557-52706, BugHerd #7). Reuses the vertical image treatment
+  // but ends in the type-of-content row (no excerpt/CTA).
+  &--media-stacked {
+    gap: var(--space-16); // image -> body
+
+    .ds-card__media { width: 100%; }
+  }
+
+  // --- resource (feature / compact) ------------------------------------------
+  // Resource Carousel/Bento card: pill(s) + date + title + serif excerpt; the
+  // feature adds a top image. Compact (no image) is the same card minus the media.
+  &--resource-feature { gap: var(--space-24); } // image -> body
+
+  &--resource-feature,
+  &--resource-compact {
+    .ds-card__media { width: 100%; }
+    .ds-card__excerpt { @include paragraph-2; } // step down from media-vertical's 18px
+    // Same 24px meta rhythm as media-compact: in the duo bento the feature ran
+    // the base 16 beside the compact column's 24 and the columns read uneven
+    // (Sami, BugHerd #409; 24 is the designed gap per Kay).
+    .ds-card__body { gap: var(--space-24); }
+  }
+
+  // Image-led resource row (More From This Expert, 1321:53357): plain 16:9
+  // photo (no accent rule) over the compact text stack.
+  &--resource-visual {
+    .ds-card__media { width: 100%; }
+    .ds-card__media img { display: block; width: 100%; height: auto; }
+    .ds-card__excerpt { @include paragraph-2; }
+  }
+
+  // Resource feature image is a plain photo (no accent top-rule) — resources span
+  // many topics, so there's no single accent. Keep the accent-media sizing only.
+  &--resource-feature .ds-accent-media { border-top: 0; }
+
+  &__date {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: var(--font-size-14);
+    letter-spacing: var(--tracking-heading); // −3% per the type ramp
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  // Author byline (Resource Bento — BugHerd #12). Names link to the bio page;
+  // raised above the whole-card title overlay so the links stay clickable.
+  &__authors {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: var(--font-size-14);
+    letter-spacing: var(--tracking-heading);
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  &__author {
+    position: relative;
+    z-index: 2;
+    color: inherit;
+    text-decoration: none;
+    @include hover-underline;
+  }
+
+  // --- media-compact ---------------------------------------------------------
+  // Horizontal: pill(s) + title + type-of-content row, with an optional square
+  // thumbnail on the right. Resource Bento / Resources Carousel.
+  &--media-compact {
+    flex-direction: row;
+    align-items: flex-start; // keep the square thumb square; top-align content
+    gap: var(--space-24);
+
+    .ds-card__body {
+      flex: 1 1 0;
+      // Floor the text column: in a tight bento column the fixed 175px thumb
+      // starved it (99px at 1372px viewport) and long title words escaped
+      // underneath the image (BugHerd #192).
+      min-width: 140px;
+      gap: var(--space-24);
+    }
+
+    // The thumb yields instead — it shrinks (square, via aspect-ratio) down to
+    // a floor rather than pushing the title under itself.
+    .ds-card__thumb {
+      flex-shrink: 1;
+      min-width: 96px;
+    }
+
+    // Last resort for a single word wider than the column.
+    .ds-card__title { overflow-wrap: break-word; }
+  }
+
+  // Type-of-content row is the shared .ds-type molecule (components/_type-of-content).
+
+  // --- event -----------------------------------------------------------------
+  // Bordered box: red date-stamp circle + (full date string + title + serif
+  // excerpt). Optional top image / RSVP are not in the carousel frame. Events
+  // Carousel.
+  &--event {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--space-24);
+    border: var(--border-divider) solid var(--surface-border);
+    padding: var(--space-16);
+    // Paint the surface the card sits on. The hover pop below scales the card
+    // over its neighbours, and a transparent card let the neighbour's border
+    // and red date stamp show through it — read as a ghost shadow and a stray
+    // red edge (Tim, BugHerd #494/#495). --surface-bg inherits from the
+    // enclosing surface, so this is a no-op at rest on every surface.
+    background: var(--surface-bg, transparent);
+    @include transition(border-color, transform var(--motion-duration-hover) var(--motion-ease-out));
+
+    // Event cards are the ONE card type with a whole-card hover pop (BugHerd
+    // #35, prototype kJmWoa9oTlgjR8zrlnFg6x): scale up over neighbours; the
+    // border also steps up from the hairline grey to the strong rule colour.
+    &:hover,
+    &:focus-within {
+      border-color: var(--surface-rule);
+      transform: scale(1.04);
+      z-index: 2;
+    }
+
+    @include reduce-motion-safe {
+      &:hover,
+      &:focus-within { transform: none; }
+    }
+  }
+
+  &__event-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-8);
+    flex: 1 1 0;
+    min-width: 0; // wrap a long title rather than widen the card
+  }
+
+  &__event-datetime {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: var(--font-size-14);
+    letter-spacing: var(--tracking-heading); // −3% per the type ramp
+    color: var(--surface-red-text); // red on light, white on dark/colour surfaces (BugHerd #34)
+    margin: 0;
+  }
+
+  // Date-proximity chip (guide: Events Module) — a quiet signal that the event
+  // is near (≤30 days), not a countdown clock. Number ticks up via countdown.js.
+  &__countdown {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: var(--font-size-14);
+    letter-spacing: var(--tracking-heading); // −3% per the type ramp
+    display: inline-flex;
+    align-items: center;
+    padding: 2px var(--space-8);
+    border: var(--border-divider) solid var(--accent);
+    color: var(--accent);
+    margin: 0;
+  }
+
+  // --- event-browse ------------------------------------------------------------
+  // Events-listing browse card (1253:41198): borderless — pills · small grey
+  // date (no time) · title · excerpt · "RSVP >". ONE form for past and upcoming
+  // (Tia, BugHerd #463): the past foot-row variant (1253:41513) is retired.
+  &--event-browse {
+    gap: var(--space-16);
+
+    .ds-card__excerpt { @include paragraph-2; }
+  }
+
+  &__event-date {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: var(--font-size-14);
+    letter-spacing: var(--tracking-heading);
+    color: var(--color-brand-grey);
+    margin: 0;
+  }
+
+  &__rsvp {
+    @include button-small;
+    position: relative;
+    z-index: 2; // same-destination link raised above the stretched title
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 2px;
+  }
+
+  // Event title wraps to its full length — no clamp — so cards size to content
+  // (BugHerd #36; supersedes the #33 single-line clamp that was clipping
+  // descenders). The excerpt below still clamps + ellipsises to keep a floor.
+  &--event &__title {
+    line-height: 1.2;
+  }
+
+  // Event excerpt is Paragraph 2 (16px), a step down from the media-vertical 18px.
+  // Clamp to 3 lines AND reserve 3 lines (min-height in the excerpt's own em/1.5
+  // line-height) so every card is the same height regardless of copy length.
+  &--event &__excerpt {
+    @include paragraph-2;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: calc(3 * 1.5em);
+  }
+
+  // Optional square thumbnail (plain image — no accent rule; gradient + base rule).
+  &__thumb {
+    position: relative;
+    flex-shrink: 0;
+    width: var(--card-thumb-size, 175px);
+    aspect-ratio: 1;
+    overflow: hidden;
+    // No underline on the thumb — the hairline touching every image's bottom
+    // edge read as a stray line (Sami + Tia, BugHerd #412).
+
+    img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    // Top-down dark gradient (matches the overlay on the square thumb).
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(183deg, rgba(0, 0, 0, 0.6) 2%, rgba(102, 102, 102, 0) 52%);
+      pointer-events: none;
+    }
+  }
+}

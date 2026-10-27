@@ -1,0 +1,190 @@
+// =============================================================================
+// Design System — Newsletter Sign-up CTA block (mod library CTA/15, 1360:106698)
+// The full red sign-up panel: photo underlay + hard-light red wash (same
+// treatment as the slim .ds-subscribe band), ruled heading top-left, serif
+// text bottom-left, first/last/email form bottom-right. White chrome
+// throughout. The panel fill comes from --cta-panel-fill: red by default, forest
+// green under the --green modifier (BugHerd #171).
+// =============================================================================
+
+.ds-newsletter-cta {
+  // Panel fill. Red by default; --green repaints it for the DPH hub, where the
+  // whole block reads green (BugHerd #171 — Tia pinned the panel itself, not the
+  // band around it). Both the hard-light wash and the solid veil read this var,
+  // so the two layers cannot drift apart. White chrome holds on either fill:
+  // 4.73 on the red, 5.62 on the forest green.
+  --cta-panel-fill: var(--color-brand-red);
+
+  &--green { --cta-panel-fill: var(--color-surface-green); }
+
+  // No top padding; full 80px below (BugHerd #221 — supersedes #113's halving).
+  padding-block: 0 var(--space-section-y);
+
+  &__panel {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: var(--space-80);
+    color: var(--color-brand-white);
+  }
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+  }
+
+  &__wash {
+    position: absolute;
+    inset: 0;
+    background: var(--cta-panel-fill);
+    mix-blend-mode: hard-light;
+    z-index: -1;
+  }
+
+  // A solid red veil above the hard-light wash knocks the photo further
+  // back — "make the overlay more opaque" (BugHerd #111).
+  &__panel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--cta-panel-fill);
+    opacity: 0.4;
+    z-index: -1;
+  }
+
+  // --- Two columns: lead (heading top / text bottom) | sign-up form ---------
+  &__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    column-gap: var(--space-80);
+    align-items: end; // text block and form bottom-align (CTA/15)
+  }
+
+  &__lead {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-64);
+    height: 100%;
+  }
+
+  &__heading {
+    @include header-3;
+    color: var(--color-brand-white);
+    margin: 0;
+  }
+
+  // Top rule hugs the title text (the site-wide motif, BugHerd #72).
+  &__heading-text {
+    display: inline-block;
+    padding-top: var(--space-16);
+    border-top: var(--border-rule) solid var(--color-brand-white);
+  }
+
+  &__text {
+    @include paragraph-1;
+    color: var(--color-brand-white);
+
+    p { margin: 0; }
+  }
+
+  // --- Sign-up form ----------------------------------------------------------
+  &__signup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+  }
+
+  &__names {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: var(--space-32);
+  }
+
+  &__row {
+    display: flex;
+    align-items: stretch;
+    gap: var(--space-24);
+
+    .ds-newsletter-cta__field { flex: 1 1 0; min-width: 0; }
+  }
+
+  &__field {
+    @include paragraph-2;
+    color: var(--color-brand-white);
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid var(--color-brand-white);
+    border-radius: 0;
+    padding: var(--space-8) 0 var(--space-12);
+    min-width: 0;
+
+    &::placeholder { color: var(--color-brand-white); opacity: 1; }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-brand-white);
+      outline-offset: 2px;
+    }
+  }
+
+  // White solid button, black text; hover inverts to black (the on-red button
+  // treatment).
+  &__submit {
+    @include button-small;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-8);
+    flex-shrink: 0;
+    padding: var(--space-16) var(--space-24);
+    color: var(--color-brand-black);
+    background: var(--color-brand-white);
+    border: 0;
+    cursor: pointer;
+    @include transition(background-color, color);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--color-brand-white);
+      background: var(--color-brand-black);
+    }
+  }
+
+  &__submit-icon {
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+    fill: currentColor;
+  }
+
+  // "By subscribing you agree…" — serif, white, underlined links.
+  &__consent {
+    @include paragraph-3;
+    color: var(--color-brand-white);
+
+    p { margin: 0; }
+    a { color: inherit; text-decoration: underline; }
+  }
+
+  // --- Mobile: stack ----------------------------------------------------------
+  @media (max-width: 768px) {
+    &__panel { padding: var(--space-48) var(--space-24); }
+
+    &__inner {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: var(--space-48);
+    }
+
+    &__lead { gap: var(--space-32); }
+  }
+}

@@ -1,0 +1,755 @@
+// =============================================================================
+// Primary header (design system)
+// Utility row (search + newsletter) over the brand/nav row (logo + primary nav).
+// Phase 1: bar + nav triggers. Mega-menu panels (Phase 2) + mobile drawer
+// (Phase 3) extend `.ds-header__panel` / `.ds-header__burger` below.
+// =============================================================================
+
+// Anchor / focus / scrollIntoView targets (e.g. the router's scroll-to-results
+// on page change) clear the pinned sticky header — closes the recorded
+// scroll-padding gap from the pre-staging sweep.
+html {
+  scroll-padding-top: calc(var(--ds-header-pinned-height, 0px) + var(--space-16));
+}
+
+// First-paint value for the pinned header height. Every sticky element that has
+// to clear the header reads it — the tab strip, the event hero's pin-bar, the
+// reading rail — and header.js overwrites it on :root with a real measurement.
+//
+// The measurement alone is not enough: a sticky offset has to be right at FIRST
+// PAINT. iOS Safari resolved #233's offset once, from the pre-JS fallback, and
+// never revisited it after the JS wrote the real number. With no CSS value the
+// tab strip pins at 0 and hides behind the header (z-index 80 against 100).
+//
+// Derived, not guessed: the header's two 24px paddings, the brand mark (120px
+// wide at the fallback SVG's 45.9x25.6 ratio) and the 1px bottom border. That
+// comes to 115.93px against the 116px measured at both 375px and 1280px. An
+// authored HeaderSettings.logo can change the mark's height, and header.js
+// still corrects for that — the point here is a sane value before it runs.
+:root {
+  // The brand mark's rendered height (~66.93px): the old 120px-wide mark's
+  // height, kept as THE constant every header mark renders at. The #246
+  // anniversary marks size to it, so the brand row never moves.
+  --ds-brand-mark-height: calc(120px * 25.6 / 45.9);
+  --ds-header-pinned-height: calc(2 * var(--space-24) + var(--ds-brand-mark-height) + 1px);
+
+  // Mobile: the ~67px mark made the sticky header eat too much of a phone
+  // screen — 44px, aspect ratio kept by the width:auto sizing (Kay, BugHerd
+  // #338). Same breakpoint as the burger collapse; the pinned-height fallback
+  // above recomputes from this, and header.js still measures the real value.
+  @media (max-width: 1254px) {
+    --ds-brand-mark-height: 44px;
+  }
+}
+
+// The utility band sits ABOVE the sticky header as its own element, so it
+// scrolls away in normal flow (BugHerd #233). It carries the same surface
+// classes as the header and paints from the base .ds-surface rule; the
+// border-bottom stays on the header alone.
+.ds-header__band {
+  // 24 above the row; the 8 below joins the header's own 24 for the 32 gap the
+  // utility row's old margin-bottom drew above the brand bar.
+  padding-block: var(--space-24) var(--space-8);
+}
+
+.ds-header {
+  // Sticky at the top, holding the brand/nav row only — the utility band above
+  // scrolls away on its own. This replaces a JS-measured negative `top`
+  // (--ds-header-offset): iOS Safari kept the offset it resolved at first
+  // paint (0), pinned the full two-row header, and covered the hero title
+  // (BugHerd #233). A plain `top: 0` needs no measurement, so no engine can
+  // disagree about it.
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  // Surface-aware chrome: the element carries `ds-surface ds-surface--{light|dark|accent-*}`
+  // (light default), so on-surface text/accent come from the surface tokens. bg/text are
+  // set on the compound selector below so they beat the legacy global `header { … }` rule
+  // (from includes/_top_bar.scss, still in the bundle).
+  &.ds-surface--light { background-color: var(--color-brand-white); color: var(--color-brand-black); }
+  &.ds-surface--dark  { background-color: var(--color-brand-black); color: var(--color-brand-white); }
+  &.ds-surface--pink  { background-color: var(--color-surface-pink);  color: var(--color-brand-black); } // podcast (light tint, black chrome)
+  &.ds-surface--green { background-color: var(--color-surface-green); color: var(--color-brand-white); } // DPH (dark green, white chrome)
+
+  // Separation from the page: a full-width 1px grey rule (BugHerd #1 — the
+  // Figma glow/dropshadow read too heavy live, per Kay 2026-07-29; removed in
+  // favour of Tia's border). Compact panels mimic it on their side edges
+  // (BugHerd #331 — on the pink chrome the panel blended into the page).
+  border-bottom: 1px solid var(--color-brand-grey);
+
+  &__inner {
+    padding-block: var(--space-24);
+  }
+
+  // --- Utility row ----------------------------------------------------------
+  // Lives in .ds-header__band now, not inside the header. The selector never
+  // required a .ds-header ancestor, so the rules below still apply; the band
+  // supplies the vertical spacing the old margin-bottom drew.
+  &__utility {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: var(--space-24);
+  }
+
+  &__search {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    width: 290px;
+    max-width: 38vw;
+    border-bottom: 3px solid currentColor;
+  }
+
+  &__search-input {
+    @include button-small;
+    flex: 1 1 auto;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    padding: var(--space-8) 0;
+
+    &::placeholder { color: currentColor; opacity: 1; }
+    &:focus-visible { outline: none; }
+  }
+
+  &__search-btn {
+    flex: 0 0 auto;
+    display: inline-flex;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+
+    svg { width: 20px; height: 20px; }
+  }
+
+  &__utility-divider {
+    width: 1px;
+    align-self: stretch;
+    min-height: 24px;
+    background: var(--color-brand-grey);
+  }
+
+  &__newsletter {
+    @include button-small;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8); // label + chevron, matching .ds-button (BugHerd #45)
+    white-space: nowrap;
+    padding: var(--space-12) var(--space-24);
+    // White button with a surface-coloured border: black border on light, white on
+    // dark (the white fill pops on a dark bar), black on accent tints.
+    border: 1px solid var(--surface-text);
+    color: var(--color-brand-black);
+    background: var(--color-brand-white);
+    text-decoration: none;
+    @include transition(color, background-color);
+
+    &:hover,
+    &:focus-visible {
+      background: var(--color-brand-black);
+      color: var(--color-brand-white);
+    }
+  }
+
+  &__newsletter-icon {
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+    fill: currentColor;
+  }
+
+  // --- Brand + nav row ------------------------------------------------------
+  &__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-32);
+  }
+
+  &__logo {
+    // Shrinkable (#246): on a narrow bar the wordmark must letterbox down
+    // rather than shove the burger past the gutter — flex-shrink + min-width 0
+    // squeeze the anchor, and the svg's max-width does the rest. The drawer
+    // re-pins its logo to flex: 0 0 auto below.
+    flex: 0 1 auto;
+    min-width: 0;
+    // Grid, so the two anniversary marks stack in one cell for the cross-fade.
+    display: grid;
+
+    // The CIGI brand mark already includes its top rule (the SVG <rect>).
+    svg { display: block; width: 120px; height: auto; fill: var(--surface-text); }
+    img { display: block; width: 120px; height: auto; }
+  }
+
+  // 25th-anniversary marks (BugHerd #246, Tim): the wordmark shows at rest and
+  // the acronym takes over once the header pins — the swap rides the same
+  // --scrolled class header.js already toggles. Both render at the SAME height
+  // as the old 120px mark (--ds-brand-mark-height), so the brand row and the
+  // :root first-paint pinned fallback (#233) hold unchanged. The pinned state
+  // shows the acronym, whose width fits any phone, so the pinned height is a
+  // constant; only the at-rest wordmark may letterbox down on narrow screens
+  // (max-width caps it, xMinYMid keeps it left-aligned).
+  // The marks CROSS-FADE on the swap — display can't animate, and the hard cut
+  // read as a glitch (Evan). Opacity rides the same 300ms/standard pair as the
+  // header's other state changes; the transition() helper carries the
+  // reduced-motion handling.
+
+  &__logo-full,
+  &__logo-mark {
+    grid-area: 1 / 1;
+    display: block;
+    @include transition(opacity var(--motion-duration-hover) var(--motion-ease-standard));
+  }
+
+  &__logo-full svg,
+  &__logo-mark svg { width: auto; height: var(--ds-brand-mark-height); }
+
+  &__logo-full svg { max-width: 100%; }
+
+  &__logo-mark { opacity: 0; }
+
+  &--scrolled &__logo-full { opacity: 0; }
+  &--scrolled &__logo-mark { opacity: 1; }
+
+  // The drawer is a compact overlay — always the acronym, statically.
+  &__drawer &__logo-full { display: none; }
+  &__drawer &__logo-mark { display: block; opacity: 1; }
+
+  &__nav {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &__menu {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-32);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__item {
+    // Static so panels resolve against `.ds-header` (full-bleed); compact panels
+    // are offset under their trigger via the JS-set --panel-left.
+    position: static;
+  }
+
+  &__link {
+    @include button-small;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--surface-text);
+    text-decoration: none;
+    cursor: pointer;
+    @include transition(color);
+
+    // Guide (Primary Navigation — active state indicator): a red underline
+    // slides in from the left on hover and persists on the active page.
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: calc(-1 * var(--space-8));
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      @include transition(transform var(--motion-duration-micro) var(--motion-ease-standard));
+    }
+
+    // Hover = red text + red underline (Kay, BugHerd #380; Tim, #323). The
+    // plain <a> items already reddened via the legacy global a:hover, while
+    // the <button> dropdown triggers did not — this rule makes every nav
+    // item consistent, buttons included.
+    // An OPEN panel no longer underlines its trigger (BugHerd #344, Juode) —
+    // the bold label carries the open state; the underline is for hover,
+    // keyboard focus and the active page only.
+    &:hover,
+    &:focus-visible { color: var(--accent-ui); }
+
+    &:hover::after,
+    &:focus-visible::after,
+    &--active::after { transform: scaleX(1); }
+  }
+
+  // Nav label: reserve the BOLD width up front so the hover/active bold weight
+  // (BugHerd #51) never reflows the sibling links. A hidden bold copy sizes the
+  // column; the visible text just switches weight inside that fixed width.
+  &__link-label {
+    display: inline-flex;
+    flex-direction: column;
+
+    &::after {
+      content: attr(data-label);
+      font-weight: 700;
+      height: 0;
+      overflow: hidden;
+      visibility: hidden;
+    }
+  }
+
+  // Hover no longer bolds — the width shift jittered the row and could wrap
+  // long labels (Kay, BugHerd #380); the red underline alone marks hover.
+  // The open-state bold went too (#323 follow-up, Evan 2026-08-27): hover
+  // opens the panel, so an open-marker bold READ as a hover bold. The caret
+  // rotation carries the open state; bold marks the current page only.
+  &__link--active &__link-label { font-weight: 700; }
+
+  &__caret {
+    width: 16px;
+    height: 16px;
+    @include transition(transform);
+
+    .ds-header__link[aria-expanded='true'] & { transform: rotate(180deg); }
+  }
+
+  // --- Mega-menu panels -----------------------------------------------------
+  &__panel {
+    position: absolute;
+    top: 100%;
+    z-index: 90;
+    // Panels take the bar's surface (1694:103744 dark / 1694:120582 light):
+    // black panel on dark chrome, white on light.
+    background: var(--surface-bg, var(--color-brand-white));
+    color: var(--surface-text);
+    // Same treatment as the bar (BugHerd #1): grey rule, no glow.
+    border-bottom: 1px solid var(--color-brand-grey);
+
+    &[hidden] { display: none; }
+
+    // Guide (Primary Navigation — megamenu): the panel arrives — opacity 0→1
+    // with an 8px downward settle. Restarts naturally each open because the
+    // `hidden` toggle re-runs the animation from display:none.
+    &:not([hidden]) {
+      animation: ds-header-panel-in var(--motion-duration-menu) var(--motion-ease-standard) both;
+    }
+
+    @include reduce-motion-safe {
+      &:not([hidden]) { animation: none; }
+    }
+  }
+
+  &__panel--full {
+    left: 0;
+    right: 0;
+  }
+
+  &__panel--compact {
+    // Fixed-width box left-aligned under its trigger (JS clamps --panel-left so
+    // a right-most panel shifts left instead of squishing — BugHerd #46).
+    left: var(--panel-left, 0);
+    min-width: 360px;
+    max-width: calc(100% - var(--space-section-x) * 2);
+    border-inline: 1px solid var(--color-brand-grey);
+  }
+
+  &__panel-inner {
+    display: flex;
+    gap: var(--space-48);
+    padding-block: var(--space-48);
+  }
+
+  &__panel--compact &__panel-inner {
+    // Fixed inline padding (not the page gutter) now the panel is a narrow
+    // box. Even 32 all round — the old 48 bottom stacked on the link list's
+    // own padding and read as extra space (John, BugHerd #295).
+    padding: var(--space-32);
+  }
+
+  &__panel-col {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-16);
+  }
+
+  &__panel-heading {
+    @include header-5;
+    color: var(--surface-text);
+    text-decoration: none;
+  }
+  a#{&}__panel-heading:hover,
+  a#{&}__panel-heading:focus-visible { color: var(--accent); }
+
+  // Compact-panel intro (1694:120582): eyebrow label over the serif description.
+  &__panel-head {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  // Compact-panel label matches the full-panel column headings — same size and
+  // colour as the About/Topics titles (BugHerd #199; was a 16px red eyebrow).
+  &__panel-label {
+    @include header-5;
+    color: var(--surface-text);
+  }
+
+  // The compact eyebrow links to the router page (replaces the removed Learn
+  // More — BugHerd #11).
+  a#{&}__panel-label {
+    text-decoration: none;
+    @include transition(color);
+
+    &:hover,
+    &:focus-visible { color: var(--accent); }
+  }
+
+  &__panel-desc {
+    @include paragraph-2;
+    margin: 0;
+  }
+
+  &__panel-links {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+
+    a {
+      @include header-7;
+      display: block;
+      padding: var(--space-8) var(--space-16);
+      margin-inline-start: calc(var(--space-16) * -1);
+      color: var(--surface-text);
+      text-decoration: none;
+      @include transition(color, background-color);
+
+      &:hover,
+      &:focus-visible {
+        background: var(--surface-text);
+        color: var(--surface-bg, var(--color-brand-white));
+      }
+    }
+  }
+
+  // Compact panel: links keep the base header-7 style so single-column
+  // submenus hold the Topics size hierarchy (BugHerd #115 reopen). The
+  // full-width rule above the list is gone — no other dropdown draws one
+  // under its title (BugHerd #344, second pass).
+  &__panel--compact &__panel-links {
+    padding-block: var(--space-24) 0; // bottom space comes from the panel (#295)
+    gap: var(--space-12);
+  }
+
+  // Dropdown bottom link (menus.Menu.bottom_link, BugHerd #539): a row under
+  // the columns, left-aligned with column 1 (Juode's mock). DS tertiary,
+  // underlined at rest per the mock; --surface-red-text makes it red on light
+  // bars and white on dark/charcoal (DPH) ones.
+  &__panel-inner:has(+ .ds-header__panel-foot) { padding-bottom: var(--space-32); }
+  &__panel-foot { padding-bottom: var(--space-48); }
+  &__panel--compact &__panel-foot { padding: var(--space-8) 0 0; }
+
+  &__panel-cta.ds-button--tertiary {
+    border-bottom-color: currentColor;
+
+    &:hover,
+    &:focus-visible { color: var(--surface-text); } // red -> black on light
+
+    // The #376 ring skips .ds-button; give this panel link the same ring as
+    // its neighbours instead of the UA blue one (#539 audit).
+    &:focus-visible {
+      outline: 2px solid var(--surface-text, var(--color-text-black-white));
+      outline-offset: 2px;
+    }
+  }
+  &.ds-surface--dark &__panel-cta:hover,
+  &.ds-surface--dark &__panel-cta:focus-visible,
+  &.ds-surface--charcoal &__panel-cta:hover,
+  &.ds-surface--charcoal &__panel-cta:focus-visible { color: var(--accent-ui); } // white -> red / DPH green
+
+  // --- Mobile burger + drawer -----------------------------------------------
+  &__burger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    border: 0;
+    background: transparent;
+    // Buttons don't inherit text colour (UA buttontext = black), so the
+    // currentColor bars rendered black on the dark header (BugHerd #52).
+    color: inherit;
+    cursor: pointer;
+  }
+
+  &__burger-bar {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background: currentColor;
+  }
+
+  &__drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    // Black overlay with white chrome (BugHerd #97) regardless of the bar's
+    // surface (resets currentColor for the shared logo/search partials inside).
+    background: var(--color-brand-black);
+    color: var(--color-brand-white);
+    overflow-y: auto;
+
+    &[hidden] { display: none; }
+  }
+
+  // Search rides its own full-width row above the logo (BugHerd #97); the
+  // underline reads as the brand red, like the closed mobile header.
+  &__drawer-search {
+    padding-block: var(--space-16) var(--space-8);
+
+    .ds-header__search {
+      width: 100%;
+      max-width: none;
+      border-bottom-color: var(--color-brand-red);
+    }
+
+    .ds-header__search-input::placeholder { text-transform: uppercase; }
+  }
+
+  &__drawer-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-16);
+    padding-block: var(--space-24);
+    border-bottom: 1px solid var(--color-brand-grey);
+
+    .ds-header__logo { flex: 0 0 auto; }
+    .ds-header__logo svg,
+    .ds-header__logo img { width: 72px; }
+    // The drawer's anniversary acronym sizes by width like the old mark did —
+    // the height rule above would letterbox it against the 72px cap (#246).
+    .ds-header__logo-mark svg { width: 72px; height: auto; }
+  }
+
+  &__drawer-close {
+    flex: 0 0 auto;
+    display: inline-flex;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-brand-white);
+    cursor: pointer;
+
+    svg { width: 28px; height: 28px; }
+  }
+
+  &__drawer-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+    padding-bottom: var(--space-48);
+
+    // Outlined newsletter button on the black overlay (BugHerd #97): white
+    // label + border on transparent, inverting to the white fill on press.
+    .ds-header__newsletter {
+      align-self: flex-start;
+      background: transparent;
+      color: var(--color-brand-white);
+      border-color: var(--color-brand-white);
+
+      &:hover,
+      &:focus-visible {
+        background: var(--color-brand-white);
+        color: var(--color-brand-black);
+      }
+    }
+  }
+
+  &__m-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    // First hairline comes from the drawer-top's bottom border.
+    > li + li { border-top: 1px solid var(--color-brand-grey); }
+  }
+
+  &__m-item--link,
+  &__m-summary {
+    @include header-6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-16);
+    padding-block: var(--space-16);
+    color: var(--color-brand-white); // white uppercase links on the black overlay (#97)
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    list-style: none;
+
+    &::-webkit-details-marker { display: none; }
+  }
+
+  &__m-chevron {
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+    @include transition(transform);
+    // Vertical rotation (QA regroup, ticket #100): down when collapsed,
+    // up when expanded — never sideways.
+    transform: rotate(90deg);
+
+    .ds-header__m-item[open] & { transform: rotate(-90deg); }
+  }
+
+  &__m-sub {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    // Roomier list (QA regroup, ticket #100): Kay flagged the links and topic
+    // groups as too tight at --space-8.
+    gap: var(--space-12);
+    padding-block: 0 var(--space-24);
+    padding-inline-start: var(--space-16);
+  }
+
+  &__m-group {
+    @include header-7;
+    margin-top: var(--space-16); // more air above each topic group (ticket #100)
+    color: var(--color-brand-white);
+    text-decoration: none;
+  }
+
+  &__m-link {
+    @include header-7b;
+    color: var(--color-brand-dark-grey); // secondary links on the black overlay (#97)
+    text-decoration: none;
+
+    // Programs sit indented under their theme group (QA regroup, ticket #100).
+    &--nested { padding-inline-start: var(--space-16); }
+  }
+
+  // The dropdown's bottom link closes its drawer section (BugHerd #539):
+  // white uppercase underlined text + chevron on the black overlay.
+  &__m-cta {
+    @include button-small;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
+    margin-top: var(--space-16);
+    border-bottom: 2px solid currentColor;
+    color: var(--color-brand-white);
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible { color: var(--accent-ui); }
+  }
+
+  &__m-cta-icon { width: 1em; height: 1em; flex-shrink: 0; fill: currentColor; }
+
+  // --- Colour/dark surfaces: search underline reads as the accent (red), not white ---
+  &.ds-surface--dark &__search,
+  &.ds-surface--green &__search { border-bottom-color: var(--accent); }
+
+  // --- Collapsible utility search --------------------------------------------
+  // Guide (Primary Navigation — search): rests as the icon alone; icon click
+  // expands the field (width 0 → 240px, ease-out) and focuses it. header.js
+  // adds `--collapsible` at init (no-JS keeps the always-open field) and
+  // toggles `is-open`. The drawer search is untouched.
+  &__utility &__search--collapsible {
+    width: auto;
+    max-width: none;
+    @include transition(border-bottom-color var(--motion-duration-hover) var(--motion-ease-out));
+
+    .ds-header__search-input {
+      flex: 0 0 auto;
+      width: 0;
+      padding-inline: 0;
+      opacity: 0;
+      @include transition(
+        width var(--motion-duration-hover) var(--motion-ease-out),
+        opacity var(--motion-duration-hover) var(--motion-ease-out)
+      );
+    }
+
+    &.is-open .ds-header__search-input {
+      width: min(240px, 34vw); // guide: expands to 240px
+      opacity: 1;
+    }
+  }
+
+  &__utility &__search--collapsible:not(.is-open) { border-bottom-color: transparent; }
+
+  // --- Responsive: collapse to burger --------------------------------------
+  // At 1254px and below the desktop nav starts stacking, so switch to the burger here
+  // rather than at 1024 (BugHerd #53). Keep the JS desktop query in sync
+  // (header.js).
+  @media (max-width: 1254px) {
+    &__nav { display: none; }
+    &__bar { align-items: center; }
+    &__burger { display: inline-flex; }
+
+    // Closed mobile header keeps a full-width search row ABOVE the brand/burger
+    // bar (BugHerd #97): red underline, uppercase placeholder; the newsletter
+    // button moves into the drawer.
+    &__utility {
+      padding-block: var(--space-12) 0;
+    }
+
+    &__utility-divider,
+    &__utility .ds-header__newsletter { display: none; }
+
+    // Always-open field on mobile (t97b): neutralise the JS-added collapsible
+    // state — the input stays visible and the underline stays red.
+    &__utility .ds-header__search,
+    &__utility .ds-header__search--collapsible,
+    &__utility .ds-header__search--collapsible:not(.is-open) {
+      width: 100%;
+      max-width: none;
+      border-bottom-color: var(--color-brand-red);
+    }
+
+    &__utility .ds-header__search--collapsible .ds-header__search-input {
+      flex: 1 1 auto;
+      width: auto;
+      opacity: 1;
+    }
+
+    &__utility .ds-header__search-input::placeholder { text-transform: uppercase; }
+  }
+
+  // The drawer is mobile-only; never show it on desktop even if left open.
+  @media (min-width: 1255px) {
+    &__drawer { display: none; }
+  }
+}
+
+body.ds-no-scroll { overflow: hidden; }
+
+@keyframes ds-header-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,34 @@
+{% load wagtailcore_tags cards %}
+{% comment %}
+  News Grid ("In the News") — dynamic module. Section title (heading left + intro
+  right) over a 2-up grid of media-compact cards, divided by column + row rules.
+  The redesigned News Carousel (now a grid). Auto = recent "CIGI in the News" /
+  manual. Surface-aware (light default). The "Explore" grid.
+{% endcomment %}
+{# An empty module renders nothing (BugHerd #297). #}
+{% if cards %}
+<div class="ds-surface ds-surface--{{ self.surface }} ds-surface--accent-{{ self.accent }}">
+  <div class="ds-news-grid ds-container">
+    {% comment %}
+      Default proportions, NOT lead_narrow: the heading grows and the intro caps
+      at 410 on the right, per the design (BugHerd #165). lead_narrow inverts
+      that and stretched the intro to 685.
+    {% endcomment %}
+    {% include "includes/section_header.html" with heading=self.heading heading_level=2 intro=self.intro %}
+    {% if self.buttons %}
+      {# Author-set button row (BugHerd #164). #}
+      <div class="ds-news-grid__buttons">
+        {% for button in self.buttons %}{% include_block button %}{% endfor %}
+      </div>
+    {% endif %}
+
+    {% if cards %}
+      <div class="ds-news-grid__grid" data-ds-reveal data-ds-reveal-stagger="80">
+        {% for item in cards %}
+          <div class="ds-news-grid__cell" data-ds-reveal-item>{% card item variant="media-compact" %}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}

@@ -1,36 +1,42 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags webpack_loader %}
-
-{% block extra_css %}
-  {% render_bundle 'personListExpertsPage' 'css' %}
-{% endblock %}
-{% block extra_js %}
-  {% render_bundle 'personListExpertsPage' 'js' attrs='defer' %}
-{% endblock %}
+{% load cards heroes wagtailcore_tags %}
+{% comment %}
+  Experts landing (PersonListPage, EXPERTS type) — author-composed page. The
+  directory renders as an authored faceted-listing block (card type: Expert),
+  not page chrome; the block handler mirrors the retired page-level router
+  (search · type · topic — core.faceted_listing._expert_handler).
+  RouterServeMixin serves the block's AJAX partial swaps. Hero: image alt-hero
+  when authored, else the in-page section header.
+{% endcomment %}
 
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-  {% include "includes/body.html" with body=self.body %}
-  <section class="experts-page-featured-experts">
-    <div class="container">
-      <h2>Featured</h2>
-      <div class="row featured-expert-row">
-        {% for expert in self.featured_experts_random %}
-          <div class="col-md-4 featured-expert-col">
-            {% include "includes/features/feature_expert_short.html" with expert=expert %}
-          </div>
-        {% endfor %}
-      </div>
-    </div>
-  </section>
-  <section>
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <div id="experts-search-table" data-revision-date={{ self.latest_revision_created_at|date:"U" }}>
+{% if self.image_hero and not self.body|starts_with_hero %}
+  {% include "includes/alt_hero.html" with image=self.image_hero heading=self.title heading_tag="h1" crumbs=hero_crumbs description=self.subtitle %}
+{% endif %}
+{% comment %}
+  Surface inherits the page setting (base.html puts it on <main>) so the
+  Dark option reaches the page and the header together — BugHerd #136.
+{% endcomment %}
+<div class="ds-surface ds-surface--inherit ds-surface--accent-red">
+  {% if not self.image_hero and not self.body|starts_with_hero %}
+    {# No authored hero — the DS listing hero (breadcrumb · title · subtitle). #}
+    {% page_hero self %}
+  {% endif %}
+
+  {% for section in self.body|body_sections %}
+    {% if section.kind == 'module' %}
+      {% include_block section.block %}
+    {% else %}
+      <div class="ds-surface ds-surface--light">
+        <div class="ds-reading ds-reading--section ds-container">
+          <div class="ds-reading__main">
+            <div class="ds-prose">
+              {% for block in section.blocks %}{% include_block block %}{% endfor %}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-{% endblock %}
+    {% endif %}
+  {% endfor %}
+</div>
+{% endblock content %}

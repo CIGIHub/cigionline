@@ -1,0 +1,44 @@
+{% comment %}
+  Date calendar facet (1253:39873) for the faceted-listing block. Today link +
+  Month/Year selects + a JS-built month calendar (day cells cloned from the
+  template below); the hidden day input carries the selection. Field names take
+  the listing's `router_prefix`; router-calendar.js binds via the data hooks.
+  No-JS: the selects still filter. Expects `facet` (kind == 'calendar').
+{% endcomment %}
+<details class="ds-router__facet ds-router__facet--date"{% if facet.open %} open{% endif %}>
+  <summary class="ds-router__facet-label ds-router__facet-label--date">
+    <span class="ds-router__date-title">{{ facet.label }}</span>
+    <button type="button" class="ds-router__today" data-router-today>Today</button>
+  </summary>
+  <div class="ds-router__date" data-router-calendar>
+    <div class="ds-router__date-selects">
+      <select name="{{ router_prefix }}-month" aria-label="Month" data-router-month>
+        <option value="">Month</option>
+        <option value="1"{% if facet.selected_month == "1" %} selected{% endif %}>January</option>
+        <option value="2"{% if facet.selected_month == "2" %} selected{% endif %}>February</option>
+        <option value="3"{% if facet.selected_month == "3" %} selected{% endif %}>March</option>
+        <option value="4"{% if facet.selected_month == "4" %} selected{% endif %}>April</option>
+        <option value="5"{% if facet.selected_month == "5" %} selected{% endif %}>May</option>
+        <option value="6"{% if facet.selected_month == "6" %} selected{% endif %}>June</option>
+        <option value="7"{% if facet.selected_month == "7" %} selected{% endif %}>July</option>
+        <option value="8"{% if facet.selected_month == "8" %} selected{% endif %}>August</option>
+        <option value="9"{% if facet.selected_month == "9" %} selected{% endif %}>September</option>
+        <option value="10"{% if facet.selected_month == "10" %} selected{% endif %}>October</option>
+        <option value="11"{% if facet.selected_month == "11" %} selected{% endif %}>November</option>
+        <option value="12"{% if facet.selected_month == "12" %} selected{% endif %}>December</option>
+      </select>
+      <select name="{{ router_prefix }}-year" class="ds-router__year-select" aria-label="Year" data-router-year>
+        <option value="">Year</option>
+        {% for y in facet.years %}<option value="{{ y }}"{% if y|stringformat:'s' == facet.selected_year %} selected{% endif %}>{{ y }}</option>{% endfor %}
+      </select>
+    </div>
+    <input type="hidden" name="{{ router_prefix }}-day" value="{{ facet.selected_day }}" data-router-day-input>
+    <div class="ds-router__cal-head" aria-hidden="true">
+      <span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
+    </div>
+    <div class="ds-router__cal-grid" data-router-calendar-grid></div>
+    <template data-router-day-template>
+      <button type="button" class="ds-router__cal-day" data-router-day></button>
+    </template>
+  </div>
+</details>

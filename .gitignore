@@ -95,4 +95,9 @@ cigionline/static/bundles/*
 # Postgres
 *.dump
 
-true/
+# block-polish audit reports (local, not committed)
+docs/redesign/.polish-reports/
+
+# Internal redesign build docs stay local; README.md is the tracked architecture doc.
+docs/redesign/*
+!docs/redesign/README.md

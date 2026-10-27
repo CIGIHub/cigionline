@@ -1,0 +1,56 @@
+// =============================================================================
+// Design System — Breadcrumbs
+// Shared breadcrumb trail used by the hero modules. Text inherits the host's
+// colour (currentColor); the ">" separator is always brand red.
+// =============================================================================
+
+.ds-breadcrumbs {
+  &__list {
+    @include header-6; // 18px Futura Demi
+    text-transform: uppercase;
+    color: inherit;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-8);
+  }
+
+  &__item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
+  }
+
+  // Long crumbs (theme/program titles on article + publication trails) cap
+  // with an ellipsis instead of wrapping the hero (BugHerd #343, Tia). The
+  // cap tracks the viewport so mobile trails stay one short line; the full
+  // label remains in the accessible name and the link title.
+  &__crumb {
+    color: inherit;
+    display: inline-block;
+    max-width: min(38ch, 42vw);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
+  }
+
+  a.ds-breadcrumbs__crumb {
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible { text-decoration: underline; }
+
+    // DPH crumbs hover green (BugHerd #379). Scoped to the green accent —
+    // the DPH-only signal — so other sections keep the plain underline.
+    .ds-surface--accent-green &:hover,
+    .ds-surface--accent-green &:focus-visible { color: var(--accent-ui); }
+  }
+
+  // The separator takes the interactive accent, not the section accent: it stays
+  // red on a theme/topic page and goes green on the DPH hub (BugHerd #242).
+  &__sep { color: var(--accent-ui); }
+}

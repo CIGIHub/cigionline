@@ -1,0 +1,40 @@
+{% load wagtailcore_tags icons %}
+{% comment %}
+  Jobs List — dynamic module. Section title (heading left + intro right) over a
+  list of job postings; each row = closing date + title, a description, and a
+  "View Opportunity" link, divided by rules. Jobs auto (open postings by closing
+  date) or manual. Surface-aware (light default).
+{% endcomment %}
+{# An empty module renders nothing (BugHerd #297). #}
+{% if jobs %}
+<div class="ds-surface ds-surface--{{ self.surface }} ds-surface--accent-{{ self.accent }}">
+  <div class="ds-jobs ds-container">
+    {% include "includes/section_header.html" with heading=self.heading heading_level=2 intro=self.intro lead_narrow=True %}
+    {% if self.buttons %}
+      {# Author-set button row (BugHerd #184). #}
+      <div class="ds-jobs-list__buttons">
+        {% for button in self.buttons %}{% include_block button %}{% endfor %}
+      </div>
+    {% endif %}
+
+    {% if jobs %}
+      <ul class="ds-jobs__list">
+        {% for job in jobs %}
+          <li class="ds-jobs__item">
+            <div class="ds-jobs__head">
+              {% if job.closing_date %}<p class="ds-jobs__closing">Closing Date: {{ job.closing_date|date:"F j, Y" }}</p>{% endif %}
+              <a class="ds-jobs__job-title" href="{% pageurl job %}">{{ job.title }}</a>
+            </div>
+            {% if job.short_description %}<div class="ds-jobs__desc">{{ job.short_description|richtext }}</div>{% endif %}
+            <a class="ds-jobs__cta" href="{% pageurl job %}">
+              {# Fixed row label — the block's cta_label field is gone (BugHerd #184). #}
+              View Opportunity
+              {% ds_icon 'chevron-right' css_class='ds-jobs__cta-icon' %}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</div>
+{% endif %}

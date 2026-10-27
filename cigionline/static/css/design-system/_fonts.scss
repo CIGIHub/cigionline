@@ -1,0 +1,16 @@
+// =============================================================================
+// Design System — Fonts
+//
+// Family vars live in _tokens.scss (--font-heading / --font-body).
+//
+// Loading strategy:
+//  - Source Serif 4 (body): open-source — loaded via a <link> in base.html
+//    (Google Fonts) or self-hosted. Fallback: Source Serif Pro / Georgia.
+//  - Futura PT (headings/buttons): Adobe Fonts (Typekit). The site's current
+//    kit (`two4qwo`) carries the OLD faces — a kit that includes Futura PT
+//    must be provisioned (licensing dependency). Until then it falls back to
+//    the stack in --font-heading.
+//
+// No @font-face here yet; if we self-host, add the @font-face rules in this
+// partial so font loading stays in one place.
+// =============================================================================

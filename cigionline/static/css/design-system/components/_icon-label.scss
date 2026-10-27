@@ -1,0 +1,17 @@
+// =============================================================================
+// Design System — Icon label
+// Generic icon + text on one line (event date/location rows, meta lines, the
+// inline calendar+date form). Layout only: the icon scales with the surrounding
+// font-size and inherits colour, so callers set the text style on the context.
+// =============================================================================
+
+.ds-icon-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  color: inherit;
+
+  &__icon {
+    flex-shrink: 0; // FA glyph scales with font-size automatically
+  }
+}

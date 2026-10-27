@@ -1,0 +1,21 @@
+{% load cards %}
+{% comment %}
+  DS podcast player (.ds-podcast-player). The Simplecast embed is a CROSS-ORIGIN
+  iframe — its internal UI can't be restyled from our CSS, only themed (the
+  `?dark` param) and sized. So this component themes the embed to its surface and
+  frames it with DS chrome + an optional "Listen on" platform row (the shared
+  share-buttons molecule). Pass `simplecast_url`, optional `dark` (bool, match a
+  dark surface), optional `platform_links` ([{platform, url}]).
+{% endcomment %}
+<div class="ds-podcast-player">
+  {% if simplecast_url %}
+    <iframe
+      class="ds-podcast-player__embed"
+      height="52" width="100%" frameborder="no" scrolling="no" seamless
+      src="{{ simplecast_url }}?dark={% if dark %}true{% else %}false{% endif %}"
+      title="Podcast episode player"></iframe>
+  {% endif %}
+  {% if platform_links %}
+    {% share_buttons platform_links heading="Listen on" %}
+  {% endif %}
+</div>

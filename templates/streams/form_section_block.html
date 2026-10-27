@@ -1,0 +1,36 @@
+{% load wagtailcore_tags icons %}
+{% comment %}
+  Venue Rental form section (Figma 1360:106549). Two columns: the aside carries
+  the ruled heading, serif description and authorable contact rows
+  (icon + text; email/phone auto-link); the fixed facility-rental inquiry form
+  fills the rest (fields in core.forms.FacilityRentalInquiryForm, multi-step
+  client-side). Gutter from .ds-container.
+{% endcomment %}
+{# Authorable band (BugHerd #163): Light default keeps the QA-approved white; the form chrome is surface-aware (_form.scss), so Dark/Charcoal render legibly. Older venue instances authored without the field fall back to light. #}
+<div class="ds-surface ds-surface--{{ self.surface|default:'light' }}">
+<div class="ds-form-section ds-container">
+  <div class="ds-form-section__aside">
+    {% if self.heading %}<h2 class="ds-form-section__heading">{{ self.heading }}</h2>{% endif %}
+    {% if self.intro %}<div class="ds-form-section__text">{{ self.intro|richtext }}</div>{% endif %}
+    {% if self.contacts %}
+      <div class="ds-form-section__contact">
+        {% if self.contact_heading %}<h3 class="ds-form-section__contact-heading">{{ self.contact_heading }}</h3>{% endif %}
+        {% for c in self.contacts %}
+          <p class="ds-form-section__contact-row">
+            {% ds_icon c.icon css_class='ds-form-section__contact-icon' %}
+            {% if c.icon == 'email' %}<a href="mailto:{{ c.text }}">{{ c.text }}</a>
+            {% elif c.icon == 'phone' %}<a href="tel:{{ c.text|cut:' ' }}">{{ c.text }}</a>
+            {% else %}<span>{{ c.text }}</span>{% endif %}
+          </p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  {# Shared by FormSectionBlock and GeneralInquiryBlock (#163): the block's #}
+  {# get_context picks the form and its POST target; everything else is common. #}
+  <div class="ds-form-section__body">
+    {% include "includes/venue_rental_form.html" with form=section_form form_action=section_form_action %}
+  </div>
+</div>
+</div>

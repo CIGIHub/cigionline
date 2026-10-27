@@ -3,6 +3,40 @@ import os
 from django.http import HttpResponse
 
 
+class EnsureCsrfCookieMiddleware:
+    """CSRF plumbing for DS forms on cached pages — scoped, not site-wide.
+
+    Previously this called get_token() on EVERY request, which stamps
+    Set-Cookie + Vary: Cookie onto every response and forfeits CDN full-page
+    caching. Now:
+
+    - The csrftoken cookie is minted on demand by /csrf/ (core.views
+      .csrf_token) — multistep-form.js fetches it when a cookie-less visitor
+      lands on a cached form page, then rewrites the baked-in token
+      (forms.md, "Caching interaction").
+    - The newsletter hand-off POSTs (footer + Subscribe band → /subscribe/
+      with prefill=1) carry subscriber PII in the body instead of GET params.
+      They are stateless prefill renders — not submissions — originating in
+      cached fragments that can't carry a valid token, so exactly those are
+      exempted here.
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        # Trailing slash is load-bearing: the slash-less legacy endpoints
+        # (/subscribe_dph, /subscribe_think7, /subscribe_digital_finance) are
+        # state-changing Mailchimp calls and must keep full CSRF.
+        if (
+            request.method == 'POST'
+            and request.path.startswith('/subscribe/')
+            and request.POST.get('prefill')
+        ):
+            request._dont_enforce_csrf_checks = True
+        return self.get_response(request)
+
+
 class BasicAuthMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response

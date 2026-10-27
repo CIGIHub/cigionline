@@ -1,0 +1,51 @@
+{% load events_form %}{% comment %}
+  DS form field (Event Form 1705:20569): one bound Django field on the ds-form
+  contract — label with required mark, help text, widget, errors. Branches on
+  the widget kind (events_form filters) so the registration builder's radio and
+  checkbox groups, single checkboxes, conditional toggles and file inputs all
+  render without widget classes; text-like widgets are styled by _form.scss's
+  element selectors. Help text sits between label and control, where the frame
+  places the consent copy. A conditional detail field ("Please specify") renders
+  hidden; registration-form.js reveals it when its trigger is chosen.
+  Params: field (bound field); in_row=True inside a ds-form__row (the row
+  carries data-ds-field, so the field does not).
+{% endcomment %}
+{% with details_for=field.field.widget.attrs.data_conditional_details_for %}
+<div class="ds-form__field{% if field.errors %} ds-form__field--error{% endif %}"{% if not in_row %} data-ds-field{% endif %}{% if details_for %} data-ds-conditional-details{% if not field.errors and not field.value %} hidden{% endif %}{% endif %}>
+{% endwith %}
+  {% if field|is_conditional_toggle %}
+    <span class="ds-form__label" id="{{ field.auto_id }}-label">{{ field.label }}{% if field.field.required %}<span class="ds-form__required">*</span>{% endif %}</span>
+    {% if field.help_text %}<p class="ds-form__help">{{ field.help_text|safe }}</p>{% endif %}
+    <label class="ds-form__checkbox" for="{{ field.id_for_label }}">
+      {{ field }}
+      <span class="ds-form__checkbox-text">{{ field.field.widget.attrs.data_conditional_checkbox_label|default:"Yes" }}</span>
+    </label>
+  {% elif field|is_single_checkbox %}
+    <label class="ds-form__checkbox" for="{{ field.id_for_label }}">
+      {{ field }}
+      <span class="ds-form__checkbox-text">{{ field.label }}{% if field.field.required %}<span class="ds-form__required">*</span>{% endif %}</span>
+    </label>
+    {% if field.help_text %}<p class="ds-form__help">{{ field.help_text|safe }}</p>{% endif %}
+  {% elif field|is_choice_group %}
+    {# auto_id, not id_for_label: RadioSelect's id_for_label is empty, which collapsed the id to "-label" and duplicated it across groups. #}
+    <span class="ds-form__label" id="{{ field.auto_id }}-label">{{ field.label }}{% if field.field.required %}<span class="ds-form__required">*</span>{% endif %}</span>
+    {% if field.help_text %}<p class="ds-form__help">{{ field.help_text|safe }}</p>{% endif %}
+    <ul class="ds-form__options" role="group" aria-labelledby="{{ field.auto_id }}-label">
+      {% for sub in field %}
+        <li><label class="ds-form__option" for="{{ sub.id_for_label }}">{{ sub.tag }}<span>{{ sub.choice_label }}</span></label></li>
+      {% endfor %}
+    </ul>
+  {% elif field|is_file %}
+    <label class="ds-form__label" for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span class="ds-form__required">*</span>{% endif %}</label>
+    {% if field.help_text %}<p class="ds-form__help">{{ field.help_text|safe }}</p>{% endif %}
+    <div class="ds-form__file">
+      {{ field }}
+      <span class="ds-form__file-meta" data-ds-file-meta aria-live="polite"></span>
+    </div>
+  {% else %}
+    <label class="ds-form__label" for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span class="ds-form__required">*</span>{% endif %}</label>
+    {% if field.help_text %}<p class="ds-form__help">{{ field.help_text|safe }}</p>{% endif %}
+    {{ field }}
+  {% endif %}
+  {% for error in field.errors %}<p class="ds-form__error">{{ error }}</p>{% endfor %}
+</div>

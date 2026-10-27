@@ -1,0 +1,55 @@
+// =============================================================================
+// Design System — Banner block
+// Slim full-bleed announcement bar on a .ds-surface. Accent top rule, heading +
+// description on the left, button(s) on the right. Colours from surface tokens.
+// =============================================================================
+
+.ds-banner {
+  // Top rule uses the section accent (toggled by --ruled).
+  &--ruled {
+    border-top: var(--border-rule-banner) solid var(--accent);
+  }
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-32);
+    padding-block: var(--space-48); // 1567-84123: 48px above/below the content row
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8); // heading → description, per the frame
+    min-width: 0;
+  }
+
+  &__heading {
+    @include header-4; // 32px
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  &__description {
+    @include paragraph-2; // 16px
+    color: var(--surface-text);
+  }
+
+  &__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-24);
+    flex-shrink: 0;
+  }
+
+  // --- Mobile: stack text then button ---------------------------------------
+  @media (max-width: 768px) {
+    &__inner {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-16);
+    }
+  }
+}

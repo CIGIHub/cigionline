@@ -1,0 +1,24 @@
+{% load icons %}
+{% comment %}
+  Shared carousel nav — circular prev / (pause) / next buttons (.ds-carousel-nav).
+  Consumed by every DS carousel (gallery, supporting materials, video).
+  Params:
+    prefix    — Swiper hook namespace for prev/next ('carousel' or 'gallery')
+    autoplay  — render the pause toggle, centred between prev/next
+  The pause button is wired + shown by gallery-init.js only when autoplay is
+  actually active; it's hidden under prefers-reduced-motion.
+{% endcomment %}
+<div class="ds-carousel-nav">
+  <button class="ds-slider-arrow ds-{{ prefix }}__prev" type="button" aria-label="Previous slide">
+    {% ds_icon 'chevron-left' css_class='ds-carousel-nav__icon' %}
+  </button>
+  {% if autoplay %}
+    <button class="ds-slider-arrow ds-carousel-nav__pause" type="button" data-ds-pause aria-pressed="false" aria-label="Pause automatic slideshow">
+      {% ds_icon 'pause' css_class='ds-carousel-nav__icon ds-carousel-nav__pause-icon' %}
+      {% ds_icon 'play' css_class='ds-carousel-nav__icon ds-carousel-nav__play-icon' %}
+    </button>
+  {% endif %}
+  <button class="ds-slider-arrow ds-{{ prefix }}__next" type="button" aria-label="Next slide">
+    {% ds_icon 'chevron-right' css_class='ds-carousel-nav__icon' %}
+  </button>
+</div>

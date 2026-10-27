@@ -1,40 +1,36 @@
 {% extends "base.html" %}
-{% load wagtailimages_tags webpack_loader %}
-{% block extra_css %}
-  {% render_bundle 'eventPage' 'css' %}
-{% endblock %}
-{% block extra_js %}
-  {% render_bundle 'eventPage' 'js' %}
-{% endblock %}
+{% load wagtailcore_tags heroes icons %}
+{% comment %}
+  Registration type chooser (register/). The event single's hero now links
+  each open type directly (Event Template 1705:20640), so this page is reached
+  only when an invite spans several types or a visitor lands on register/
+  itself. Same shell as the form page (Event Form 1705:20332): registration
+  hero + centred column; the types render as the hero's outline buttons.
+{% endcomment %}
 {% block title %}Register — {{ event.title }}{% endblock %}
+
 {% block content %}
-{% include "includes/heroes/hero_event.html" with topics=event.topics_sorted title=event.title date=event.publishing_date end_date=event.event_end event_type=event.get_event_type_display event_access=event.get_event_access_display authors=event.authors.all author_count=event.author_count registration_url=event.registration_url time_zone=event.time_zone time_zone_label=event.time_zone_label is_past=event.is_past %}
+{% page_hero event variant='registration' %}
 
-<section class="event-registration-type-select-section">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <a href="{{ event.url }}" class="btn mb-3"><i class="far fa-arrow-left"></i> Back to event</a>
-        <div class="registration-banner-image">
-          {% if event.registration_image_banner %}
-            {% image event.registration_image_banner width-1280 %}
-          {% endif %}
-        </div>
-        <p class="mb-4">Choose your registration type:</p>
-
-        <ul class="types-list">
-          {% for t in types %}
-          <li>
-            <a href="{{ event.url }}register/type/{{ t.slug }}/{% if invite %}?invite={{ invite.token }}{% endif %}">
-              <button class="button-action event-registration-button">
-                {{ t.name }}
-              </button>
-            </a>
-          </li>
-          {% endfor %}
-        </ul>
+<div class="ds-surface ds-surface--light">
+  <div class="ds-container ds-registration">
+    <div class="ds-registration__main">
+      <h2 class="ds-registration__heading">Choose your registration type</h2>
+      <div class="ds-registration__types">
+        {% for t in types %}
+          <a class="ds-button ds-button--outline" href="{% pageurl event %}register/type/{{ t.slug }}/{% if invite %}?invite={{ invite.token }}{% endif %}">
+            <span class="ds-button__label">{{ t.name }}</span>
+            {% ds_icon 'chevron-right' css_class='ds-button__icon' %}
+          </a>
+        {% endfor %}
+      </div>
+      <div class="ds-registration__actions">
+        <a class="ds-button ds-button--tertiary" href="{% pageurl event %}">
+          {% ds_icon 'chevron-left' css_class='ds-button__icon' %}
+          <span class="ds-button__label">Back to event</span>
+        </a>
       </div>
     </div>
   </div>
-</section>
+</div>
 {% endblock %}

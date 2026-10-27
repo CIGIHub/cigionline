@@ -4,7 +4,6 @@ footer {
   }
   background-color: $policy-prompt-blue;
   padding: 2rem 0;
-  margin-top: 0;
 
   &.live-false {
     .footer-content {
@@ -52,7 +51,6 @@ footer {
       @include media-breakpoint-up(md) {
         margin-top: 0;
         max-width: 400px;
-        text-align: left;
       }
       margin-top: 2em;
 
@@ -94,33 +92,6 @@ footer {
       }
     }
 
-    .download-episode {
-      align-items: center;
-      border: 1px solid $white;
-      color: $white;
-      display: inline-flex;
-      font-family: $policy-prompt-font;
-      font-size: 0.6rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      line-height: 1;
-      margin-bottom: 1rem;
-      padding: 0.7rem 0.8rem;
-      text-transform: uppercase;
-      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-
-      i {
-        margin-right: 0.5rem;
-      }
-
-      &:hover {
-        background-color: $policy-prompt-green;
-        border-color: $policy-prompt-green;
-        color: $black;
-        text-decoration: none;
-      }
-    }
-
     .spacer {
       @include media-breakpoint-up(md) {
         display: block;
@@ -131,7 +102,7 @@ footer {
       .slash {
         @include slash($height: 50px, $color: $white);
         @include media-breakpoint-up(md) {
-          height: 175px;
+          height: 150px;
           margin: 0 1rem;
         }
         @include media-breakpoint-up(lg) {
@@ -152,7 +123,7 @@ footer {
 
       a {
         display: block;
-        margin-left: 1em;
+        margin-left: 2em;
         width: 25px;
 
         &:hover {
@@ -181,7 +152,6 @@ footer {
         letter-spacing: 0.1em;
         font-style: normal;
         margin: 0;
-        line-height: 1;
         text-transform: uppercase;
       }
     }

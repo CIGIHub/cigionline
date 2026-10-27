@@ -1,0 +1,78 @@
+// =============================================================================
+// Design System — Split Hero block
+// No background image: a text column (breadcrumb + title + body) beside an
+// optional image/logo column, divided by a vertical rule. Colours come from the
+// surface tokens (.ds-surface on the wrapper); microsite themes supply specifics.
+// =============================================================================
+
+.ds-split-hero {
+  // Grid, not flex (BugHerd #311): with flex-basis 0 the media column's 24px
+  // divider padding pre-allocated into its base size and skewed the ratio
+  // ~17px, so this divider missed the podcast hero's (which is grid, #378).
+  display: grid;
+  grid-template-columns: minmax(0, 842fr) minmax(0, 414fr);
+  gap: var(--space-24);
+  align-items: stretch; // so the divider runs full height
+  padding-block: var(--space-section-y);
+  color: var(--surface-text); // breadcrumbs/text inherit the surface colour
+
+  // --- Text column ----------------------------------------------------------
+  // Frame proportions (1360:113331 @ 1280 content width): text column 842,
+  // logo column 390, 48 between them (24 flex gap + the media column's 24
+  // divider padding). Flex-grow weights carry the ratio at any width — the
+  // px are ratio constants only, never literal sizes.
+  &__text {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-32);
+    justify-content: center;
+
+    // Text measure: content runs 621 of the 842 column in the frame.
+    > * { max-width: calc(100% * 621 / 842); }
+  }
+
+  &__heading {
+    @include header-1; // 56px
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  &__description {
+    @include paragraph-1;
+    color: var(--surface-text);
+  }
+
+  // --- Image / logo column (with leading vertical divider) ------------------
+  &__media {
+    // Track = 24 divider padding + the frame's 390 logo column (see grid above).
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: var(--space-24);
+    border-left: var(--border-divider) solid var(--surface-border);
+  }
+
+  &__img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  // --- Mobile: stack, divider becomes a top rule ----------------------------
+  @media (max-width: 768px) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-32);
+
+    &__text > * { max-width: none; }
+
+    &__media {
+      padding-left: 0;
+      padding-top: var(--space-32);
+      border-left: 0;
+      border-top: var(--border-divider) solid var(--surface-border);
+      justify-content: flex-start;
+    }
+  }
+}

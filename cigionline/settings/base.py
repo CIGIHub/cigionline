@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     'search',
     'streams',
     'subscribe',
-    'mediavalet',
     'wagtailschedules',
     'signals',
     'uploads',
@@ -88,6 +87,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.humanize',
     'django.contrib.messages',
     'django.contrib.postgres',
     'django.contrib.sessions',
@@ -106,6 +106,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
+    'cigionline.middleware.EnsureCsrfCookieMiddleware',
     'cigionline.middleware.BasicAuthMiddleware',
 
     'wagtail_2fa.middleware.VerifyUserMiddleware',
@@ -191,18 +192,6 @@ WAGTAILEMBEDS_FINDERS = [
 ]
 
 WAGTAILIMAGES_IMAGE_MODEL = 'images.CigionlineImage'
-
-# MediaValet Asset Picker integration
-# Override MEDIAVALET_ASSET_PICKER_URL in environment-specific settings if needed.
-MEDIAVALET_ASSET_PICKER_URL = 'https://assetpicker.mediavalet.com'
-MEDIAVALET_ASSET_PICKER_APP_ID = os.environ.get('MEDIAVALET_ASSET_PICKER_APP_ID', '')
-# Restrict image downloads to these hostnames (SSRF protection).
-MEDIAVALET_ALLOWED_HOSTNAMES = [
-    'mediavalet.com',
-    '.mediavalet.com',
-    'mediavaletcdn.com',
-    '.mediavaletcdn.com',
-]
 
 
 # Database
@@ -344,9 +333,5 @@ if 'SENDGRID_API_KEY' in os.environ:
     SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
 if 'PUBLISHING_NOTIFICATION_FROM_EMAIL' in os.environ:
     PUBLISHING_NOTIFICATION_FROM_EMAIL = os.environ['PUBLISHING_NOTIFICATION_FROM_EMAIL']
-if 'CLOUDFLARE_TURNSTILE_SITE_KEY' in os.environ:
-    CLOUDFLARE_TURNSTILE_SITE_KEY = os.environ['CLOUDFLARE_TURNSTILE_SITE_KEY']
-if 'CLOUDFLARE_TURNSTILE_SECRET_KEY' in os.environ:
-    CLOUDFLARE_TURNSTILE_SECRET_KEY = os.environ['CLOUDFLARE_TURNSTILE_SECRET_KEY']
 
 WAGTAILDOCS_EXTENSIONS = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'rtf']

@@ -1,0 +1,14 @@
+{% comment %}
+  CPT hero dispatcher. Renders the right hero layout for `hero` (core.heroes
+  presenters): content (article/opinion/news/publication/event), expert, podcast.
+  STAGED — not yet wired into live page templates.
+{% endcomment %}
+{% if hero.layout == "expert" %}
+  {% include "includes/heroes/expert_hero.html" %}
+{% elif hero.layout == "podcast" %}
+  {% include "includes/heroes/podcast_hero.html" %}
+{% elif hero.layout == "series" %}
+  {% include "includes/heroes/series_hero.html" %}
+{% else %}
+  {% include "includes/heroes/content_hero.html" %}
+{% endif %}

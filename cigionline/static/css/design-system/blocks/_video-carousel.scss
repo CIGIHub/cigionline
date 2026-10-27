@@ -1,0 +1,83 @@
+// =============================================================================
+// Design System — Video Carousel
+// Section title over a 3-up card carousel of click-to-load video facades.
+// Each card: facade (poster + play) + topic tag (accent dot + label) + title +
+// description. Carousel shell/nav/pagination + video facade are shared.
+// =============================================================================
+
+.ds-video-carousel {
+  padding-block: 112px; // section padding (off-scale, deliberate)
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-48);
+
+  // --- Section title (heading left + top-rule, intro right) -----------------
+  &__title {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-24);
+    align-items: flex-start;
+  }
+
+  &__heading {
+    @include header-3;
+    color: var(--color-text-black-white);
+    flex: 1 1 0;
+    min-width: 0;
+    margin: 0;
+    padding-top: var(--space-24);
+    border-top: var(--border-rule) solid var(--color-border-black-white);
+  }
+
+  &__intro {
+    @include paragraph-1;
+    color: var(--color-text-black-white);
+    flex: 2 1 0;
+    min-width: 0;
+    padding-top: var(--space-24);
+  }
+
+  @media (max-width: 768px) {
+    &__title { flex-direction: column; }
+  }
+
+  // --- Card -----------------------------------------------------------------
+  // Compound with .swiper-slide so display:flex out-specifies Swiper's
+  // `.swiper-slide{display:block}` (its CSS loads after, equal specificity).
+  &__card.swiper-slide {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+    height: auto;
+  }
+
+  // Portrait facade in the carousel (overrides .ds-video's 16:9 default).
+  &__video.ds-video {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+  }
+
+  // Non-uniform rhythm 24px tag→title, 8px title→desc. Base gap is 8;
+  // the tag carries the extra 16 (heading margins are reset under .body prose, so
+  // we can't margin the title directly).
+  &__body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-8); // title → desc
+  }
+
+  // Topic tag uses the shared .ds-tag component (includes/tag.html).
+  .ds-tag { margin-bottom: var(--space-16); } // → 8 + 16 = 24 tag → title
+
+  &__card-title {
+    @include header-5;
+    color: var(--color-text-black-white);
+    margin: 0;
+  }
+
+  &__card-desc {
+    @include paragraph-2;
+    color: var(--color-text-black-white);
+  }
+}

@@ -1,0 +1,103 @@
+// =============================================================================
+// Design System — Module title (shared dynamic-module header)
+// One source for the heading + intro + CTA header reused across the dynamic
+// modules (carousels / grids / bento). Rendered via includes/module_title.html.
+// Surface-aware; all spacing/colour from tokens.
+// =============================================================================
+.ds-module-title {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-24);
+  align-items: flex-start;
+  margin-bottom: var(--space-80);
+
+  &__heading {
+    @include header-3;
+    color: var(--surface-text);
+    flex: 0 1 var(--width-410);
+    min-width: 0;
+    margin: 0;
+  }
+
+  // The 5px top-rule motif lives on an inner span so it hugs the title text
+  // rather than spanning the whole heading column (BugHerd #72; matches the
+  // section-header's fit-content rule).
+  &__heading-text {
+    display: inline-block;
+    padding-top: var(--space-16);
+    border-top: var(--border-rule) solid var(--surface-rule);
+  }
+
+  &__aside {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-32);
+  }
+
+  &__intro {
+    @include paragraph-1;
+    color: var(--surface-text);
+
+    // The richtext paragraph's own bottom margin stacked onto the aside gap,
+    // pushing the CTA past the 32px spec (BugHerd #30 comment). Flushed
+    // whatever follows now, for one rule across every module (BugHerd #175).
+    @include flush-last-paragraph;
+  }
+
+  &__cta { align-self: flex-start; }
+
+  // Lead-wide variant — heading is the wide column, intro/CTA the narrow fixed
+  // column (reversed band, e.g. Resource Bento).
+  &--lead-wide {
+    .ds-module-title__heading { flex: 1 1 0; }
+    .ds-module-title__heading-text { padding-top: var(--space-24); }
+    .ds-module-title__aside {
+      flex: 0 1 var(--width-410);
+      padding-top: var(--space-24); // baseline-align with the heading rule
+    }
+  }
+
+  // Stacked variant — the carousel intro cell (first slide): column layout, a
+  // short ~80px heading rule instead of the full-width top-rule.
+  &--stacked {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: var(--space-24);
+    margin-bottom: 0;
+
+    // The rule hugs the heading text here too — the base text-hugging span
+    // (BugHerd #72) replaces the old fixed 80px short rule (BugHerd #104).
+    .ds-module-title__heading { flex: 0 0 auto; }
+
+    // 32 to the button, as every other module title (BugHerd #175 — the gap
+    // is 32 on every heading/description/button stack). Only the heading-to-
+    // description gap above stays at this variant's tighter 24.
+    .ds-module-title__aside { gap: var(--space-32); }
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    margin-bottom: var(--space-48);
+
+    // Once the header stacks, the row-direction flex-basis values (widths) become
+    // MAIN-AXIS heights — the lead-wide aside's 410px basis left ~313px of empty
+    // space below the CTA (BugHerd #58). Reset to content height.
+    //
+    // The variant selectors (.ds-module-title--lead-wide .ds-module-title__aside)
+    // are 0,2,0 and a media query adds NO specificity, so the bare &__aside reset
+    // below (0,1,0) loses to them — the variants must be reset by name.
+    &--lead-wide &__heading,
+    &--lead-wide &__aside,
+    &--stacked &__heading,
+    &--stacked &__aside,
+    &__heading,
+    &__aside { flex: 0 0 auto; }
+
+    // lead-wide pads the aside only to baseline-align it with the heading's
+    // top-rule in ROW layout; stacked it's just dead space above the intro.
+    &--lead-wide &__aside { padding-top: 0; }
+  }
+}

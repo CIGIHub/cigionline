@@ -1,0 +1,16 @@
+{% load cards wagtailcore_tags wagtailimages_tags %}{% comment %}
+  Image-led resource row — More From This Expert (1321:53357): 16:9 image ·
+  pill · title · excerpt · type-of-content. No byline (redundant on the
+  author's own page) and no date, per the frame.
+{% endcomment %}
+<article class="ds-card ds-card--resource-visual">
+  {% if item.image_hero %}
+    <div class="ds-card__media">{% image item.image_hero fill-740x416 %}</div>
+  {% endif %}
+  <div class="ds-card__body">
+    {% include "includes/card/_pills.html" with pills=item.topics.all|topic_pills:item %}
+    <a class="ds-card__title" href="{% pageurl item %}">{{ item|display_title }}</a>
+    {% with excerpt=item|card_excerpt %}{% if excerpt %}<p class="ds-card__excerpt">{{ excerpt }}</p>{% endif %}{% endwith %}
+    {% type_of_content item %}
+  </div>
+</article>

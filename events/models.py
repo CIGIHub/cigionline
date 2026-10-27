@@ -1,30 +1,23 @@
-from datetime import timedelta
-
 from .forms_admin import EventPageAdminForm
-from .panels import (
-    EmailCampaignPreviewPanel,
-    EmailCampaignTestSendPanel,
-    RegistrationFormFieldPanel,
-)
+from .panels import EmailCampaignPreviewPanel, EmailCampaignTestSendPanel
+from core.routers import RouterServeMixin
 from core.models import (
     BasicPageAbstract,
     ContentPage,
     FeatureablePageAbstract,
+    HeroContentTogglesAbstract,
     SearchablePageAbstract,
     ShareablePageAbstract,
     ThemeablePageAbstract
 )
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
-from django.core.exceptions import ValidationError
 from django.db import models, transaction
 from django.utils import timezone
 import logging
 from django.utils.translation import gettext_lazy as _
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect
-from django.utils.cache import add_never_cache_headers
-from mediavalet.panels import MediaValetImageChooserPanel
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 from streams.blocks import AbstractSubmissionBlock
@@ -70,6 +63,11 @@ def _split_tokens(s: str):
     return [x.strip().lower() for x in (s or "").split(",") if x.strip()]
 
 
+def _registration_type_open_filter(now=None):
+    now = now or timezone.now()
+    return models.Q(close_date__isnull=True) | models.Q(close_date__gt=now)
+
+
 def _match(rule: str, slugs: list[str], current_slug: str) -> bool:
     S = set(slugs)
     if rule == "all":
@@ -81,7 +79,8 @@ def _match(rule: str, slugs: list[str], current_slug: str) -> bool:
     return True
 
 
-class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
+class EventListPage(RouterServeMixin, BasicPageAbstract, SearchablePageAbstract,
+                    ThemeablePageAbstract, Page):
     max_count = 2
     parent_page_types = ['home.HomePage', 'home.Think7HomePage']
     subpage_types = ['events.EventPage']
@@ -107,6 +106,10 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
+        # Page-level light/dark choice (BugHerd #136): the KP runs the events
+        # landing on the dark surface, header included. The theme panel stays
+        # off — the legacy theme fork would bypass the DS template.
+        ThemeablePageAbstract.surface_panel,
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
@@ -127,7 +130,15 @@ class EventListPage(BasicPageAbstract, SearchablePageAbstract, Page):
         return [pages[x] for x in featured_event_ids]
 
     def get_context(self, request):
+        from core.heroes import _breadcrumb
+
         context = super().get_context(request)
+        context['hero_crumbs'] = _breadcrumb(self)
+        # featured_events feeds the Think 7 template only — the DS events page
+        # composes via body modules (BugHerd #135): the browse listing is an
+        # authored faceted-listing block (card type: Event); its filter logic
+        # lives in core.faceted_listing._event_handler and RouterServeMixin
+        # serves the AJAX partial swaps.
         if hasattr(context['request'], 'is_preview'):
             if context['request'].is_preview:
                 context['featured_events'] = self.get_featured_events_preview()
@@ -171,12 +182,25 @@ class EventListPageFeaturedEvent(Orderable):
 class EventPage(
     RoutablePageMixin,
     BasicPageAbstract,
+    HeroContentTogglesAbstract,
     ContentPage,
     FeatureablePageAbstract,
     ShareablePageAbstract,
     ThemeablePageAbstract,
 ):
     logger = logging.getLogger(__name__)
+
+    # Events default the hero banner OFF (override of HeroContentTogglesAbstract):
+    # only ~17% of live events have a hero-sized (≥1920w) image; most authored
+    # images are small posters that upscale badly. Authors flip it on per event
+    # when a suitable image is set.
+    show_hero_banner = models.BooleanField(
+        default=False,
+        verbose_name='Show image banner',
+        help_text='Off by default for events. Turn on when a suitably large '
+                  '(at least 1920px-wide) hero image is set.',
+    )
+
     class EventAccessOptions(models.IntegerChoices):
         PRIVATE = (0, 'Private')
         PUBLIC = (1, 'Public')
@@ -252,10 +276,6 @@ class EventPage(
         verbose_name='Event agenda',
     )
     event_access = models.IntegerField(choices=EventAccessOptions.choices, default=EventAccessOptions.PUBLIC, null=True, blank=True)
-    add_to_calendar = models.BooleanField(
-        default=True,
-        help_text='Show this event on the event list page calendar.',
-    )
     event_end = models.DateTimeField(blank=True, null=True)
     event_format = models.CharField(
         blank=True,
@@ -381,41 +401,6 @@ class EventPage(
     def location_map_url(self):
         return f'https://www.google.com/maps/search/?api=1&query={urllib.parse.quote(self.location_string())}'
 
-    @property
-    def calendar_feed_url(self):
-        return f'/events/feed.ics?id={self.id}'
-
-    @property
-    def calendar_end_time_utc(self):
-        if self.event_end:
-            return self.event_end_time_utc
-        return self.event_start_time_utc + timedelta(hours=1)
-
-    def _google_calendar_datetime(self, value):
-        return value.astimezone(pytz.utc).strftime('%Y%m%dT%H%M%SZ')
-
-    @property
-    def google_calendar_url(self):
-        event_url = self.full_url or self.url
-        params = {
-            'action': 'TEMPLATE',
-            'text': self.title,
-            'dates': (
-                f'{self._google_calendar_datetime(self.event_start_time_utc)}/'
-                f'{self._google_calendar_datetime(self.calendar_end_time_utc)}'
-            ),
-            'details': f'More Event Information: {event_url}',
-            'location': self.location_string(),
-            'trp': 'false',
-            'sprop': 'www.cigionline.org',
-            'pli': '1',
-            'sf': 'true',
-            'output': 'xml',
-        }
-        if self.time_zone:
-            params['ctz'] = self.time_zone
-        return f'https://www.google.com/calendar/render?{urllib.parse.urlencode(params)}'
-
     def event_format_string(self):
         return self.get_event_format_display()
 
@@ -505,8 +490,9 @@ class EventPage(
         context['event_format_string'] = self.get_event_format_display()
         context['location_map_url'] = self.location_map_url()
         context['invite'] = invite
-        context['registration_available'] = bool(self._open_registration_types(invite))
         return context
+
+    legacy_fork_template = 'event_page.html'
 
     def get_template(self, request, *args, **kwargs):
         standard_template = super(EventPage, self).get_template(request, *args, **kwargs)
@@ -514,15 +500,9 @@ class EventPage(
         if self.get_site().site_name == 'Think 7 Canada':
             return 'think7/event_page.html'
 
-        if self.theme:
-            return f'themes/{self.get_theme_dir()}/event_page.html'
-        return standard_template
-
-    def serve(self, request, *args, **kwargs):
-        response = super().serve(request, *args, **kwargs)
-        if self.registration_open:
-            add_never_cache_headers(response)
-        return response
+        # A themed event (Digital Finance) keeps its pre-redesign design
+        # (CIGI, sync 2026-09-21), like the themed articles and episodes.
+        return self.themed_template(self.legacy_fork_template, standard_template)
 
     @property
     def total_confirmed(self):
@@ -531,44 +511,6 @@ class EventPage(
     @property
     def register_url(self):
         return self.url + "register/"
-
-    def is_registration_type_open(self, registration_type, now=None) -> bool:
-        if not self.registration_open:
-            return False
-
-        deadline = registration_type.close_date
-        if deadline is None and self.event_end:
-            deadline = self.event_end_time_utc
-        return deadline is None or deadline > (now or timezone.now())
-
-    def _registration_types_for_invite(self, invite=None):
-        valid_invite = invite and invite.is_valid()
-        if self.is_private_registration:
-            if not valid_invite:
-                return self.registration_types.none()
-            types_qs = self.registration_types.all()
-        elif valid_invite:
-            types_qs = self.registration_types.all()
-        else:
-            types_qs = self.registration_types.filter(is_public=True)
-
-        if valid_invite:
-            allowed = set(_split_tokens(invite.allowed_type_slugs))
-            if allowed:
-                types_qs = types_qs.filter(slug__in=allowed)
-        return types_qs
-
-    def _open_registration_types(self, invite=None, now=None):
-        now = now or timezone.now()
-        return [
-            registration_type
-            for registration_type in self._registration_types_for_invite(invite).order_by("sort_order")
-            if self.is_registration_type_open(registration_type, now)
-        ]
-
-    @property
-    def public_registration_available(self) -> bool:
-        return bool(self._open_registration_types())
 
     @property
     def registration_report_url(self):
@@ -649,6 +591,34 @@ class EventPage(
             },
         )
 
+    def open_registration_types(self, invite=None):
+        """Registration types a visitor may register for right now.
+
+        The type chooser (``register/``) and the DS hero's per-type Register
+        buttons (core.heroes.event_hero_data; Event Template 1705:20640) share
+        this so the two never drift. Private events need a valid invite; a
+        valid invite narrows or expands the set to its allowed slugs even on
+        public events (non-public types stay reachable by invite); types past
+        their close date drop out. Order is the editor's sort order.
+        """
+        if not self.registration_open:
+            return []
+        invite_ok = bool(invite and invite.is_valid())
+        if self.is_private_registration:
+            if not invite_ok:
+                return []
+            types_qs = self.registration_types.all()
+        else:
+            types_qs = self.registration_types.filter(is_public=True)
+        if invite_ok:
+            types_qs = self.registration_types.all()
+            allowed = set(_split_tokens(invite.allowed_type_slugs))
+            if allowed:
+                types_qs = types_qs.filter(slug__in=allowed)
+        return list(
+            types_qs.filter(_registration_type_open_filter()).order_by("sort_order")
+        )
+
     # ---------- ROUTES ----------
 
     @route(r"^registration-report/$")
@@ -657,7 +627,7 @@ class EventPage(
         if gate_response:
             return gate_response
 
-        from .reporting import build_choice_summary_rows, build_type_rows
+        from .reporting import build_type_rows
 
         return self.render(
             request,
@@ -666,7 +636,6 @@ class EventPage(
                 "event": self,
                 "report_base_url": self._registration_report_base_url(request),
                 "type_rows": build_type_rows(self),
-                "choice_summary_rows": build_choice_summary_rows(self),
             },
         )
 
@@ -762,24 +731,20 @@ class EventPage(
 
         invite = self._get_invite_from_request(request)
 
-        if self.is_private_registration:
-            if not invite or not invite.is_valid():
-                return self.render(
-                    request,
-                    context_overrides={
-                        "registration_error": "Private registration. Please use your invite link."
-                    },
-                )
-        types_qs = self._registration_types_for_invite(invite)
-        types = self._open_registration_types(invite)
+        if self.is_private_registration and not (invite and invite.is_valid()):
+            return self.render(
+                request,
+                context_overrides={
+                    "registration_error": "Private registration. Please use your invite link."
+                },
+            )
+
+        types = self.open_registration_types(invite)
         if not types:
             return self.render(
                 request,
                 template="events/registration_no_types.html",
-                context_overrides={
-                    "event": self,
-                    "registration_closed": types_qs.exists(),
-                },
+                context_overrides={"event": self},
             )
 
         # If this is an invite flow and the invite restricts allowed types to a
@@ -824,7 +789,6 @@ class EventPage(
     def register_form(self, request, type_slug: str, *args, **kwargs):
         from django.conf import settings
         from django.db import transaction
-        from .forms import add_choice_limit_errors, validate_choice_limits
         from .utils import save_registrant_from_form
         from .models import Registrant
         from .emailing import (
@@ -834,7 +798,6 @@ class EventPage(
             send_group_duplicate_manage_email,
         )
         from .guest_registration import build_primary_and_guest_forms
-        from .utils import verify_turnstile_token
 
         if not self.registration_open:
             return self.render(
@@ -851,18 +814,25 @@ class EventPage(
             )
 
         invite = self._get_invite_from_request(request)
-        if not self._registration_types_for_invite(invite).filter(pk=reg_type.pk).exists():
+        if self.is_private_registration:
+            if not invite or not invite.is_valid():
+                return self.render(
+                    request,
+                    template="events/registration_no_types.html",
+                    context_overrides={"event": self},
+                )
+            if not invite.allows_type_slug(reg_type.slug):
+                return self.render(
+                    request,
+                    template="events/registration_no_types.html",
+                    context_overrides={"event": self},
+                )
+
+        if not reg_type.is_open_for_registration():
             return self.render(
                 request,
                 template="events/registration_no_types.html",
                 context_overrides={"event": self},
-            )
-
-        if not self.is_registration_type_open(reg_type):
-            return self.render(
-                request,
-                template="events/registration_no_types.html",
-                context_overrides={"event": self, "registration_closed": True},
             )
 
         # Primary form + optional guest formset (if enabled on the event)
@@ -876,12 +846,6 @@ class EventPage(
                 getattr(reg_type, "allow_group_registrations", False),
             )
             if request.POST.get("website"):
-                base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
-                return redirect(f"{base}register/result/?s=bot")
-
-            turnstile_token = request.POST.get("cf-turnstile-response", "")
-            if not verify_turnstile_token(turnstile_token, request.META.get("REMOTE_ADDR")):
-                self.logger.warning("Turnstile verification failed event_id=%s", self.pk)
                 base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
                 return redirect(f"{base}register/result/?s=bot")
 
@@ -1018,35 +982,6 @@ class EventPage(
                     # (confirm-until-full).
                     try:
                         with transaction.atomic():
-                            locked_event = EventPage.objects.select_for_update().get(pk=self.pk)
-                            locked_type = RegistrationType.objects.select_for_update().get(pk=reg_type.pk)
-                            if not locked_event.is_registration_type_open(locked_type):
-                                return self.render(
-                                    request,
-                                    template="events/registration_no_types.html",
-                                    context_overrides={"event": self, "registration_closed": True},
-                                )
-                            cleaned_forms = [form.cleaned_data] + [
-                                gf.cleaned_data for gf in guest_formset.forms if gf.cleaned_data
-                            ]
-                            quota_errors = validate_choice_limits(self, reg_type, cleaned_forms)
-                            if quota_errors:
-                                add_choice_limit_errors(form, quota_errors)
-                                for gf in guest_formset.forms:
-                                    add_choice_limit_errors(gf, quota_errors)
-                                return self.render(
-                                    request,
-                                    template="events/registration_form.html",
-                                    context_overrides={
-                                        "event": self,
-                                        "reg_type": reg_type,
-                                        "form": form,
-                                        "guest_formset": guest_formset,
-                                        "invite": invite,
-                                        "turnstile_site_key": getattr(settings, "CLOUDFLARE_TURNSTILE_SITE_KEY", ""),
-                                    },
-                                )
-
                             # Reserve invite usage *inside the same transaction* so
                             # nothing persists if the invite is maxed out.
                             if invite:
@@ -1096,12 +1031,18 @@ class EventPage(
                             )
 
                             base = self.get_url(request=request) or ("/" + self.url_path.lstrip("/"))
-                            # Prefer a fully-qualified URL in emails.
-                            if base and base.startswith("/"):
+                            # Prefer a fully-qualified URL in emails — but keep it
+                            # off `base`: the result redirect below reuses `base`,
+                            # and the absolute form sent a staging group registration
+                            # to the production host, which 500'd (Evan, BugHerd #239
+                            # QA). WAGTAILADMIN_BASE_URL is unset on staging, so the
+                            # settings default (cigionline.org) leaked into the redirect.
+                            email_base = base
+                            if email_base and email_base.startswith("/"):
                                 site_base = getattr(settings, "WAGTAILADMIN_BASE_URL", "").rstrip("/")
                                 if site_base:
-                                    base = f"{site_base}{base}"
-                            manage_url = f"{base}register/manage/group/?gid={group.pk}&t={raw_group_token}"
+                                    email_base = f"{site_base}{email_base}"
+                            manage_url = f"{email_base}register/manage/group/?gid={group.pk}&t={raw_group_token}"
 
                             created: list[Registrant] = []
                             # Double opt-in: new registrants start PENDING and only
@@ -1192,30 +1133,6 @@ class EventPage(
 
                 else:
                     with transaction.atomic():
-                        locked_event = EventPage.objects.select_for_update().get(pk=self.pk)
-                        locked_type = RegistrationType.objects.select_for_update().get(pk=reg_type.pk)
-                        if not locked_event.is_registration_type_open(locked_type):
-                            return self.render(
-                                request,
-                                template="events/registration_no_types.html",
-                                context_overrides={"event": self, "registration_closed": True},
-                            )
-                        quota_errors = validate_choice_limits(self, reg_type, [form.cleaned_data])
-                        if quota_errors:
-                            add_choice_limit_errors(form, quota_errors)
-                            return self.render(
-                                request,
-                                template="events/registration_form.html",
-                                context_overrides={
-                                    "event": self,
-                                    "reg_type": reg_type,
-                                    "form": form,
-                                    "guest_formset": (forms_obj.guest_formset if forms_obj else None),
-                                    "invite": invite,
-                                    "turnstile_site_key": getattr(settings, "CLOUDFLARE_TURNSTILE_SITE_KEY", ""),
-                                },
-                            )
-
                         # Reserve invite usage *inside the same transaction* so
                         # nothing persists if the invite is maxed out.
                         if invite:
@@ -1267,7 +1184,6 @@ class EventPage(
                         "form": form,
                         "guest_formset": (forms_obj.guest_formset if forms_obj else None),
                         "invite": invite,
-                        "turnstile_site_key": getattr(settings, "CLOUDFLARE_TURNSTILE_SITE_KEY", ""),
                     },
                 )
         else:
@@ -1283,7 +1199,6 @@ class EventPage(
                 "form": form,
                 "guest_formset": (forms_obj.guest_formset if forms_obj else None),
                 "invite": invite,
-                "turnstile_site_key": getattr(settings, "CLOUDFLARE_TURNSTILE_SITE_KEY", ""),
             },
         )
 
@@ -1295,7 +1210,7 @@ class EventPage(
             get_registrant_for_manage_link,
             get_registrant_for_group_manage_link,
         )
-        from .forms import build_dynamic_form, strip_non_answer_data
+        from .forms import build_dynamic_form
 
         token = request.GET.get("t", "")
         rid = request.GET.get("rid", "")
@@ -1313,13 +1228,7 @@ class EventPage(
             registrant = get_registrant_for_manage_link(registrant_id=_safe_int(rid), token=token, event_id=self.id)
 
         reg_type = registrant.registration_type
-        form_class = build_dynamic_form(
-            self,
-            reg_type,
-            registrant.invite,
-            require_email=False,
-            current_registrant=registrant,
-        )
+        form_class = build_dynamic_form(self, reg_type, registrant.invite, require_email=False)
 
         # Pre-fill initial values from stored answers + core fields.
         initial = {}
@@ -1392,7 +1301,7 @@ class EventPage(
             get_registrant_for_manage_link,
             get_registrant_for_group_manage_link,
         )
-        from .forms import add_choice_limit_errors, build_dynamic_form, strip_non_answer_data, validate_choice_limits
+        from .forms import build_dynamic_form
         from .utils import _jsonable, _try_mailchimp_optin
 
         if request.method != "POST":
@@ -1413,13 +1322,7 @@ class EventPage(
             registrant = get_registrant_for_manage_link(registrant_id=_safe_int(rid), token=token, event_id=self.id)
 
         reg_type = registrant.registration_type
-        form_class = build_dynamic_form(
-            self,
-            reg_type,
-            registrant.invite,
-            require_email=False,
-            current_registrant=registrant,
-        )
+        form_class = build_dynamic_form(self, reg_type, registrant.invite, require_email=False)
         form = form_class(request.POST, request.FILES or None)
 
         if not form.is_valid():
@@ -1448,33 +1351,10 @@ class EventPage(
         # We intentionally do NOT allow changing email via self-service.
         # Ignore posted value and also prevent storing it into answers.
         cleaned.pop("email", None)
-        strip_non_answer_data(self, cleaned)
 
-        with transaction.atomic():
-            EventPage.objects.select_for_update().get(pk=self.pk)
-            quota_errors = validate_choice_limits(
-                self,
-                reg_type,
-                [cleaned],
-                current_registrant=registrant,
-            )
-            if quota_errors:
-                add_choice_limit_errors(form, quota_errors)
-                return self.render(
-                    request,
-                    template="events/registration_manage.html",
-                    context_overrides={
-                        "event": self,
-                        "registrant": registrant,
-                        "reg_type": reg_type,
-                        "form": form,
-                        "token": token,
-                    },
-                )
-
-            # Persist answers (basic JSON-ability). File handling isn't supported in update yet.
-            registrant.answers = _jsonable(cleaned)
-            registrant.save(update_fields=["first_name", "last_name", "answers"])
+        # Persist answers (basic JSON-ability). File handling isn't supported in update yet.
+        registrant.answers = _jsonable(cleaned)
+        registrant.save(update_fields=["first_name", "last_name", "answers"])
 
         _try_mailchimp_optin(
             email=registrant.email,
@@ -1816,7 +1696,6 @@ class EventPage(
         FieldPanel('publishing_date', heading='Event start'),
         FieldPanel('event_end'),
         FieldPanel('time_zone'),
-        FieldPanel('add_to_calendar'),
         MultiFieldPanel(
             [
                 FieldPanel('event_format'),
@@ -1888,6 +1767,7 @@ class EventPage(
             heading='Submission Form',
             classname='collapsible collapsed',
         ),
+        HeroContentTogglesAbstract.hero_options_panel,
     ]
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
@@ -1904,7 +1784,7 @@ class EventPage(
                 [
                     FieldPanel('registration_open'),
                     FieldPanel('is_private_registration'),
-                    MediaValetImageChooserPanel('registration_image_banner'),
+                    FieldPanel('registration_image_banner'),
                     FieldPanel('mailchimp_tag'),
                 ],
                 heading='General Settings',
@@ -2077,12 +1957,11 @@ class EventRegistrationReportPage(RoutablePageMixin, Page):
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
 
-        from .reporting import build_choice_summary_rows, build_type_rows
+        from .reporting import build_type_rows
 
         event = self._get_event()
         context["event"] = event
         context["type_rows"] = build_type_rows(event)
-        context["choice_summary_rows"] = build_choice_summary_rows(event)
         context["report_base_url"] = self.url
         return context
 
@@ -2102,8 +1981,8 @@ class RegistrationType(Orderable):
         null=True,
         blank=True,
         help_text=(
-            "Overrides the event end as the deadline for this registration type. "
-            "Leave blank to close registration when the event ends."
+            "After this date and time, this registration type is hidden and no longer accepts "
+            "new registrations. Leave blank to keep it open while event registration is open."
         ),
     )
     custom_confirmation_text = RichTextField(blank=True)
@@ -2172,19 +2051,11 @@ class RegistrationType(Orderable):
         return f"{self.name}" + (f" (cap {self.capacity})" if self.capacity is not None else "")
 
     def is_open_for_registration(self, now=None) -> bool:
-        return self.event.is_registration_type_open(self, now)
+        now = now or timezone.now()
+        return self.close_date is None or self.close_date > now
 
 
 class RegistrationFormField(AbstractFormField):
-    CHOICE_LIMIT_FIELD_TYPES = {
-        "dropdown",
-        "radio",
-        "checkboxes",
-        "multiselect",
-        "conditional_dropdown_other",
-        "conditional_multiselect_other",
-    }
-
     FIELD_CHOICES = (
         ("singleline", _("Single line text")),
         ("multiline", _("Multi-line text")),
@@ -2204,7 +2075,6 @@ class RegistrationFormField(AbstractFormField):
         ("conditional_dropdown_other", _("Conditional dropdown (Other + textbox)")),
         ("conditional_multiselect_other", _("Conditional multiselect (Other + textbox)")),
         ("mailchimp_optin", _("Opt-in mailing list (Yes/No)")),
-        ("rich_text", _("Rich text block")),
     )
     field_key = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     template = ParentalKey(
@@ -2221,20 +2091,12 @@ class RegistrationFormField(AbstractFormField):
         null=True, blank=True,
         help_text="Max file size (MB). Leave blank for no limit."
     )
-    rich_text = RichTextField(blank=True)
-    choice_limits = models.TextField(
-        blank=True,
-        help_text='Optional per-choice limits, one per line: "Choice label | 10".',
-    )
 
     field_type = models.CharField(
         max_length=32,
         choices=FIELD_CHOICES,
         default="singleline",
     )
-
-    def __str__(self):
-        return self.label or "Untitled field"
 
     class Rule(models.TextChoices):
         ALL = "all", "All types"
@@ -2283,18 +2145,6 @@ class RegistrationFormField(AbstractFormField):
         default=True,
         help_text="Require textbox when 'Other' is selected.",
     )
-    conditional_parent = models.ForeignKey(
-        "self",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name="conditional_children",
-        help_text="Show this field only when the selected question has one of the values below.",
-    )
-    conditional_parent_values = models.TextField(
-        blank=True,
-        help_text="Trigger values, one per line. Example: Yes",
-    )
 
     exclude_from_guest_forms = models.BooleanField(
         default=False,
@@ -2304,50 +2154,7 @@ class RegistrationFormField(AbstractFormField):
         ),
     )
 
-    def clean(self):
-        super().clean()
-        if self.conditional_parent_id:
-            if self.conditional_parent_id == self.id:
-                raise ValidationError({"conditional_parent": "A field cannot depend on itself."})
-            if self.conditional_parent and self.conditional_parent.template_id != self.template_id:
-                raise ValidationError({"conditional_parent": "Choose a field from the same form template."})
-            if not self.conditional_parent_values.strip():
-                raise ValidationError({"conditional_parent_values": "Enter at least one trigger value."})
-
-        if not self.choice_limits.strip():
-            return
-
-        if self.field_type not in self.CHOICE_LIMIT_FIELD_TYPES:
-            raise ValidationError({"choice_limits": "Choice limits only apply to choice fields."})
-
-        valid_choices = {x.strip() for x in self.choices.splitlines() if x.strip()}
-        seen = set()
-        errors = []
-        for line in self.choice_limits.splitlines():
-            line = line.strip()
-            if not line:
-                continue
-            if "|" not in line:
-                errors.append(f'"{line}" must use "Choice label | limit".')
-                continue
-            label, limit = [part.strip() for part in line.split("|", 1)]
-            if label in seen:
-                errors.append(f'"{label}" has more than one limit.')
-            seen.add(label)
-            if label not in valid_choices:
-                errors.append(f'"{label}" is not one of this field\'s choices. the choices are: {", ".join(sorted(valid_choices))}')
-            try:
-                if int(limit) <= 0:
-                    raise ValueError
-            except ValueError:
-                errors.append(f'"{label}" limit must be a positive whole number.')
-
-        if errors:
-            raise ValidationError({"choice_limits": errors})
-
     panels = AbstractFormField.panels + [
-        FieldPanel("rich_text"),
-        FieldPanel("choice_limits"),
         FieldPanel("exclude_from_guest_forms"),
         MultiFieldPanel(
             [
@@ -2383,14 +2190,6 @@ class RegistrationFormField(AbstractFormField):
                 FieldPanel("conditional_other_required"),
             ],
             heading="Conditional 'Other' settings",
-            classname="collapsible collapsed",
-        ),
-        MultiFieldPanel(
-            [
-                FieldPanel("conditional_parent"),
-                FieldPanel("conditional_parent_values"),
-            ],
-            heading="Conditional visibility",
             classname="collapsible collapsed",
         )
     ]
@@ -2525,7 +2324,6 @@ class Registrant(models.Model):
 
     invite = models.ForeignKey(Invite, null=True, blank=True, on_delete=models.SET_NULL, related_name="registrants")
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
-    attended = models.BooleanField(default=False)
 
     # Self-service management token for a "manage your registration" link.
     # Stored hashed so leaked DB dumps don't expose usable tokens.
@@ -2822,7 +2620,7 @@ class EmailCampaignSend(models.Model):
 
 
 @register_snippet
-class RegistrationFormTemplate(PreviewableMixin, ClusterableModel):
+class RegistrationFormTemplate(ClusterableModel):
     title = models.CharField(max_length=120, unique=True)
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -2832,7 +2630,7 @@ class RegistrationFormTemplate(PreviewableMixin, ClusterableModel):
         FieldPanel("description"),
         MultiFieldPanel(
             [
-                RegistrationFormFieldPanel("fields", label="Fields"),
+                InlinePanel("fields", label="Fields"),
             ],
             heading="Form Fields",
             classname="js-registration-fields-inline"
@@ -2841,36 +2639,3 @@ class RegistrationFormTemplate(PreviewableMixin, ClusterableModel):
 
     def __str__(self):
         return self.title
-
-    preview_modes = [
-        ("form", "Form"),
-    ]
-
-    def serve_preview(self, request, mode_name):
-        from django.template.response import TemplateResponse
-        from types import SimpleNamespace
-        from .forms import build_dynamic_form
-
-        event = SimpleNamespace(
-            pk=None,
-            title=f"{self.title} Preview",
-            registration_form_template=self,
-        )
-        reg_type = SimpleNamespace(name="Preview", slug="preview")
-        form_class = build_dynamic_form(
-            event,
-            reg_type,
-            include_honeypot=False,
-            include_invisible_fields=True,
-        )
-
-        return TemplateResponse(
-            request,
-            "events/admin/registration_form_template_preview.html",
-            {
-                "template": self,
-                "event": event,
-                "reg_type": reg_type,
-                "form": form_class(),
-            },
-        )

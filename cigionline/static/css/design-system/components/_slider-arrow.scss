@@ -1,0 +1,49 @@
+// =============================================================================
+// Design System — Slider arrow
+// The single circular chevron control (scroll / step / carousel prev-next),
+// surface-aware. Consumers wire behaviour and toggle the --up flip. The carousel
+// nav (components/_carousel-nav) reuses this for its prev/next/pause buttons — it
+// only adds the row layout + pause icon-swap on top.
+// =============================================================================
+
+.ds-slider-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: var(--border-divider) solid var(--surface-border, var(--color-border-black-white));
+  border-radius: 50%;
+  background: transparent;
+  color: var(--surface-text, var(--color-text-black-white));
+  cursor: pointer;
+  @include transition(background-color, color);
+
+  &:hover,
+  &:focus-visible {
+    // Invert against the surface: white fill + black arrow on dark/colour,
+    // black fill + white arrow on light. Uses --surface-* (the --color-*-* pair
+    // tokens only flip under <html data-theme="dark">, not per section, so they
+    // produced no visible hover change on dark surfaces — BugHerd #32).
+    color: var(--surface-invert-text);
+    background: var(--surface-invert-bg);
+  }
+
+  // Disabled (e.g. Swiper adds .swiper-button-disabled at a carousel's ends).
+  &[disabled],
+  &.swiper-button-disabled {
+    opacity: 0.35;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  &__icon {
+    @include transition(transform);
+  }
+
+  // Flipped state (e.g. scrolled to bottom → points up).
+  &--up &__icon {
+    transform: rotate(180deg);
+  }
+}

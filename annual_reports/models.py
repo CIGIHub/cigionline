@@ -1,17 +1,18 @@
 from django.http import Http404
+from core.routers import RouterServeMixin
 from core.models import (
     BasicPageAbstract,
     ContentPage,
     FeatureablePageAbstract,
     SearchablePageAbstract,
-    ShareablePageAbstract
+    ShareablePageAbstract,
+    ThemeablePageAbstract
 )
 from django.core.cache import cache
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.shortcuts import render, redirect
 from django.utils.text import slugify
-from mediavalet.panels import MediaValetImageChooserPanel
 from streams.blocks import ARFinancialPositionBlock, ARFinancialsAuditorReportBlock, ARFundBalancesBlock, AROutputsBlock, ARSlideBoardBlock, ARSlideChooserBlock, ARSlideColumnBlock, SPSlideBoardBlock, SPSlideChooserBlock, SPSlideFrameworkBlock
 from wagtail.admin.panels import (
     FieldPanel,
@@ -28,7 +29,8 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from utils.helpers import richtext_html, richtext_to_inline_html
 
 
-class AnnualReportListPage(BasicPageAbstract, Page, SearchablePageAbstract):
+class AnnualReportListPage(RouterServeMixin, BasicPageAbstract,
+                           ThemeablePageAbstract, Page, SearchablePageAbstract):
     max_count = 1
     parent_page_types = ['core.BasicPage']
     subpage_types = ['annual_reports.AnnualReportPage']
@@ -63,8 +65,22 @@ class AnnualReportListPage(BasicPageAbstract, Page, SearchablePageAbstract):
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
+        # Page-level light/dark choice (BugHerd #136 follow-up: all composed
+        # landings). The theme panel stays off — the legacy theme fork would
+        # bypass the DS template.
+        ThemeablePageAbstract.surface_panel,
     ]
     search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
+
+    def get_context(self, request):
+        from core.heroes import _breadcrumb
+
+        # The listing is an authored faceted-listing block now (card type:
+        # Annual report — core.faceted_listing._report_handler carries the
+        # search · year filters); RouterServeMixin serves its AJAX swaps.
+        context = super().get_context(request)
+        context['hero_crumbs'] = _breadcrumb(self)
+        return context
 
     class Meta:
         verbose_name = 'Annual Report List Page'
@@ -133,7 +149,7 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
         ),
         MultiFieldPanel(
             [
-                MediaValetImageChooserPanel('image_poster'),
+                FieldPanel('image_poster'),
             ],
             heading='Images',
             classname='collapsible collapsed',
@@ -180,8 +196,6 @@ class AnnualReportSPAPage(RoutablePageMixin, FeatureablePageAbstract, Searchable
         ShareablePageAbstract.social_panel,
         SearchablePageAbstract.search_panel,
     ]
-    
-    search_fields = Page.search_fields + SearchablePageAbstract.search_fields
 
     subpage_types = ["AnnualReportSlidePage"]
 

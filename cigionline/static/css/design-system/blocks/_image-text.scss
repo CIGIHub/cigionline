@@ -1,0 +1,127 @@
+// =============================================================================
+// Design System — Image + Text block
+// Image beside a content column (~50/50). The content column distributes its
+// children top→bottom: heading (10px top-rule motif) at the top, a one/two-
+// column body with an optional button row at the bottom. Tokens only.
+// =============================================================================
+
+.ds-image-text {
+  display: flex;
+  align-items: stretch; // image and content match heights
+  gap: 28px; // column gap (off-scale, deliberate)
+  padding-block: var(--space-section-y); // horizontal gutters from the container
+
+  // --- Image ----------------------------------------------------------------
+  &__media {
+    flex: 1 1 0;
+    min-width: 0;
+    // Portrait image — gives the content column room to
+    // space-between; image fills via cover.
+    aspect-ratio: 624 / 664;
+  }
+
+  &__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  // --- Content ---------------------------------------------------------------
+  // Two groups (1361:117901): title pinned top; body + button hug the bottom
+  // as one run with 32px gaps. The title's auto margin absorbs the slack —
+  // NOT space-between, which would float the body midway between the two.
+  &__content {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-32);
+  }
+
+  &__title { margin-bottom: auto; }
+
+  &__heading {
+    @include header-2;
+    color: var(--surface-text);
+    // The 10px rule hugs the heading's own width (Section Title hugs content
+    // in the frame) — no fixed cap, so a short title stays on one line.
+    width: fit-content;
+    // fit-content resolves to min-content when a single word is wider than the
+    // column, and "Land Acknowledgement" then ran off a phone screen (Juode,
+    // BugHerd #229). Cap it to the column and let such a word break.
+    max-width: 100%;
+    overflow-wrap: break-word;
+    margin: 0;
+    padding-top: var(--space-24);
+    // 5px, the shared top-rule motif — Text + Image was the only block on the
+    // 10px variant, which read inconsistent beside the others (BugHerd #182).
+    border-top: var(--border-rule) solid var(--surface-rule);
+  }
+
+  // --- Body (single stacked column) -----------------------------------------
+  &__body {
+    display: flex;
+    flex-direction: column; // text + secondary text stack in one column (per design)
+    gap: var(--space-32);
+  }
+
+  &__body-col {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-32);
+  }
+
+  &__text {
+    @include paragraph-1;
+    color: var(--surface-text);
+
+    // Paragraphs inside one richtext run at the same 32px rhythm as the
+    // column's groups (the frame's gap-32 stack).
+    p { margin: 0; }
+    p + p { margin-top: var(--space-32); }
+
+    // Richtext lists lost the browser defaults inside the reset — restore
+    // indent + item spacing (BugHerd #126). Bottom spacing matches the
+    // column's 32px group rhythm (#126 reopen); a trailing list drops it.
+    ul,
+    ol {
+      margin: var(--space-16) 0 var(--space-32);
+      padding-left: var(--space-24);
+
+      &:last-child { margin-bottom: 0; }
+    }
+
+    ul { list-style: disc; }
+    ol { list-style: decimal; }
+
+    li { margin-top: var(--space-8); }
+    li:first-child { margin-top: 0; }
+  }
+
+  &__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-24);
+  }
+
+  // --- Image side ------------------------------------------------------------
+  &--image-right { flex-direction: row-reverse; }
+
+  // --- Mobile: stack ---------------------------------------------------------
+  @media (max-width: 768px) {
+    flex-direction: column;
+
+    &--image-right { flex-direction: column; }
+
+    &__media { aspect-ratio: 3 / 2; width: 100%; }
+
+    // One step down the ramp on a phone — "40px instead of 48px" (Juode,
+    // BugHerd #229), which is header-2 → header-3.
+    &__heading { @include header-3; }
+
+    &__body { flex-direction: column; gap: var(--space-32); }
+  }
+}

@@ -1,47 +1,102 @@
 {% extends "base.html" %}
+{% load wagtailcore_tags heroes cards icons %}
+{% comment %}
+  Subscribe — DS shell (BugHerd #265: the legacy template left a contrast
+  clash under the light header). Content hero (breadcrumb · title · subtitle),
+  authored body in the reading measure, then the sign-up form on the DS form
+  contract. Messaging (consent text, button label/help, privacy note) is
+  authorable on the page.
+{% endcomment %}
 
-{% load webpack_loader wagtailcore_tags %}
-
-{% block extra_css %}
-  {% render_bundle 'subscribePage' 'css' %}
-{% endblock %}
-
-{% block extra_js %}
-  {% if turnstile_site_key %}
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-  {% endif %}
-{% endblock %}
+{# Landing-type chrome: the dark site header, like the other landings (Tia, BugHerd #265). #}
+{% block header %}{% include "includes/header.html" with header_surface='dark' %}{% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_plain.html" with title=self.title %}
-  <section class="body">
-    {{self.body}}
-  </section>
-  <section>
-    <div class="container">
-      <div class="row d-block">
-        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-          <hr>
-          <form class="cigi-subscribe-form" action="/subscribe/" method="POST" id="subscribe-form" accept-charset="UTF-8">
+  {% page_hero self %}
+
+  {% for section in self.body|body_sections %}
+    {% if section.kind == 'module' %}
+      {% include_block section.block %}
+    {% else %}
+      <div class="ds-surface ds-surface--light">
+        <div class="ds-reading ds-reading--section ds-container">
+          <div class="ds-reading__main">
+            <div class="ds-prose">
+              {% for block in section.blocks %}{% include_block block %}{% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+
+  <div class="ds-surface ds-surface--light">
+    <div class="ds-reading ds-reading--section ds-container">
+      <div class="ds-reading__main">
+        <div class="ds-form">
+          <form action="{% pageurl self %}" method="post" novalidate>
             {% csrf_token %}
-            {{form.as_p}}
-            {% comment %} <div class="legends"><p>*Optional fields</p></div> {% endcomment %}
-            <button class="button-action" type="submit">Sign Up</button>
-            {% if turnstile_site_key %}
-              <div class="cf-turnstile mt-3 mb-3" data-sitekey="{{ turnstile_site_key }}" data-appearance="invisible"></div>
+
+            {% if form.non_field_errors %}
+              <div class="ds-form__errors">
+                {% for error in form.non_field_errors %}<p class="ds-form__error">{{ error }}</p>{% endfor %}
+              </div>
             {% endif %}
+
+            <div class="ds-form__row">
+              <div class="ds-form__field{% if form.first_name.errors %} ds-form__field--error{% endif %}">
+                <label class="ds-form__label" for="{{ form.first_name.id_for_label }}">First Name</label>
+                {{ form.first_name }}
+                {% for error in form.first_name.errors %}<p class="ds-form__error">{{ error }}</p>{% endfor %}
+              </div>
+              <div class="ds-form__field{% if form.last_name.errors %} ds-form__field--error{% endif %}">
+                <label class="ds-form__label" for="{{ form.last_name.id_for_label }}">Last Name</label>
+                {{ form.last_name }}
+                {% for error in form.last_name.errors %}<p class="ds-form__error">{{ error }}</p>{% endfor %}
+              </div>
+            </div>
+
+            <div class="ds-form__field{% if form.email.errors %} ds-form__field--error{% endif %}">
+              <label class="ds-form__label" for="{{ form.email.id_for_label }}">Email Address</label>
+              {{ form.email }}
+              {% for error in form.email.errors %}<p class="ds-form__error">{{ error }}</p>{% endfor %}
+            </div>
+
+            <div class="ds-form__field{% if form.organization.errors %} ds-form__field--error{% endif %}">
+              <label class="ds-form__label" for="{{ form.organization.id_for_label }}">Organization</label>
+              {{ form.organization }}
+              {% for error in form.organization.errors %}<p class="ds-form__error">{{ error }}</p>{% endfor %}
+            </div>
+
+            <div class="ds-form__field{% if form.location.errors %} ds-form__field--error{% endif %}">
+              <label class="ds-form__label" for="{{ form.location.id_for_label }}">Country</label>
+              {{ form.location }}
+              {% for error in form.location.errors %}<p class="ds-form__error">{{ error }}</p>{% endfor %}
+            </div>
+
+            {# Consent text is authorable (page.consent_text) — it arrives as the field's help_text. #}
+            <div class="ds-form__field ds-form__field--checkbox{% if form.consent.errors %} ds-form__field--error{% endif %}">
+              <label class="ds-form__checkbox" for="{{ form.consent.id_for_label }}">
+                {{ form.consent }}
+                <span class="ds-form__checkbox-text">{{ form.consent.help_text }}</span>
+              </label>
+              {% for error in form.consent.errors %}<p class="ds-form__error">{{ error }}</p>{% endfor %}
+            </div>
+
+            <div class="ds-form__actions">
+              <button class="ds-button ds-button--solid ds-button--on-light" type="submit">
+                <span class="ds-button__label">{{ self.button_text|default:"Sign Up" }}</span>
+                {% ds_icon 'chevron-right' css_class='ds-button__icon' %}
+              </button>
+              {% if self.button_help_text %}<p class="ds-form__help">{{ self.button_help_text }}</p>{% endif %}
+            </div>
           </form>
         </div>
+
+        {% if self.privacy_note %}
+          <div class="ds-prose">{{ self.privacy_note|richtext }}</div>
+        {% endif %}
       </div>
     </div>
-  </section>
-  <section class="privacy-note">
-    <div class="container">
-      <div class="row d-block">
-        <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-          {{self.privacy_note|richtext}}
-        </div>
-      </div>
-    </div>
-  </section>
+  </div>
 {% endblock %}

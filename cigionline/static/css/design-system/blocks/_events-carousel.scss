@@ -1,0 +1,26 @@
+// =============================================================================
+// Design System — Events Carousel block
+// Section header (heading + intro + "View all") over a swipeable rail of event
+// cards (shared `event` variant — bordered box with date-stamp + datetime +
+// title + excerpt). Built on the shared .ds-carousel shell + Swiper init.
+// Surface-aware (light default).
+// =============================================================================
+
+.ds-events-carousel {
+  padding-block: var(--space-section-y);
+
+  .ds-section-header { margin-bottom: var(--space-48); }
+
+  // Equal-height cards: stretch the flex row so every slide takes the tallest
+  // slide's height, let slides size to it, and have the card fill its slide.
+  // The doubled class beats Swiper's runtime-injected .swiper-slide{height:100%},
+  // which lands after our bundle in the cascade (same pattern as the video and
+  // supporting-materials carousels).
+  .swiper-wrapper { align-items: stretch; }
+  &__slide.swiper-slide { height: auto; }
+  &__slide .ds-card { height: 100%; }
+
+  @media (max-width: 768px) {
+    .ds-section-header { margin-bottom: var(--space-32); }
+  }
+}

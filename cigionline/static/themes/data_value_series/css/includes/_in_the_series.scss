@@ -62,6 +62,10 @@
   h4 {
     position: relative;
     padding-left: 5px;
+    // Own stacking context: the DS shell paints main.ds-surface--light with an
+    // opaque background, and the z-index:-1 colour bar below sank behind it
+    // (BugHerd #456). Isolated, the bar stays behind the text only.
+    isolation: isolate;
 
     &::before {
       content: '';

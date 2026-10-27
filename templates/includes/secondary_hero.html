@@ -1,0 +1,15 @@
+{% load wagtailcore_tags %}
+{% comment %}
+  Shared Secondary Hero — the Alt Hero plus a tab strip whose tabs reveal in-page
+  content panels (JS tablist; progressive — all panels visible without JS).
+  Rendered from the block and from a page template; keep markup here so both stay
+  in sync.
+
+  Context:
+    image, crumbs, heading, heading_tag, description — passed through to alt_hero
+    tabs      — list of {label, content} (content = rich text value/HTML)
+    group_id  — unique id prefix for tab/panel a11y wiring
+{% endcomment %}
+{% include "includes/alt_hero.html" with image=image crumbs=crumbs heading=heading heading_tag=heading_tag description=description %}
+
+{% include "includes/tabs.html" with tabs=tabs group_id=group_id label=heading %}

@@ -1,0 +1,31 @@
+// =============================================================================
+// Design System — Accent media
+// Image block with a brand-accent top-rule. `--accent` resolves from an ancestor
+// .ds-surface--accent-* class. Used by program/resource cards + bio/publication
+// heroes. (Plain / circular avatars are a separate plain-image case — see the
+// component sweep, decision: avatars are not accent-media.)
+// =============================================================================
+
+// The CONTAINER holds the fixed ratio; the image absolutely fills it with
+// object-fit: cover. Putting the ratio on the box (not the <img>) makes every
+// image render at exactly the same size regardless of the source/rendition
+// pixel dimensions or the <img>'s width/height attributes — Wagtail's `fill`
+// doesn't upscale, so renditions vary (e.g. 286×160 vs 520×294) and an
+// img-level aspect-ratio lets those attrs win in some browsers. Mirrors the
+// component structure (sized card + object-cover image). Override via
+// --accent-media-ratio.
+.ds-accent-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--accent-media-ratio, 1320 / 742);
+  overflow: hidden;
+  border-top: 10px solid var(--accent);
+
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
