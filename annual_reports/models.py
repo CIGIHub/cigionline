@@ -827,6 +827,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                         {
                             'title': related.page.title,
                             'url': related.page.url,
+                            'content_type': related.page.specific_class.__name__,
                         }
                         for related in story.related_pages.all()
                     ],

@@ -22,18 +22,37 @@ const storyMatches = (story, searchQuery, selectedTheme) => {
   );
 };
 
+const themeClasses = {
+  'AI and Transformative Technology': 'theme-ai',
+  'Data, Economy, Society': 'theme-data',
+  'Digitalization, Security and Democracy': 'theme-security',
+  'Global Cooperation and Governance': 'theme-cooperation',
+};
+
+const getStoryPosition = (coordinates, index, map) => {
+  const center = map.latLngToContainerPoint([
+    coordinates.latitude,
+    coordinates.longitude,
+  ]);
+
+  const angle = index * 2.39996;
+  const radius = 22 * Math.sqrt(index);
+
+  return map.containerPointToLatLng([
+    center.x + radius * Math.cos(angle),
+    center.y + radius * Math.sin(angle),
+  ]);
+};
+
 function AnnualReportMap({ slide }) {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTheme, setSelectedTheme] = useState('');
+  const [activeStory, setActiveStory] = useState(null);
   const highlightMarkersRef = useRef([]);
   const criteriaRef = useRef({ searchQuery, selectedTheme });
   criteriaRef.current = { searchQuery, selectedTheme };
-
-  const isTouchEvent = (event) => (
-    event.originalEvent?.pointerType === 'touch'
-  );
 
   const [isMobile, setIsMobile] = useState(
     window.innerWidth <= 768
@@ -65,21 +84,10 @@ function AnnualReportMap({ slide }) {
       const country = story.country;
 
       if (!groups[country]) {
-        groups[country] = {
-          country,
-          stories: [],
-          research_themes: [],
-        };
+        groups[country] = { stories: [] };
       }
 
       groups[country].stories.push(story);
-
-      if (
-        story.research_theme &&
-        !groups[country].research_themes.includes(story.research_theme)
-      ) {
-        groups[country].research_themes.push(story.research_theme);
-      }
 
       return groups;
     }, {});
@@ -87,8 +95,11 @@ function AnnualReportMap({ slide }) {
     const map = L.map(mapContainerRef.current, {
       minZoom: 1.5,
       maxZoom: 5,
-      zoomSnap: 0.5,
-      wheelPxPerZoomLevel: 40,
+      zoomSnap: 0,
+      zoomDelta: 1,
+      wheelPxPerZoomLevel: 15,
+      zoomAnimation: true,
+      zoomAnimationThreshold: 4,
       maxBounds: [
         [-85, -180],
         [85, 180],
@@ -131,6 +142,8 @@ function AnnualReportMap({ slide }) {
       map.invalidateSize();
     });
 
+    const countryLayers = {};
+
     fetch('/static/assets/ne_110m_admin_0_countries.geojson')
       .then((response) => {
         if (!response.ok) throw new Error('Failed to load country GeoJSON');
@@ -141,10 +154,40 @@ function AnnualReportMap({ slide }) {
           style: {
             className: 'map-country',
           },
-          interactive: false,
+          interactive: true,
+
+          onEachFeature: (feature, layer) => {
+            const countryName = feature.properties.ADMIN;
+
+            if (!countryLayers[countryName]) {
+              countryLayers[countryName] = [];
+            }
+
+            countryLayers[countryName].push(layer);
+          },
         }).addTo(map);
       })
       .catch((error) => console.error(error));
+
+    const oceans = [
+      { name: 'Pacific Ocean', coordinates: [0, -145] },
+      { name: 'Atlantic Ocean', coordinates: [30, -35] },
+      { name: 'Indian Ocean', coordinates: [-25, 80] },
+      { name: 'Southern Ocean', coordinates: [-62, 0] },
+      { name: 'Arctic Ocean', coordinates: [82, 0] },
+    ];
+
+    oceans.forEach(({ name, coordinates }) => {
+      L.marker(coordinates, {
+        icon: L.divIcon({
+          className: 'map-ocean-label',
+          html: `<span>${name}</span>`,
+          iconSize: [0, 0],
+        }),
+        interactive: false,
+        keyboard: false,
+      }).addTo(map);
+    });
 
     highlightMarkersRef.current = [];
 
@@ -153,261 +196,74 @@ function AnnualReportMap({ slide }) {
 
       if (!coordinates) return;
 
-      const hubPosition = [coordinates.latitude, coordinates.longitude];
-
-      const hubIcon = L.divIcon({
-        className: 'map-country-hub',
-        html: `<div class="map-country-hub-circle">${group.stories.length}</div>`,
-        iconSize: [40, 40],
-        iconAnchor: [20, 20],
-      });
-
-      const hub = L.marker(hubPosition, {
-        icon: hubIcon,
-      })
-        .addTo(map)
-        .bindTooltip(`
-          <div class="map-hub-card">
-            <div class="map-hub-card-country">${group.country}</div>
-            <ul class="map-hub-card-themes">
-              ${group.research_themes.map(theme => `
-                <li>${theme}</li>
-              `).join('')}
-            </ul>
-          </div>
-        `, {
-          direction: 'left',
-          offset: [-20, 0],
-          opacity: 1,
-        });
-
-      const storyNodes = [];
-      const highlightRecord = { hub, stories: group.stories, nodes: [] };
-      highlightMarkersRef.current.push(highlightRecord);
-      let closeTimeout;
-
-      const collapseHub = () => {
-        storyNodes.forEach((node) => {
-          node.closePopup();
-          map.removeLayer(node);
-        });
-
-        storyNodes.length = 0;
-        highlightRecord.nodes.length = 0;
-      };
-
-      const expandHub = () => {
-        clearTimeout(closeTimeout);
-
-        if (storyNodes.length) return;
-
-        const hubPoint = map.latLngToContainerPoint(hub.getLatLng());
-        const count = group.stories.length;
-        const radius = Math.max(90, (count - 1) * 16);
-        const mapWidth = map.getSize().x;
-        const expandLeft = hubPoint.x + radius + 20 > mapWidth;
-        const direction = expandLeft ? -1 : 1;
-        const mapHeight = map.getSize().y;
-
-        const verticalOffset = Math.max(
-          radius + 20 - hubPoint.y,
-          0
-        ) - Math.max(
-          hubPoint.y + radius + 20 - mapHeight,
-          0
+      group.stories.forEach((story, index) => {
+        const position = getStoryPosition(
+          coordinates,
+          index,
+          map
         );
 
-        group.stories.forEach((story, index) => {
-          const angle = count === 1
-            ? 0
-            : -Math.PI / 2 + (Math.PI * index) / (count - 1);
+        const { searchQuery: activeQuery, selectedTheme: activeTheme } = criteriaRef.current;
+        const isMatch = storyMatches(story, activeQuery, activeTheme);
+        const hasActiveSearch = Boolean(activeQuery.trim() || activeTheme);
 
-          const x = hubPoint.x + direction * radius * Math.cos(angle);
-          const y = hubPoint.y + verticalOffset + radius * Math.sin(angle);
-
-          const position = map.containerPointToLatLng([x, y]);
-
-          const { searchQuery: activeQuery, selectedTheme: activeTheme } = criteriaRef.current;
-          const isMatch = storyMatches(story, activeQuery, activeTheme);
-          const hasActiveSearch = Boolean(activeQuery.trim() || activeTheme);
-
-          const nodeIcon = L.divIcon({
-            className: `map-story-node${hasActiveSearch && isMatch ? ' map-story-node-highlight' : ''}`,
-            html: '<div class="map-story-node-circle"></div>',
-            iconSize: [20, 20],
-            iconAnchor: [10, 10],
-          });
-
-          const relatedPages = (story.related_pages || [])
-            .map((related) => `
-              <a href="${related.url}">
-                ${related.title}
-              </a>
-            `)
-            .join('');
-
-          const node = L.marker(position, {
-            icon: nodeIcon,
-            zIndexOffset: 1000,
-          }).addTo(map);
-          highlightRecord.nodes.push({ marker: node, story });
-
-          const popupWidth = Math.min(900, map.getSize().x - 40);
-          const markerX = map.latLngToContainerPoint(node.getLatLng()).x;
-          const currentMapWidth = map.getSize().x;
-          const markerY = map.latLngToContainerPoint(node.getLatLng()).y;
-          const mapHeight = map.getSize().y;
-
-          // Place the popup below the node when there's insufficient room above
-          const openBelow = markerY < mapHeight / 2;
-
-          const popupOffsetX = Math.max(
-            popupWidth / 2 + 20 - markerX,
-            Math.min(
-              0,
-              currentMapWidth - popupWidth / 2 - 20 - markerX
-            )
-          );
-
-          node.bindPopup(`
-            <div class="map-card">
-              ${story.research_theme ? `
-                <div class="map-card-theme">
-                  ${story.research_theme}
-                </div>
-              ` : ''}
-
-              <div class="map-card-title">
-                ${story.title}
-              </div>
-
-              <div class="map-card-description">
-                ${story.short_description}
-              </div>
-
-              ${(story.related_pages || []).length ? `
-                <div class="map-card-related">
-                  ${relatedPages}
-                </div>
-              ` : ''}
-
-              <div class="map-card-meta">
-                <span>${story.publishing_date}</span>
-                <span>${story.location}</span>
-              </div>
-            </div>
-          `, {
-            closeButton: false,
-            autoClose: true,
-            closeOnClick: false,
-            autoPan: false,
-            minWidth: popupWidth,
-            maxWidth: popupWidth,
-            offset: L.point(popupOffsetX, 0),
-          });
-
-          node.on('mouseover', (event) => {
-            if (isTouchEvent(event)) return;
-
-            clearTimeout(closeTimeout);
-            hub.closeTooltip();
-            node.openPopup();
-          });
-
-          node.on('mouseout', (event) => {
-            if (isTouchEvent(event)) return;
-
-            closeTimeout = setTimeout(collapseHub, 500);
-          });
-
-          node.on('click', (event) => {
-            if (!isTouchEvent(event)) return;
-
-            L.DomEvent.stopPropagation(event.originalEvent);
-            clearTimeout(closeTimeout);
-            hub.closeTooltip();
-            node.openPopup();
-          });
-
-          node.on('popupopen', (event) => {
-            const popup = event.popup.getElement();
-
-            if (!popup) return;
-
-            const mapHeight = map.getSize().y;
-            const markerY = map.latLngToContainerPoint(node.getLatLng()).y;
-            const popupHeight = popup.offsetHeight;
-            const padding = 20;
-
-            // Leaflet normally positions the popup above its marker.
-            const spaceAbove = markerY - padding;
-            const spaceBelow = mapHeight - markerY - padding;
-
-            if (popupHeight > spaceAbove && spaceBelow > spaceAbove) {
-              // Move the popup below the marker.
-              event.popup.options.offset = L.point(popupOffsetX, popupHeight + 20);
-            } else {
-              // Keep it above, shifting downward if necessary.
-              const overflow = Math.max(0, popupHeight - spaceAbove);
-              event.popup.options.offset = L.point(popupOffsetX, overflow);
-            }
-
-            event.popup.update();
-
-            popup.addEventListener('mouseenter', () => {
-              clearTimeout(closeTimeout);
-            });
-
-            popup.addEventListener('mouseleave', () => {
-              closeTimeout = setTimeout(collapseHub, 500);
-            });
-          });
-
-          storyNodes.push(node);
+        const nodeIcon = L.divIcon({
+          className: [
+            'map-story-node',
+            themeClasses[story.research_theme] || '',
+            hasActiveSearch && isMatch ? 'map-story-node-highlight' : '',
+          ].filter(Boolean).join(' '),
+          html: '<div class="map-story-node-circle"></div>',
+          iconSize: [20, 20],
+          iconAnchor: [10, 10],
         });
-      };
 
-      hub.on('mouseover', (event) => {
-        if (isTouchEvent(event)) return;
+        const node = L.marker(position, {
+          icon: nodeIcon,
+          zIndexOffset: 1000,
+        })
+          .addTo(map)
+          .bindTooltip(story.title, {
+            direction: 'top',
+            offset: [0, -10],
+            opacity: 1,
+            className: 'map-story-title-tooltip',
+          });
+        highlightMarkersRef.current.push({
+          marker: node,
+          story,
+          coordinates,
+          index,
+        });
 
-        expandHub();
-        hub.openTooltip();
-      });
+        node.on('mouseover', () => {
+          (countryLayers[story.country] || []).forEach((layer) => {
+            layer.getElement()?.classList.add('map-country-highlight');
+          });
+        });
 
-      hub.on('mouseout', (event) => {
-        if (isTouchEvent(event)) return;
+        node.on('mouseout', () => {
+          (countryLayers[story.country] || []).forEach((layer) => {
+            layer.getElement()?.classList.remove('map-country-highlight');
+          });
+        });
 
-        closeTimeout = setTimeout(collapseHub, 500);
-      });
+        node.on('click', (event) => {
+          L.DomEvent.stopPropagation(event.originalEvent);
 
-      hub.on('click', (event) => {
-        if (!isTouchEvent(event)) return;
-
-        L.DomEvent.stopPropagation(event.originalEvent);
-        clearTimeout(closeTimeout);
-
-        if (storyNodes.length) {
-          collapseHub();
-          hub.closeTooltip();
-        } else {
-          expandHub();
-          hub.openTooltip();
-        }
-      });
-
-      map.on('movestart', () => {
-        clearTimeout(closeTimeout);
-        collapseHub();
-      });
-
-      map.on('click', (event) => {
-        if (!isTouchEvent(event)) return;
-
-        clearTimeout(closeTimeout);
-        collapseHub();
-        hub.closeTooltip();
+          node.closeTooltip();
+          setActiveStory(story);
+        });
       });
     });
+
+    const updateStoryPositions = () => {
+      highlightMarkersRef.current.forEach(({ marker, coordinates, index }) => {
+        marker.setLatLng(getStoryPosition(coordinates, index, map));
+      });
+    };
+
+    map.on('zoomend', updateStoryPositions);
 
     return () => {
       resizeObserver.disconnect();
@@ -419,23 +275,15 @@ function AnnualReportMap({ slide }) {
   useEffect(() => {
     const hasActiveSearch = Boolean(searchQuery.trim() || selectedTheme);
 
-    highlightMarkersRef.current.forEach(({ hub, stories: hubStories, nodes }) => {
-      const hubMatches = hubStories.some((story) => storyMatches(story, searchQuery, selectedTheme));
-      const hubElement = hub.getElement();
+    highlightMarkersRef.current.forEach(({ marker, story }) => {
+      const nodeElement = marker.getElement();
 
-      if (hubElement) {
-        hubElement.classList.toggle('map-country-hub-highlight', hasActiveSearch && hubMatches);
+      if (nodeElement) {
+        nodeElement.classList.toggle(
+          'map-story-node-highlight',
+          hasActiveSearch && storyMatches(story, searchQuery, selectedTheme)
+        );
       }
-
-      nodes.forEach(({ marker, story }) => {
-        const nodeElement = marker.getElement();
-        if (nodeElement) {
-          nodeElement.classList.toggle(
-            'map-story-node-highlight',
-            hasActiveSearch && storyMatches(story, searchQuery, selectedTheme)
-          );
-        }
-      });
     });
   }, [searchQuery, selectedTheme, slide]);
 
@@ -483,6 +331,52 @@ function AnnualReportMap({ slide }) {
         ref={mapContainerRef}
         className="annual-report-map-container"
       />
+
+      {activeStory && (
+        <div className="map-story-panel">
+          <button
+            type="button"
+            className="map-story-panel-close"
+            onClick={() => setActiveStory(null)}
+            aria-label="Close story card"
+          >
+            &times;
+          </button>
+          <div className="map-card">
+            {activeStory.research_theme && (
+              <div className={`map-card-theme ${themeClasses[activeStory.research_theme] || ''}`}>
+                {activeStory.research_theme}
+              </div>
+            )}
+
+            <div className="map-card-title">
+              {activeStory.title}
+            </div>
+
+            <div
+              className="map-card-description"
+              dangerouslySetInnerHTML={{
+                __html: activeStory.short_description || '',
+              }}
+            />
+
+            {(activeStory.related_pages || []).length > 0 && (
+              <div className="map-card-related">
+                {activeStory.related_pages.map((related) => (
+                  <a key={related.url} href={related.url}>
+                    {related.title}
+                  </a>
+                ))}
+              </div>
+            )}
+
+            <div className="map-card-meta">
+              <span>{activeStory.publishing_date}</span>
+              <span>{activeStory.location}</span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
