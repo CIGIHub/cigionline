@@ -128,6 +128,7 @@ function AnnualReportMap({ slide }) {
     resizeObserver.observe(mapContainerRef.current);
 
     map.attributionControl.setPrefix(false);
+    map.zoomControl.setPosition('topright');
     mapRef.current = map;
 
     const controls = mapContainerRef.current.parentElement
@@ -143,6 +144,17 @@ function AnnualReportMap({ slide }) {
     });
 
     const countryLayers = {};
+
+    const setHighlightedCountry = (country) => {
+      Object.entries(countryLayers).forEach(([name, layers]) => {
+        layers.forEach((layer) => {
+          layer.getElement()?.classList.toggle(
+            'map-country-dimmed',
+            Boolean(country) && name !== country
+          );
+        });
+      });
+    };
 
     fetch('/static/assets/ne_110m_admin_0_countries.geojson')
       .then((response) => {
@@ -237,15 +249,11 @@ function AnnualReportMap({ slide }) {
         });
 
         node.on('mouseover', () => {
-          (countryLayers[story.country] || []).forEach((layer) => {
-            layer.getElement()?.classList.add('map-country-highlight');
-          });
+          setHighlightedCountry(story.country);
         });
 
         node.on('mouseout', () => {
-          (countryLayers[story.country] || []).forEach((layer) => {
-            layer.getElement()?.classList.remove('map-country-highlight');
-          });
+          setHighlightedCountry(null);
         });
 
         node.on('click', (event) => {
@@ -287,31 +295,58 @@ function AnnualReportMap({ slide }) {
     });
   }, [searchQuery, selectedTheme, slide]);
 
+  useEffect(() => {
+    if (!activeStory) return undefined;
+
+    const handleOutsideClick = (event) => {
+      if (
+        event.target.closest('.map-story-panel') ||
+        event.target.closest('.map-story-node')
+      ) {
+        return;
+      }
+
+      setActiveStory(null);
+    };
+
+    document.addEventListener('click', handleOutsideClick);
+
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, [activeStory]);
+
   return (
     <div className="annual-report-map">
       <div className="annual-report-map-controls">
-        <input
-          type="search"
-          placeholder="Search stories..."
-          value={searchQuery}
-          onChange={(event) => setSearchQuery(event.target.value)}
-          aria-label="Search stories"
-        />
+        <div className="map-search-input">
+          <i className="fa-solid fa-magnifying-glass" aria-hidden="true" />
+          <input
+            type="search"
+            placeholder="Search stories..."
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            aria-label="Search stories"
+          />
+        </div>
 
-        <select
-          value={selectedTheme}
-          onChange={(event) => setSelectedTheme(event.target.value)}
-          aria-label="Filter by research theme"
-        >
-          <option value="">
-            {isMobile ? 'All' : 'All research themes'}
-          </option>
-          {researchThemes.map((theme) => (
-            <option key={theme} value={theme}>
-              {theme}
+        <div className="map-theme-select">
+          <select
+            value={selectedTheme}
+            onChange={(event) => setSelectedTheme(event.target.value)}
+            aria-label="Filter by research theme"
+          >
+            <option value="">
+              {isMobile ? 'All' : 'All research themes'}
             </option>
-          ))}
-        </select>
+            {researchThemes.map((theme) => (
+              <option key={theme} value={theme}>
+                {theme}
+              </option>
+            ))}
+          </select>
+          <i className="fa-solid fa-chevron-down" aria-hidden="true" />
+        </div>
 
         {(searchQuery || selectedTheme) && (
           <button
@@ -362,11 +397,24 @@ function AnnualReportMap({ slide }) {
 
             {(activeStory.related_pages || []).length > 0 && (
               <div className="map-card-related">
-                {activeStory.related_pages.map((related) => (
-                  <a key={related.url} href={related.url}>
-                    {related.title}
-                  </a>
-                ))}
+                {activeStory.related_pages.map((related) => {
+                  const icons = {
+                    ArticlePage: 'fa-pen',
+                    PublicationPage: 'fa-book-open',
+                    EventPage: 'fa-calendar',
+                    MultimediaPage: 'fa-play',
+                    PersonPage: 'fa-user',
+                  };
+
+                  const icon = icons[related.content_type] || 'fa-arrow-up-right-from-square';
+
+                  return (
+                    <a key={related.url} href={related.url}>
+                      <i className={`fa-solid ${icon}`} aria-hidden="true" />
+                      <span>{related.title}</span>
+                    </a>
+                  );
+                })}
               </div>
             )}
 
