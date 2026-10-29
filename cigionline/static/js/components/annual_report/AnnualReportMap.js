@@ -265,6 +265,14 @@ function AnnualReportMap({ slide }) {
 
           node.closeTooltip();
           setActiveStory(story);
+
+          map.panTo(
+            [coordinates.latitude, coordinates.longitude],
+            {
+              animate: true,
+              duration: 0.8,
+            }
+          );
         });
       });
     });
