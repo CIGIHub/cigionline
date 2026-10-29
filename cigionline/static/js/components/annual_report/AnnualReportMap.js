@@ -152,6 +152,10 @@ function AnnualReportMap({ slide }) {
             'map-country-dimmed',
             Boolean(country) && name !== country
           );
+
+          if (country && name === country) {
+            layer.bringToFront();
+          }
         });
       });
     };

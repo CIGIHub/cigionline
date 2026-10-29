@@ -14,6 +14,35 @@ body:has(.annual-report-map) {
   z-index: 0;
   isolation: isolate;
 
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 15%;
+    z-index: 900;
+    pointer-events: none;
+  }
+
+  &::before {
+    top: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.9),
+      transparent
+    );
+  }
+
+  &::after {
+    bottom: 0;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.9),
+      transparent
+    );
+  }
+
   .leaflet-tooltip {
     background-color: $black;
     color: $white;
