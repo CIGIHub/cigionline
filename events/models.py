@@ -1188,7 +1188,9 @@ class EventPage(
                     )
 
                     any_confirmed = any(confirmed_flags)
-                    return redirect(f"{base}register/result/?s={'ok' if any_confirmed else 'wait'}")
+                    return redirect(
+                        f"{base}register/result/?s={'ok' if any_confirmed else 'wait'}&rid={primary.pk}"
+                    )
 
                 else:
                     with transaction.atomic():
