@@ -141,8 +141,7 @@ body:has(.annual-report-map) {
   display: flex;
   gap: 0.75rem;
 
-  input,
-  select {
+  input {
     padding: 0.5rem 0.875rem;
     background-color: $white;
     color: $black;
@@ -160,31 +159,85 @@ body:has(.annual-report-map) {
     width: 240px;
   }
 
-  select {
-    max-width: 260px;
-    appearance: none;
-    padding-right: 3rem;
-    background-image: none;
-  }
-
   .map-theme-select {
     position: relative;
-    display: flex;
-    align-items: center;
+    min-width: 220px;
+    max-width: 260px;
 
-    > i {
-      position: absolute;
-      right: 0.4rem;
-      width: 24px;
-      height: 24px;
+    .map-theme-trigger {
       display: flex;
       align-items: center;
-      justify-content: center;
-      border: 1px solid $black;
-      border-radius: 50%;
+      justify-content: space-between;
+      gap: 1rem;
+      width: 100%;
+      padding: 0.5rem 0.4rem 0.5rem 0.875rem;
+      background-color: $white;
       color: $black;
-      font-size: 0.65rem;
-      pointer-events: none;
+      border: none;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      text-align: left;
+      cursor: pointer;
+
+      span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      > i {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+        border: 1px solid $black;
+        border-radius: 50%;
+        font-size: 0.65rem;
+        transition: transform 200ms ease;
+      }
+
+      &[aria-expanded='true'] > i {
+        transform: rotate(180deg);
+      }
+    }
+
+    .map-theme-options {
+      position: absolute;
+      top: calc(100% + 0.5rem);
+      left: 0;
+      width: 100%;
+      padding: 0.5rem;
+      background-color: $white;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba($black, 0.25);
+      box-sizing: border-box;
+      z-index: 1200;
+
+      button {
+        display: block;
+        width: 100%;
+        padding: 0.65rem 0.75rem;
+        background: transparent;
+        color: $black;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        text-align: left;
+        cursor: pointer;
+        transition: background-color 200ms ease;
+
+        &:hover,
+        &:focus-visible {
+          background-color: $cigi-light-grey;
+        }
+
+        &[aria-pressed='true'] {
+          background-color: $cigi-light-grey;
+          font-weight: 600;
+        }
+      }
     }
   }
 
@@ -195,7 +248,7 @@ body:has(.annual-report-map) {
     gap: 0.375rem;
 
     input,
-    select,
+    .map-theme-trigger,
     .map-search-clear {
       min-height: 44px;
       box-sizing: border-box;
@@ -206,7 +259,7 @@ body:has(.annual-report-map) {
       min-width: 0;
     }
 
-    select {
+    .map-theme-select {
       flex: 1;
       min-width: 0;
       max-width: 100%;
@@ -542,14 +595,23 @@ body:has(.annual-report-map) {
 }
 
 .map-search-clear {
-  padding: 0.75rem 1rem;
-  background-color: $cigi-primary-colour;
-  color: $white;
-  border: none;
+  padding: 0.5rem 1rem;
+  background-color: $white;
+  color: $black;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 0.9rem;
   cursor: pointer;
+  transition: background-color 200ms ease, color 200ms ease;
 
   &:hover {
-    background-color: $cigi-light-pink;
+    background-color: $cigi-light-grey;
+    color: $black;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $black;
+    outline-offset: 2px;
   }
 }
 

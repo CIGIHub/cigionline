@@ -143,6 +143,8 @@ function AnnualReportMap({ slide }) {
   const mapRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTheme, setSelectedTheme] = useState('');
+  const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
+  const themeDropdownRef = useRef(null);
   const [activeStory, setActiveStory] = useState(null);
   const highlightMarkersRef = useRef([]);
   const criteriaRef = useRef({ searchQuery, selectedTheme });
@@ -402,6 +404,33 @@ function AnnualReportMap({ slide }) {
   }, [searchQuery, selectedTheme, slide]);
 
   useEffect(() => {
+    if (!themeDropdownOpen) return undefined;
+
+    const handleOutsideClick = (event) => {
+      if (!themeDropdownRef.current?.contains(event.target)) {
+        setThemeDropdownOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setThemeDropdownOpen(false);
+        themeDropdownRef.current
+          ?.querySelector('.map-theme-trigger')
+          ?.focus();
+      }
+    };
+
+    document.addEventListener('pointerdown', handleOutsideClick);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('pointerdown', handleOutsideClick);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [themeDropdownOpen]);
+
+  useEffect(() => {
     if (!activeStory) return undefined;
 
     const handleOutsideClick = (event) => {
@@ -436,22 +465,50 @@ function AnnualReportMap({ slide }) {
           />
         </div>
 
-        <div className="map-theme-select">
-          <select
-            value={selectedTheme}
-            onChange={(event) => setSelectedTheme(event.target.value)}
-            aria-label="Filter by research theme"
+        <div className="map-theme-select" ref={themeDropdownRef}>
+          <button
+            type="button"
+            className="map-theme-trigger"
+            aria-haspopup="listbox"
+            aria-expanded={themeDropdownOpen}
+            onClick={() => setThemeDropdownOpen(!themeDropdownOpen)}
           >
-            <option value="">
-              {isMobile ? 'All' : 'All research themes'}
-            </option>
-            {researchThemes.map((theme) => (
-              <option key={theme} value={theme}>
-                {theme}
-              </option>
-            ))}
-          </select>
-          <i className="fa-solid fa-chevron-down" aria-hidden="true" />
+            <span>
+              {selectedTheme || (isMobile ? 'All' : 'All research themes')}
+            </span>
+            <i className="fa-solid fa-chevron-down" aria-hidden="true" />
+          </button>
+
+          {themeDropdownOpen && (
+            <div className="map-theme-options" role="listbox" aria-label="Research theme">
+              <button
+                type="button"
+                role="option"
+                aria-selected={!selectedTheme}
+                onClick={() => {
+                  setSelectedTheme('');
+                  setThemeDropdownOpen(false);
+                }}
+              >
+                All research themes
+              </button>
+
+              {researchThemes.map((theme) => (
+                <button
+                  key={theme}
+                  type="button"
+                  role="option"
+                  aria-selected={selectedTheme === theme}
+                  onClick={() => {
+                    setSelectedTheme(theme);
+                    setThemeDropdownOpen(false);
+                  }}
+                >
+                  {theme}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {(searchQuery || selectedTheme) && (

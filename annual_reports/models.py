@@ -1240,21 +1240,3 @@ class MapStory(ClusterableModel):
 
     def __str__(self):
         return self.title
-
-
-class MapStoryRelatedPage(Orderable):
-    story = ParentalKey(
-        'MapStory',
-        related_name='related_pages',
-        on_delete=models.CASCADE,
-    )
-
-    page = models.ForeignKey(
-        'wagtailcore.Page',
-        on_delete=models.CASCADE,
-        related_name='+',
-    )
-
-    panels = [
-        PageChooserPanel('page'),
-    ]
