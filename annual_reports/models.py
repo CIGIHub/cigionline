@@ -15,7 +15,7 @@ from geopy.geocoders import Nominatim
 from mediavalet.panels import MediaValetImageChooserPanel
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
-from streams.blocks import ARFinancialPositionBlock, ARFinancialsAuditorReportBlock, ARFundBalancesBlock, AROutputsBlock, ARSlideBoardBlock, ARSlideChooserBlock, ARSlideColumnBlock, SPSlideBoardBlock, SPSlideChooserBlock, SPSlideFrameworkBlock
+from streams.blocks import ARFinancialPositionBlock, ARFinancialsAuditorReportBlock, ARFundBalancesBlock, AROutputsBlock, ARSlideBoardBlock, ARSlideChooserBlock, ARSlideContentBlock, ARSlideColumnBlock, SPSlideBoardBlock, SPSlideChooserBlock, SPSlideFrameworkBlock
 from utils.helpers import richtext_html, richtext_to_inline_html
 from wagtail.admin.panels import (
     FieldPanel,
@@ -827,11 +827,22 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                     'research_theme': story.research_theme.title if story.research_theme else None,
                     'related_pages': [
                         {
-                            'title': related.page.title,
-                            'url': related.page.url,
-                            'content_type': related.page.specific_class.__name__,
+                            'title': (
+                                richtext_to_inline_html(block.value.get('title_en'))
+                                if block.value.get('title_en')
+                                else block.value['page'].title
+                                if block.value.get('page')
+                                else ''
+                            ),
+                            'url': (
+                                block.value.get('link_override')
+                                or (block.value['page'].url if block.value.get('page') else '')
+                            ),
+                            'content_type': block.value.get('type'),
+                            'type_override': block.value.get('type_override') or '',
                         }
-                        for related in story.related_pages.all()
+                        for block in story.related_content
+                        if block.block_type == 'content'
                     ],
                 })
 
@@ -1172,6 +1183,13 @@ class MapStory(ClusterableModel):
         on_delete=models.SET_NULL,
         related_name='map_stories',
     )
+    related_content = StreamField(
+        [
+            ('content', ARSlideContentBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
 
     @property
     def coordinates(self):
@@ -1213,7 +1231,7 @@ class MapStory(ClusterableModel):
         FieldPanel('publishing_date'),
         FieldPanel('location'),
         PageChooserPanel('research_theme', ['research.ThemePage']),
-        InlinePanel('related_pages', label='Related pages'),
+        FieldPanel('related_content'),
     ]
 
     class Meta:

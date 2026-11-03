@@ -456,22 +456,81 @@ body:has(.annual-report-map) {
 .map-card-related {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
   margin-bottom: 1rem;
 
-  a {
+  .content-link {
     display: flex;
-    align-items: baseline;
-    gap: 0.75rem;
-    font-size: 1rem;
-    line-height: 1.4;
+    align-items: flex-start;
+    gap: 10px;
+    text-decoration: none;
+    color: $white;
+    
+
+    &:hover {
+      text-decoration: none;
+      h4 {
+        color: $cigi-primary-colour;
+      }
+
+      .content-link-icon {
+        border-color: $cigi-primary-colour;
+      }
+
+      .underline {
+        background-size: 100% 2px;
+      }
+    }
   }
 
-  i {
+  .content-link-icon {
+    border: 1px solid $white;
+    border-radius: 50%;
+    color: $white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
-    width: 1.25rem;
-    color: $cigi-primary-colour;
-    text-align: center;
+    font-size: 12px;
+    height: 38px;
+    width: 38px;
+    transition: border-color 500ms;
+
+    svg g {
+      fill: $white;
+    }
+  }
+
+  .content-copy {
+    flex: 1;
+    min-width: 0;
+
+    h4 {
+      color: #acaaaa;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      margin-bottom: 0;
+      text-transform: uppercase;
+      transition: color 500ms;
+    }
+
+    p {
+      font-size: 1rem;
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    .underline {
+      display: inline;
+      background-image: linear-gradient(
+        $cigi-primary-colour,
+        $cigi-primary-colour
+      );
+      background-position: left bottom;
+      background-repeat: no-repeat;
+      background-size: 0% 2px;
+      transition: background-size 500ms ease;
+    }
   }
 }
 
