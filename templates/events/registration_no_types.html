@@ -30,6 +30,10 @@
         <div class="alert alert-warning">
           Registration for this event is currently closed.
         </div>
+        {% elif registration_closed %}
+        <div class="alert alert-warning">
+          Registration for this event is closed.
+        </div>
         {% elif event.is_private_registration %}
         <div class="alert alert-info">
           This event uses private invitations. Please open the registration link from your

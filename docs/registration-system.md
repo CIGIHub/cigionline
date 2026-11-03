@@ -45,6 +45,7 @@ This guide maps the event registration system for future AI agents and maintaine
 
 - `events/models.py`
   - `EventPage.register_form(...)` handles public registration POSTs, duplicate registration checks, invite usage, group registration creation, and pending confirmation redirects.
+  - New registration requires `registration_open=True`. A registration type closes at its own `close_date` when set; otherwise it closes at the event's `event_end`. Existing registration management and confirmation links remain available afterward.
   - `EventPage.manage_registration(...)` builds the self-service edit form and pre-populates answers.
   - `EventPage.manage_registration_update(...)` validates and saves self-service answer edits; it also strips non-answer keys before replacing `Registrant.answers`.
   - `EventPage.confirm_registration(...)` and `EventPage.confirm_group_registration(...)` finalize pending registrations.

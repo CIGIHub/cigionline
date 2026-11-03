@@ -37,6 +37,7 @@ from streams.blocks import (
     AutoPlayVideoBlock,
     ButtonBlock,
     ImageFullBleedBlock,
+    InteractiveChartBlock,
     ChartBlock,
     PersonsListBlock,
     PublicationsListBlock,
@@ -276,6 +277,7 @@ class BasicPageAbstract(models.Model):
         ('files_block', FilesBlock()),
         ('collapsible_paragraph_block', CollapsibleParagraphBlock()),
         ('promotion_block_stream_block', PromotionBlockStreamBlock()),
+        ('interactive_chart', InteractiveChartBlock()),
     ]
 
     body_accordion_block = ('accordion', AccordionBlock())
@@ -912,6 +914,14 @@ class BasicPage(
     ThemeablePageAbstract,
 ):
     """Page with StreamField body"""
+
+    body = StreamField(
+        BasicPageAbstract.body_default_blocks + [
+            BasicPageAbstract.body_autoplay_video_block,
+        ],
+        blank=True,
+        use_json_field=True,
+    )
 
     related_files = StreamField(
         [

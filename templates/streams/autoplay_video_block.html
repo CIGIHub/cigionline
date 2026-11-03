@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        <video playsinline autoplay muted controls>
+        <video playsinline{% if not self.disable_autoplay %} autoplay{% endif %} muted controls>
           <source src="{{ self.video.url }}" type="video/mp4">
         </video>
       </div>

@@ -148,6 +148,12 @@ $(function () {
 
 addInlineVideoActions();
 
+if (document.querySelector('.interactive-chart')) {
+  import('./js/interactive_chart_block').then(({ default: initializeInteractiveCharts }) => {
+    initializeInteractiveCharts();
+  });
+}
+
 const cookieConsentContainer = document.getElementById('cigi-cookie-consent-container');
 if (
   cookieConsentContainer &&

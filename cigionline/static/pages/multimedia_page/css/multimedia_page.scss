@@ -2,6 +2,8 @@
 @import '../../../css/global/animations/slide_down';
 @import '../../../css/includes/hero_multimedia';
 
+
+
 .multimedia-series-block {
   margin: 3em 0;
 
@@ -18,6 +20,18 @@
     p {
       line-height: 1.25em;
       margin-bottom: 0;
+    }
+  }
+}
+
+section {
+  &.body {
+    .paragraph-block {
+      p {
+        a {
+          overflow-wrap: anywhere;
+        }
+      }
     }
   }
 }
