@@ -379,9 +379,12 @@ h1 {
 .overlay {
   background-color: $background-overlay;
   height: 100%;
+  opacity: 0;
+  pointer-events: none;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
+  transition: opacity 250ms ease-in, z-index 0s linear 250ms;
   width: 100%;
   z-index: -1;
 
@@ -391,6 +394,8 @@ h1 {
 
   &.is-visible {
     opacity: 1;
+    pointer-events: auto;
+    transition: opacity 250ms ease-out;
     z-index: 3;
   }
 }
