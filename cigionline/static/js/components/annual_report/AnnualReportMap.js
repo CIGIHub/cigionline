@@ -590,7 +590,9 @@ function AnnualReportMap({ slide }) {
             )}
 
             <div className="map-card-meta">
-              <span>{activeStory.publishing_date}</span>
+              {activeStory.publishing_date && (
+                <span>{activeStory.publishing_date}</span>
+              )}
               <span>{activeStory.location}</span>
             </div>
           </div>
