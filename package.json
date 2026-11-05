@@ -34,6 +34,7 @@
     "chartjs-plugin-datalabels": "^2.2.0",
     "framer-motion": "12.4.7",
     "jquery": "3.6.0",
+    "leaflet": "^1.9.4",
     "mediaelement": "7.0.5",
     "normalize.css": "8.0.1",
     "react-calendar": "4.0.0",

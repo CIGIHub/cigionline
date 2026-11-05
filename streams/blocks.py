@@ -1932,7 +1932,7 @@ class ARSlideBoardBlock(blocks.StructBlock):
     ])
 
 
-class ARSlideColumnBlock(blocks.StructBlock):
+class ARSlideContentBlock(blocks.StructBlock):
     CONTENT_TYPES = [
         ('publication', 'Publication'),
         ('opinion', 'Opinion'),
@@ -1954,6 +1954,16 @@ class ARSlideColumnBlock(blocks.StructBlock):
         ('t7', 'T7'),
         ('website', 'Website'),
     ]
+    type = blocks.ChoiceBlock(choices=CONTENT_TYPES, required=True)
+    type_override = blocks.CharBlock(required=False, help_text='Override the content type label for this content item')
+    type_override_fr = blocks.CharBlock(required=False, help_text='Override the content type label for this content item in French')
+    page = blocks.PageChooserBlock(required=False)
+    link_override = blocks.URLBlock(required=False, help_text='Override the link for this content item')
+    title_en = blocks.RichTextBlock(required=False, help_text='Override the title for this content item')
+    title_fr = blocks.RichTextBlock(required=False, help_text='Override the title for this content item')
+
+
+class ARSlideColumnBlock(blocks.StructBlock):
     column = blocks.StreamBlock([
         ('paragraph_column', blocks.StructBlock([
             ('en', blocks.RichTextBlock(required=False, features=['bold', 'italic', 'link', 'red-line', 'chair-name'])),
@@ -1961,17 +1971,7 @@ class ARSlideColumnBlock(blocks.StructBlock):
         ])),
         ('content_column', blocks.StreamBlock(
             [
-                ('content', blocks.StructBlock(
-                    [
-                        ('type', blocks.ChoiceBlock(choices=CONTENT_TYPES, required=True)),
-                        ('type_override', blocks.CharBlock(required=False, help_text='Override the content type label for this content item')),
-                        ('type_override_fr', blocks.CharBlock(required=False, help_text='Override the content type label for this content item in French')),
-                        ('page', blocks.PageChooserBlock(required=False)),
-                        ('link_override', blocks.URLBlock(required=False, help_text='Override the link for this content item')),
-                        ('title_en', blocks.RichTextBlock(required=False, help_text='Override the title for this content item')),
-                        ('title_fr', blocks.RichTextBlock(required=False, help_text='Override the title for this content item')),
-                    ]
-                ))
+                ('content', ARSlideContentBlock()),
             ],
             required=False
         )),
