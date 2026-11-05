@@ -1174,7 +1174,11 @@ class MapStory(ClusterableModel):
         null=False,
         features=['bold', 'italic', 'link'],
     )
-    publishing_date = models.DateTimeField(blank=False, null=True, verbose_name='Story Date')
+    publishing_date = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name='Story Date',
+    )
     location = models.CharField(max_length=255)
     research_theme = models.ForeignKey(
         'research.ThemePage',
