@@ -1437,6 +1437,10 @@ class GroupRegistrationConfirmTests(TestCase):
         self.assertNotIn("s=pending", resp["Location"])
         self.assertTrue(send_mock.called)
 
+        result = self.client.get(resp["Location"])
+        self.assertEqual(result.status_code, 200)
+        self.assertContains(result, "Thanks, Primary.")
+
         from events.models import Registrant
 
         statuses = list(Registrant.objects.filter(event=event).values_list("status", flat=True))
@@ -1850,6 +1854,17 @@ class EventsAPITests(WagtailPageTestCase):
 
 
 class EmailTemplateRenderingTests(WagtailPageTestCase):
+    def test_group_guest_name_lists_guests(self):
+        from events.emailing import _group_guest_name
+
+        registrants = [
+            SimpleNamespace(first_name="Primary", last_name="Registrant"),
+            SimpleNamespace(first_name="Guest", last_name="One"),
+            SimpleNamespace(first_name="Guest", last_name="Two"),
+        ]
+
+        self.assertEqual(_group_guest_name(registrants), "Guest One, Guest Two")
+
     def test_streamfield_email_rendering_outputs_email_safe_wrapper(self):
         class DummyTemplate:
             def __init__(self, body):

@@ -427,6 +427,14 @@ def _render_group_registrant_answers(registrants: list) -> tuple[str, str]:
     return ("\n".join(sections_html).strip(), "\n".join(lines).strip())
 
 
+def _group_guest_name(registrants: list) -> str:
+    return ", ".join(
+        name
+        for registrant in registrants[1:]
+        if (name := f"{registrant.first_name} {registrant.last_name}".strip())
+    )
+
+
 def send_event_campaign_email(campaign, registrant) -> None:
     """Send one scheduled EmailCampaign email to a registrant.
 
@@ -946,6 +954,7 @@ def send_group_confirmation_email(*, group, registrants: list, confirmed_flags: 
         "manage_url": manage_url,
         "group": group,
         "people": people,
+        "guest_name": _group_guest_name(registrants),
     }
     ctx.update(_event_email_merge_vars(event))
 
