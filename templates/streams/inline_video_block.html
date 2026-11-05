@@ -1,31 +1,15 @@
-{% load wagtailimages_tags wagtailembeds_tags %}
-
-<div class="container">
-  <div class="row d-block">
-    <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2 stream-block-inline-video">
-      <div class="stream-block-inline-video-content">
-        <div class="flex-row">
-          <div class="img-wrapper">
-            {% image self.specific.image_hero fill-377x246 %}
-            <div class="image-button">
-              <i class="fas fa-play"></i>
-            </div>
-          </div>
-
-          <div class="stream-block-inline-video-text flex-column">
-            <div class="watch-video-label meta">WATCH <i class="fa fa-chevron-down"></i></div>
-            <a href="{{ self.url }}">{{ self.title }}</a>
-          </div>
-
-          <div class="close-video-icon hidden">
-            <i class="fa fa-times-circle"></i>
-          </div>
-        </div>
-
-        <div class="video-wrapper shrink">
-          {% embed self.specific.multimedia_url max_width=705 %}
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+{% load wagtailembeds_tags wagtailcore_tags %}
+{% comment %}
+  Inline video (page chooser → multimedia page) — the legacy expand-to-play
+  panel becomes the prose media treatment: in-measure embed with the video
+  title as a linked caption. Falls back to a plain link when the chosen page
+  has no embeddable URL.
+{% endcomment %}
+{% if self.specific.multimedia_url %}
+  <figure class="ds-prose__media">
+    {% embed self.specific.multimedia_url max_width=820 %}
+    <figcaption><a href="{% pageurl self %}">{{ self.title }}</a></figcaption>
+  </figure>
+{% else %}
+  <p class="ds-prose__media-link"><a href="{% pageurl self %}">Watch: {{ self.title }}</a></p>
+{% endif %}

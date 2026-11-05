@@ -1,0 +1,83 @@
+// =============================================================================
+// Design System — Alt Hero block
+// Full-bleed background image over a black base with a heavy top/bottom gradient
+// for legibility. Content anchored to the bottom: breadcrumb/eyebrow + large
+// title on the left, optional description on the right. White text throughout.
+// Full-bleed: rendered outside .container; inset comes from the block padding.
+// =============================================================================
+
+.ds-alt-hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; // content sits at the bottom
+  min-height: 683px; // hero frame height
+  padding-block: var(--space-section-y); // horizontal gutter + 1280 cap via .ds-container on __content
+  overflow: hidden;
+
+  // --- Background image + gradients -----------------------------------------
+  &__media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--color-brand-black); // base behind the image
+  }
+
+  &__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    // Darken the top edge and (heavily) the bottom so the title/description read.
+    background:
+      linear-gradient(0deg, rgba(0, 0, 0, 0.7) 18%, rgba(102, 102, 102, 0) 90%),
+      linear-gradient(180deg, rgba(102, 102, 102, 0) 75%, rgb(0, 0, 0) 96%),
+      linear-gradient(180deg, rgb(0, 0, 0) 2%, rgba(102, 102, 102, 0) 26%);
+  }
+
+  // --- Content (bottom) -----------------------------------------------------
+  &__content {
+    display: flex;
+    gap: var(--space-48);
+    align-items: flex-start;
+    width: 100%;
+    color: var(--color-brand-white); // shared breadcrumbs inherit this
+  }
+
+  &__header {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-32); // breadcrumb → title (BugHerd #76)
+  }
+
+  &__heading {
+    @include header-1; // 56px
+    color: var(--color-brand-white);
+    margin: 0;
+  }
+
+  &__description {
+    @include paragraph-1;
+    color: var(--color-brand-white);
+    flex: 0 1 var(--width-410);
+    min-width: 0;
+  }
+
+  // --- Mobile: stack, lighter height ----------------------------------------
+  @media (max-width: 768px) {
+    min-height: 420px;
+    padding-block: var(--space-48); // inline gutter from .ds-container (responsive)
+
+    &__content { flex-direction: column; }
+
+    &__description { flex-basis: auto; }
+  }
+}

@@ -1,11 +1,5 @@
 {% load wagtailembeds_tags %}
-
-<div class="container">
-  <div class="row d-block">
-    <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-      <div class="embedded-multimedia-block">
-        {% embed self.multimedia_url max_width=705 %}
-      </div>
-    </div>
-  </div>
+{% comment %}Embedded multimedia — in-measure media embed (prose media treatment).{% endcomment %}
+<div class="ds-prose__media">
+  {% embed self.multimedia_url max_width=820 %}
 </div>

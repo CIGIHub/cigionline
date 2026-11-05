@@ -1,5 +1,13 @@
 {% extends "base.html" %}
-{% load webpack_loader wagtailimages_tags wagtailcore_tags %}
+{% load wagtailimages_tags wagtailcore_tags heroes cards %}
+{% comment %}
+  Program / activity page (ProjectPage) — DS shell (Keypage R03 Program frames).
+  Dev-owned: the program hero (theme-accent content hero) and the data-driven
+  Team Members / Contact sections. Everything else is the body StreamField —
+  legacy prose renders in the reading measure; DS modules (composable tabs,
+  faceted listings, carousels) render full-bleed. Theme-forked microsites and
+  Think7 keep their own templates (get_template).
+{% endcomment %}
 
 {% block meta_description %}
   {% if self.social_description %}
@@ -36,177 +44,74 @@
   {% endif %}
 {% endblock %}
 
-{% block extra_css %}
-  {% render_bundle 'projectPage' 'css' %}
-{% endblock %}
-{% block extra_js %}
-  <script type="text/javascript">
-    var projectId= {{ self.id }};
-    var hasTaggedPages = {{ self.has_tagged_pages|lower }};
-  </script>
-  {% render_bundle 'projectPage' 'js' attrs='defer' %}
-{% endblock %}
-
 {% block content %}
-  {% block page_hero %}
-    {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu image_banner=self.image_banner %}
-  {% endblock %}
-  {% if featured_pages|length > 0 %}
-    <section class="featured">
-      <div class="container">
-        <h2 class="paragraph-heading">Featured</h2>
-        {% if self.featured_pages_format == 'large_only' %}
-          <div class="row">
-            <div class="col-12 singular-feature">
-              {% include "includes/features/feature_content_large.html" with content=featured_pages.0 poster=True cta=True %}
+  {% if self.image_hero %}
+    {# Image alt-hero (breadcrumb · H1 · subtitle) when a hero background is authored — BugHerd #77; falls back to the content hero. #}
+    {% include "includes/alt_hero.html" with image=self.image_hero heading=self.title heading_tag="h1" crumbs=hero_crumbs description=self.subtitle show_overlay=self.show_hero_overlay %}
+  {% else %}
+    {% page_hero self %}
+  {% endif %}
+
+  {% for section in self.body|body_sections %}
+    {% if section.kind == 'module' %}
+      {% include_block section.block %}
+    {% else %}
+      <div class="ds-surface ds-surface--light">
+        <div class="ds-reading ds-reading--section ds-container">
+          <div class="ds-reading__main">
+            <div class="ds-prose">
+              {% for block in section.blocks %}{% include_block block %}{% endfor %}
             </div>
           </div>
-        {% elif self.featured_pages_format == 'standard' %}
-          <div class="row">
-            <div class="col-12 col-md-8 feature-border-right">
-              {% include "includes/features/feature_content_large.html" with content=featured_pages.0 poster=True cta=True %}
-            </div>
-            <div class="col-12 col-md-4 featured-small">
-              {% with featured_pages|slice:"1:4" as featured_small %}
-                {% for item in featured_small %}
-                  {% if forloop.counter > 1 %}
-                    <hr>
-                  {% endif %}
-                  {% include "includes/features/feature_content_small.html" with content=item cta=True %}
-                {% endfor %}
-              {% endwith %}
-            </div>
-          </div>
-        {% elif self.featured_pages_format == 'medium_only' %}
-          {% with featured_pages|slice:":3" as featured_medium %}
-          <div class="row featured-medium">
-            {% for item in featured_medium %}
-              <div class="col-12 col-md-4">
-                {% if forloop.counter > 1 %}
-                  <hr>
-                {% endif %}
-                {% include "includes/features/feature_content_medium.html" with content=item cta=True %}
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+
+  {% if self.members.count %}
+    <div class="ds-surface ds-surface--light">
+      <div class="ds-experts-grid ds-container">
+        {% include "includes/module_title.html" with heading="Team Members" %}
+        <div class="ds-experts-grid__grid">
+          {% for member in self.members.all %}
+            {% if member.member.live %}
+              <div class="ds-experts-grid__cell">
+                {% expert_card member.member show_bio=True %}
               </div>
-            {% endfor %}
-          </div>
-          {% endwith %}
-        {% endif %}
-        <div class="row">
-          <div class="col-12">
-            <hr>
-          </div>
+            {% endif %}
+          {% endfor %}
         </div>
       </div>
-    </section>
+    </div>
   {% endif %}
 
-  {% include "includes/body.html" with body=self.body heading="About" %}
-
-  {% if self.members.all %}
-    <section class="persons-list-block">
-      <div class="container">
-        <div class="row d-block">
-          <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-            <h2 class="paragraph-heading">Team Members</h2>
-            <ul class="persons-list">
-              {% for member in self.members.all %}
-                <li>
-                  <div class="person-info">
-                    <a href="{{ member.url }}" class="person-photo">
-                      <div class="img-wrapper">
-                        {% if member.member.image_square %}
-                          {% image member.member.image_square fill-300x300 %}
-                        {% endif %}
-                      </div>
-                    </a>
-            
-                    <div>
-                      <a href="{{ member.member.url }}" class="person-name">{{ member.member.title }}</a>
-                      <div class="person-function">
-                        {{ member.member.position }}
-                      </div>
-                    </div>
-                  </div>
-                  <div class="person-description">
-                    {{ member.member.short_bio|safe }}
-                  </div>
-                </li>
-              {% endfor %}
-            </ul>
-          </div>
+  {% for block in self.additional_members %}
+    <div class="ds-surface ds-surface--light">
+      <div class="ds-experts-grid ds-container">
+        {% include "includes/module_title.html" with heading=block.value.title %}
+        <div class="ds-experts-grid__grid">
+          {% for member in block.value.persons %}
+            {% if member.value.live %}
+              <div class="ds-experts-grid__cell">
+                {% expert_card member.value show_bio=True %}
+              </div>
+            {% endif %}
+          {% endfor %}
         </div>
       </div>
-    </section>
-  {% endif %}
-
-  {% if self.additional_members %}
-    {% for block in self.additional_members %}
-      <section class="persons-list-block">
-        <div class="container">
-          <div class="row d-block">
-            <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-              <h2 class="paragraph-heading">{{ block.value.title }}</h2>
-              <ul class="persons-list">
-                {% for member in block.value.persons %}
-                  <li>
-                    <div class="person-info">
-                      <a href="{{ member.url }}" class="person-photo">
-                        <div class="img-wrapper">
-                          {% if member.value.image_square %}
-                            {% image member.value.image_square fill-300x300 %}
-                          {% endif %}
-                        </div>
-                      </a>
-              
-                      <div>
-                        <a href="{{ member.value.url }}" class="person-name">{{ member.value.title }}</a>
-                        <div class="person-function">
-                          {{ member.value.position }}
-                        </div>
-                      </div>
-                    </div>
-                    <div class="person-description">
-                      {% if block.value.bio_source_field and block.value.bio_source_field == 'short_bio' %}
-                        {{ member.value.short_bio|safe }}
-                      {% else %}
-                        {% for block in member.value.body %}
-                          {{ block.value|safe }}
-                        {% endfor %}
-                      {% endif %}
-                    </div>
-                  </li>
-                {% endfor %}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-    {% endfor %}
-  {% endif %}
+    </div>
+  {% endfor %}
 
   {% if self.contact %}
-    <section class="contact-info">
-      <div class="container">
-        <div class="row">
-          <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-            <h2 class="paragraph-heading">Contact Us</h2>
-            <div>
-              {{ self.contact|richtext }}
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endif %}
-
-  <section>
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <div id="project-search-table">
+    <div class="ds-surface ds-surface--light">
+      <div class="ds-reading ds-reading--section ds-container">
+        <div class="ds-reading__main">
+          <div class="ds-prose">
+            <h2>Contact Us</h2>
+            {{ self.contact|richtext }}
           </div>
         </div>
       </div>
     </div>
-  </section>
+  {% endif %}
 {% endblock content %}

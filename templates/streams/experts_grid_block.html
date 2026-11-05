@@ -1,0 +1,40 @@
+{% load wagtailcore_tags cards icons %}
+{% comment %}
+  Experts Grid — dynamic module. A paginated 3-up grid of expert cards
+  (ExpertsGridBlock.get_context): auto (all live experts, A–Z) or manual
+  (hand-picked). Section title (heading left + intro/CTA right). Cards stagger in
+  on scroll (data-ds-reveal); the grid pages client-side (expert-grid.js). Cells
+  are separated by column + row dividers (surface-border). Surface-aware (dark
+  default).
+{% endcomment %}
+{# An empty module renders nothing (BugHerd #297). #}
+{% if experts %}
+<div class="ds-surface ds-surface--{{ self.surface }} ds-surface--accent-{{ self.accent }}">
+  <div class="ds-experts-grid ds-container">
+    {# lead-wide: heading grows, intro+button cap at the 410 column (KP, BugHerd #87). #}
+    {% include "includes/module_title.html" with wide_lead=True heading=self.heading intro=self.intro cta_url=cta_url cta_label=self.cta_label|default:"View All Experts" cta_scheme=cta_scheme %}
+
+    {% if experts %}
+      <div class="ds-experts-grid__grid" data-ds-expert-grid data-ds-per-page="{{ per_page }}"
+        data-ds-reveal data-ds-reveal-stagger="80">
+        {% for person in experts %}
+          <div class="ds-experts-grid__cell" data-ds-expert-grid-item data-ds-reveal-item>
+            {% expert_card person slots=self.card_slots %}
+          </div>
+        {% endfor %}
+      </div>
+      {# Pager built by expert-grid.js; hidden with no JS (all cards show). #}
+      <div class="ds-pager ds-experts-grid__pager" data-ds-expert-grid-pager hidden></div>
+      {% comment %}
+        Mobile "Load More" — replaces the numbered pager under 769px (BugHerd
+        #147). Standard outline button, so it lives in the template rather than
+        being built in JS; expert-grid.js only reveals and wires it.
+      {% endcomment %}
+      <button type="button" class="ds-button ds-button--outline ds-experts-grid__load-more"
+        data-ds-expert-grid-more hidden>
+        <span class="ds-button__label">Load More</span>
+      </button>
+    {% endif %}
+  </div>
+</div>
+{% endif %}

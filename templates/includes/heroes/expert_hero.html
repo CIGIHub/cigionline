@@ -1,0 +1,41 @@
+{% load wagtailcore_tags wagtailimages_tags cards %}
+{% comment %}
+  Expert Bio hero — square headshot beside breadcrumb · name · role · bio ·
+  Expertise pills · Programs pills · social. Dark surface. `hero` =
+  core.heroes.person_hero_data (the expert_data superset). Simple variant drops
+  the bio.
+{% endcomment %}
+{# DPH brand swaps black for charcoal (BugHerd #232); green accent = DPH only. #}
+<header class="ds-hero ds-hero--expert ds-surface ds-surface--{% if main_accent_scheme == 'green' %}charcoal{% else %}dark{% endif %} ds-surface--accent-{{ main_accent_scheme|default:'red' }}{% if hero.simple %} ds-hero--simple{% endif %}">
+  <div class="ds-hero__inner ds-container">
+    {% if hero.avatar %}
+      <div class="ds-hero__headshot">{% image hero.avatar fill-600x600 %}</div>
+    {% endif %}
+    <div class="ds-hero__expert-body">
+      {% include "includes/breadcrumbs.html" with crumbs=hero.breadcrumb %}
+      <h1 class="ds-hero__title">{{ hero.name }}</h1>
+      {% if hero.role %}<p class="ds-hero__role">{{ hero.role }}</p>{% endif %}
+      {% if hero.bio %}<div class="ds-hero__bio">{{ hero.bio|richtext }}</div>{% endif %}
+
+      {% if hero.expertise_tags %}
+        <div class="ds-hero__taglist">
+          <p class="ds-hero__taglist-label">Expertise</p>
+          <div class="ds-hero__pills">
+            {% for t in hero.expertise_tags %}{% include "includes/tag.html" with label=t.label accent=t.accent %}{% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if hero.programs %}
+        <div class="ds-hero__taglist">
+          <p class="ds-hero__taglist-label">Programs</p>
+          <div class="ds-hero__pills">
+            {% for p in hero.programs %}{% include "includes/tag.html" with label=p.label accent=p.accent %}{% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if hero.share %}<div class="ds-hero__share">{% share_buttons hero.share heading="" %}</div>{% endif %}
+    </div>
+  </div>
+</header>

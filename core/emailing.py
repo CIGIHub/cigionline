@@ -85,3 +85,74 @@ def send_facility_rental_confirmation_email(form_data):
 
     sg = SendGridAPIClient(api_key)
     sg.send(message)
+
+
+def _general_from_email():
+    """General Inquiries sender: SENDGRID_FROM_EMAIL_GENERAL, falling back to
+    the rentals sender. getattr defaults evaluate eagerly, so the naive
+    two-arg getattr raised AttributeError when BOTH were unset (staging,
+    BugHerd #355's second failure mode) — resolve lazily and fail with a
+    clear message instead."""
+    addr = (
+        getattr(settings, "SENDGRID_FROM_EMAIL_GENERAL", None) or
+        getattr(settings, "SENDGRID_FROM_EMAIL_RENTALS", None)
+    )
+    if not addr:
+        raise RuntimeError("SENDGRID_FROM_EMAIL_GENERAL / _RENTALS is not configured")
+    return addr
+
+
+def send_general_inquiry_email(recipients: list[str], form_data: dict):
+    """Email a General Inquiries submission (BugHerd #163) to the configured
+    recipients. Same SendGrid path as the venue rental notification; the from
+    address falls back to the rentals sender until a general one is set."""
+    api_key = settings.SENDGRID_API_KEY
+    if not api_key:
+        raise RuntimeError("SENDGRID_API_KEY is not configured")
+
+    first_name = form_data.get("first_name") or ""
+    last_name = form_data.get("last_name") or ""
+    subject = f"[General Inquiry] {first_name} {last_name}".strip()
+
+    html_body = render_to_string(
+        "core/email/general_inquiry_notification.html", {"data": form_data}
+    )
+    text_body = strip_tags(html_body)
+
+    message = Mail(
+        from_email=_general_from_email(),
+        to_emails=recipients,
+        subject=subject,
+        html_content=html_body,
+        plain_text_content=text_body,
+    )
+
+    sg = SendGridAPIClient(api_key)
+    response = sg.send(message)
+    if response.status_code != 202:
+        raise RuntimeError(f"Failed to send email, status code: {response.status_code}")
+    return response
+
+
+def send_general_inquiry_confirmation_email(form_data):
+    """Confirmation back to the submitter, mirroring the venue flow."""
+    api_key = settings.SENDGRID_API_KEY
+    if not api_key:
+        raise RuntimeError("SENDGRID_API_KEY not configured")
+
+    subject = "CIGI General Inquiry - Submission Confirmation"
+    html_body = render_to_string(
+        "core/email/general_inquiry_confirmation.html", {"data": form_data}
+    )
+    text_body = strip_tags(html_body)
+
+    message = Mail(
+        from_email=_general_from_email(),
+        to_emails=form_data["email"],
+        subject=subject,
+        html_content=html_body,
+        plain_text_content=text_body,
+    )
+
+    sg = SendGridAPIClient(api_key)
+    sg.send(message)

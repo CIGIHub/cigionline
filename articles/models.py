@@ -1,5 +1,6 @@
 from core.models import (
     BasicPageAbstract,
+    HeroContentTogglesAbstract,
     ContentPage,
     FeatureablePageAbstract,
     FromTheArchivesPageAbstract,
@@ -7,9 +8,9 @@ from core.models import (
     ShareablePageAbstract,
     ThemeablePageAbstract,
 )
+from core.routers import RouterServeMixin
 from django.db import models
 from modelcluster.fields import ParentalKey
-from mediavalet.panels import MediaValetImageChooserPanel
 from publications.models import PublicationPage
 from streams.blocks import SeriesItemImageBlock
 from wagtail.admin.panels import (
@@ -29,11 +30,15 @@ import pytz
 from .tts import extract_body_text
 
 
-class ArticleLandingPage(BasicPageAbstract, SearchablePageAbstract, Page):
+class ArticleLandingPage(RouterServeMixin, BasicPageAbstract, SearchablePageAbstract,
+                         ThemeablePageAbstract, Page):
     max_count = 1
     parent_page_types = ['home.HomePage']
     subpage_types = ['articles.OpinionSeriesListPage']
     templates = 'articles/article_landing_page.html'
+
+    # The abstract body already carries the defaults + the full DS module
+    # library (BugHerd #116) — authored modules render below the listing.
 
     def get_featured_articles(self):
         featured_article_ids = self.featured_articles.order_by('sort_order').values_list('article_page', flat=True)
@@ -43,18 +48,26 @@ class ArticleLandingPage(BasicPageAbstract, SearchablePageAbstract, Page):
         ).in_bulk(featured_article_ids)
         return [pages[x] for x in featured_article_ids]
 
+    # DS Opinions landing composes via the body module library (BugHerd #124):
+    # the page-level hardcoded listing is retired. RouterServeMixin stays so an
+    # authored faceted-listing block gets its AJAX partial swaps.
     def get_context(self, request):
+        from core.heroes import _breadcrumb
+
         context = super().get_context(request)
-        context['featured_articles'] = self.get_featured_articles()
+        context['hero_crumbs'] = _breadcrumb(self)
         return context
 
-    content_panels = Page.content_panels + [
+    content_panels = [
+        BasicPageAbstract.title_panel,
+        BasicPageAbstract.body_panel,
+        BasicPageAbstract.images_panel,
         MultiFieldPanel(
             [
                 InlinePanel(
                     'featured_articles',
                     max_num=15,
-                    min_num=13,
+                    min_num=0,
                     label='Article',
                 )
             ],
@@ -65,6 +78,13 @@ class ArticleLandingPage(BasicPageAbstract, SearchablePageAbstract, Page):
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
+
+    # Page-level light/dark choice (BugHerd #136 follow-up: all composed
+    # landings). The theme panel stays off — the legacy theme fork would
+    # bypass the DS template.
+    settings_panels = Page.settings_panels + [
+        ThemeablePageAbstract.surface_panel,
+    ]
 
     class Meta:
         verbose_name = 'Article Landing Page'
@@ -129,6 +149,7 @@ class ArticleListPage(Page):
 
 class ArticlePage(
     BasicPageAbstract,
+    HeroContentTogglesAbstract,
     ContentPage,
     FeatureablePageAbstract,
     FromTheArchivesPageAbstract,
@@ -179,9 +200,44 @@ class ArticlePage(
         on_delete=models.SET_NULL,
         related_name='articles',
     )
+    authors_intro = RichTextField(
+        blank=True,
+        features=['bold', 'italic', 'link'],
+        verbose_name='About the Author intro',
+        help_text='Optional short intro under the "About the Author(s)" '
+                  'heading in the sidebar.',
+    )
     body = StreamField(
         BasicPageAbstract.body_default_blocks + [
             BasicPageAbstract.body_accordion_block,
+            BasicPageAbstract.body_accordion_module_block,
+            BasicPageAbstract.body_text_columns_block,
+            BasicPageAbstract.body_stats_block,
+            BasicPageAbstract.body_image_text_block,
+            BasicPageAbstract.body_cta_image_block,
+            BasicPageAbstract.body_alt_hero_block,
+            BasicPageAbstract.body_split_hero_block,
+            BasicPageAbstract.body_primary_hero_block,
+            BasicPageAbstract.body_horizontal_tabs_block,
+            BasicPageAbstract.body_text_card_grid_block,
+            BasicPageAbstract.body_video_carousel_block,
+            BasicPageAbstract.body_program_spotlight_block,
+            BasicPageAbstract.body_program_grid_block,
+            BasicPageAbstract.body_programs_carousel_block,
+            BasicPageAbstract.body_experts_grid_block,
+            BasicPageAbstract.body_experts_carousel_block,
+            BasicPageAbstract.body_resource_carousel_block,
+            BasicPageAbstract.body_resource_bento_block,
+            BasicPageAbstract.body_events_carousel_block,
+            BasicPageAbstract.body_news_carousel_block,
+            BasicPageAbstract.body_trending_issues_block,
+            BasicPageAbstract.body_jobs_list_block,
+            BasicPageAbstract.body_news_grid_block,
+            BasicPageAbstract.body_form_block,
+            BasicPageAbstract.body_video_text_block,
+            BasicPageAbstract.body_banner_block,
+            BasicPageAbstract.body_gallery_text_block,
+            BasicPageAbstract.body_supporting_materials_block,
             BasicPageAbstract.body_autoplay_video_block,
             BasicPageAbstract.body_chart_block,
             BasicPageAbstract.body_embedded_tiktok_block,
@@ -201,7 +257,6 @@ class ArticlePage(
             BasicPageAbstract.additional_image_block,
             BasicPageAbstract.additional_disclaimer_block,
             BasicPageAbstract.line_break_block,
-            BasicPageAbstract.newsletter_subscription_block,
         ],
         blank=True,
         use_json_field=True,
@@ -254,10 +309,15 @@ class ArticlePage(
         verbose_name='Hide Disclaimer',
         help_text='When enabled, hide disclaimer at the bottom of the page',
     )
-    hide_has_disclaimer = models.BooleanField(
+    # DPH news scope (BugHerd #439): the hub's Latest News grid needs a
+    # queryable marker, and the DPH news items carry no topics/projects.
+    # Deliberately NOT a topic/project — those render as front-end taxonomy
+    # (pills, filters); this flag stays admin-only (Evan, 2026-09-02).
+    is_dph_news = models.BooleanField(
         default=False,
-        verbose_name='Hide HAS Disclaimer',
-        help_text='When enabled, hide the Hub for Advanced Studies disclaimer',
+        verbose_name='DPH news item',
+        help_text='Show this article in the Digital Policy Hub news feed. '
+                  'Admin-only flag — never shown on the front end.',
     )
     image_banner = models.ForeignKey(
         'images.CigionlineImage',
@@ -415,21 +475,24 @@ class ArticlePage(
             'Opinion',
         ]
 
-    @property
-    def show_has_disclaimer(self):
-        if self.hide_has_disclaimer or not self.article_type or not self.publishing_date:
-            return False
+    # Art-directed longform essays whose layout is the content. Kept as the
+    # named subset of the theme forks; since the 2026-09-21 revert EVERY themed
+    # article with a fork template renders it (series skins, Big Tech, DPH
+    # included) — CIGI asked for the converted special-design pages back.
+    ART_DIRECTED_THEME_DIRS = {
+        'longform',
+        'longform_2',
+        'longform_2_dark_mode',
+        'wide_landscape',
+        'accents',
+        'special_opinions',
+    }
 
-        return (
-            self.article_type.title in ['Opinion', 'Opinions']
-            and self.publishing_date.date() > datetime.date(2026, 7, 13)
-        )
+    legacy_fork_template = 'article_page.html'
 
     def get_template(self, request, *args, **kwargs):
         standard_template = super(ArticlePage, self).get_template(request, *args, **kwargs)
-        if self.theme:
-            return f'themes/{self.get_theme_dir()}/article_page.html'
-        return standard_template
+        return self.themed_template(self.legacy_fork_template, standard_template)
 
     def get_additional_images(self):
         additional_images = []
@@ -480,7 +543,6 @@ class ArticlePage(
                 ),
                 FieldPanel('hide_excerpt'),
                 FieldPanel('hide_disclaimer'),
-                FieldPanel('hide_has_disclaimer'),
                 FieldPanel('publishing_date'),
                 FieldPanel('website_url'),
                 FieldPanel('website_button_text'),
@@ -489,7 +551,14 @@ class ArticlePage(
             heading='General Information',
             classname='collapsible collapsed',
         ),
-        ContentPage.authors_panel,
+        MultiFieldPanel(
+            [
+                InlinePanel('authors'),
+                FieldPanel('authors_intro'),
+            ],
+            heading='Authors',
+            classname='collapsible collapsed',
+        ),
         MultiFieldPanel(
             [
                 FieldPanel('tts_voice'),
@@ -500,10 +569,10 @@ class ArticlePage(
         ),
         MultiFieldPanel(
             [
-                MediaValetImageChooserPanel('image_hero'),
-                MediaValetImageChooserPanel('image_poster'),
-                MediaValetImageChooserPanel('image_banner'),
-                MediaValetImageChooserPanel('image_banner_small'),
+                FieldPanel('image_hero'),
+                FieldPanel('image_poster'),
+                FieldPanel('image_banner'),
+                FieldPanel('image_banner_small'),
             ],
             heading='Images',
             classname='collapsible collapsed',
@@ -537,11 +606,13 @@ class ArticlePage(
                 InlinePanel('cigi_people_mentioned', label='People Mentioned'),
                 FieldPanel('interviewers'),
                 FieldPanel('related_files'),
+                FieldPanel('is_dph_news'),
             ],
             heading='Related',
             classname='collapsible collapsed',
         ),
         FromTheArchivesPageAbstract.from_the_archives_panel,
+        HeroContentTogglesAbstract.hero_options_panel,
     ]
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
@@ -854,10 +925,10 @@ class ArticleSeriesPage(
         ),
         MultiFieldPanel(
             [
-                MediaValetImageChooserPanel('image_hero'),
-                MediaValetImageChooserPanel('image_banner'),
-                MediaValetImageChooserPanel('image_banner_small'),
-                MediaValetImageChooserPanel('image_poster'),
+                FieldPanel('image_hero'),
+                FieldPanel('image_banner'),
+                FieldPanel('image_banner_small'),
+                FieldPanel('image_poster'),
             ],
             heading='Image',
             classname='collapsible collapsed',
@@ -1118,8 +1189,8 @@ class OpinionSeriesPage(
         ),
         MultiFieldPanel(
             [
-                MediaValetImageChooserPanel('image_hero'),
-                MediaValetImageChooserPanel('image_banner'),
+                FieldPanel('image_hero'),
+                FieldPanel('image_banner'),
             ],
             heading='Images',
             classname='collapsible collapsed',

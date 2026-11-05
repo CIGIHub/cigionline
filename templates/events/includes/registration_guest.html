@@ -1,0 +1,25 @@
+{% load icons %}{% comment %}
+  One guest's sub-form on the registration form (no frame — the DS form
+  contract applied: ds-form__group box, "Guest n" + Remove on one line, the
+  name pair 2-up, then the type's other fields). Rendered for bound guest
+  forms after a POST and, with the formset's empty_form, inside the
+  <template data-guest-prototype> that registration-form.js clones.
+  Params: gf (guest form), index (1-based number or the "__INDEX__" marker).
+{% endcomment %}
+<div class="ds-form__group" data-guest-block>
+  <div class="ds-form__group-head">
+    <h3 class="ds-form__group-title" data-guest-title>Guest {{ index }}</h3>
+    <button type="button" class="ds-button ds-button--tertiary" data-guest-remove>
+      <span class="ds-button__label">Remove guest</span>
+    </button>
+  </div>
+  <div class="ds-form__row" data-ds-field>
+    {% include "includes/ds_form_field.html" with field=gf.first_name in_row=True %}
+    {% include "includes/ds_form_field.html" with field=gf.last_name in_row=True %}
+  </div>
+  {% for field in gf %}
+    {% if field.name != 'first_name' and field.name != 'last_name' %}
+      {% include "includes/ds_form_field.html" with field=field %}
+    {% endif %}
+  {% endfor %}
+</div>

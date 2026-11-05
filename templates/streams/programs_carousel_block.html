@@ -1,0 +1,54 @@
+{% load wagtailcore_tags cards icons %}
+{% comment %}
+  Programs Carousel — dynamic module. A section title (heading + intro + a "View
+  More" link to the program) sits as a stationary first column beside a swipeable
+  rail of content cards (ProgramsCarouselBlock.get_context). Same data + author
+  controls as the Program Grid: program auto/manual, cards auto/manual. Cards are
+  the shared media-vertical archetype; each carries the program's theme accent.
+  The title is NOT a slide — the rail holds only cards (BugHerd #137).
+
+  Shared infra: the carousel shell + Swiper init ([data-ds-carousel] in
+  gallery-init.js), section_header, carousel_nav, pagination, and the card.
+  Surface-aware (light / dark).
+{% endcomment %}
+{# No cards → no module. An empty rail rendered intro + pagination as a tall blank band (BugHerd #198). #}
+{% if carousel_pages %}
+<div class="ds-surface ds-surface--{{ self.surface }} ds-surface--accent-{{ self.accent }}">
+  <div class="ds-programs-carousel ds-container">
+    <div class="ds-carousel ds-programs-carousel__carousel" data-ds-carousel
+      data-ds-space="48"
+      data-ds-slides-lg="2"
+      data-ds-loop="{{ self.loop|yesno:'1,0' }}"
+      data-ds-pagination="{{ self.show_pagination|yesno:'1,0' }}">
+      {% comment %}
+        Title column: stationary on desktop, stacked on top on mobile — NOT a
+        slide, so the cards scroll past it (BugHerd #137, Experts pattern).
+      {% endcomment %}
+      <div class="ds-programs-carousel__intro">
+        {% if self.heading %}<h2 class="ds-programs-carousel__heading">{{ self.heading }}</h2>{% endif %}
+        {% if self.intro %}<div class="ds-programs-carousel__intro-text">{{ self.intro|richtext }}</div>{% endif %}
+        {% if view_more_url %}
+          <a class="ds-button ds-button--outline ds-button--{{ cta_scheme }} ds-programs-carousel__cta" href="{{ view_more_url }}">
+            <span class="ds-button__label">{{ self.cta_label|default:"View More" }}</span>
+            {% ds_icon 'chevron-right' css_class='ds-button__icon' %}
+          </a>
+        {% endif %}
+      </div>
+      <div class="swiper ds-carousel__swiper">
+        <div class="swiper-wrapper" data-ds-reveal data-ds-reveal-stagger="80">
+          {% for content, pills in carousel_cards %}
+            <div class="swiper-slide ds-programs-carousel__slide {{ carousel_accent_class }}" data-ds-reveal-item>
+              {% card content variant="media-vertical" pills=pills cta_label="Read More" cta_scheme=cta_scheme %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="ds-carousel__controls">
+        <div class="swiper-pagination ds-pagination"></div>
+        {% include "includes/carousel_nav.html" with prefix="carousel" %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}

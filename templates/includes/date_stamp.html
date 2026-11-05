@@ -1,0 +1,10 @@
+{% comment %}
+  Shared date-stamp molecule (.ds-date-stamp) — red month/day circle. Pass a
+  `date` (date/datetime). Decorative: it duplicates a date shown in full text
+  nearby, so it is aria-hidden. Used by event cards and event heroes. Optional
+  `size="lg"` is the registration hero's larger step (Event Form 1705:20344).
+{% endcomment %}
+<span class="ds-date-stamp{% if size %} ds-date-stamp--{{ size }}{% endif %}" aria-hidden="true">
+  <span class="ds-date-stamp__month">{{ date|date:"M" }}</span>
+  <span class="ds-date-stamp__day">{{ date|date:"j" }}</span>
+</span>

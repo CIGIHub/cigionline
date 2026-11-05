@@ -1,5 +1,8 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags heroes cards icons %}
+
+{# Policy Prompt singles are pink-branded end to end (BugHerd #312); other audio and video use the default light surface. #}
+{% block header %}{% include "includes/header.html" with header_surface=self.ds_surface %}{% endblock %}
 
 {% block meta_description %}
   {% if self.social_description %}
@@ -45,85 +48,41 @@
 
 {% block content %}
   {% block hero %}
-    {% include "includes/heroes/hero_multimedia.html" %}
+    {% page_hero self %}
   {% endblock %}
 
   {% if self.from_the_archives and self.from_the_archives_blurb %}
     {% include "includes/from_the_archives_blurb.html" with blurb=self.from_the_archives_blurb %}
   {% endif %}
 
-  {% if self.article_series_description %}
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col col-md-10 col-lg-8">
-          <div class="article-series-description">
-            {{self.article_series_description|richtext}}
-          </div>
-        </div>
-      </div>
-    </div>
+  {# Reading shell (Podcast Template / Multimedia Template): show #}
+  {# notes + hosts/guests aside; series note via the shell's series slot. No #}
+  {# Subscribe band on podcast singles (Evan, 2026-07-03). #}
+  {% if self.multimedia_type == 'audio' %}
+    {# Podcast rail (1360:69160): "Experts / Hosts" heading + authorable series #}
+    {# intro, persons as expert cards (expertise + latest activity, no bio). #}
+    {% include "includes/reading_body.html" with page=self body=self.body intro_note=self.article_series_description authors=self.authors.all author_count=self.author_count authors_heading="Experts / Host" authors_intro=self.multimedia_series.specific.podcast_hosts_description guests=self.podcast_guests guest_count=self.podcast_guests|length author_card_mode="expert" promote_labels=True series_page=self.multimedia_series suppress_subscribe=True surface=self.ds_surface tail_template="multimedia/includes/podcast_reading_tail.html" %}
+  {% else %}
+    {# Video single: player above the prose (audio's player is in the hero), #}
+    {# centred narrow measure per 1437:71519. #}
+    {% include "includes/reading_body.html" with page=self body=self.body lead_embed=self.multimedia_url measure="video" intro_note=self.article_series_description authors=self.authors.all author_count=self.author_count guests=self.podcast_guests guest_count=self.podcast_guests|length series_page=self.multimedia_series suppress_subscribe=True surface=self.ds_surface tail_template="multimedia/includes/podcast_reading_tail.html" %}
   {% endif %}
 
-  {% include "includes/body.html" with body=self.body %}
-
-  {% if self.transcript %}
-    <section>
-      {% for block in self.transcript %}
-        {% include_block block with id=block.id %}
-      {% endfor %}
-    </section>
-  {% endif %}
+  {% include 'includes/disclaimer_ds.html' with multimedia_disclaimer=True surface=self.ds_surface %}
 
   {% if self.multimedia_series %}
-    <section class="multimedia-series-block">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-md-10 col-lg-8">
-            <article>
-              <h2>
-                Series:
-                <a href="{{self.multimedia_series.url}}">
-                  {{ self.multimedia_series.title }}
-                </a>
-              </h2>
-              <p>{{ self.multimedia_series.specific.subtitle|richtext }}</p>
-            </article>
-          </div>
-        </div>
-      </div>
-    </section>
+    {# Same-series rail (Podcast Carousel) — LIGHT surface per the keypage, #}
+    {# and it replaces Explore Recommended on series episodes. #}
+    {% continue_listening self %}
+  {% else %}
+    {% block recommended %}
+      {# Tail rails are light even on the pink shell (keypage). #}
+      {% recommended_carousel self %}
+    {% endblock recommended %}
   {% endif %}
-
-  {% include 'includes/disclaimer.html' with multimedia_disclaimer=True %}
-
-  {% block recommended %}
-    {% if request.is_preview and self.recommended_content_preview %}
-      {% define self.recommended_content_preview as recommended_content %}
-    {% elif self.recommended_content %}
-      {% define self.recommended_content as recommended_content %}
-    {% endif %}
-    {% if recommended_content %}
-      <section class="recommended">
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="col col-md-10 col-lg-8">
-              <div class="flex-column align-items-center">
-                <div class="recommended-dot"></div>
-                <div class="recommended-vertical-line"></div>
-                <h2>Recommended</h2>
-                {% include "includes/footer_bracket.svg" %}
-              </div>
-              {% for page in recommended_content|slice:":3" %}
-                {% include "includes/recommended_article.html" with article=page.specific %}
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-      </section>
-    {% endif %}
-  {% endblock recommended %}
 
   {% block in_the_series %}
     {# Override this in templates to add series listing #}
   {% endblock %}
+
 {% endblock content %}

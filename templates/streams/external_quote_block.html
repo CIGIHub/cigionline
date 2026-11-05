@@ -1,17 +1,10 @@
-<div class="container">
-  <div class="row d-block">
-    <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-      <div class="stream-block-external-quote">
-        <blockquote>
-          {{ self.quote }}
-        </blockquote>
-
-        {% if self.source %}
-          <div class="stream-block-external-quote-source">
-            {{ self.source }}
-          </div>
-        {% endif %}
-      </div>
-    </div>
-  </div>
+{% comment %}
+  External quote — same treatment as block_quote (red top rule); the source
+  line reuses the quote-author styling.
+{% endcomment %}
+<div class="stream-block-blockquote">
+  <blockquote>{{ self.quote }}</blockquote>
+  {% if self.source %}
+    <div class="stream-block-blockquote-author">{{ self.source }}</div>
+  {% endif %}
 </div>

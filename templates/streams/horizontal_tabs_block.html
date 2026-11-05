@@ -1,0 +1,6 @@
+{% comment %}
+  Horizontal Tabs (StreamField block) — standalone tab strip + content panels.
+  Markup lives in the shared includes/tabs.html partial. group_id from
+  get_context.
+{% endcomment %}
+{% include "includes/tabs.html" with tabs=self.tabs group_id=group_id label=self.heading %}

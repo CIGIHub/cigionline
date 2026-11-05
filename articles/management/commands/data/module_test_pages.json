@@ -1,0 +1,3771 @@
+{
+ "accordion-test": {
+  "title": "Accordion (plain block) Test",
+  "body": [
+   {
+    "id": "f37563af-cde4-43d7-a87a-6f33868c11d6",
+    "type": "accordion",
+    "value": {
+     "text": "<p>A single collapsible item without the module wrapper \u2014 placed to complete the module sweep.</p>",
+     "title": "What is the plain accordion block?"
+    }
+   },
+   {
+    "id": "b7c1226c-e5ee-452c-b5ad-dd7241318768",
+    "type": "accordion",
+    "value": {
+     "text": "<p>Second collapsible for grouped behaviour checks.</p>",
+     "title": "Second item"
+    }
+   }
+  ]
+ },
+ "alt-hero": {
+  "title": "Alt Hero",
+  "body": [
+   {
+    "id": "3e243c68a9c2403faebfbc4144fdaacb",
+    "type": "alt_hero",
+    "value": {
+     "image": 12472,
+     "eyebrow": "Home > CIGI Experts",
+     "heading": "CIGI Experts",
+     "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.</p>"
+    }
+   }
+  ]
+ },
+ "banner-test": {
+  "title": "Banner \u2014 all options",
+  "body": [
+   {
+    "id": "2d5b0302-3f79-4559-a30d-ce5c58906e3f",
+    "type": "highlight_title",
+    "value": "rule \u2713 \u00b7 heading \u2713 \u00b7 description \u2713 \u00b7 buttons \u2713"
+   },
+   {
+    "id": "d409ef4a-339a-4659-ac86-e31d525b8167",
+    "type": "banner",
+    "value": {
+     "accent": "red",
+     "buttons": [
+      {
+       "id": "2c6c1579-fe4b-44ee-b750-a434f7a8d2fb",
+       "type": "item",
+       "value": {
+        "label": "Learn more",
+        "link_url": "#"
+       }
+      }
+     ],
+     "heading": "Banner heading",
+     "surface": "red",
+     "show_rule": true,
+     "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "show_buttons": true,
+     "show_heading": true,
+     "show_description": true
+    }
+   },
+   {
+    "id": "3d462ac3-73f0-442e-8b56-5baeb276c4cd",
+    "type": "highlight_title",
+    "value": "rule \u2713 \u00b7 heading \u2713 \u00b7 description \u2713 \u00b7 buttons \u2717"
+   },
+   {
+    "id": "85211c83-bd31-499f-b494-773e09394518",
+    "type": "banner",
+    "value": {
+     "accent": "red",
+     "buttons": [
+      {
+       "id": "f0d68b0a-a839-4cac-8e0c-e0d80523902b",
+       "type": "item",
+       "value": {
+        "label": "Learn more",
+        "link_url": "#"
+       }
+      }
+     ],
+     "heading": "Banner heading",
+     "surface": "red",
+     "show_rule": true,
+     "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "show_buttons": false,
+     "show_heading": true,
+     "show_description": true
+    }
+   },
+   {
+    "id": "2801677f-751b-40da-a14b-e215dc1cf22f",
+    "type": "highlight_title",
+    "value": "rule \u2713 \u00b7 heading \u2713 \u00b7 description \u2717 \u00b7 buttons \u2713"
+   },
+   {
+    "id": "445074d3-a426-43d4-8c08-20a08b148c32",
+    "type": "banner",
+    "value": {
+     "accent": "red",
+     "buttons": [
+      {
+       "id": "11c6b936-b36c-48ea-a8b1-17a13dd5dc6a",
+       "type": "item",
+       "value": {
+        "label": "Learn more",
+        "link_url": "#"
+       }
+      }
+     ],
+     "heading": "Banner heading",
+     "surface": "red",
+     "show_rule": true,
+     "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "show_buttons": true,
+     "show_heading": true,
+     "show_description": false
+    }
+   },
+   {
+    "id": "f95c6386-6d08-4c95-9150-46509fc73ec7",
+    "type": "highlight_title",
+    "value": "rule \u2713 \u00b7 heading \u2713 \u00b7 description \u2717 \u00b7 buttons \u2717"
+   },
+   {
+    "id": "5f0906a2-ff49-46ac-aee8-60a2c63b25b8",
+    "type": "banner",
+    "value": {
+     "accent": "red",
+     "buttons": [
+      {
+       "id": "c434fe21-4723-44cd-b6a3-dca01fef3be2",
+       "type": "item",
+       "value": {
+        "label": "Learn more",
+        "link_url": "#"
+       }
+      }
+     ],
+     "heading": "Banner heading",
+     "surface": "red",
+     "show_rule": true,
+     "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "show_buttons": false,
+     "show_heading": true,
+     "show_description": false
+    }
+   },
+   {
+    "id": "b6f7c53d-efde-441f-91f5-fe20611948cb",
+    "type": "highlight_title",
+    "value": "rule \u2713 \u00b7 heading \u2717 \u00b7 description \u2713 \u00b7 buttons \u2713"
+   },
+   {
+    "id": "e20d502b-50a8-410e-b9d7-be5aa1df7c8e",
+    "type": "banner",
+    "value": {
+     "accent": "red",
+     "buttons": [
+      {
+       "id": "b61a360f-ab5f-4bc8-9475-c8d946b73906",
+       "type": "item",
+       "value": {
+        "label": "Learn more",
+        "link_url": "#"
+       }
+      }
+     ],
+     "heading": "Banner heading",
+     "surface": "red",
+     "show_rule": true,
+     "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "show_buttons": true,
+     "show_heading": false,
+     "show_description": true
+    }
+   },
+   {
+    "id": "d5f6d442-0b42-4866-9e52-eec0a75bd14e",
+    "type": "highlight_title",
+    "value": "rule \u2713 \u00b7 heading \u2717 \u00b7 description \u2713 \u00b7 buttons \u2717"
+   },
+   {
+    "id": "ff1a29ef-a9d5-4687-ae2a-b80a01b23c1f",
+    "type": "banner",
+    "value": {
+     "accent": "red",
+     "buttons": [
+      {
+       "id": "dc883c26-b0cc-48ab-95e3-8a317bb592fd",
+       "type": "item",
+       "value": {
+        "label": "Learn more",
+        "link_url": "#"
+       }
+      }
+     ],
+     "heading": "Banner heading",
+     "surface": "red",
+     "show_rule": true,
+     "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "show_buttons": false,
+     "show_heading": false,
+     "show_description": true
+    }
+   },
+   {
+    "id": "d110e32d-5651-408f-b602-5d9ba844e8e0",
+    "type": "highlight_title",
+    "value": "rule \u2713 \u00b7 heading \u2717 \u00b7 description \u2717 \u00b7 buttons \u2713"
+   },
+   {
+    "id": "a2fb553d-b285-4154-8178-b209fdd50124",
+    "type": "banner",
+    "value": {
+     "accent": "red",
+     "buttons": [
+      {
+       "id": "f1086741-85f5-4c71-95d6-e6a4c930e4db",
+       "type": "item",
+       "value": {
+        "label": "Learn more",
+        "link_url": "#"
+       }
+      }
+     ],
+     "heading": "Banner heading",
+     "surface": "red",
+     "show_rule": true,
+     "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "show_buttons": true,
+     "show_heading": false,
+     "show_description": false
+    }
+   },
+   {
+    "id": "05c31da9-1908-4fce-9917-9a0c9e9bd1f1",
+    "type": "highlight_title",
+    "value": "rule \u2713 \u00b7 heading \u2717 \u00b7 description \u2717 \u00b7 buttons \u2717"
+   },
+   {
+    "id": "7da82e15-59b7-48c5-bb73-f62e4e7f99c6",
+    "type": "banner",
+    "value": {
+     "accent": "red",
+     "buttons": [
+      {
+       "id": "98a0183d-ad67-47d9-8c9e-758a0ca5fe42",
+       "type": "item",
+       "value": {
+        "label": "Learn more",
+        "link_url": "#"
+       }
+      }
+     ],
+     "heading": "Banner heading",
+     "surface": "red",
+     "show_rule": true,
+     "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "show_buttons": false,
+     "show_heading": false,
+     "show_description": false
+    }
+   },
+   {
+    "id": "55e7d4a6-010e-4143-b90c-40d99cf9363b",
+    "type": "highlight_title",
+    "value": "rule \u2717 \u00b7 heading \u2713 \u00b7 description \u2713 \u00b7 buttons \u2713"
+   },
+   {
+    "id": "7888a4fc-d69d-431f-9b07-26a1673fbc55",
+    "type": "banner",
+    "value": {
+     "accent": "red",
+     "buttons": [
+      {
+       "id": "77cd8ec0-ab9a-4993-8270-68211062f9e9",
+       "type": "item",
+       "value": {
+        "label": "Learn more",
+        "link_url": "#"
+       }
+      }
+     ],
+     "heading": "Banner heading",
+     "surface": "red",
+     "show_rule": false,
+     "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "show_buttons": true,
+     "show_heading": true,
+     "show_description": true
+    }
+   },
+   {
+    "id": "10966bc2-fdfa-41a2-b49d-6d536327f55d",
+    "type": "highlight_title",
+    "value": "rule \u2717 \u00b7 heading \u2713 \u00b7 description \u2713 \u00b7 buttons \u2717"
+   },
+   {
+    "id": "a6704d72-f6e4-4f31-8c67-8b37cb0e5717",
+    "type": "banner",
+    "value": {
+     "accent": "red",
+     "buttons": [
+      {
+       "id": "966cc494-ec4d-45bd-918e-471a92de5313",
+       "type": "item",
+       "value": {
+        "label": "Learn more",
+        "link_url": "#"
+       }
+      }
+     ],
+     "heading": "Banner heading",
+     "surface": "red",
+     "show_rule": false,
+     "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "show_buttons": false,
+     "show_heading": true,
+     "show_description": true
+    }
+   },
+   {
+    "id": "d0109496-f0f9-45ff-be22-e170a7e1f135",
+    "type": "highlight_title",
+    "value": "rule \u2717 \u00b7 heading \u2713 \u00b7 description \u2717 \u00b7 buttons \u2713"
+   },
+   {
+    "id": "9aa8e22b-6307-4866-8eca-9b303da6278e",
+    "type": "banner",
+    "value": {
+     "accent": "red",
+     "buttons": [
+      {
+       "id": "c507fdd0-f762-4ff6-82e8-989db6f1a03b",
+       "type": "item",
+       "value": {
+        "label": "Learn more",
+        "link_url": "#"
+       }
+      }
+     ],
+     "heading": "Banner heading",
+     "surface": "red",
+     "show_rule": false,
+     "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "show_buttons": true,
+     "show_heading": true,
+     "show_description": false
+    }
+   },
+   {
+    "id": "70319ae6-3005-443f-a41a-bd654273a550",
+    "type": "highlight_title",
+    "value": "rule \u2717 \u00b7 heading \u2713 \u00b7 description \u2717 \u00b7 buttons \u2717"
+   },
+   {
+    "id": "cfb918ac-1399-4014-80dc-996de4d73a90",
+    "type": "banner",
+    "value": {
+     "accent": "red",
+     "buttons": [
+      {
+       "id": "8e7651ca-251a-42d3-8a21-af6ac016d1b6",
+       "type": "item",
+       "value": {
+        "label": "Learn more",
+        "link_url": "#"
+       }
+      }
+     ],
+     "heading": "Banner heading",
+     "surface": "red",
+     "show_rule": false,
+     "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "show_buttons": false,
+     "show_heading": true,
+     "show_description": false
+    }
+   },
+   {
+    "id": "73f46499-7b14-48be-b1b7-77b37fec0628",
+    "type": "highlight_title",
+    "value": "rule \u2717 \u00b7 heading \u2717 \u00b7 description \u2713 \u00b7 buttons \u2713"
+   },
+   {
+    "id": "b1ba8b7e-1220-4e86-b562-7a4c4c53f4fd",
+    "type": "banner",
+    "value": {
+     "accent": "red",
+     "buttons": [
+      {
+       "id": "f37a6994-165d-4693-b5af-12326ed237b6",
+       "type": "item",
+       "value": {
+        "label": "Learn more",
+        "link_url": "#"
+       }
+      }
+     ],
+     "heading": "Banner heading",
+     "surface": "red",
+     "show_rule": false,
+     "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "show_buttons": true,
+     "show_heading": false,
+     "show_description": true
+    }
+   },
+   {
+    "id": "338953f5-b385-4be3-b199-02ad3fc80f69",
+    "type": "highlight_title",
+    "value": "rule \u2717 \u00b7 heading \u2717 \u00b7 description \u2713 \u00b7 buttons \u2717"
+   },
+   {
+    "id": "364465ca-4c34-44f5-88ac-c2df1ff54860",
+    "type": "banner",
+    "value": {
+     "accent": "red",
+     "buttons": [
+      {
+       "id": "0dcf33de-de60-42ca-b36f-c8a2ff3b2104",
+       "type": "item",
+       "value": {
+        "label": "Learn more",
+        "link_url": "#"
+       }
+      }
+     ],
+     "heading": "Banner heading",
+     "surface": "red",
+     "show_rule": false,
+     "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "show_buttons": false,
+     "show_heading": false,
+     "show_description": true
+    }
+   },
+   {
+    "id": "68a9fe17-8e7b-45c4-9188-5a06668afd05",
+    "type": "highlight_title",
+    "value": "rule \u2717 \u00b7 heading \u2717 \u00b7 description \u2717 \u00b7 buttons \u2713"
+   },
+   {
+    "id": "9963d205-f983-4094-b7b4-f3855d6f97d3",
+    "type": "banner",
+    "value": {
+     "accent": "red",
+     "buttons": [
+      {
+       "id": "8c5dc07a-7523-4d4e-be5d-4e6943ec60a6",
+       "type": "item",
+       "value": {
+        "label": "Learn more",
+        "link_url": "#"
+       }
+      }
+     ],
+     "heading": "Banner heading",
+     "surface": "red",
+     "show_rule": false,
+     "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "show_buttons": true,
+     "show_heading": false,
+     "show_description": false
+    }
+   },
+   {
+    "id": "2db7f373-2ca2-4256-b991-667f5fac17a2",
+    "type": "highlight_title",
+    "value": "rule \u2717 \u00b7 heading \u2717 \u00b7 description \u2717 \u00b7 buttons \u2717"
+   },
+   {
+    "id": "fe5ff04e-903c-46c0-8c66-6d725f30f4b6",
+    "type": "banner",
+    "value": {
+     "accent": "red",
+     "buttons": [
+      {
+       "id": "2ee3a1e0-e0a6-402d-9206-07f4bfce40fc",
+       "type": "item",
+       "value": {
+        "label": "Learn more",
+        "link_url": "#"
+       }
+      }
+     ],
+     "heading": "Banner heading",
+     "surface": "red",
+     "show_rule": false,
+     "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "show_buttons": false,
+     "show_heading": false,
+     "show_description": false
+    }
+   },
+   {
+    "id": "a1140432-d06e-4d19-ab52-18b8491c26c1",
+    "type": "highlight_title",
+    "value": "surface/accent swap \u2192 dark \u00b7 teal (all on)"
+   },
+   {
+    "id": "813e963f-834a-4130-8a64-f0aaa03c84b2",
+    "type": "banner",
+    "value": {
+     "accent": "teal",
+     "buttons": [
+      {
+       "id": "3e041a12-904b-4443-8656-82a1db2e4178",
+       "type": "item",
+       "value": {
+        "label": "Learn more",
+        "link_url": "#"
+       }
+      }
+     ],
+     "heading": "Banner heading",
+     "surface": "dark",
+     "show_rule": true,
+     "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "show_buttons": true,
+     "show_heading": true,
+     "show_description": true
+    }
+   }
+  ]
+ },
+ "branded-hero-test": {
+  "title": "Branded / Split Hero \u2014 Test",
+  "body": [
+   {
+    "id": "09b49c84-d816-405c-9a6b-68bf00796b0b",
+    "type": "split_hero",
+    "value": {
+     "image": 12472,
+     "accent": "red",
+     "eyebrow": "HOME > EXAMPLE SERIES",
+     "heading": "Branded Hero (Split Hero) \u2014 Test",
+     "surface": "light",
+     "description": "<p>Text column beside a logo/image column, divided by a vertical rule. Figma 1673-40667.</p>"
+    }
+   }
+  ]
+ },
+ "events-carousel-test": {
+  "title": "Events Carousel \u2014 DS test",
+  "body": [
+   {
+    "id": "4c695a50-7eff-4d22-abe1-544b98efe155",
+    "type": "events_carousel",
+    "value": {
+     "mode": "auto",
+     "count": 9,
+     "intro": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "items": [],
+     "accent": "red",
+     "heading": "Events",
+     "surface": "light",
+     "cta_page": null,
+     "cta_label": "View all",
+     "show_pagination": true
+    }
+   }
+  ]
+ },
+ "experts-carousel-test": {
+  "title": "Experts Carousel \u2014 DS test",
+  "body": [
+   {
+    "id": "eb8bf609-7a51-4225-b823-ca95e9a9730c",
+    "type": "experts_carousel",
+    "value": {
+     "mode": "auto",
+     "count": 12,
+     "intro": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla.</p>",
+     "accent": "red",
+     "experts": [],
+     "heading": "Experts",
+     "surface": "dark",
+     "cta_page": null,
+     "cta_label": "View All Experts",
+     "card_slots": {
+      "show_bio": true,
+      "show_title": true,
+      "show_expertise": true,
+      "show_latest_activity": true,
+      "show_read_bio": false
+     },
+     "show_pagination": true
+    }
+   }
+  ]
+ },
+ "experts-grid-test": {
+  "title": "Experts Grid \u2014 DS test",
+  "body": [
+   {
+    "id": "4b213dd7-8c16-428a-be59-26064c78bf51",
+    "type": "experts_grid",
+    "value": {
+     "mode": "auto",
+     "count": 24,
+     "intro": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>",
+     "accent": "red",
+     "experts": [],
+     "heading": "Experts",
+     "surface": "dark",
+     "cta_page": null,
+     "per_page": 9,
+     "cta_label": "View All Experts",
+     "card_slots": {
+      "show_bio": true,
+      "show_title": true,
+      "show_expertise": true,
+      "show_latest_activity": true,
+      "show_read_bio": false
+     }
+    }
+   }
+  ]
+ },
+ "form-test": {
+  "title": "Form \u2014 multi-step",
+  "body": [
+   {
+    "id": "0152cb68-825e-4929-b67f-fc02016cd3f3",
+    "type": "form",
+    "value": {
+     "form": {
+      "form": 1,
+      "form_action": "",
+      "form_reference": "48f021ea-1f0d-4c4e-abbe-87e163b7de2e"
+     },
+     "intro": "<p>Contact us today about your event and our team will get back to you shortly.</p>",
+     "heading": "Event Rental Inquiry"
+    }
+   }
+  ]
+ },
+ "gallery-text-button": {
+  "title": "Gallery + Text (with button)",
+  "body": [
+   {
+    "id": "4818ea4976ab46d9920677b83cdf2944",
+    "type": "gallery_text",
+    "value": {
+     "slides": [
+      {
+       "id": "c709c3cf590546cc954f6d0d9ca6149f",
+       "type": "item",
+       "value": {
+        "image": 12470,
+        "caption": "Caption"
+       }
+      },
+      {
+       "id": "ced6b94179ed4f3280f5c63b16d515f0",
+       "type": "item",
+       "value": {
+        "image": 12471,
+        "caption": "Caption"
+       }
+      },
+      {
+       "id": "03a453ee8bc3476398d48b97ec3e657f",
+       "type": "item",
+       "value": {
+        "image": 12472,
+        "caption": "Caption"
+       }
+      },
+      {
+       "id": "4f1b897a45cd4443960d3f7f3f05fd58",
+       "type": "item",
+       "value": {
+        "image": 12473,
+        "caption": "Caption"
+       }
+      },
+      {
+       "id": "da590795a1f44518beb7a54da49e364f",
+       "type": "item",
+       "value": {
+        "image": 12474,
+        "caption": "Caption"
+       }
+      },
+      {
+       "id": "384259b7bc1646ae9d293694040bd115",
+       "type": "item",
+       "value": {
+        "image": 12475,
+        "caption": "Caption"
+       }
+      },
+      {
+       "id": "6d5fabb2a0424013b14f933251599228",
+       "type": "item",
+       "value": {
+        "image": 12470,
+        "caption": "Caption"
+       }
+      },
+      {
+       "id": "4d3b8134327c4c1f8e3c33516ec1e6ea",
+       "type": "item",
+       "value": {
+        "image": 12471,
+        "caption": "Caption"
+       }
+      }
+     ],
+     "buttons": [
+      {
+       "id": "5d48e27eafca49f68c69dc2d556e7afc",
+       "type": "item",
+       "value": {
+        "icon": "chevron",
+        "label": "Venue Rentals",
+        "scheme": "on-light",
+        "variant": "outline",
+        "link_url": "#",
+        "link_page": null,
+        "link_document": null
+       }
+      }
+     ],
+     "heading": "CIGI Auditorium",
+     "intro_text": "<p>The CIGI Auditorium is a premier venue designed to host up to 250 seated guests, making it ideal for conferences, seminars, workshops and lectures.</p>"
+    }
+   }
+  ]
+ },
+ "horizontal-tabs-test": {
+  "title": "Horizontal Tabs Test",
+  "body": [
+   {
+    "id": "1808f378-b3de-4f80-80fb-496a5e4c0d08",
+    "type": "horizontal_tabs",
+    "value": {
+     "tabs": [
+      {
+       "id": "0ce0ac14-e12e-43c9-a156-8f418814cfef",
+       "type": "item",
+       "value": {
+        "label": "CIGI Auditorium and Foyer",
+        "content": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.</p>"
+       }
+      },
+      {
+       "id": "aa357bdc-deee-4e5d-aa1b-d7b279c5d061",
+       "type": "item",
+       "value": {
+        "label": "Multi-Purpose Room A-120",
+        "content": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.</p>"
+       }
+      },
+      {
+       "id": "0a82900e-ac72-4d39-b6ad-043a3fcdd26a",
+       "type": "item",
+       "value": {
+        "label": "Event Catering",
+        "content": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.</p>"
+       }
+      },
+      {
+       "id": "e1efff34-075e-47f5-baf9-10f04a7aca3f",
+       "type": "item",
+       "value": {
+        "label": "Audio-Visual Capabilities",
+        "content": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.</p>"
+       }
+      },
+      {
+       "id": "b216010f-def5-4777-aa66-f617fc8fb881",
+       "type": "item",
+       "value": {
+        "label": "Venue Rental Inquiry Form",
+        "content": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.</p>"
+       }
+      }
+     ],
+     "heading": "Venue options"
+    }
+   }
+  ]
+ },
+ "jobs-list-test": {
+  "title": "Jobs List \u2014 DS test",
+  "body": [
+   {
+    "id": "58586995-e9f0-429e-8023-cb25d376a27f",
+    "type": "jobs_list",
+    "value": {
+     "mode": "auto",
+     "count": 10,
+     "intro": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "items": [],
+     "accent": "red",
+     "heading": "Find Your Place",
+     "surface": "light",
+     "cta_label": "View Opportunity"
+    }
+   }
+  ]
+ },
+ "news-carousel-test": {
+  "title": "News Carousel Test",
+  "body": [
+   {
+    "id": "b533b804-f05f-4137-9fb3-5c09efe58465",
+    "type": "news_carousel",
+    "value": {
+     "mode": "auto",
+     "count": 9,
+     "intro": "",
+     "items": [],
+     "accent": "red",
+     "heading": "In the News",
+     "surface": "light",
+     "cta_label": "View all",
+     "show_pagination": true
+    }
+   }
+  ]
+ },
+ "news-grid-test": {
+  "title": "News Grid \u2014 DS test",
+  "body": [
+   {
+    "id": "4a9a2b1b-a3f4-4695-8038-4d51faa4eb4b",
+    "type": "news_grid",
+    "value": {
+     "mode": "auto",
+     "count": 6,
+     "intro": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>",
+     "items": [],
+     "accent": "red",
+     "heading": "In the News",
+     "surface": "light"
+    }
+   }
+  ]
+ },
+ "primary-hero-test": {
+  "title": "Primary Hero Test",
+  "body": [
+   {
+    "id": "29b5b7b1-e735-4ae6-84c4-18397549da9c",
+    "type": "primary_hero",
+    "value": {
+     "accent": "red",
+     "heading": "World-Leading Research Driving Policy at the Intersection of Technology and Governance",
+     "surface": "dark",
+     "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.</p>"
+    }
+   }
+  ]
+ },
+ "program-grid-test": {
+  "title": "Program Grid \u2014 DS test",
+  "body": [
+   {
+    "id": "2e7d1665-34de-4b1b-acfd-9fb33716355e",
+    "type": "program_grid",
+    "value": {
+     "mode": "auto",
+     "count": 3,
+     "intro": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "items": [],
+     "heading": "Program Overview & Why It Matters",
+     "program": 22925
+    }
+   },
+   {
+    "id": "d83e7014-cea0-4d80-a543-de0d234d04ac",
+    "type": "program_grid",
+    "value": {
+     "mode": "manual",
+     "count": 3,
+     "intro": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "items": [
+      {
+       "id": "40adfba2-ad15-4ec3-b19d-0c36088f2f9f",
+       "type": "item",
+       "value": 23552
+      },
+      {
+       "id": "65dc350f-8e0a-4734-9aca-7c42584a8e34",
+       "type": "item",
+       "value": 23501
+      },
+      {
+       "id": "bcb02284-d195-4618-ae96-6dfabf6a71b4",
+       "type": "item",
+       "value": 23344
+      },
+      {
+       "id": "2c2920ad-0c49-4fad-9c1b-de2a93842fee",
+       "type": "item",
+       "value": 23300
+      }
+     ],
+     "heading": "Selected Reading (manual)",
+     "program": 123
+    }
+   }
+  ]
+ },
+ "program-spotlight-test": {
+  "title": "Program Spotlight \u2014 DS test",
+  "body": [
+   {
+    "id": "45be1f1d-376e-45ab-bf78-4c8976454af3",
+    "type": "program_spotlight",
+    "value": {
+     "intro": "<p>Led by experienced practitioners and distinguished academics, CIGI supports research, forms networks, advances policy debate and generates ideas for multilateral governance improvements.</p>",
+     "heading": "Our Research"
+    }
+   }
+  ]
+ },
+ "programs-carousel-test": {
+  "title": "Programs Carousel \u2014 DS test",
+  "body": [
+   {
+    "id": "2feddf24-9f2f-4dee-88b5-5cea6b830ee9",
+    "type": "programs_carousel",
+    "value": {
+     "mode": "auto",
+     "count": 6,
+     "intro": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros.</p>",
+     "items": [],
+     "accent": "red",
+     "heading": "Explore Other Programs (light)",
+     "program": 22925,
+     "surface": "light",
+     "cta_label": "View More",
+     "program_source": "manual",
+     "show_pagination": true
+    }
+   },
+   {
+    "id": "307fec88-6e78-4bb9-a0cb-95b9afcbbba7",
+    "type": "programs_carousel",
+    "value": {
+     "mode": "auto",
+     "count": 6,
+     "intro": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros.</p>",
+     "items": [],
+     "accent": "red",
+     "heading": "Explore Other Programs (dark)",
+     "program": 22925,
+     "surface": "dark",
+     "cta_label": "View More",
+     "program_source": "manual",
+     "show_pagination": true
+    }
+   }
+  ]
+ },
+ "resource-bento-test": {
+  "title": "Resource Bento \u2014 DS test",
+  "body": [
+   {
+    "id": "2323bc68-73a5-42da-8835-0ec9721732ba",
+    "type": "resource_bento",
+    "value": {
+     "mode": "auto",
+     "count": 5,
+     "intro": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "items": [],
+     "accent": "red",
+     "heading": "Opinions / Thought Leadership",
+     "surface": "dark",
+     "cta_page": null,
+     "cta_label": "View All",
+     "show_header": true,
+     "show_date": true,
+     "show_author": true
+    }
+   }
+  ]
+ },
+ "resource-carousel-test": {
+  "title": "Resource Carousel \u2014 DS test",
+  "body": [
+   {
+    "id": "d162e0bf-fd1a-4533-a9cd-a372abd5b04e",
+    "type": "resource_carousel",
+    "value": {
+     "mode": "auto",
+     "count": 9,
+     "intro": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "items": [],
+     "accent": "red",
+     "heading": "Explore Recommended",
+     "surface": "light",
+     "cta_page": null,
+     "cta_label": "View All",
+     "show_pagination": true
+    }
+   }
+  ]
+ },
+ "stats-green": {
+  "title": "Stats - Green surface",
+  "body": [
+   {
+    "id": "e249e984c145423eb4cb8b7f33d2745b",
+    "type": "stats",
+    "value": {
+     "stats": [
+      {
+       "id": "f4062781bed3432b896612ab7863eabe",
+       "type": "item",
+       "value": {
+        "label": "Medium length feature heading goes here",
+        "number": "100+"
+       }
+      },
+      {
+       "id": "4868e2e4b8f447ecb46dc8ea5f001475",
+       "type": "item",
+       "value": {
+        "label": "Working Papers",
+        "number": "20+"
+       }
+      },
+      {
+       "id": "22c20bced5bd4d3c990a5b42655d52a5",
+       "type": "item",
+       "value": {
+        "label": "Cohorts",
+        "number": "3+"
+       }
+      }
+     ],
+     "accent": "green",
+     "buttons": [
+      {
+       "id": "530072ba2ae74465a0e22ba826d6b882",
+       "type": "item",
+       "value": {
+        "icon": "arrow",
+        "label": "Learn more",
+        "scheme": "on-dark",
+        "variant": "solid",
+        "link_url": "#",
+        "link_page": null,
+        "link_document": null
+       }
+      }
+     ],
+     "heading": "Shaping the Future of Digital Policy",
+     "surface": "green",
+     "intro_text": "<p>The Digital Policy Hub at the Centre for International Governance Innovation (CIGI) hosts a diverse group of emerging, innovative thinkers from the social, natural and applied sciences, providing opportunities for them to further develop their own research, analytical and policy skills.</p>"
+    }
+   }
+  ]
+ },
+ "supporting-materials": {
+  "title": "Supporting Materials \u2014 all options",
+  "body": [
+   {
+    "id": "90b3f8a3-e574-46ca-b508-0b47c4be5a36",
+    "type": "highlight_title",
+    "value": "pagination \u2713 \u00b7 loop \u2713 \u00b7 autoplay \u2713"
+   },
+   {
+    "id": "f2381f19-3811-4e0d-81cf-73321055e6f1",
+    "type": "supporting_materials",
+    "value": {
+     "loop": true,
+     "items": [
+      {
+       "id": "ffcdd474-106f-4f2e-a92b-2ebc768ea636",
+       "type": "item",
+       "value": {
+        "title": "Material 1",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "789b6c9f-0a79-46a2-ba99-177ec97b05de",
+       "type": "item",
+       "value": {
+        "title": "Material 2",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "3881a77b-6d4b-42cf-a2d9-270aafe75cca",
+       "type": "item",
+       "value": {
+        "title": "Material 3",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "0b873839-a9b5-41c5-a854-9d8deb47fbce",
+       "type": "item",
+       "value": {
+        "title": "Material 4",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "950c995c-4eab-4e5b-a819-1b981e024c84",
+       "type": "item",
+       "value": {
+        "title": "Material 5",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      }
+     ],
+     "heading": "Supporting Materials",
+     "autoplay": true,
+     "intro_text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "autoplay_speed": 3,
+     "show_pagination": true
+    }
+   },
+   {
+    "id": "dcdbd7ca-5449-45fa-875a-362ee7621515",
+    "type": "highlight_title",
+    "value": "pagination \u2713 \u00b7 loop \u2713 \u00b7 autoplay \u2717"
+   },
+   {
+    "id": "c6cd2453-0ff9-4985-81a0-d1da6c9d7a42",
+    "type": "supporting_materials",
+    "value": {
+     "loop": true,
+     "items": [
+      {
+       "id": "88d6f57a-b01f-4ddc-8cb3-2ec342c5e84f",
+       "type": "item",
+       "value": {
+        "title": "Material 1",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "6fef2590-ee99-4908-b168-b7cbb6e4e2a9",
+       "type": "item",
+       "value": {
+        "title": "Material 2",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "506eb5cc-3c67-4e8b-aef3-a20bf6ce9894",
+       "type": "item",
+       "value": {
+        "title": "Material 3",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "7627f1dc-337d-44ac-a652-f5a27293dc5a",
+       "type": "item",
+       "value": {
+        "title": "Material 4",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "b1e90d52-2d36-4277-80c1-3f34fd51d82b",
+       "type": "item",
+       "value": {
+        "title": "Material 5",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      }
+     ],
+     "heading": "Supporting Materials",
+     "autoplay": false,
+     "intro_text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "autoplay_speed": 3,
+     "show_pagination": true
+    }
+   },
+   {
+    "id": "ccfafa3a-52c8-4965-bd63-48c6a90febb4",
+    "type": "highlight_title",
+    "value": "pagination \u2713 \u00b7 loop \u2717 \u00b7 autoplay \u2713"
+   },
+   {
+    "id": "6e61363d-43c5-4d7e-b7fc-87407e902b4c",
+    "type": "supporting_materials",
+    "value": {
+     "loop": false,
+     "items": [
+      {
+       "id": "6c983f93-6080-4d33-894b-ae52a5fa2313",
+       "type": "item",
+       "value": {
+        "title": "Material 1",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "f0c6ddfe-88f2-48c1-b41e-8cc6f3677540",
+       "type": "item",
+       "value": {
+        "title": "Material 2",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "78d3a5ca-9ac1-4111-a448-a8121b7ecf0d",
+       "type": "item",
+       "value": {
+        "title": "Material 3",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "603ed824-d71f-452c-be87-66c15657a003",
+       "type": "item",
+       "value": {
+        "title": "Material 4",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "bf766c2c-eb20-443a-b12d-15cebbf7c5ca",
+       "type": "item",
+       "value": {
+        "title": "Material 5",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      }
+     ],
+     "heading": "Supporting Materials",
+     "autoplay": true,
+     "intro_text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "autoplay_speed": 3,
+     "show_pagination": true
+    }
+   },
+   {
+    "id": "e1e74cd6-969b-463d-9e99-3f6e52b3c8dd",
+    "type": "highlight_title",
+    "value": "pagination \u2713 \u00b7 loop \u2717 \u00b7 autoplay \u2717"
+   },
+   {
+    "id": "725fcd96-d5e1-4841-b29e-811125362af3",
+    "type": "supporting_materials",
+    "value": {
+     "loop": false,
+     "items": [
+      {
+       "id": "5107cd72-9995-41af-a5bf-98d6a5ac92c6",
+       "type": "item",
+       "value": {
+        "title": "Material 1",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "d962fcc4-5a37-4638-909f-fce11fe79fbc",
+       "type": "item",
+       "value": {
+        "title": "Material 2",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "971271f5-5908-4a6b-8e0b-58dff357e037",
+       "type": "item",
+       "value": {
+        "title": "Material 3",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "f1f6baf8-fd8d-426d-9b04-50dfc7085a93",
+       "type": "item",
+       "value": {
+        "title": "Material 4",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "cef20073-bce5-4019-810c-0cf9e7341bd6",
+       "type": "item",
+       "value": {
+        "title": "Material 5",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      }
+     ],
+     "heading": "Supporting Materials",
+     "autoplay": false,
+     "intro_text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "autoplay_speed": 3,
+     "show_pagination": true
+    }
+   },
+   {
+    "id": "558954b1-814a-403b-aec4-0d7676c4490b",
+    "type": "highlight_title",
+    "value": "pagination \u2717 \u00b7 loop \u2713 \u00b7 autoplay \u2713"
+   },
+   {
+    "id": "eec79381-2d93-4e39-84b9-1e43be5b947a",
+    "type": "supporting_materials",
+    "value": {
+     "loop": true,
+     "items": [
+      {
+       "id": "b4f8c37f-c228-439d-9ba3-facc2baf67ee",
+       "type": "item",
+       "value": {
+        "title": "Material 1",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "ba1287cf-cd49-49b7-9327-876b7b46decd",
+       "type": "item",
+       "value": {
+        "title": "Material 2",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "d050376a-c417-4986-9e11-68a61d8f3c71",
+       "type": "item",
+       "value": {
+        "title": "Material 3",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "12b7a333-eeae-4c58-a65c-099857c088d5",
+       "type": "item",
+       "value": {
+        "title": "Material 4",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "e1fb64c6-0adf-484f-a94b-27edc9e130ad",
+       "type": "item",
+       "value": {
+        "title": "Material 5",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      }
+     ],
+     "heading": "Supporting Materials",
+     "autoplay": true,
+     "intro_text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "autoplay_speed": 3,
+     "show_pagination": false
+    }
+   },
+   {
+    "id": "6a860674-fb63-4ceb-bc3a-9a2ecb56c742",
+    "type": "highlight_title",
+    "value": "pagination \u2717 \u00b7 loop \u2713 \u00b7 autoplay \u2717"
+   },
+   {
+    "id": "70125c98-4f23-41d8-9a3e-8cd7bcdf9619",
+    "type": "supporting_materials",
+    "value": {
+     "loop": true,
+     "items": [
+      {
+       "id": "543ab4a8-8ed1-4f33-9815-7c688c02fcf3",
+       "type": "item",
+       "value": {
+        "title": "Material 1",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "5f1fdda4-3a74-4ce8-9dc5-db32af85820f",
+       "type": "item",
+       "value": {
+        "title": "Material 2",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "7e74b374-1828-40ca-aa7a-4f4aad2f7f89",
+       "type": "item",
+       "value": {
+        "title": "Material 3",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "27b83007-21d5-4f9b-81d6-ab244bc234ac",
+       "type": "item",
+       "value": {
+        "title": "Material 4",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "fdd913d1-dce0-4814-b642-dcd06f8fd3da",
+       "type": "item",
+       "value": {
+        "title": "Material 5",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      }
+     ],
+     "heading": "Supporting Materials",
+     "autoplay": false,
+     "intro_text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "autoplay_speed": 3,
+     "show_pagination": false
+    }
+   },
+   {
+    "id": "23c3f110-746b-40fd-886a-e494ce008007",
+    "type": "highlight_title",
+    "value": "pagination \u2717 \u00b7 loop \u2717 \u00b7 autoplay \u2713"
+   },
+   {
+    "id": "950cd9e7-83f2-4a99-b250-cbddd16b1f20",
+    "type": "supporting_materials",
+    "value": {
+     "loop": false,
+     "items": [
+      {
+       "id": "72333c4c-7c87-45fb-aad4-0f2d8eb2e42d",
+       "type": "item",
+       "value": {
+        "title": "Material 1",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "8f1de1c9-7faa-478b-91fd-ab9dcc290243",
+       "type": "item",
+       "value": {
+        "title": "Material 2",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "a82b1576-5366-4d84-9a90-52965b3bbe0a",
+       "type": "item",
+       "value": {
+        "title": "Material 3",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "f906464b-c111-426e-9497-fe6437af3553",
+       "type": "item",
+       "value": {
+        "title": "Material 4",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "d559feec-65f8-4ba4-8407-3553ed1b0ad0",
+       "type": "item",
+       "value": {
+        "title": "Material 5",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      }
+     ],
+     "heading": "Supporting Materials",
+     "autoplay": true,
+     "intro_text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "autoplay_speed": 3,
+     "show_pagination": false
+    }
+   },
+   {
+    "id": "b3ffd5c4-dc7a-4f6e-9088-896a8d356bc0",
+    "type": "highlight_title",
+    "value": "pagination \u2717 \u00b7 loop \u2717 \u00b7 autoplay \u2717"
+   },
+   {
+    "id": "06dfb68e-27d4-469f-afe1-f7c2cee088bf",
+    "type": "supporting_materials",
+    "value": {
+     "loop": false,
+     "items": [
+      {
+       "id": "b5aa1b8d-8ca9-4e4d-aaf8-9172aaf0e541",
+       "type": "item",
+       "value": {
+        "title": "Material 1",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "3a5b6c0c-6cbb-4450-b630-f3c013304123",
+       "type": "item",
+       "value": {
+        "title": "Material 2",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "9dd0395d-d296-4514-8145-52ef29fdb4c9",
+       "type": "item",
+       "value": {
+        "title": "Material 3",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "31dd6903-e19e-4e69-96b7-c55a0c9ae2fe",
+       "type": "item",
+       "value": {
+        "title": "Material 4",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      },
+      {
+       "id": "ec7a7c18-58a5-42dc-8d62-0a587770338d",
+       "type": "item",
+       "value": {
+        "title": "Material 5",
+        "link_url": "#",
+        "content_type": "Report"
+       }
+      }
+     ],
+     "heading": "Supporting Materials",
+     "autoplay": false,
+     "intro_text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "autoplay_speed": 3,
+     "show_pagination": false
+    }
+   }
+  ]
+ },
+ "text-card-grid-test": {
+  "title": "Text Card Grid Test",
+  "body": [
+   {
+    "id": "b53c52a0-f730-4027-88b9-f9dabc02fcf9",
+    "type": "text_card_grid",
+    "value": {
+     "cards": [
+      {
+       "id": "95c7699c-c314-46bc-8123-183b7d65e61f",
+       "type": "item",
+       "value": {
+        "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla.</p>",
+        "heading": "Medium length feature heading goes here"
+       }
+      },
+      {
+       "id": "a1b78fde-80bc-407f-9ede-a4e098817a4c",
+       "type": "item",
+       "value": {
+        "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla.</p>",
+        "heading": "Medium length feature heading goes here"
+       }
+      },
+      {
+       "id": "5a41c69d-8032-4718-9a33-b8c68a6cc4bf",
+       "type": "item",
+       "value": {
+        "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla.</p>",
+        "heading": "Medium length feature heading goes here"
+       }
+      },
+      {
+       "id": "5052198a-fcff-4735-9b5a-909edf027ce3",
+       "type": "item",
+       "value": {
+        "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla.</p>",
+        "heading": "Medium length feature heading goes here"
+       }
+      },
+      {
+       "id": "135b3d6b-e145-476a-b616-4a1fbeefd8e2",
+       "type": "item",
+       "value": {
+        "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla.</p>",
+        "heading": "Medium length feature heading goes here"
+       }
+      },
+      {
+       "id": "36436ee3-2801-4c17-81a4-3774c278ffc5",
+       "type": "item",
+       "value": {
+        "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla.</p>",
+        "heading": "Medium length feature heading goes here"
+       }
+      }
+     ],
+     "intro": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>",
+     "accent": "red",
+     "columns": "3",
+     "heading": "Programs (Topics) Approach / Objectives / Activities",
+     "surface": "light"
+    }
+   },
+   {
+    "id": "3eddfe90-c3cd-48cc-a859-188c37451320",
+    "type": "text_card_grid",
+    "value": {
+     "cards": [
+      {
+       "id": "81a82269-9995-4ebc-a5e7-1ceb5b84ff38",
+       "type": "item",
+       "value": {
+        "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla.</p>",
+        "heading": "Medium length feature heading goes here"
+       }
+      },
+      {
+       "id": "2a3a7b30-7f43-4063-8a51-b1942ff94c16",
+       "type": "item",
+       "value": {
+        "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla.</p>",
+        "heading": "Medium length feature heading goes here"
+       }
+      },
+      {
+       "id": "67c30765-ee54-486f-adcd-669bad4e123d",
+       "type": "item",
+       "value": {
+        "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla.</p>",
+        "heading": "Medium length feature heading goes here"
+       }
+      },
+      {
+       "id": "05df6e97-183f-407c-94fa-c1e91b71f4de",
+       "type": "item",
+       "value": {
+        "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla.</p>",
+        "heading": "Medium length feature heading goes here"
+       }
+      }
+     ],
+     "intro": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>",
+     "accent": "red",
+     "columns": "4",
+     "heading": "Four per row",
+     "surface": "light"
+    }
+   }
+  ]
+ },
+ "text-columns": {
+  "title": "Text",
+  "body": [
+   {
+    "id": "48998d1e-d0cd-4b88-957a-1cb18367135e",
+    "type": "text_columns",
+    "value": {
+     "body": "<p>The Hub addresses the need for a transdisciplinary understanding of governance challenges and opportunities across such technologies. Research focus is centred on digital ethics and rights frameworks that assist in identifying and mitigating the gaps between rapid technological disruption and diffusion.</p><h4>Core research areas include</h4><ul><li>Data, economy and society;</li><li>Artificial intelligence;</li><li>Outer space;</li><li>Digitalization, security and democracy; and the environment and natural resources.</li></ul><h4>Approach</h4><p>The Hub is founded on a transdisciplinary approach (i.e., research that cuts across disciplines and connects fellows with policy makers and industry professionals) that seeks to increase our collective understanding of the socio-economic and technological impacts of digitalization.</p>",
+     "intro": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>",
+     "buttons": [],
+     "heading": "Through A Transdisciplinary Research Approach",
+     "logos": [],
+     "footnote": ""
+    }
+   },
+   {
+    "id": "8f4f7f1a-2c14-4c26-9f3b-6f2f9a2d5e01",
+    "type": "text_columns",
+    "value": {
+     "body": "",
+     "intro": "<p>The Hub partners with universities, governments and the private sector to offer a highly collaborative space for undergraduate, masters, doctoral, post-doctoral and visiting (professional) fellows.</p>",
+     "buttons": [],
+     "heading": "Partnering With Universities, Governments and the Private Sector",
+     "logos": [
+      {
+       "id": "3f7c1f7e-9a1b-4d1e-8a2c-1b0f4e6d7a02",
+       "type": "item",
+       "value": {
+        "logo": 12474,
+        "text": "<p>Thank you to Mitacs for its partnership and support of Digital Policy Hub fellows through the Accelerate program.</p>"
+       }
+      },
+      {
+       "id": "b1e2d3c4-5f6a-4b7c-8d9e-0a1b2c3d4e03",
+       "type": "item",
+       "value": {
+        "logo": 12474,
+        "text": "<p>Thank you to Mitacs for its partnership and support of Digital Policy Hub fellows through the Accelerate program.</p>"
+       }
+      }
+     ],
+     "footnote": "<p>We\u2019d also like to thank our universities, governments and the private sector partners for their involvement that allows CIGI to offer this transdisciplinary research program.</p>"
+    }
+   },
+   {
+    "id": "c5d6e7f8-1a2b-4c3d-9e0f-5a6b7c8d9e04",
+    "type": "text_columns",
+    "value": {
+     "body": "<p>Body and logos together: the body renders first, then the logo row, then the footnote \u2014 the stacked fallback when an author fills every field.</p>",
+     "intro": "<p>Both-filled placement: flowing body AND partner logos in one block.</p>",
+     "buttons": [],
+     "heading": "Body + Logos Combined",
+     "logos": [
+      {
+       "id": "d7e8f9a0-2b3c-4d5e-8f9a-6b7c8d9e0f05",
+       "type": "item",
+       "value": {
+        "logo": 12474,
+        "text": "<p>Thank you to Mitacs for its partnership and support of Digital Policy Hub fellows through the Accelerate program.</p>"
+       }
+      },
+      {
+       "id": "e9f0a1b2-3c4d-4e5f-9a0b-7c8d9e0f1a06",
+       "type": "item",
+       "value": {
+        "logo": 12474,
+        "text": "<p>Thank you to Mitacs for its partnership and support of Digital Policy Hub fellows through the Accelerate program.</p>"
+       }
+      }
+     ],
+     "footnote": "<p>Footnote under the combined placement.</p>"
+    }
+   }
+  ]
+ },
+ "trending-issues-test": {
+  "title": "Trending Issues \u2014 DS test",
+  "body": [
+   {
+    "id": "fe2e1efb-8c72-4b02-a3d9-d6d73b84b209",
+    "type": "trending_issues",
+    "value": {
+     "item": null,
+     "mode": "auto",
+     "accent": "red",
+     "surface": "light",
+     "cta_label": "Read More"
+    }
+   }
+  ]
+ },
+ "video-carousel-test": {
+  "title": "Video Carousel \u2014 all options",
+  "body": [
+   {
+    "id": "2eeac8f1-474a-4494-b884-00ffaa55e18c",
+    "type": "highlight_title",
+    "value": "pagination \u2713 \u00b7 loop \u2713 \u00b7 autoplay \u2713"
+   },
+   {
+    "id": "e8d09acd-fbd6-4c69-9ddc-7ec2b659e6c9",
+    "type": "video_carousel",
+    "value": {
+     "loop": true,
+     "items": [
+      {
+       "id": "941b8c7b-502d-4897-8793-c49720c53119",
+       "type": "item",
+       "value": {
+        "tag": "Topic 1",
+        "title": "Short video 1",
+        "accent": "teal",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "8642d088-4242-4a8b-9cc5-93ce8a942621",
+       "type": "item",
+       "value": {
+        "tag": "Topic 2",
+        "title": "Short video 2",
+        "accent": "blue",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "0394e08b-91c1-4865-ae9f-0e840f32885d",
+       "type": "item",
+       "value": {
+        "tag": "Topic 3",
+        "title": "Short video 3",
+        "accent": "olive",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "912ceb95-a3af-41db-a95a-02f888624188",
+       "type": "item",
+       "value": {
+        "tag": "Topic 4",
+        "title": "Short video 4",
+        "accent": "mauve",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "47b22c54-1951-437d-82d5-405c0b3fc75c",
+       "type": "item",
+       "value": {
+        "tag": "Topic 5",
+        "title": "Short video 5",
+        "accent": "red",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "aa5d356f-da76-493a-aaa2-b3f7337dbf05",
+       "type": "item",
+       "value": {
+        "tag": "Topic 6",
+        "title": "Short video 6",
+        "accent": "teal",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "8c7392ef-1226-4f11-8a7d-e3fefca2af85",
+       "type": "item",
+       "value": {
+        "tag": "Topic 7",
+        "title": "Short video 7",
+        "accent": "blue",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "19821c68-505b-45df-9f94-dbc348e67f9b",
+       "type": "item",
+       "value": {
+        "tag": "Topic 8",
+        "title": "Short video 8",
+        "accent": "olive",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      }
+     ],
+     "heading": "Featured Short Videos",
+     "autoplay": true,
+     "intro_text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "autoplay_speed": 3,
+     "show_pagination": true
+    }
+   },
+   {
+    "id": "26c18bef-2fc7-4701-8eed-18efb2854964",
+    "type": "highlight_title",
+    "value": "pagination \u2713 \u00b7 loop \u2713 \u00b7 autoplay \u2717"
+   },
+   {
+    "id": "2dc60258-b0ae-4985-b084-a5a0d2606e33",
+    "type": "video_carousel",
+    "value": {
+     "loop": true,
+     "items": [
+      {
+       "id": "d6a1d27f-bf6e-48d0-a024-c7bbdb6a4700",
+       "type": "item",
+       "value": {
+        "tag": "Topic 1",
+        "title": "Short video 1",
+        "accent": "teal",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "449856d0-2157-4d39-9d08-65fdc518a21f",
+       "type": "item",
+       "value": {
+        "tag": "Topic 2",
+        "title": "Short video 2",
+        "accent": "blue",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "ce19d3d1-5e8d-44a6-9144-109d984a82d5",
+       "type": "item",
+       "value": {
+        "tag": "Topic 3",
+        "title": "Short video 3",
+        "accent": "olive",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "3cdc332f-52e6-47fe-85ca-5cf7bb19b043",
+       "type": "item",
+       "value": {
+        "tag": "Topic 4",
+        "title": "Short video 4",
+        "accent": "mauve",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "e2f59dd7-a2e4-42ae-aef7-5653ddeb327b",
+       "type": "item",
+       "value": {
+        "tag": "Topic 5",
+        "title": "Short video 5",
+        "accent": "red",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "d6319ce7-8abf-4be8-a9cb-b941d7741d6e",
+       "type": "item",
+       "value": {
+        "tag": "Topic 6",
+        "title": "Short video 6",
+        "accent": "teal",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "2f525c59-3eb5-422f-8a60-5e3ae6eb1c6a",
+       "type": "item",
+       "value": {
+        "tag": "Topic 7",
+        "title": "Short video 7",
+        "accent": "blue",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "06d95459-ddc8-4578-ab4a-6a709a0693c9",
+       "type": "item",
+       "value": {
+        "tag": "Topic 8",
+        "title": "Short video 8",
+        "accent": "olive",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      }
+     ],
+     "heading": "Featured Short Videos",
+     "autoplay": false,
+     "intro_text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "autoplay_speed": 3,
+     "show_pagination": true
+    }
+   },
+   {
+    "id": "67c6a5ca-1808-40dc-82c2-b3e470b72329",
+    "type": "highlight_title",
+    "value": "pagination \u2713 \u00b7 loop \u2717 \u00b7 autoplay \u2713"
+   },
+   {
+    "id": "2babd1a0-852e-40e4-9d9e-da9e4a9be431",
+    "type": "video_carousel",
+    "value": {
+     "loop": false,
+     "items": [
+      {
+       "id": "986b9b16-11b6-4872-899b-60878ea2054e",
+       "type": "item",
+       "value": {
+        "tag": "Topic 1",
+        "title": "Short video 1",
+        "accent": "teal",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "e74b96d6-27e2-44e9-bab7-b67e5325c349",
+       "type": "item",
+       "value": {
+        "tag": "Topic 2",
+        "title": "Short video 2",
+        "accent": "blue",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "f2f80ac9-f183-43db-8da7-b428b1cea756",
+       "type": "item",
+       "value": {
+        "tag": "Topic 3",
+        "title": "Short video 3",
+        "accent": "olive",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "517ed857-d2c3-4852-903d-cf6ac5163b12",
+       "type": "item",
+       "value": {
+        "tag": "Topic 4",
+        "title": "Short video 4",
+        "accent": "mauve",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "34148ddf-66f0-4c2e-8065-16eea4ebd335",
+       "type": "item",
+       "value": {
+        "tag": "Topic 5",
+        "title": "Short video 5",
+        "accent": "red",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "17c2bbde-3e69-4fda-a15c-d8d42f48991d",
+       "type": "item",
+       "value": {
+        "tag": "Topic 6",
+        "title": "Short video 6",
+        "accent": "teal",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "336db9bf-8f88-466d-8ad2-deb6ab6f08c2",
+       "type": "item",
+       "value": {
+        "tag": "Topic 7",
+        "title": "Short video 7",
+        "accent": "blue",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "cc2dba5e-6740-4abc-be65-f61cc64075e1",
+       "type": "item",
+       "value": {
+        "tag": "Topic 8",
+        "title": "Short video 8",
+        "accent": "olive",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      }
+     ],
+     "heading": "Featured Short Videos",
+     "autoplay": true,
+     "intro_text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "autoplay_speed": 3,
+     "show_pagination": true
+    }
+   },
+   {
+    "id": "5b58f81e-0c14-44b6-b0bb-cdd48bc3d394",
+    "type": "highlight_title",
+    "value": "pagination \u2713 \u00b7 loop \u2717 \u00b7 autoplay \u2717"
+   },
+   {
+    "id": "6f4680e6-1c7d-457f-8535-e8bd6ed0ad67",
+    "type": "video_carousel",
+    "value": {
+     "loop": false,
+     "items": [
+      {
+       "id": "2fb3f9ba-1236-4dcd-8bb0-cf38e786aa68",
+       "type": "item",
+       "value": {
+        "tag": "Topic 1",
+        "title": "Short video 1",
+        "accent": "teal",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "f4829642-9e72-4911-a989-fd0e7ed3540a",
+       "type": "item",
+       "value": {
+        "tag": "Topic 2",
+        "title": "Short video 2",
+        "accent": "blue",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "fd85d926-244b-4125-9817-ea559cfb5744",
+       "type": "item",
+       "value": {
+        "tag": "Topic 3",
+        "title": "Short video 3",
+        "accent": "olive",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "797f323f-eed0-4458-8a33-302332ad4e24",
+       "type": "item",
+       "value": {
+        "tag": "Topic 4",
+        "title": "Short video 4",
+        "accent": "mauve",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "7b583ab6-eb71-417b-83e7-d537ebe9a712",
+       "type": "item",
+       "value": {
+        "tag": "Topic 5",
+        "title": "Short video 5",
+        "accent": "red",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "f0982c4d-f809-45cc-b8be-24062bb5e5e5",
+       "type": "item",
+       "value": {
+        "tag": "Topic 6",
+        "title": "Short video 6",
+        "accent": "teal",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "f9203b66-40bd-46b5-8f29-d46ee1e19369",
+       "type": "item",
+       "value": {
+        "tag": "Topic 7",
+        "title": "Short video 7",
+        "accent": "blue",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "442717e6-39a9-47d3-84ac-fbe8c1a09dc0",
+       "type": "item",
+       "value": {
+        "tag": "Topic 8",
+        "title": "Short video 8",
+        "accent": "olive",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      }
+     ],
+     "heading": "Featured Short Videos",
+     "autoplay": false,
+     "intro_text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "autoplay_speed": 3,
+     "show_pagination": true
+    }
+   },
+   {
+    "id": "a06724d8-d459-4ccf-b96e-07c9a5c871a8",
+    "type": "highlight_title",
+    "value": "pagination \u2717 \u00b7 loop \u2713 \u00b7 autoplay \u2713"
+   },
+   {
+    "id": "967ff382-33bf-4d14-8d09-95786a878591",
+    "type": "video_carousel",
+    "value": {
+     "loop": true,
+     "items": [
+      {
+       "id": "42917e8d-8dd3-4cf3-ad68-86bbf3d7fc5f",
+       "type": "item",
+       "value": {
+        "tag": "Topic 1",
+        "title": "Short video 1",
+        "accent": "teal",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "bf9203c0-e7e7-4f56-a95a-1b6e7bc420ba",
+       "type": "item",
+       "value": {
+        "tag": "Topic 2",
+        "title": "Short video 2",
+        "accent": "blue",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "b6188e78-e7a0-45aa-b190-62af8eb1711e",
+       "type": "item",
+       "value": {
+        "tag": "Topic 3",
+        "title": "Short video 3",
+        "accent": "olive",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "f16c70ff-946b-4d26-9397-af2a07bf80ca",
+       "type": "item",
+       "value": {
+        "tag": "Topic 4",
+        "title": "Short video 4",
+        "accent": "mauve",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "fbfaddd1-0f2c-4967-834b-d5834967dc93",
+       "type": "item",
+       "value": {
+        "tag": "Topic 5",
+        "title": "Short video 5",
+        "accent": "red",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "d8c7f493-504d-4698-a084-c1010b867e27",
+       "type": "item",
+       "value": {
+        "tag": "Topic 6",
+        "title": "Short video 6",
+        "accent": "teal",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "9c3298b2-b8e0-43ec-bfa8-a835878043a8",
+       "type": "item",
+       "value": {
+        "tag": "Topic 7",
+        "title": "Short video 7",
+        "accent": "blue",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "44f6f74a-4fc3-43a1-a02b-d1a8cdd8e67d",
+       "type": "item",
+       "value": {
+        "tag": "Topic 8",
+        "title": "Short video 8",
+        "accent": "olive",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      }
+     ],
+     "heading": "Featured Short Videos",
+     "autoplay": true,
+     "intro_text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "autoplay_speed": 3,
+     "show_pagination": false
+    }
+   },
+   {
+    "id": "cfec2e61-9210-4982-ba6f-aa3fae2cc2bf",
+    "type": "highlight_title",
+    "value": "pagination \u2717 \u00b7 loop \u2713 \u00b7 autoplay \u2717"
+   },
+   {
+    "id": "df5cef6a-1cab-4b78-82d2-4734f2a53fc6",
+    "type": "video_carousel",
+    "value": {
+     "loop": true,
+     "items": [
+      {
+       "id": "77db09a6-824d-42bf-a889-329c3ef8e457",
+       "type": "item",
+       "value": {
+        "tag": "Topic 1",
+        "title": "Short video 1",
+        "accent": "teal",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "b2310267-ca83-4aac-a202-6a4a3193d66f",
+       "type": "item",
+       "value": {
+        "tag": "Topic 2",
+        "title": "Short video 2",
+        "accent": "blue",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "c7a52bca-a9b1-4f02-b3eb-4819b1ea005d",
+       "type": "item",
+       "value": {
+        "tag": "Topic 3",
+        "title": "Short video 3",
+        "accent": "olive",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "c83aa045-8fde-4ee5-87cb-a9b28fd51433",
+       "type": "item",
+       "value": {
+        "tag": "Topic 4",
+        "title": "Short video 4",
+        "accent": "mauve",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "295e8193-d66d-404a-9ecf-11ab1c27d2c7",
+       "type": "item",
+       "value": {
+        "tag": "Topic 5",
+        "title": "Short video 5",
+        "accent": "red",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "99752517-d92a-4152-b467-0ee136586682",
+       "type": "item",
+       "value": {
+        "tag": "Topic 6",
+        "title": "Short video 6",
+        "accent": "teal",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "2cc83a73-dfbb-461d-a1b0-9624fa5c910a",
+       "type": "item",
+       "value": {
+        "tag": "Topic 7",
+        "title": "Short video 7",
+        "accent": "blue",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "ab9822e2-84a5-4bcd-8cf5-dbb6b4d45fc6",
+       "type": "item",
+       "value": {
+        "tag": "Topic 8",
+        "title": "Short video 8",
+        "accent": "olive",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      }
+     ],
+     "heading": "Featured Short Videos",
+     "autoplay": false,
+     "intro_text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "autoplay_speed": 3,
+     "show_pagination": false
+    }
+   },
+   {
+    "id": "960cefb5-1399-4a79-9582-5047d3dea6a4",
+    "type": "highlight_title",
+    "value": "pagination \u2717 \u00b7 loop \u2717 \u00b7 autoplay \u2713"
+   },
+   {
+    "id": "1c8adb68-f64b-420f-8830-dde6994f2bb0",
+    "type": "video_carousel",
+    "value": {
+     "loop": false,
+     "items": [
+      {
+       "id": "5e33de6f-504a-463c-820d-52b398b538e7",
+       "type": "item",
+       "value": {
+        "tag": "Topic 1",
+        "title": "Short video 1",
+        "accent": "teal",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "3507ba0a-8f7c-4e5c-8ba2-91364500a94e",
+       "type": "item",
+       "value": {
+        "tag": "Topic 2",
+        "title": "Short video 2",
+        "accent": "blue",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "7c45b903-f660-459e-88ad-491337eb1336",
+       "type": "item",
+       "value": {
+        "tag": "Topic 3",
+        "title": "Short video 3",
+        "accent": "olive",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "cf979fb3-7c2c-400a-a6d0-aa488f0de820",
+       "type": "item",
+       "value": {
+        "tag": "Topic 4",
+        "title": "Short video 4",
+        "accent": "mauve",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "c5291aa3-10fe-49f0-bee9-3c4292122fa6",
+       "type": "item",
+       "value": {
+        "tag": "Topic 5",
+        "title": "Short video 5",
+        "accent": "red",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "e69e69bc-c3ca-4c0d-9921-5254429fa403",
+       "type": "item",
+       "value": {
+        "tag": "Topic 6",
+        "title": "Short video 6",
+        "accent": "teal",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "bc5969f9-48c1-45bc-91b3-1ad38a0d6a88",
+       "type": "item",
+       "value": {
+        "tag": "Topic 7",
+        "title": "Short video 7",
+        "accent": "blue",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "f0091592-11ed-41ec-bc9b-00dc60919c06",
+       "type": "item",
+       "value": {
+        "tag": "Topic 8",
+        "title": "Short video 8",
+        "accent": "olive",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      }
+     ],
+     "heading": "Featured Short Videos",
+     "autoplay": true,
+     "intro_text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "autoplay_speed": 3,
+     "show_pagination": false
+    }
+   },
+   {
+    "id": "5c408149-e92e-4a7d-9417-c75379adb28f",
+    "type": "highlight_title",
+    "value": "pagination \u2717 \u00b7 loop \u2717 \u00b7 autoplay \u2717"
+   },
+   {
+    "id": "5c2f94a3-58c2-46e6-8320-eb08c81e33bb",
+    "type": "video_carousel",
+    "value": {
+     "loop": false,
+     "items": [
+      {
+       "id": "fef30424-e22e-43ed-918e-b005dbef9a51",
+       "type": "item",
+       "value": {
+        "tag": "Topic 1",
+        "title": "Short video 1",
+        "accent": "teal",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "89a5cf16-d740-46a1-bc01-a264d2e8f322",
+       "type": "item",
+       "value": {
+        "tag": "Topic 2",
+        "title": "Short video 2",
+        "accent": "blue",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "07a7494f-d3a1-4c48-96bb-81b39bbe51ca",
+       "type": "item",
+       "value": {
+        "tag": "Topic 3",
+        "title": "Short video 3",
+        "accent": "olive",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "88473453-250f-49fb-841d-f548c77ba34e",
+       "type": "item",
+       "value": {
+        "tag": "Topic 4",
+        "title": "Short video 4",
+        "accent": "mauve",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "a806637b-e11f-40f7-b63c-bd289c01405b",
+       "type": "item",
+       "value": {
+        "tag": "Topic 5",
+        "title": "Short video 5",
+        "accent": "red",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "fe98cc6e-1b11-4444-a805-20cb60ffe501",
+       "type": "item",
+       "value": {
+        "tag": "Topic 6",
+        "title": "Short video 6",
+        "accent": "teal",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "fa81262d-d860-4eb0-8c8b-92f9106483c8",
+       "type": "item",
+       "value": {
+        "tag": "Topic 7",
+        "title": "Short video 7",
+        "accent": "blue",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      },
+      {
+       "id": "8ca44406-4cb0-4db0-bc61-7791438767ef",
+       "type": "item",
+       "value": {
+        "tag": "Topic 8",
+        "title": "Short video 8",
+        "accent": "olive",
+        "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+        "poster_image": 12475
+       }
+      }
+     ],
+     "heading": "Featured Short Videos",
+     "autoplay": false,
+     "intro_text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "autoplay_speed": 3,
+     "show_pagination": false
+    }
+   }
+  ]
+ },
+ "video-text": {
+  "title": "Video + Text",
+  "body": [
+   {
+    "id": "ce221ffe5f48491b99967bfdbcae6438",
+    "type": "video_text",
+    "value": {
+     "buttons": [
+      {
+       "id": "ba5769ca0d5f496389eedc2aa439e153",
+       "type": "item",
+       "value": {
+        "icon": "chevron",
+        "label": "Watch more",
+        "scheme": "on-light",
+        "variant": "outline",
+        "link_url": "#",
+        "link_page": null,
+        "link_document": null
+       }
+      }
+     ],
+     "heading": "Program (=Topic) Overview & Why It Matters",
+     "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+     "intro_text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>",
+     "video_file": null,
+     "poster_image": 12475
+    }
+   }
+  ]
+ },
+ "composable-tabs-test": {
+  "title": "Composable Tabs (test)",
+  "body": [
+   {
+    "id": "8620dd5c-1ad8-4b81-81cb-b1c74c100ddc",
+    "type": "composable_tabs",
+    "value": {
+     "tabs": [
+      {
+       "id": "c9e152ff-1467-4005-9c2f-b7a535c52cc3",
+       "type": "item",
+       "value": {
+        "label": "Modules",
+        "content": [
+         {
+          "id": "f7e03531-2897-4787-829d-98ac024b731e",
+          "type": "paragraph",
+          "value": "<p>Rich text + modules in a tab panel. Program auto-scope is N/A here (BasicPage, not a program).</p>"
+         },
+         {
+          "id": "3ace2c94-9ded-4705-9368-212f94c4d0fa",
+          "type": "experts_grid",
+          "value": {}
+         }
+        ]
+       }
+      },
+      {
+       "id": "b72e0910-684f-4862-8ab4-2f2dec19d87c",
+       "type": "item",
+       "value": {
+        "label": "Resources (faceted)",
+        "content": [
+         {
+          "id": "83b2b6b8-7757-4fe5-ad83-69d1643a0314",
+          "type": "faceted_listing",
+          "value": {
+           "facets": [
+            "topic",
+            "year"
+           ],
+           "prefix": "res",
+           "heading": "Resources",
+           "card_type": "resource",
+           "show_search": true,
+           "show_filters": true
+          }
+         }
+        ]
+       }
+      },
+      {
+       "id": "35aca7fd-b324-4e0a-b7b5-89f6f3a6da78",
+       "type": "item",
+       "value": {
+        "label": "Publications (year facet)",
+        "content": [
+         {
+          "id": "5c8b953c-187a-4a26-bcb2-a4ddda69f069",
+          "type": "faceted_listing",
+          "value": {
+           "facets": [
+            "year"
+           ],
+           "prefix": "pub",
+           "heading": "Working Papers",
+           "card_type": "publication",
+           "show_search": true,
+           "show_filters": true,
+           "publication_type": "working-paper"
+          }
+         }
+        ]
+       }
+      },
+      {
+       "id": "85bf2af7-cb6d-4575-8375-53bb147d0087",
+       "type": "item",
+       "value": {
+        "label": "People (faceted)",
+        "content": [
+         {
+          "id": "1cdcf7f0-7df6-45f5-a9a3-9920bfb1457d",
+          "type": "faceted_listing",
+          "value": {
+           "facets": [],
+           "prefix": "ppl",
+           "heading": "Fellows",
+           "card_type": "person",
+           "person_type": "dph_fellow",
+           "show_search": true,
+           "show_filters": true
+          }
+         }
+        ]
+       }
+      },
+      {
+       "id": "b4019092-708a-40df-94fe-e06277ed262d",
+       "type": "item",
+       "value": {
+        "label": "Speakers (no-filter grid)",
+        "content": [
+         {
+          "id": "1f80cfa6-3d3c-45c2-92aa-eb2fd300718a",
+          "type": "faceted_listing",
+          "value": {
+           "facets": [],
+           "prefix": "spk",
+           "heading": "Speakers",
+           "card_type": "person",
+           "person_type": "speaker",
+           "show_search": false,
+           "show_filters": false
+          }
+         }
+        ]
+       }
+      },
+      {
+       "id": "88211bf9-62af-41de-a9cb-4123ba84222d",
+       "type": "item",
+       "value": {
+        "label": "Staff (A\u2013Z)",
+        "content": [
+         {
+          "id": "322eefcb-6fca-42b8-99d6-22ceafe3127b",
+          "type": "faceted_listing",
+          "value": {
+           "facets": [
+            "letter"
+           ],
+           "prefix": "staff",
+           "heading": "Staff Directory",
+           "card_type": "staff",
+           "show_search": true,
+           "show_filters": true
+          }
+         }
+        ]
+       }
+      },
+      {
+       "id": "4fcf4864-06a6-4373-bce9-2bdb168607b2",
+       "type": "item",
+       "value": {
+        "label": "News (faceted)",
+        "content": [
+         {
+          "id": "b5f257f9-62dd-4c3a-ad3e-da95daab5bf5",
+          "type": "faceted_listing",
+          "value": {
+           "facets": [],
+           "prefix": "news",
+           "heading": "News",
+           "card_type": "news",
+           "show_search": true,
+           "show_filters": true
+          }
+         }
+        ]
+       }
+      },
+      {
+       "id": "e3b11ab3-f812-49b2-871d-45d03f2526c9",
+       "type": "item",
+       "value": {
+        "label": "Episodes",
+        "content": [
+         {
+          "id": "41d7a46b-9e80-4a80-bc23-88be252a450c",
+          "type": "faceted_listing",
+          "value": {
+           "facets": [],
+           "prefix": "ep",
+           "heading": "All Episodes",
+           "card_type": "episode_row",
+           "show_search": true,
+           "show_filters": true
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "heading": "DS test"
+    }
+   }
+  ],
+  "page_type": "basic"
+ },
+ "news-router-test": {
+  "title": "CIGI News archive (test)",
+  "body": [
+   {
+    "id": "2abdfef0-a0e7-4b35-af15-78b0c998db6b",
+    "type": "faceted_listing",
+    "value": {
+     "intro": "<p>The CIGI News archive \u2014 prefiltered to News Releases, restricted TYPE facet.</p>",
+     "facets": [
+      "topic",
+      "type",
+      "experts",
+      "year"
+     ],
+     "prefix": "n",
+     "heading": "Browse all CIGI News",
+     "card_type": "news",
+     "empty_text": "No news matches your filters.",
+     "show_search": true,
+     "show_filters": true,
+     "news_prefilter": "news-release"
+    }
+   }
+  ],
+  "page_type": "basic"
+ },
+ "podcast-all-episodes-test": {
+  "title": "Podcast All-Episodes (test)",
+  "body": [
+   {
+    "id": "8aa4edfc-ff52-4037-afa2-e94a035c347e",
+    "type": "faceted_listing",
+    "value": {
+     "intro": "<p>Browse every episode of the Big Tech podcast. Filter by season or search by title.</p>",
+     "facets": [
+      "season"
+     ],
+     "prefix": "ep",
+     "series": 202,
+     "heading": "All Episodes",
+     "card_type": "episode_row",
+     "empty_text": "No episodes match your filters.",
+     "show_search": true,
+     "show_filters": true,
+     "series_source": "manual"
+    }
+   }
+  ],
+  "page_type": "basic"
+ },
+ "venue-rentals-test": {
+  "title": "Venue Rentals (test)",
+  "page_type": "basic",
+  "body": [
+   {
+    "id": "d322ce0e-a9f1-48ba-bbd7-f92caabd6ebd",
+    "type": "alt_hero",
+    "value": {
+     "image": 12481,
+     "eyebrow": "Home > Venue Rentals",
+     "heading": "Venue Rentals",
+     "description": "<p>The CIGI Campus is a nightowl venue in the heart of Waterloo, available to non-profit organizations, community groups and businesses for meetings and events. We do not accommodate rentals for private gatherings such as weddings and memorials.</p>"
+    }
+   },
+   {
+    "id": "a178e08e-6377-4edc-8528-6ee942becec3",
+    "type": "composable_tabs",
+    "value": {
+     "heading": "Venue Rentals",
+     "tabs": [
+      {
+       "id": "c151a998-845c-4ad3-9a13-e26eba94d465",
+       "type": "item",
+       "value": {
+        "label": "About the Program",
+        "content": [
+         {
+          "id": "76d0d749-32de-4b7f-8245-ebc3079b4d19",
+          "type": "gallery_text",
+          "value": {
+           "heading": "CIGI Auditorium",
+           "intro_text": "<p>The CIGI Auditorium is a world-class venue in the heart of Waterloo, available for rental to non-profit organizations, community groups and businesses. Amenities include:</p><ul><li>High-definition projector</li><li>Continuous ceiling projection</li><li>Four HD cameras</li><li>Podium with microphone</li><li>Integrated listening-assist technology</li><li>Broadcasting and recording</li></ul>",
+           "buttons": [],
+           "slides": [
+            {
+             "id": "69e339a8-c046-440b-9a2c-ba034ffbd918",
+             "type": "item",
+             "value": {
+              "image": 12474,
+              "caption": "Caption for slide 1"
+             }
+            },
+            {
+             "id": "e1cef82a-bdfb-4aa0-aa54-0a15be8864b3",
+             "type": "item",
+             "value": {
+              "image": 12475,
+              "caption": "Caption for slide 2"
+             }
+            },
+            {
+             "id": "f8b982ff-538e-4e8b-ba45-ce39fdafcc7c",
+             "type": "item",
+             "value": {
+              "image": 12476,
+              "caption": "Caption for slide 3"
+             }
+            }
+           ],
+           "show_pagination": true,
+           "loop": true,
+           "autoplay": false,
+           "autoplay_speed": 5
+          }
+         },
+         {
+          "id": "6203b46a-5a0b-49b8-8b75-dff1183a2f4f",
+          "type": "gallery_text",
+          "value": {
+           "heading": "CIGI Main Foyer",
+           "intro_text": "<p>The CIGI Main Foyer gives different gatherings a distinct setting to listen to the surrounding glass corridors, modern architecture and CIGI sensibilities. The venue features natural stone flooring and can seat up to 200 guests for a reception or dinner event.</p>",
+           "buttons": [],
+           "slides": [
+            {
+             "id": "d5686a0a-fe73-4b19-9e37-5bf300f62c74",
+             "type": "item",
+             "value": {
+              "image": 12477,
+              "caption": "Caption for slide 1"
+             }
+            },
+            {
+             "id": "eb6aaada-1337-467c-8919-925827b19943",
+             "type": "item",
+             "value": {
+              "image": 12478,
+              "caption": "Caption for slide 2"
+             }
+            },
+            {
+             "id": "18c38e92-09c5-4307-907a-b9fd2eb89d96",
+             "type": "item",
+             "value": {
+              "image": 12479,
+              "caption": "Caption for slide 3"
+             }
+            }
+           ],
+           "show_pagination": true,
+           "loop": true,
+           "autoplay": false,
+           "autoplay_speed": 5
+          }
+         },
+         {
+          "id": "7e270596-70bd-4124-a504-cb28299c8704",
+          "type": "accordion_module",
+          "value": {
+           "heading": "Rental Pricing",
+           "intro_text": "<p>All rental packages below include set-up and tear-down time. For more information, view our full rental package.</p>",
+           "buttons": [
+            {
+             "id": "274b352f-35f3-40b8-b536-02b1d12f3b1f",
+             "type": "item",
+             "value": {
+              "label": "Download Rental Package",
+              "link_page": null,
+              "link_document": null,
+              "link_url": "#",
+              "variant": "outline",
+              "scheme": "auto",
+              "icon": "download"
+             }
+            }
+           ],
+           "items": [
+            {
+             "id": "18cb9e98-3abd-4994-9890-5c83cb279a67",
+             "type": "item",
+             "value": {
+              "title": "Reception Only Package",
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>"
+             }
+            },
+            {
+             "id": "5d1973cc-d5a0-493b-9b97-53e2058237f4",
+             "type": "item",
+             "value": {
+              "title": "Basic Auditorium Package",
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>"
+             }
+            },
+            {
+             "id": "150302f2-9fb5-46dc-80d1-6caa75a66122",
+             "type": "item",
+             "value": {
+              "title": "Half-day Conference Package",
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>"
+             }
+            },
+            {
+             "id": "910f1a0c-050f-473f-b002-9861f1f2ab7a",
+             "type": "item",
+             "value": {
+              "title": "Full-day Conference Package",
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>"
+             }
+            },
+            {
+             "id": "16cbab53-0253-4f0e-ac1f-063fc7ab3637",
+             "type": "item",
+             "value": {
+              "title": "Multi-day Conference",
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>"
+             }
+            },
+            {
+             "id": "acbd5a18-803c-4203-b2a9-67f4129d3caf",
+             "type": "item",
+             "value": {
+              "title": "What is not Included in a Rental Package",
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>"
+             }
+            }
+           ]
+          }
+         },
+         {
+          "id": "37f0e88e-f764-4859-ac92-c72b35ebc5dd",
+          "type": "cta_image",
+          "value": {
+           "image": 12480,
+           "heading": "Inquire Now",
+           "text": "<p>Tell us about your event and our team will get back to you shortly.</p>",
+           "buttons": [
+            {
+             "id": "00ca4b64-0c60-42c6-8486-907df0a9d677",
+             "type": "item",
+             "value": {
+              "label": "View Rental Inquiry Form",
+              "link_page": null,
+              "link_document": null,
+              "link_url": "#",
+              "variant": "outline",
+              "scheme": "on-red",
+              "icon": "chevron"
+             }
+            }
+           ]
+          }
+         }
+        ]
+       }
+      },
+      {
+       "id": "4d9f2f6f-69dc-43ca-8918-e6e8a4a2664e",
+       "type": "item",
+       "value": {
+        "label": "Multi-Purpose Room A-120",
+        "content": [
+         {
+          "id": "af810759-db2d-4e9c-b2c1-8642c6fe7958",
+          "type": "accordion_module",
+          "value": {
+           "heading": "Multi-Purpose Room A-120",
+           "intro_text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>",
+           "buttons": [],
+           "items": [
+            {
+             "id": "e93d95e0-dd6f-4b0b-b527-7333d4c1a47e",
+             "type": "item",
+             "value": {
+              "title": "Multi-Purpose Room A-120 details",
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>"
+             }
+            }
+           ]
+          }
+         }
+        ]
+       }
+      },
+      {
+       "id": "1ffc3dec-b487-4ae8-9e9b-92066eca6d8f",
+       "type": "item",
+       "value": {
+        "label": "Event Catering",
+        "content": [
+         {
+          "id": "f4feaed0-ceb6-4482-a1a2-8894c7a98e19",
+          "type": "accordion_module",
+          "value": {
+           "heading": "Event Catering",
+           "intro_text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>",
+           "buttons": [],
+           "items": [
+            {
+             "id": "99211daa-ff30-4469-a5d2-55910ef2edd5",
+             "type": "item",
+             "value": {
+              "title": "Event Catering details",
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>"
+             }
+            }
+           ]
+          }
+         }
+        ]
+       }
+      },
+      {
+       "id": "456ecbaf-af3e-44e1-8a02-ddf5fd4698e6",
+       "type": "item",
+       "value": {
+        "label": "Audio-Visual Capabilities",
+        "content": [
+         {
+          "id": "7317a0a4-8788-4bc9-916a-539ba9cf5688",
+          "type": "accordion_module",
+          "value": {
+           "heading": "Audio-Visual Capabilities",
+           "intro_text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>",
+           "buttons": [],
+           "items": [
+            {
+             "id": "2c94a707-b91e-4d46-a353-089d0ebe0ea8",
+             "type": "item",
+             "value": {
+              "title": "Audio-Visual Capabilities details",
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>"
+             }
+            }
+           ]
+          }
+         }
+        ]
+       }
+      },
+      {
+       "id": "f18e1480-eb04-4bc4-9504-a829ef9c12d5",
+       "type": "item",
+       "value": {
+        "label": "Venue Rental Inquiry Form",
+        "content": [
+         {
+          "id": "5d881320-dc0f-4be8-8458-8886b09da5c3",
+          "type": "accordion_module",
+          "value": {
+           "heading": "Venue Rental Inquiry Form",
+           "intro_text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>",
+           "buttons": [],
+           "items": [
+            {
+             "id": "52038fda-291d-4f2c-943e-5f713548efb6",
+             "type": "item",
+             "value": {
+              "title": "Venue Rental Inquiry Form details",
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>"
+             }
+            }
+           ]
+          }
+         }
+        ]
+       }
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "dph-test": {
+  "title": "Digital Policy Hub (test)",
+  "page_type": "basic",
+  "body": [
+   {
+    "id": "2614956f-4652-40b7-ba24-19d7bf5e1425",
+    "type": "split_hero",
+    "value": {
+     "image": 13,
+     "accent": "green",
+     "eyebrow": "Home > Digital Policy Hub",
+     "heading": "Digital Policy Hub",
+     "surface": "charcoal",
+     "description": "<p>A collaborative space for emerging scholars and innovative thinkers to think through emerging digital policy issues and the evolution of governance.</p>"
+    }
+   },
+   {
+    "id": "5429a19c-c994-4f9c-9774-bb5591137aa8",
+    "type": "composable_tabs",
+    "value": {
+     "tabs": [
+      {
+       "id": "50cee1f7-4644-4573-8bde-efcf32bccb17",
+       "type": "item",
+       "value": {
+        "label": "About",
+        "content": [
+         {
+          "id": "dca4bbb0-f9bf-455a-90f1-70bb3692eab8",
+          "type": "stats",
+          "value": {
+           "stats": [
+            {
+             "id": "8bda75c5-148a-4929-8dc0-22b17a8a97ed",
+             "type": "item",
+             "value": {
+              "label": "Medium-length feature heading goes here",
+              "number": "100+"
+             }
+            },
+            {
+             "id": "081a3ff2-0bb2-4102-812e-a0b04a9f191c",
+             "type": "item",
+             "value": {
+              "label": "Working Papers",
+              "number": "20+"
+             }
+            },
+            {
+             "id": "5b7e1d5f-1b2b-421a-ac34-0fb2af1870ea",
+             "type": "item",
+             "value": {
+              "label": "Cohorts",
+              "number": "3+"
+             }
+            }
+           ],
+           "accent": "green",
+           "buttons": [],
+           "heading": "Shaping the Future of Digital Policy",
+           "surface": "green",
+           "intro_text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>"
+          }
+         },
+         {
+          "id": "593852ea-e103-43d8-bbaa-a88a93bb9059",
+          "type": "text_columns",
+          "value": {
+           "body": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>",
+           "intro": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>",
+           "logos": [],
+           "buttons": [],
+           "heading": "Through A Transdisciplinary Research Approach",
+           "footnote": ""
+          }
+         },
+         {
+          "id": "6dd93a0b-5a4f-4117-850c-443f5730e777",
+          "type": "resource_carousel",
+          "value": {
+           "mode": "auto",
+           "count": 4,
+           "intro": "",
+           "items": [],
+           "accent": "green",
+           "heading": "Featured Working Papers",
+           "surface": "charcoal",
+           "cta_page": null,
+           "cta_label": "View All",
+           "show_pagination": true
+          }
+         },
+         {
+          "id": "8f5b7a07-6fc2-4a74-a083-015016b1b7a0",
+          "type": "text_columns",
+          "value": {
+           "body": "",
+           "intro": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>",
+           "logos": [
+            {
+             "id": "363b7743-d506-4c12-81a4-88217632fddb",
+             "type": "item",
+             "value": {
+              "logo": 12474,
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>"
+             }
+            },
+            {
+             "id": "d16f3c9a-3ff0-4fb0-9248-59b3624b9e37",
+             "type": "item",
+             "value": {
+              "logo": 12475,
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>"
+             }
+            }
+           ],
+           "buttons": [],
+           "heading": "Partnering With Universities, Governments and the Private Sector",
+           "footnote": "Thank you to our partners for their support of Digital Policy Hub fellows."
+          }
+         },
+         {
+          "id": "6a4cd134-9f01-4aad-9b9b-f813a0f39012",
+          "type": "news_grid",
+          "value": {
+           "mode": "auto",
+           "count": 4,
+           "intro": "",
+           "items": [],
+           "accent": "green",
+           "heading": "Latest News & Media",
+           "surface": "light"
+          }
+         },
+         {
+          "id": "0f7783e6-6fe7-4efd-8cc1-7b65c4774e99",
+          "type": "newsletter_subscription",
+          "value": {
+           "scheme": "green"
+          }
+         }
+        ]
+       }
+      },
+      {
+       "id": "263b9e23-3133-4551-b069-53d413b03cb6",
+       "type": "item",
+       "value": {
+        "label": "Application & Program Information",
+        "content": [
+         {
+          "id": "3f2bc0a6-57f3-4363-8603-d5f198f3cec1",
+          "type": "banner",
+          "value": {
+           "accent": "green",
+           "buttons": [
+            {
+             "id": "a7987e6b-3708-425f-a4e2-d445cc0eeea6",
+             "type": "item",
+             "value": {
+              "icon": "chevron",
+              "label": "Learn More",
+              "scheme": "auto",
+              "variant": "tertiary",
+              "link_url": "#",
+              "link_page": null,
+              "link_document": null
+             }
+            }
+           ],
+           "heading": "Applications for the next cohort open this fall",
+           "surface": "charcoal",
+           "show_rule": true,
+           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>",
+           "show_buttons": true,
+           "show_heading": true,
+           "show_description": true
+          }
+         },
+         {
+          "id": "c50998e1-1f54-4905-a1ab-865a1a0eb4d7",
+          "type": "text_columns",
+          "value": {
+           "body": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>",
+           "intro": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>",
+           "logos": [],
+           "accent": "green",
+           "buttons": [],
+           "heading": "Application Cycle",
+           "surface": "charcoal",
+           "footnote": ""
+          }
+         },
+         {
+          "id": "834c3e7d-6867-468c-a065-d51c0581add6",
+          "type": "text_card_grid",
+          "value": {
+           "cards": [
+            {
+             "id": "6a8227bb-994e-4216-81c8-499cf64c4a3e",
+             "type": "item",
+             "value": {
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>",
+              "heading": "Basic Eligibility Criteria \u2014 criterion 1"
+             }
+            },
+            {
+             "id": "6e05187e-5f23-497f-8f69-5751885e6d41",
+             "type": "item",
+             "value": {
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>",
+              "heading": "Basic Eligibility Criteria \u2014 criterion 2"
+             }
+            },
+            {
+             "id": "afe1621d-9a60-46b2-b867-ea09195cc254",
+             "type": "item",
+             "value": {
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>",
+              "heading": "Basic Eligibility Criteria \u2014 criterion 3"
+             }
+            },
+            {
+             "id": "359f4d90-9c1e-4cfa-a702-19a7c0cb1db0",
+             "type": "item",
+             "value": {
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>",
+              "heading": "Basic Eligibility Criteria \u2014 criterion 4"
+             }
+            },
+            {
+             "id": "e71120fd-f9bf-41ad-aab0-4cf40184a8bf",
+             "type": "item",
+             "value": {
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>",
+              "heading": "Basic Eligibility Criteria \u2014 criterion 5"
+             }
+            },
+            {
+             "id": "2faa27a0-023e-4880-916f-bd02b58bb5a5",
+             "type": "item",
+             "value": {
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>",
+              "heading": "Basic Eligibility Criteria \u2014 criterion 6"
+             }
+            }
+           ],
+           "intro": "",
+           "accent": "green",
+           "columns": "3",
+           "heading": "Basic Eligibility Criteria",
+           "surface": "green"
+          }
+         },
+         {
+          "id": "dd49bdca-d825-4535-80c4-c29e6c2a4655",
+          "type": "text_columns",
+          "value": {
+           "body": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>",
+           "intro": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>",
+           "logos": [],
+           "accent": "green",
+           "buttons": [],
+           "heading": "Funding",
+           "surface": "green",
+           "footnote": ""
+          }
+         },
+         {
+          "id": "af65621d-efb2-422c-9992-c75fe0ee8823",
+          "type": "text_card_grid",
+          "value": {
+           "cards": [
+            {
+             "id": "4c4cf832-f1be-4ff7-a22f-e8b49b09fbd7",
+             "type": "item",
+             "value": {
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>",
+              "heading": "What to Expect \u2014 criterion 1"
+             }
+            },
+            {
+             "id": "48c85edc-1808-42d7-88e5-4c7a2bcb3a3a",
+             "type": "item",
+             "value": {
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>",
+              "heading": "What to Expect \u2014 criterion 2"
+             }
+            },
+            {
+             "id": "c0c85f78-cff8-4408-92f3-a31e9a35a9f8",
+             "type": "item",
+             "value": {
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>",
+              "heading": "What to Expect \u2014 criterion 3"
+             }
+            },
+            {
+             "id": "787a3207-1d57-4017-90a9-a00c4030cc0f",
+             "type": "item",
+             "value": {
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>",
+              "heading": "What to Expect \u2014 criterion 4"
+             }
+            }
+           ],
+           "intro": "",
+           "accent": "green",
+           "columns": "4",
+           "heading": "What to Expect",
+           "surface": "charcoal"
+          }
+         },
+         {
+          "id": "20480706-6866-426e-a469-af11d620b791",
+          "type": "newsletter_subscription",
+          "value": {
+           "scheme": "green"
+          }
+         },
+         {
+          "id": "127a393d-d540-4d1a-82f2-08ad66941aaf",
+          "type": "accordion_module",
+          "value": {
+           "items": [
+            {
+             "id": "3e6bf56e-35a7-48cc-b639-e03f2462e4d8",
+             "type": "item",
+             "value": {
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>",
+              "title": "Frequently asked question 1"
+             }
+            },
+            {
+             "id": "e52c4c35-9446-4e30-bf1b-5c21d40a96ab",
+             "type": "item",
+             "value": {
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>",
+              "title": "Frequently asked question 2"
+             }
+            },
+            {
+             "id": "3f67e856-ad21-49b6-9260-b31c03a37b10",
+             "type": "item",
+             "value": {
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>",
+              "title": "Frequently asked question 3"
+             }
+            },
+            {
+             "id": "ae4c52b0-d2f6-442b-8414-59a258252c62",
+             "type": "item",
+             "value": {
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.</p>",
+              "title": "Frequently asked question 4"
+             }
+            }
+           ],
+           "accent": "green",
+           "buttons": [],
+           "heading": "FAQs",
+           "surface": "charcoal",
+           "intro_text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>"
+          }
+         }
+        ]
+       }
+      },
+      {
+       "id": "4061bc82-e73f-43e9-96e8-192012748cd0",
+       "type": "item",
+       "value": {
+        "label": "Current Cohort & Alumni",
+        "content": [
+         {
+          "id": "e6fafdaa-652f-4aea-aca8-ad3cd5712948",
+          "type": "faceted_listing",
+          "value": {
+           "accent": "green",
+           "facets": [],
+           "prefix": "dphc",
+           "heading": "Current Cohort & Alumni",
+           "surface": "charcoal",
+           "card_type": "person",
+           "person_type": "dph_fellow",
+           "show_search": true,
+           "show_filters": true
+          }
+         }
+        ]
+       }
+      },
+      {
+       "id": "d6641c20-dac9-470d-8bb4-7c767f6e7b19",
+       "type": "item",
+       "value": {
+        "label": "Working Papers",
+        "content": [
+         {
+          "id": "47656e5e-3dc4-4f2a-83be-ba5efb73f31d",
+          "type": "resource_carousel",
+          "value": {
+           "mode": "auto",
+           "count": 4,
+           "intro": "",
+           "items": [],
+           "accent": "green",
+           "heading": "Featured Working Papers",
+           "surface": "charcoal",
+           "cta_page": null,
+           "cta_label": "View All",
+           "show_pagination": true
+          }
+         },
+         {
+          "id": "ab4a6fed-19a1-4d23-9b91-957b9948269e",
+          "type": "faceted_listing",
+          "value": {
+           "accent": "green",
+           "facets": [
+            "year"
+           ],
+           "prefix": "dphwp",
+           "heading": "Working Papers",
+           "surface": "charcoal",
+           "card_type": "publication",
+           "show_search": true,
+           "show_filters": true,
+           "publication_type": "working-paper"
+          }
+         }
+        ]
+       }
+      },
+      {
+       "id": "cfc9d114-b398-48e8-b30e-fead8b0bd910",
+       "type": "item",
+       "value": {
+        "label": "Program Speakers",
+        "content": [
+         {
+          "id": "06b5bbd7-4b16-4bc7-80f7-32ef714cfeb3",
+          "type": "faceted_listing",
+          "value": {
+           "accent": "green",
+           "facets": [],
+           "prefix": "dphs",
+           "heading": "Program Speakers",
+           "surface": "charcoal",
+           "card_type": "person",
+           "person_type": "speaker",
+           "show_search": false,
+           "show_filters": false
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "heading": "Digital Policy Hub"
+    }
+   }
+  ]
+ }
+}

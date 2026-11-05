@@ -1,0 +1,105 @@
+// =============================================================================
+// Design System — Event registration pages (Event Form 1705:20332)
+// The on-site registration flow (register/type/<slug>/ and its siblings): the
+// dark registration hero (_hero.scss --registration) over a centred single
+// column on the ds-form contract (_form.scss). The column is the reading
+// measure (--width-845) centred in the container, as the frame's 843-wide
+// form at 1440. Guest sub-forms are ds-form__group boxes inside a ruled
+// section. Surface-aware via the --surface-* tokens.
+// =============================================================================
+
+.ds-registration {
+  padding-block: var(--space-section-y);
+
+  &__main {
+    max-width: var(--width-845);
+    margin-inline: auto;
+
+    // Lift the standalone single-column cap — the frame runs 2-up rows.
+    .ds-form { max-width: none; }
+  }
+
+  // Result / no-types pages: heading + serif copy above the actions.
+  &__heading {
+    @include header-3;
+    color: var(--surface-text);
+    margin: 0 0 var(--space-24);
+  }
+
+  &__text {
+    @include paragraph-1;
+    color: var(--surface-text);
+
+    p { margin: 0 0 var(--space-16); }
+    p:last-child { margin-bottom: 0; }
+  }
+
+  // Type chooser (register/ when an invite spans several types): the same
+  // outline buttons as the event hero's per-type Register row.
+  &__types {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-16);
+    margin-top: var(--space-32);
+  }
+
+  // Guests (optional per registration type) — ruled section between the
+  // primary fields and the actions.
+  &__guests {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+    margin-block: var(--space-32);
+    padding-top: var(--space-24);
+    border-top: var(--border-divider) solid var(--surface-border);
+  }
+
+  &__guests-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-16);
+  }
+
+  &__guests-title {
+    @include header-6;
+    color: var(--surface-text);
+    margin: 0 0 var(--space-8);
+  }
+
+  &__guests-help {
+    @include paragraph-3;
+    color: var(--surface-text-muted);
+    margin: 0;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-16);
+    margin-top: var(--space-32);
+  }
+}
+
+// Add-to-calendar links (events/includes/add_to_calendar.html) — label over a
+// row of tertiary buttons. Also rendered on the legacy confirm page, so it
+// carries its own spacing rather than leaning on .ds-registration.
+.ds-calendar-links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  margin-top: var(--space-32);
+
+  &__label {
+    @include header-7;
+    color: var(--surface-text, var(--color-brand-black));
+    margin: 0;
+  }
+
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-24);
+  }
+}

@@ -1,0 +1,59 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+{% comment %}
+  Text — heading (+ top-rule) and intro in a left column; the right column is
+  either a single flowing rich-text body (sub-headings, lists, paragraphs) or
+  the partner-logos variant: divider-separated logo + text
+  items over a small ruled footnote. Two-up on desktop, stacked on mobile.
+  (Distinct from Text Card Grid's equal-card grid.)
+{% endcomment %}
+<div class="ds-surface ds-surface--{{ self.surface|default:'inherit' }}{% if self.accent %} ds-surface--accent-{{ self.accent }}{% endif %}">
+<div class="ds-text-columns ds-container">
+  <div class="ds-text-columns__intro-col">
+    {% if self.heading %}<h2 class="ds-text-columns__heading">{{ self.heading }}</h2>{% endif %}
+    {% if self.intro %}<div class="ds-text-columns__intro">{{ self.intro|richtext }}</div>{% endif %}
+    {% if self.buttons %}
+      <div class="ds-text-columns__buttons">
+        {% for button in self.buttons %}{% include_block button %}{% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  {% if self.body or self.logos or self.footnote %}
+    <div class="ds-text-columns__content-col">
+      {% if self.body %}
+        <div class="ds-text-columns__body">{{ self.body|richtext }}</div>
+      {% endif %}
+
+      {% if self.logos %}
+        <div class="ds-text-columns__logos">
+          {% comment %}
+            A row renders when it has a logo OR text (BugHerd #369, Tia 9/10: a
+            cleared logo must keep the row's copy in the two-column layout; only
+            a fully empty row drops out). Every visible row carries a leading
+            divider; CSS hides the first one — forloop.first can't tell which
+            VISIBLE row comes first.
+          {% endcomment %}
+          {% for item in self.logos %}
+            {% if item.logo or item.text %}
+              <span class="ds-text-columns__logo-divider" aria-hidden="true"></span>
+              <div class="ds-text-columns__logo{% if not item.logo %} ds-text-columns__logo--text-only{% endif %}">
+                {% comment %}
+                  The logo displays at 56px (CSS). A lone height-56 rendition is 1x, so
+                  high-density screens upscale it and it reads soft (Tim, BugHerd #369).
+                  Serve a 2x rendition alongside it.
+                {% endcomment %}
+                {% if item.logo %}{% image item.logo height-56 as logo_1x %}{% image item.logo height-112 as logo_2x %}<img src="{{ logo_1x.url }}" srcset="{{ logo_1x.url }} 1x, {{ logo_2x.url }} 2x" width="{{ logo_1x.width }}" height="{{ logo_1x.height }}" alt="{{ logo_1x.alt }}" class="ds-text-columns__logo-img">{% endif %}
+                {% if item.text %}<div class="ds-text-columns__logo-text">{{ item.text|richtext }}</div>{% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if self.footnote %}
+        <div class="ds-text-columns__footnote">{{ self.footnote|richtext }}</div>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+</div>

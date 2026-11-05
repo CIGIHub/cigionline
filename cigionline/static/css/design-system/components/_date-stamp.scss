@@ -1,0 +1,44 @@
+// =============================================================================
+// Design System — Date stamp
+// Red month/day circle (e.g. JUN / 20). Reusable molecule for event cards and
+// event heroes. Decorative — the template marks it aria-hidden and pairs it with
+// a full date string. Month uses the 3-letter form so long months don't overflow
+// the fixed circle.
+// =============================================================================
+
+.ds-date-stamp {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  border: var(--border-divider) solid var(--color-brand-red);
+  border-radius: 1000px;
+  color: var(--surface-red-text); // red on light, white on dark/colour (same fix as #34)
+  font-family: var(--font-heading);
+  font-weight: 400;
+  line-height: 1;
+  text-align: center;
+
+  &__month {
+    font-size: var(--font-size-14);
+    letter-spacing: -0.42px;
+  }
+
+  &__day {
+    font-size: var(--font-size-18);
+    letter-spacing: -0.54px;
+  }
+
+  // Registration hero step (Event Form 1705:20344): the circle grows to the
+  // 80 spacing token and the type moves up one size each.
+  &--lg {
+    width: var(--space-80);
+    height: var(--space-80);
+
+    .ds-date-stamp__month { font-size: var(--font-size-18); }
+    .ds-date-stamp__day { font-size: var(--font-size-24); }
+  }
+}

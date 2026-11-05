@@ -1,0 +1,51 @@
+// =============================================================================
+// Design System — Spinner (submit feedback)
+// Guide (Newsletter + Forms — submit interaction): on submit the button label
+// swaps to a rotating spinner. subscribe-form.js adds `is-submitting` to the
+// form; the spinner element ships in the button markup (`.ds-spinner`, hidden
+// at rest) so JS never authors markup. The newsletter forms navigate to
+// /subscribe/, so the spinner covers the hand-off; the success states (checkmark,
+// field collapse, confirmation) belong to an in-place submit — see the guide
+// registry.
+// =============================================================================
+
+.ds-spinner {
+  display: none;
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+}
+
+form.is-submitting button[type='submit'] {
+  > :not(.ds-spinner) { display: none; }
+
+  .ds-spinner {
+    display: inline-block;
+    animation:
+      ds-spinner-in var(--motion-duration-swap) var(--motion-ease-standard) both,
+      ds-spinner-spin 800ms linear infinite;
+  }
+}
+
+// Reduced motion: no swap, no rotation — the label stays put.
+@include reduce-motion-safe {
+  form.is-submitting button[type='submit'] {
+    > :not(.ds-spinner) { display: revert; }
+
+    .ds-spinner {
+      display: none;
+      animation: none;
+    }
+  }
+}
+
+@keyframes ds-spinner-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes ds-spinner-spin {
+  to { transform: rotate(360deg); }
+}

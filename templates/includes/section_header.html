@@ -1,0 +1,43 @@
+{% load wagtailcore_tags icons %}
+{% comment %}
+  Shared section / band header (.ds-section-header). Reused across modules.
+  Params (all optional):
+    eyebrow             — small uppercase label
+    eyebrow_rule        — truthy → label-only 3px top-rule variant
+    heading             — heading text (gets a 5px top-rule)
+    heading_level       — heading tag level, default 2
+    intro               — rich text shown on the right of the heading
+    action_label        — action link text (e.g. "View All", "Explore")
+    action_url          — action href
+    action_button       — truthy → action renders as an outline DS button with a
+                          chevron (the heading-row "View all" treatment); default
+                          is the plain text link (eyebrow-row "Explore" treatment)
+    action_scheme       — button scheme when action_button (on-light | on-dark),
+                          default on-light
+    action_attrs        — extra raw attributes on the <a> (controlled strings only)
+    action_suffix       — dynamic text after the label (e.g. a program title)
+    action_suffix_attrs — raw attributes on the suffix <span>
+    lead_narrow         — truthy → heading column caps at 410, intro grows wide
+                          (the heading-left / intro-right module-title layout)
+{% endcomment %}
+{% if eyebrow or heading or action_label %}
+  <div class="ds-section-header{% if lead_narrow %} ds-section-header--lead-narrow{% endif %}">
+    {% if eyebrow or heading %}
+      <div class="ds-section-header__lead">
+        {% if eyebrow %}<p class="ds-section-header__eyebrow{% if eyebrow_rule %} ds-section-header__eyebrow--rule{% endif %}">{{ eyebrow }}</p>{% endif %}
+        {% if heading %}<h{{ heading_level|default:2 }} class="ds-section-header__heading">{{ heading }}</h{{ heading_level|default:2 }}>{% endif %}
+      </div>
+    {% endif %}
+    {% if intro %}<div class="ds-section-header__intro">{{ intro|richtext }}</div>{% endif %}
+    {% if action_label %}
+      {% if action_button %}
+        <a class="ds-button ds-button--outline ds-button--{{ action_scheme|default:'on-light' }} ds-section-header__button" href="{{ action_url }}"{% if action_attrs %} {{ action_attrs|safe }}{% endif %}>
+          <span class="ds-button__label">{{ action_label }}</span>
+          {% ds_icon 'chevron-right' css_class='ds-button__icon' %}
+        </a>
+      {% else %}
+        <a class="ds-section-header__action" href="{{ action_url }}"{% if action_attrs %} {{ action_attrs|safe }}{% endif %}>{{ action_label }}{% if action_suffix %} <span class="ds-section-header__action-suffix"{% if action_suffix_attrs %} {{ action_suffix_attrs|safe }}{% endif %}>{{ action_suffix }}</span>{% endif %}{% ds_icon 'chevron-right' %}</a>
+      {% endif %}
+    {% endif %}
+  </div>
+{% endif %}

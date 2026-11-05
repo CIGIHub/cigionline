@@ -1,0 +1,9 @@
+{% load icons %}{% comment %}
+  Hidden <template> fragments cloned by design-system JS (js/design-system/*) so
+  markup + SVG never live in the .js files. Cloned via js/design-system/templates.js.
+  Icons are class-less — the consuming module adds its context class. Included once
+  in base.html. Chevrons match includes/carousel_nav.html.
+{% endcomment %}
+<template data-ds-icon="chevron-left">{% ds_icon 'chevron-left' %}</template>
+<template data-ds-icon="chevron-right">{% ds_icon 'chevron-right' %}</template>
+<template data-ds-pagination-bullet><span><span class="ds-pagination__num"></span></span></template>

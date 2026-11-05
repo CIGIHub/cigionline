@@ -1,17 +1,25 @@
-{% load wagtailcore_tags %}
-
-<div class="container button-block">
-  <div class="row d-block">
-    <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-      {% if self.page %}
-        <a class="button-action" href="{% pageurl self.page %}">
-          {% if self.icon %}<i class="{{ self.icon }}" aria-hidden="true"></i> {% endif %}{{ self.text }}
-        </a>
-      {% else %}
-        <a class="button-action" href="{{ self.url }}">
-          {% if self.icon %}<i class="{{ self.icon }}" aria-hidden="true"></i> {% endif %}{{ self.text }}
-        </a>
-      {% endif %}
-    </div>
-  </div>
-</div>
+{% load wagtailcore_tags icons cards %}
+{% comment %}
+  Design-system button. Resolves href from page > document > url (first set wins).
+  Variant (outline | tertiary) × scheme (on-light | on-dark | on-red) via modifier
+  classes. Scheme 'auto' (the authoring default) resolves from `button_surface`,
+  set by surface-carrying module templates (banner/stats/cta_image).
+{% endcomment %}
+{% button_scheme self.scheme button_surface|default:'' as resolved_scheme %}
+<a
+  href="{% if self.link_page %}{% pageurl self.link_page %}{% elif self.link_document %}{{ self.link_document.url }}{% elif self.link_url %}{{ self.link_url }}{% else %}#{% endif %}"
+  class="ds-button ds-button--{{ self.variant }} ds-button--{{ resolved_scheme }}"
+  {% if self.link_document %}download{% endif %}
+>
+  <span class="ds-button__label">{{ self.label }}</span>
+  {% if self.link_document %}
+    {# Document links always carry the download glyph, whatever icon was authored — site-wide rule (BugHerd #219/#222). #}
+    {% ds_icon 'download' css_class='ds-button__icon' %}
+  {% elif self.icon == 'chevron' %}
+    {% ds_icon 'chevron-right' css_class='ds-button__icon' %}
+  {% elif self.icon == 'arrow' %}
+    <svg class="ds-button__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 11h12.17l-5.58-5.59L12 4l8 8-8 8-1.41-1.41L16.17 13H4z"/></svg>
+  {% elif self.icon == 'download' %}
+    {% ds_icon 'download' css_class='ds-button__icon' %}
+  {% endif %}
+</a>

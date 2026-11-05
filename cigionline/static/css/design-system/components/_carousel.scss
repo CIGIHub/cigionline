@@ -1,0 +1,75 @@
+// =============================================================================
+// Design System — Carousel shell
+// Shared wrapper + controls row for card carousels ([data-ds-carousel]):
+// supporting materials, video carousel, etc. Pairs with _carousel-nav.scss and
+// _pagination.scss; the Swiper init is in js/design-system/gallery-init.js.
+// =============================================================================
+
+// Carousel tracks bleed past the container into the gutters and are clipped
+// at the viewport edge. `clip` (not `hidden`) so position: sticky (header,
+// reading rail) keeps working.
+// body too (BugHerd #490): with the clip only on html, an over-wide element
+// (the router pager at phone widths) still grew the document's scroll area,
+// and mobile/device-mode let the page pan sideways over it. Clipping at body
+// stops any descendant widening the document, on every page — carousel gutter
+// bleeds are unaffected (body already spans the full viewport).
+html,
+body {
+  overflow-x: clip;
+}
+
+// Crop the bleed at each section, not just the viewport. html clip stops real
+// scrolling but the painted overflow still extends the document's paint area —
+// Chrome DevTools device mode draws its own scrollbars across it, so emulated
+// mobile could pan sideways over off-screen slides (QA kept hitting this). A
+// full-bleed surface spans the viewport, so clipping here keeps the in-gutter
+// bleed identical while nothing paints past the section edge.
+.ds-surface:has(.swiper) {
+  overflow-x: clip;
+}
+
+.ds-carousel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-32);
+
+  // Slide transition uses the motion ease-out (animation-guide); duration is the
+  // Swiper `speed` (350ms) set in gallery-init.js.
+  --swiper-wrapper-transition-timing-function: var(--motion-ease-out);
+
+  // Compound with Swiper's own class: Swiper injects `.swiper { overflow:
+  // hidden }` as a runtime <style> that lands after our bundle, so a bare
+  // `.ds-carousel__swiper` loses on source order.
+  &__swiper.swiper {
+    width: 100%;
+    // Carousel tracks extend over the site gutters (e.g. 1595:93820: three
+    // full cards fill the container, the next paints across the gutter):
+    // override Swiper's overflow so out-of-view slides stay visible; the
+    // viewport clips them (html overflow-x above).
+    overflow: visible;
+  }
+
+  // Pagination (left) + nav (right).
+  &__controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-24);
+  }
+
+  // Undo Swiper's absolute pagination positioning (shared .ds-pagination styles it).
+  .ds-pagination {
+    position: static;
+    width: auto;
+  }
+
+  // Card descriptions in every carousel clamp at three lines with an ellipsis
+  // (BugHerd #98); grid/bento excerpts are unaffected.
+  .ds-card__excerpt {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    overflow: hidden;
+  }
+}

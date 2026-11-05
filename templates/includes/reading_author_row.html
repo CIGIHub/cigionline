@@ -1,0 +1,49 @@
+{% load wagtailcore_tags wagtailimages_tags core_tags cards %}
+{# One person row of an aside group (reading_author_group.html). Params: #}
+{# item (one group row), card_mode ('expert' = shared expert card). #}
+{# Items are authorship rows (.author/.editor), podcast guest blocks #}
+{# (guest_page struct / plain-string guest), chooser blocks (.value = a #}
+{# person page), or person pages directly. #}
+{% if item.author %}{% define item.author as person %}{% elif item.editor %}{% define item.editor as person %}{% elif item.block_type == 'guest_page' %}{% define item.value.guest_page.specific as person %}{% elif item.value %}{% define item.value.specific as person %}{% else %}{% define item.specific as person %}{% endif %}
+{% if person and not person.archive %}
+  {% if card_mode == 'expert' %}
+    <div class="ds-reading__author">
+      {% expert_card person show_title=True show_expertise=True show_latest_activity=True %}
+    </div>
+  {% else %}
+  <div class="ds-reading__author">
+    <div class="ds-reading__author-head">
+      <div class="ds-reading__author-meta">
+        <a class="ds-reading__author-name" href="{% pageurl person %}">{{ person.title }}</a>
+        {% if person.position %}<p class="ds-reading__author-title">{{ person.position }}</p>{% endif %}
+      </div>
+      {% if person.image_square %}
+        {% image person.image_square fill-144x144 class="ds-reading__author-avatar" %}
+      {% endif %}
+    </div>
+    {% if not item.hide_link and person.short_bio|length > 1 %}
+      <div class="ds-reading__author-bio">{{ person.short_bio|richtext }}</div>
+    {% endif %}
+  </div>
+  {% endif %}
+{% elif item.block_type == 'guest_page' and item.value.guest %}
+  {# Guest block without a person page — render the block's own fields. #}
+  <div class="ds-reading__author">
+    <div class="ds-reading__author-head">
+      <div class="ds-reading__author-meta">
+        <p class="ds-reading__author-name">{{ item.value.guest }}</p>
+      </div>
+      {% if item.value.image %}
+        {% image item.value.image fill-144x144 class="ds-reading__author-avatar" %}
+      {% endif %}
+    </div>
+    {% if item.value.bio %}
+      <div class="ds-reading__author-bio">{{ item.value.bio|richtext }}</div>
+    {% endif %}
+  </div>
+{% elif item.block_type == 'guest' and item.value %}
+  {# Plain-string guest (no page on the site) — name-only row. #}
+  <div class="ds-reading__author">
+    <p class="ds-reading__author-name">{{ item.value }}</p>
+  </div>
+{% endif %}

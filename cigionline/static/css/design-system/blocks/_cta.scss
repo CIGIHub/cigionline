@@ -1,0 +1,147 @@
+// =============================================================================
+// Design System — CTA (with image) block
+// Full-bleed background image + left→right dark gradient. Heading pinned to the
+// top (white, 5px rule), red panel (text + buttons) pinned to the bottom-left.
+// Full-bleed: rendered outside .container; inset comes from the block padding.
+// =============================================================================
+
+.ds-cta {
+  position: relative;
+  isolation: isolate; // contain the negative-z media behind the content
+  padding-block: var(--space-section-y);
+  overflow: hidden;
+
+  // --- Section entry (guide: Digital Policy Hub — featured module) -----------
+  // The full-bleed image clip-path-reveals downward from the top edge, then
+  // the heading and panel fade in +200ms behind it — the section arrives rather
+  // than appears. Shared reveal classes from scroll-reveal.js (container mode).
+  // The clip lives on __media (absolute, spans the section) — NOT on the
+  // observed section itself: a fully clipped target has zero intersection
+  // area, so the IntersectionObserver threshold could never fire.
+  &.ds-reveal-pending {
+    opacity: 1;
+    transform: none;
+  }
+
+  &.ds-reveal-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  &.ds-reveal-pending &__media { clip-path: inset(0 0 100% 0); }
+
+  &.ds-reveal-in &__media {
+    clip-path: inset(0 0 0 0);
+    @include transition(clip-path var(--motion-duration-entry) var(--motion-ease-standard));
+  }
+
+  &.ds-reveal-pending &__heading,
+  &.ds-reveal-pending &__panel { opacity: 0; }
+
+  &.ds-reveal-in &__heading,
+  &.ds-reveal-in &__panel {
+    opacity: 1;
+    // Delayed shorthand passes through @include transition untouched.
+    @include transition(opacity var(--motion-duration-entry) var(--motion-ease-standard) 200ms);
+  }
+
+  // The transition mixin already zeroes the transitions under reduced motion;
+  // this restores the static end state (unclipped media, visible text).
+  @include reduce-motion-safe {
+    &.ds-reveal-pending &__media,
+    &.ds-reveal-in &__media { clip-path: none; }
+
+    &.ds-reveal-pending &__heading,
+    &.ds-reveal-pending &__panel,
+    &.ds-reveal-in &__heading,
+    &.ds-reveal-in &__panel { opacity: 1; }
+  }
+
+  // Inner = the constrained content (gutter + 1280 cap via .ds-container);
+  // heading pinned top, panel pinned bottom.
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-48);
+    min-height: 480px; // approx — gives the image room and spreads heading/panel
+  }
+
+  // --- Background image + gradient ------------------------------------------
+  &__media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+
+  &__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    // Left→right darkening for legibility behind the heading and panel.
+    background: linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.5) 0%,
+      rgba(102, 102, 102, 0.5) 45%
+    );
+  }
+
+  // --- Heading (top) --------------------------------------------------------
+  &__heading {
+    @include header-1;
+    color: var(--color-brand-white);
+    align-self: flex-start; // rule + heading shrink to text width
+    max-width: 100%;
+    margin: 0;
+    padding-top: var(--space-24);
+    border-top: var(--border-rule) solid var(--color-brand-white);
+  }
+
+  // --- Red panel (bottom) ---------------------------------------------------
+  &__panel {
+    align-self: flex-start;
+    width: 100%;
+    max-width: var(--width-628);
+    background: var(--color-surface-red-white);
+    color: var(--color-brand-white);
+    padding: var(--space-24);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-48);
+  }
+
+  &__text {
+    @include flush-last-paragraph; // BugHerd #175
+    @include paragraph-2;
+    color: var(--color-brand-white);
+
+    // Inline text links read white like the copy; the hover is the underline
+    // (Tia, BugHerd #512). Without this they inherited the global link colour.
+    a {
+      color: var(--color-brand-white);
+      text-decoration: none;
+
+      &:hover,
+      &:focus-visible { text-decoration: underline; }
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-24);
+  }
+
+  // --- Mobile ---------------------------------------------------------------
+  @media (max-width: 768px) {
+    padding-block: var(--space-48); // inline gutter from .ds-container (responsive)
+
+    &__panel { max-width: none; }
+  }
+}

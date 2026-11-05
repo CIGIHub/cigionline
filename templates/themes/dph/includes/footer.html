@@ -30,10 +30,10 @@
           <p>
             or sign up for the email list to stay up to date:
           </p>
-          <form class="cigi-newsletter-subscription-form" title="DPH Newsletter Sign Up" action="/subscribe_dph" method="GET">
-            <input type="email" name="email" value="" size="60" maxlength="128" placeholder="Your email"
-              class="form-email required" required="required" aria-required="true">
-            <button type="submit" class="button-submit">Sign up</button>
+          <form id='subscribe-form-dph' action="{% url 'subscribe_dph' %}" method="POST">
+            {% csrf_token %}
+            <input type="email" name="email" autocomplete="email" placeholder="enter your email" required id="subscribe-email">
+            <input type="submit" value="Sign up">
           </form>
           <div class="response-message" id="response-message"></div>
         </div>

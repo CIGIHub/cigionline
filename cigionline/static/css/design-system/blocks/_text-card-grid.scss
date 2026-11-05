@@ -1,0 +1,173 @@
+// =============================================================================
+// Design System — Text Card Grid block
+// Section title (heading + intro) over a grid of text cards. 3 or 4 per row;
+// extra cards wrap to further rows. Vertical rules divide columns, a horizontal
+// rule divides rows. Lives on a .ds-surface, so colours come from the surface
+// tokens (light by default → black text, grey dividers, black top-rule).
+// =============================================================================
+
+.ds-card-grid {
+  padding-block: var(--space-section-y); // horizontal gutters from the container
+
+  // --- Section title (heading left + top-rule, intro right) -----------------
+  &__title {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-24);
+    align-items: flex-start;
+    margin-bottom: var(--space-80);
+  }
+
+  &__heading {
+    @include header-3;
+    color: var(--surface-text);
+    flex: 1 1 0; // share the row; wrap within its column, don't push intro below
+    min-width: 0;
+    margin: 0;
+  }
+
+  // Top-rule motif on an inner span so it hugs the title text, not the whole
+  // heading column (BugHerd #82; same treatment as the module title, #72).
+  &__heading-text {
+    display: inline-block;
+    padding-top: var(--space-16);
+    border-top: var(--border-rule) solid var(--surface-rule);
+  }
+
+  // The intro column: description, then the section button row under it. The
+  // column carries the rail measure; the intro itself no longer sits in the
+  // title row (BugHerd #217).
+  &__aside {
+    flex: 0 1 var(--width-410);
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__intro {
+    @include paragraph-1;
+    color: var(--surface-text);
+    min-width: 0;
+
+    @include flush-last-paragraph; // so the 32px below measures from the text
+  }
+
+  // Section button row (BugHerd #172), inside the intro column and 32px under
+  // the description (BugHerd #217, #175). It starts at the description's left
+  // edge, per Tia's frame — the old full-width row pushed it to the container
+  // edge. __title's 80px bottom margin still spaces the grid below.
+  &__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-24);
+    margin-top: var(--space-32);
+  }
+
+  // --- Card grid ------------------------------------------------------------
+
+  // Per-card button (BugHerd #185): the card is a 24px-gap flex column, so the
+  // row needs no extra margin — it becomes the card's last child.
+  &__card-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-16);
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--ds-card-cols, 3), 1fr);
+  }
+
+  &--cols-2 { --ds-card-cols: 2; } // BugHerd #90
+  &--cols-3 { --ds-card-cols: 3; }
+  &--cols-4 { --ds-card-cols: 4; }
+
+  &__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+    // 24px of breathing room around every divider rule (column + row) → 48px between cards.
+    padding: var(--space-24);
+    border-top: var(--border-divider) solid var(--surface-border);
+  }
+
+  &__card-heading {
+    @include header-5;
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  &__card-text {
+    @include paragraph-2;
+    color: var(--surface-text);
+
+    // Richtext links follow the surface and stay underlined (BugHerd #174):
+    // on the DPH charcoal surface --surface-text resolves white, so this reads
+    // white-with-underline there and black-with-underline on light.
+    a {
+      color: var(--surface-text);
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.2em;
+    }
+  }
+
+  // Trim the outer rules: no left rule on the first column, no top rule on the
+  // first row. Scoped to ≥769px so the mobile single-column rules win cleanly.
+  @media (min-width: 769px) {
+    // Column divider drawn as an inset pseudo, not a border: it starts 24px
+    // below the row rule and stops 24px above the next, so the vertical and
+    // horizontal rules never cross into a boxed grid (BugHerd #173). Same
+    // construction as the experts / program / router grids.
+    &__card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: var(--space-24);
+      bottom: var(--space-24);
+      width: var(--border-divider);
+      background: var(--surface-border);
+    }
+
+    &--cols-2 .ds-card-grid__card {
+      &:nth-child(odd)    { padding-left: 0; &::before { content: none; } }
+      &:nth-child(even)   { padding-right: 0; }
+      // First row carries no rule above, so its divider starts flush.
+      &:nth-child(-n + 2) { border-top: 0; padding-top: 0; &::before { top: 0; } }
+    }
+
+    &--cols-3 .ds-card-grid__card {
+      &:nth-child(3n + 1) { padding-left: 0; &::before { content: none; } }
+      &:nth-child(3n)     { padding-right: 0; }
+      &:nth-child(-n + 3) { border-top: 0; padding-top: 0; &::before { top: 0; } }
+    }
+
+    &--cols-4 .ds-card-grid__card {
+      &:nth-child(4n + 1) { padding-left: 0; &::before { content: none; } }
+      &:nth-child(4n)     { padding-right: 0; }
+      &:nth-child(-n + 4) { border-top: 0; padding-top: 0; &::before { top: 0; } }
+    }
+  }
+
+  // --- Mobile: single column, stacked with horizontal rules only ------------
+  @media (max-width: 768px) {
+    &__title {
+      flex-direction: column;
+      margin-bottom: var(--space-48);
+    }
+
+    // The intro's desktop width cap (flex-basis 410) turns into a HEIGHT once
+    // the title stacks in a column — a ~250px blank between the intro text
+    // and the first card (BugHerd #146).
+    &__intro { flex-basis: auto; }
+
+    &__grid { grid-template-columns: 1fr; }
+
+    &__card {
+      padding-inline: 0;
+
+      &:first-child { border-top: 0; padding-top: 0; }
+    }
+  }
+}

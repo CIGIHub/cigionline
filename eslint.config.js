@@ -31,6 +31,8 @@ module.exports = [
         clearInterval: 'readonly',
         fetch: 'readonly',
         URLSearchParams: 'readonly',
+        URL: 'readonly',
+        CSS: 'readonly',
         FormData: 'readonly',
         navigator: 'readonly',
         localStorage: 'readonly',

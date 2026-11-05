@@ -1,0 +1,153 @@
+// =============================================================================
+// Design System — Resource Bento block
+// Section title (heading left / intro+CTA right) over a bento: one large feature
+// card (image) beside a divided column of compact cards. A vertical rule splits
+// the two columns; horizontal rules divide the compact column. Surface-aware
+// (--surface-border).
+// =============================================================================
+
+.ds-resource-bento {
+  padding-block: var(--space-section-y);
+
+  // Card titles keep the shared heading line-height of 1 (Kay, BugHerd #226 —
+  // supersedes #16's 1.2 relaxation here).
+  .ds-card__title { line-height: 1; }
+
+  // Mobile carousel toggle (BugHerd #56): the grid/stack (__desktop) shows above
+  // 768px; the swipe rail (__mobile) at <=768. Swiper is gated by matchMedia in
+  // gallery-init so only the visible one is ever live.
+  & > &__mobile { display: none; }
+
+  // The mobile rail clips at its own edge — the design (Figma 1363-124701) shows
+  // ONE full-width card with no peek, unlike the desktop rails' gutter bleed.
+  &__mobile .ds-carousel__swiper.swiper { overflow: hidden; }
+
+  // Section title → shared includes/module_title.html (.ds-module-title--lead-wide).
+
+  // --- Bento grid: feature | compact column ---------------------------------
+  &__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-48);
+  }
+
+  // Compact column: stacked cards divided by horizontal rules, with a vertical
+  // rule to its left (centred in the 48px gutter).
+  &__list {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: calc(-1 * var(--space-24));
+      top: 0;
+      bottom: 0;
+      width: var(--border-divider);
+      background: var(--surface-border);
+    }
+
+    .ds-card + .ds-card {
+      margin-top: var(--space-24);
+      padding-top: var(--space-24);
+      border-top: var(--border-divider) solid var(--surface-border);
+    }
+  }
+
+  // Left column of the centred layout: image-led stacked cards (BugHerd #7,
+  // KP 1557-52706). Separated by space only — no between-card rule.
+  &__list--stacked {
+    gap: var(--space-48);
+
+    .ds-card + .ds-card {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: 0;
+    }
+  }
+
+  // --- Centred layout: compact | feature | compact --------------------------
+  // The feature sits between two compact columns; a vertical rule flanks each
+  // side of the feature.
+  &__grid--centered {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.75fr) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  // Duo (homepage light bento): two feature cards + the compact
+  // column; each later column carries the vertical rule in its left gutter.
+  // Columns stretch to one row height (KP, BugHerd #31): the feature card
+  // fills its column and the image flexes to absorb the height difference, so
+  // the text stacks bottom-align with the list column.
+  &__grid--duo {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+    // (#412's stray line was the thumb's own underline, fixed in _card.scss —
+    // the designed between-card dividers here stay.)
+
+    // Desktop: the feature card fills its column, but the image keeps the
+    // fixed accent-media ratio. The #31 image-flex (the photo absorbed the
+    // column-height difference) made the two feature photos render at
+    // different heights — Tia superseded it: force the ratio on both
+    // features (BugHerd #284).
+    @media (min-width: 1025px) {
+      .ds-resource-bento__feature { display: flex; }
+
+      .ds-card--resource-feature { width: 100%; }
+    }
+  }
+
+  &__feature--ruled {
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: calc(-1 * var(--space-24));
+      top: 0;
+      bottom: 0;
+      width: var(--border-divider);
+      background: var(--surface-border);
+    }
+  }
+
+  // Left column's rule moves to its right edge (between it and the feature).
+  &__list--right-rule::before {
+    left: auto;
+    right: calc(-1 * var(--space-24));
+  }
+
+  // Stacked-card images drop the accent top-rule in the desktop grid (BugHerd
+  // #156, Kay): the feature already strips its own (_card.scss) and the
+  // compact thumbs never draw one, so the stacked card's lone red bar read as
+  // a stray line. The mobile rail keeps its designed card.
+  &__desktop .ds-card--media-stacked .ds-accent-media { border-top: 0; }
+
+  // The mobile rail keeps the rule but in neutral grey #4d4d4d, not the block
+  // accent: the homepage bentos are authored Red, and the red bar read as a
+  // stray brand colour on the phone (Tia, BugHerd #468).
+  &__mobile .ds-card--media-stacked .ds-accent-media { border-top-color: var(--color-brand-grey); }
+
+  // Mobile: 64px between the section header and the resource posts (BugHerd #58).
+  @media (max-width: 768px) {
+    .ds-module-title { margin-bottom: var(--space-64); }
+
+    // Swap the grid/stack for the swipe rail (BugHerd #56).
+    & > &__desktop { display: none; }
+    & > &__mobile { display: flex; }
+  }
+
+  // --- Tablet + mobile: stack feature over the column(s) --------------------
+  // Full single-column stack from 1024px down (BugHerd #54) — the multi-column
+  // grids cramped between 769–1024px.
+  @media (max-width: 1024px) {
+    &__grid,
+    &__grid--centered,
+    &__grid--duo { grid-template-columns: minmax(0, 1fr); gap: var(--space-48); }
+
+    &__feature--ruled::before { display: none; }
+
+    &__list::before,
+    &__list--right-rule::before { display: none; } // no vertical rule when stacked
+  }
+}

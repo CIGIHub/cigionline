@@ -11,7 +11,7 @@
         {% endif %}
       ">
         {% if self.page %}
-          <a href="{{ self.page.url }}">
+          <a href="{% pageurl self.page %}">
         {% else %}
           <a href="{{ self.file.file.url }}">
         {% endif %}
@@ -38,7 +38,7 @@
         {% endif %}
         <h3 class="stream-block-title">
           {% if self.page %}
-            <a href="{{ self.page.url }}">
+            <a href="{% pageurl self.page %}">
           {% else %}
             <a href="{{ self.file.file.url }}">
           {% endif %}

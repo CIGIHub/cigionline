@@ -1,0 +1,1 @@
+{% load wagtailcore_tags %}{% comment %}One nav link from a menus.MenuItem (`link`).{% endcomment %}<a href="{% if link.link_page %}{% pageurl link.link_page %}{% elif link.link_url %}{{ link.link_url }}{% else %}#{% endif %}">{{ link.title }}</a>

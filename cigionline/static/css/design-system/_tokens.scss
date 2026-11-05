@@ -1,0 +1,194 @@
+// =============================================================================
+// Design System — Tokens (single source of truth)
+//
+// CSS custom properties generated from the design-token export.
+// CSS vars (not SCSS vars) so light/dark/accent theming works at runtime.
+//
+// Naming mirrors the design-system semantic tokens. Colour tokens encode a light–dark
+// PAIR in the name (`text-black-white` = black in light, white in dark); the
+// light value is defined in :root, the dark value overridden under
+// [data-theme="dark"]. Never hardcode a hex/px in a component — use a token.
+// =============================================================================
+
+:root {
+  // --- Primitives: brand palette --------------------------------------------
+  --color-brand-red:        #e6023b;
+  --color-brand-black:      #000000;
+  --color-brand-white:      #ffffff;
+  --color-brand-light-grey: #dfdcd7;
+  --color-brand-grey:       #4d4d4d;
+  --color-brand-dark-grey:  #92908c;
+
+  // Topic accents
+  --color-accent-data-economy: #1a9089; // teal
+  --color-accent-ai-tech:      #4a8fd4; // blue
+  --color-accent-security:     #6b8a3a; // olive
+  --color-accent-governance:   #9b6bad; // mauve
+  --color-accent-green:        #5fcf79; // bright green (pairs with the green surface)
+
+  // --- Semantic colour (LIGHT mode) -----------------------------------------
+  // text
+  --color-text-black-white: #000000;
+  --color-text-white-black: #ffffff;
+  --color-text-white-white: #ffffff;
+  --color-text-black-black: #000000;
+  --color-text-red-white:   #e6023b;
+  --color-text-white-red:   #ffffff;
+  --color-text-grey-white:  #4d4d4d;
+  // surface
+  --color-surface-white-black: #ffffff;
+  --color-surface-black-white: #000000;
+  --color-surface-red-white:   #e6023b;
+  --color-surface-grey:        #4d4d4d;
+  --color-surface-teal:   #1a9089;
+  --color-surface-blue:   #4a8fd4;
+  --color-surface-olive:  #6b8a3a;
+  --color-surface-mauve:  #9b6bad;
+  --color-surface-green:  #3a734d; // Digital Policy Hub forest green
+  --color-surface-charcoal: #2c2c2c; // DPH dark bands (hero/tabs/listings, 1595:93724)
+  --color-surface-pink:   #f1d6d7; // Podcast (Policy Prompt) — light tint, black chrome
+  // border
+  --color-border-black-white: #000000;
+  --color-border-white-black: #ffffff;
+  --color-border-black-black: #000000;
+  --color-border-grey-white:  #4d4d4d;
+  --color-border-red-white:   #e6023b;
+  --color-border-divider:     #dfdcd7; // faint hairline between sub-elements
+  --color-border-on-colour:   rgba(255, 255, 255, 0.4); // dividers on dark/colour surfaces
+  // icon
+  --color-icon-white:       #ffffff;
+  --color-icon-black-white: #222222;
+
+  // Current accent + its contrasting text. Overridden per surface by
+  // `.ds-surface--accent-*`; defaults here so solid buttons work anywhere.
+  --accent:    var(--color-brand-red);
+  --accent-on: var(--color-brand-white);
+  // Interactive accent (hovers, breadcrumb separator, active carousel number).
+  // Tracks --accent here; `.ds-surface--accent-*` pins it to red under the four
+  // theme colours, which stay decorative (BugHerd #242–#244). Needed at :root so
+  // a component outside any .ds-surface wrapper still resolves it.
+  --accent-ui: var(--accent);
+
+  // --- Type sizes -----------------------------------------------------------
+  --font-size-14: 14px;
+  --font-size-16: 16px;
+  --font-size-18: 18px;
+  --font-size-20: 20px; // mobile footer column headings (BugHerd #142)
+  --font-size-24: 24px;
+  --font-size-32: 32px;
+  --font-size-36: 36px; // mobile section-header headings (BugHerd #196)
+  --font-size-40: 40px;
+  --font-size-48: 48px;
+  --font-size-56: 56px;
+  --font-size-96: 96px;
+
+  // --- Font families --------------------------------------------------------
+  // Futura PT = Adobe Fonts (Typekit) — needs a kit that includes it.
+  // Source Serif 4 = open-source (Google Fonts / self-host).
+  --font-heading: "Futura PT", "Futura", "Trebuchet MS", sans-serif;
+  --font-body:    "Source Serif 4", "Source Serif Pro", Georgia, serif;
+
+  // Heading letter-spacing is a uniform -3% across all heading tiers.
+  --tracking-heading: -0.03em;
+
+  // --- Spacing scale (margin / gap) -----------------------------------------
+  --space-4:  4px;
+  --space-8:  8px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+  --space-56: 56px;
+  --space-64: 64px;
+  --space-80: 80px;
+  --space-96: 96px;
+  // Section padding
+  --space-section-y: 80px; // margin-top-bottom
+  --space-section-x: 80px; // margin-left-right (container gutter)
+
+  // --- Radius & borders -----------------------------------------------------
+  --radius-0: 0;        // design is square-cornered
+  --border-divider: 1px; // Stroke/Divider Width
+  --border-tab: 4px;     // active-tab underline
+  --border-rule: 5px;    // top-rule motif (cta); 10px variant on image+text
+  --border-rule-banner: 6px; // Banner top-rule
+  --border-rule-thick: 10px;
+
+  // --- Max-widths (never fixed widths) --------------------------------------
+  --width-394:  394.67px;
+  --width-410:  410.67px;
+  --width-461:  461px;   // approx; stats heading wrap width (rule matches)
+  --width-628:  628px;
+  --width-845:  845.33px;
+  --width-1280: 1280px;
+  --width-screen: 1440px;
+
+  // --- Motion ---------------------------------------------------------------
+  // First principle: motion is restrained and purposeful. CIGI reads as
+  // official and serious — transitions are short and decelerate into place.
+  // No bounce, overshoot, or spring curves. Every interactive element that
+  // changes state (hover, expand, reveal) MUST transition with these tokens
+  // rather than hardcoded durations/easings, and MUST be suppressed under
+  // prefers-reduced-motion. These vars are the single source of truth for
+  // both CSS transitions and JS (Web Animations API) timings.
+  //
+  // Values are the authoritative CIGI Animation + Interaction Guide "Global
+  // Specs" (docs/redesign/animation-guide.md). Easing = fast deceleration,
+  // clean settle — no bounce/overshoot/spring.
+  --motion-ease-standard:  cubic-bezier(0.22, 1, 0.36, 1); // guide standard
+  --motion-ease-out:       cubic-bezier(0, 0, 0.2, 1);
+  --motion-ease-in:        cubic-bezier(0.4, 0, 1, 1);
+  --motion-ease-in-out:    cubic-bezier(0.4, 0, 0.2, 1); // symmetric settle (BugHerd #105)
+
+  // Durations — guide semantics.
+  --motion-duration-micro: 200ms; // micro-interactions
+  --motion-duration-hover: 300ms; // hover transitions
+  --motion-duration-entry: 600ms; // scroll-entry reveals (500–600ms)
+
+  // Component durations the guide specifies outside the three tiers.
+  --motion-duration-menu: 250ms;       // megamenu enter (guide: Primary Navigation)
+  --motion-duration-media-fade: 400ms; // inline media / pull-quote fade; countdown tick (guide)
+  --motion-duration-swap: 150ms;       // submit label→spinner swap; fade-out steps (guide: Forms)
+  --motion-duration-press: 100ms;      // click scale-press; error shake (guide)
+
+  // Back-compat aliases (existing components) mapped to the guide durations.
+  --motion-duration-fast: var(--motion-duration-micro);
+  --motion-duration-base: var(--motion-duration-hover);
+  --motion-duration-slow: var(--motion-duration-entry);
+}
+
+// =============================================================================
+// Responsive horizontal gutter — `margin-left-right` shrinks on smaller
+// viewports. One token so every consumer (.ds-container + full-bleed blocks)
+// adapts together.
+// =============================================================================
+@media (max-width: 1024px) { :root { --space-section-x: 48px; } }
+// Mobile module rhythm tightens to 40px top/bottom (BugHerd #151, Kay's spec).
+@media (max-width: 768px)  { :root { --space-section-x: 24px; --space-section-y: 40px; } }
+
+// =============================================================================
+// Dark mode — override the light–dark pairs only.
+// Toggle via <html data-theme="dark"> (or a section-level wrapper).
+// =============================================================================
+[data-theme="dark"] {
+  --color-text-black-white: #ffffff;
+  --color-text-white-black: #000000;
+  --color-text-red-white:   #ffffff;
+  --color-text-white-red:   #e6023b;
+  --color-text-grey-white:  #ffffff;
+
+  --color-surface-white-black: #000000;
+  --color-surface-black-white: #ffffff;
+  --color-surface-red-white:   #ffffff;
+
+  --color-border-black-white: #ffffff;
+  --color-border-white-black: #000000;
+  --color-border-grey-white:  #ffffff;
+  --color-border-red-white:   #ffffff;
+  --color-border-divider:     #4d4d4d;
+
+  --color-icon-black-white: #ffffff;
+}

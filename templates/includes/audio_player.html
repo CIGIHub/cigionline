@@ -1,0 +1,52 @@
+{% comment %}
+  DS audio player (.ds-audio) — a native <audio> enhanced by Plyr
+  (js/design-system/audio-player.js): Play/Pause · seekable progress · speed
+  (0.75–1.5×). Pass `src` — a direct audio file URL. No-JS: the native controls
+  stay usable.
+
+  The custom Plyr controls markup (incl. SVGs) lives here in a <template> the JS
+  reads — markup/SVG never live in the .js file.
+{% endcomment %}
+{% if src %}
+  <div class="ds-audio">
+    <audio class="ds-audio__el" data-ds-audio controls preload="metadata">
+      <source src="{{ src }}">
+      Your browser does not support the audio element.
+    </audio>
+    <template data-ds-audio-controls>
+      <div class="plyr__controls ds-player">
+        <button type="button" class="plyr__control ds-player__play" data-plyr="play">
+          <svg class="icon--not-pressed" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="32" fill="var(--ds-player-accent)"/><path d="M26 20l20 12-20 12z" fill="#fff"/></svg>
+          <svg class="icon--pressed" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="32" fill="var(--ds-player-accent)"/><rect x="23" y="20" width="6" height="24" rx="1" fill="#fff"/><rect x="35" y="20" width="6" height="24" rx="1" fill="#fff"/></svg>
+          <span class="label--not-pressed plyr__sr-only">Play</span>
+          <span class="label--pressed plyr__sr-only">Pause</span>
+        </button>
+        <div class="ds-player__body">
+          <div class="ds-player__times">
+            <span class="plyr__time plyr__time--current" aria-label="Current time">00:00</span>
+            <span class="plyr__time plyr__time--duration" aria-label="Duration">00:00</span>
+          </div>
+          <div class="plyr__progress">
+            <input data-plyr="seek" type="range" min="0" max="100" step="0.01" value="0" aria-label="Seek">
+            <progress class="plyr__progress__buffer" min="0" max="100" value="0"></progress>
+          </div>
+          <div class="ds-player__skips">
+            <button type="button" class="plyr__control ds-player__skip" data-plyr="rewind">
+              <svg viewBox="0 0 24 16" aria-hidden="true"><path d="M12 2 4 8l8 6zM22 2l-8 6 8 6z" fill="currentColor"/></svg>
+              <span class="plyr__sr-only">Rewind</span>
+            </button>
+            {# Speed cycle 1 → 1.25 → 1.5 → 0.75 (BugHerd #298); audio-player.js wires it. #}
+            <button type="button" class="plyr__control ds-player__speed" data-ds-audio-speed>
+              <span data-ds-audio-speed-label>1&times;</span>
+              <span class="plyr__sr-only">Playback speed</span>
+            </button>
+            <button type="button" class="plyr__control ds-player__skip" data-plyr="fast-forward">
+              <svg viewBox="0 0 24 16" aria-hidden="true"><path d="M2 2l8 6-8 6zM12 2l8 6-8 6z" fill="currentColor"/></svg>
+              <span class="plyr__sr-only">Forward</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+{% endif %}

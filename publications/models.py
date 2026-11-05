@@ -3,6 +3,7 @@ from core.models import (
     ContentPage,
     FeatureablePageAbstract,
     FromTheArchivesPageAbstract,
+    HeroContentTogglesAbstract,
     SearchablePageAbstract,
     ShareablePageAbstract,
     ThemeablePageAbstract,
@@ -10,7 +11,6 @@ from core.models import (
 from django.apps import apps
 from django.db import models
 from django.http import Http404
-from mediavalet.panels import MediaValetImageChooserPanel
 from modelcluster.fields import ParentalKey
 from streams.blocks import (
     BookPurchaseLinkBlock,
@@ -169,6 +169,7 @@ class PublicationListPageFeaturedPublication(Orderable):
 
 class PublicationPage(
     BasicPageAbstract,
+    HeroContentTogglesAbstract,
     ContentPage,
     FeatureablePageAbstract,
     FromTheArchivesPageAbstract,
@@ -176,6 +177,17 @@ class PublicationPage(
     ThemeablePageAbstract,
 ):
     """View publication page"""
+
+    # Publications default the hero banner OFF (override of HeroContentTogglesAbstract):
+    # image_feature is authored as the card thumbnail, not a hero, so promoting it
+    # to a full-bleed banner was never chosen per page (Tim, BugHerd #520 — Policy
+    # Briefs especially). Authors flip it on per publication when it suits.
+    show_hero_banner = models.BooleanField(
+        default=False,
+        verbose_name='Show image banner',
+        help_text='Off by default for publications. Turn on to show the feature '
+                  'image as a full-width banner (needs an image at least 1280px wide).',
+    )
 
     class BookFormats(models.TextChoices):
         HARDCOVER = ('HC', 'Hardcover')
@@ -197,6 +209,13 @@ class PublicationPage(
         STUDENT_ESSAY = ('student_essay', 'Student Essay')
         T7COMMUNIQUE = ('t7_communique', 'T7 Communiqué')
 
+    authors_intro = RichTextField(
+        blank=True,
+        features=['bold', 'italic', 'link'],
+        verbose_name='About the Author intro',
+        help_text='Optional short intro under the "About the Author(s)" '
+                  'heading in the sidebar.',
+    )
     body = StreamField(
         BasicPageAbstract.body_default_blocks + [
             BasicPageAbstract.body_chart_block,
@@ -273,6 +292,41 @@ class PublicationPage(
         blank=True,
         verbose_name='YouTube Embed',
         help_text='Enter the YouTube URL (https://www.youtube.com/watch?v=4-Xkn1U1DkA) or short URL (https://youtu.be/o5acQ2GxKbQ) to add an embedded video.',
+    )
+    # Footnotes / Works Cited, ported from ArticlePage (Tim + Tia, BugHerd
+    # #472): new publications had no end-matter fields, so editors typed
+    # footnotes into the body as plain paragraphs. Same features as the
+    # article fields; the reading shell already renders both sections.
+    footnotes = RichTextField(
+        blank=True,
+        features=[
+            'bold',
+            'endofarticle',
+            'h3',
+            'h4',
+            'italic',
+            'link',
+            'ol',
+            'ul',
+            'subscript',
+            'superscript',
+            'anchor',
+        ],
+    )
+    works_cited = RichTextField(
+        blank=True,
+        features=[
+            'bold',
+            'endofarticle',
+            'h3',
+            'h4',
+            'italic',
+            'link',
+            'ol',
+            'ul',
+            'subscript',
+            'superscript',
+        ],
     )
     image_cover = models.ForeignKey(
         'images.CigionlineImage',
@@ -387,14 +441,34 @@ class PublicationPage(
     def display_authors(self):
         return self.publication_type.title != 'DigiFin Policy Brief' if self.publication_type else True
 
+    # Theme dirs that still keep a legacy publication fork (retiring per
+    # legacy-page-conversion-plan §7a — DPH publications are being cleared to the
+    # DS single via clear_dph_publication_themes). Any other theme renders the DS
+    # template.
+    THEMED_FORK_DIRS = {'dph'}
+
     def get_template(self, request, *args, **kwargs):
         standard_template = super(PublicationPage, self).get_template(request, *args, **kwargs)
         if self.publication_type:
             if self.publication_type.title == 'Quick Insights':
                 return 'publications/publication_quick_insights_page.html'
-        if self.theme:
+        if self.theme and self.get_theme_dir() in self.THEMED_FORK_DIRS:
             return f'themes/{self.get_theme_dir()}/publication_page.html'
         return standard_template
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        # DPH Working Paper single = Publication single + the DPH brand chrome
+        # (charcoal header/main + green accent + green subscribe band, per the
+        # 1595 hub frames); body modules inherit it. The publication hero keeps
+        # its own (light) surface per its template. Working Paper is the DPH
+        # publication subtype (the resource hub excludes it as DPH content).
+        if self.publication_type and self.publication_type.slug == 'working-paper':
+            context['header_surface'] = 'charcoal'
+            context['main_surface'] = 'charcoal'
+            context['main_accent_scheme'] = 'green'
+            context['subscribe_scheme'] = 'green'
+        return context
 
     content_panels = [
         BasicPageAbstract.title_panel,
@@ -402,6 +476,8 @@ class PublicationPage(
             [
                 FieldPanel('short_description'),
                 FieldPanel('body'),
+                FieldPanel('footnotes'),
+                FieldPanel('works_cited'),
             ],
             heading='Body',
             classname='collapsible collapsed',
@@ -418,7 +494,14 @@ class PublicationPage(
             heading='General Information',
             classname='collapsible collapsed',
         ),
-        ContentPage.authors_panel,
+        MultiFieldPanel(
+            [
+                InlinePanel('authors'),
+                FieldPanel('authors_intro'),
+            ],
+            heading='Authors',
+            classname='collapsible collapsed',
+        ),
         ContentPage.editors_panel,
         MultiFieldPanel(
             [
@@ -446,8 +529,8 @@ class PublicationPage(
         ),
         MultiFieldPanel(
             [
-                MediaValetImageChooserPanel('image_cover'),
-                MediaValetImageChooserPanel('image_poster'),
+                FieldPanel('image_cover'),
+                FieldPanel('image_poster'),
             ],
             heading='Images',
             classname='collapsible collapsed',
@@ -476,6 +559,7 @@ class PublicationPage(
             classname='collapsible collapsed',
         ),
         FromTheArchivesPageAbstract.from_the_archives_panel,
+        HeroContentTogglesAbstract.hero_options_panel,
     ]
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
@@ -589,8 +673,8 @@ class PublicationSeriesPage(
         ),
         MultiFieldPanel(
             [
-                MediaValetImageChooserPanel('image_hero'),
-                MediaValetImageChooserPanel('image_poster'),
+                FieldPanel('image_hero'),
+                FieldPanel('image_poster'),
             ],
             heading='Images',
             classname='collapsible collapsed',
@@ -754,8 +838,8 @@ class T7PublicationPage(Page):
         ),
         MultiFieldPanel(
             [
-                MediaValetImageChooserPanel('image_feature'),
-                MediaValetImageChooserPanel('image_poster'),
+                FieldPanel('image_feature'),
+                FieldPanel('image_poster'),
                 FieldPanel('pdf_attachment'),
                 FieldPanel('pdf_attachment_fr'),
             ],

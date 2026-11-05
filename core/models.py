@@ -7,14 +7,15 @@ from django.http import JsonResponse, HttpResponseForbidden
 from django.http.response import Http404
 from django.utils.functional import cached_property
 from django.shortcuts import render, redirect
-from mediavalet.panels import MediaValetImageChooserPanel
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from core.routers import RouterServeMixin
 from search.filters import (
     # AuthorFilterField,
     ParentalManyToManyFilterField,
 )
 from streams.blocks import (
     AccordionBlock,
+    AccordionModuleBlock,
     AdditionalDisclaimerBlock,
     AdditionalImageBlock,
     AddtionalPagesBlock,
@@ -26,23 +27,16 @@ from streams.blocks import (
     EmbeddedVideoBlock,
     ExternalQuoteBlock,
     ExternalVideoBlock,
-    FounderLetterBlock,
     HeroLinkBlock,
     HeroDocumentBlock,
-    HumanAnalysisConversionBlock,
-    HumanAnalysisImagePairBlock,
-    HumanAnalysisPolicyDownloadBlock,
     ImageBlock,
     ImageScrollBlock,
     AutoPlayVideoBlock,
-    ButtonBlock,
     ImageFullBleedBlock,
-    InteractiveChartBlock,
     ChartBlock,
     PersonsListBlock,
     PublicationsListBlock,
     PosterBlock,
-    PublicationVisualElementsBlock,
     PullQuoteLeftBlock,
     PullQuoteRightBlock,
     RecommendedBlock,
@@ -53,7 +47,6 @@ from streams.blocks import (
     TimelineGalleryBlock,
     TooltipBlock,
     TweetBlock,
-    VideoTextBlock,
     InlineVideoBlock,
     HighlightTitleBlock,
     LineBreakBlock,
@@ -62,8 +55,38 @@ from streams.blocks import (
     SovereignCanadaDashboardBlock,
     CollapsibleParagraphBlock,
     NewsletterSubscriptionBlock,
-    AnniversarySubscribeBlock,
+    NewsletterSignupCTABlock,
     PromotionBlockStreamBlock,
+    TextColumnsBlock,
+    StatsBlock,
+    ImageTextBlock,
+    CTAImageBlock,
+    AltHeroBlock,
+    SplitHeroBlock,
+    PrimaryHeroBlock,
+    HorizontalTabsBlock,
+    TextCardGridBlock,
+    VideoCarouselBlock,
+    FormSectionBlock,
+    GeneralInquiryBlock,
+    ProgramSpotlightBlock,
+    ProgramGridBlock,
+    ProgramsCarouselBlock,
+    ExpertsGridBlock,
+    ExpertsCarouselBlock,
+    ResourceCarouselBlock,
+    ResourceBentoBlock,
+    EventsCarouselBlock,
+    NewsCarouselBlock,
+    NewsGridBlock,
+    TrendingIssuesBlock,
+    JobsListBlock,
+    VideoTextBlock,
+    BannerBlock,
+    GalleryTextBlock,
+    SupportingMaterialsBlock,
+    ComposableTabsBlock,
+    FacetedListingBlock,
 )
 from uploads.models import DocumentUpload
 from utils.email_utils import send_email, extract_errors_as_string
@@ -75,8 +98,6 @@ from wagtail.admin.panels import (
     PageChooserPanel,
     TitleFieldPanel,
 )
-from wagtail.admin.widgets import AdminPageChooser
-from wagtailmedia.edit_handlers import MediaChooserPanel
 from .panels import QRCodePanel
 from wagtail import blocks
 from wagtail.fields import RichTextField, StreamField
@@ -129,7 +150,8 @@ def build_alumni_theme_people_map(alumni_person_ids):
     if not alumni_person_ids:
         return {"themes": [], "theme_to_person_ids": {}}
 
-    alumni_qs = PersonPage.objects.filter(id__in=alumni_person_ids)
+    # Live, public pages only — a draft person must never surface (BugHerd #444).
+    alumni_qs = PersonPage.objects.live().public().filter(id__in=alumni_person_ids)
     person_map = {p.id: p for p in alumni_qs}
 
     papers_qs = (
@@ -260,7 +282,6 @@ class BasicPageAbstract(models.Model):
     # Body StreamField blocks
     body_default_blocks = [
         ('block_quote', BlockQuoteBlock()),
-        ('button', ButtonBlock()),
         ('embedded_multimedia', EmbeddedMultimediaBlock()),
         ('embedded_video', EmbeddedVideoBlock()),
         ('image', ImageBlock()),
@@ -277,10 +298,45 @@ class BasicPageAbstract(models.Model):
         ('files_block', FilesBlock()),
         ('collapsible_paragraph_block', CollapsibleParagraphBlock()),
         ('promotion_block_stream_block', PromotionBlockStreamBlock()),
-        ('interactive_chart', InteractiveChartBlock()),
+        # Newsletter blocks are placeable on EVERY body, not just tab panels
+        # (BugHerd #93) — pages with standalone body lists (Home, Theme) carry
+        # them separately.
+        ('newsletter_subscription', NewsletterSubscriptionBlock()),
+        ('newsletter_signup_cta', NewsletterSignupCTABlock()),
     ]
 
     body_accordion_block = ('accordion', AccordionBlock())
+    body_accordion_module_block = ('accordion_module', AccordionModuleBlock())
+    body_text_columns_block = ('text_columns', TextColumnsBlock())
+    body_stats_block = ('stats', StatsBlock())
+    body_image_text_block = ('image_text', ImageTextBlock())
+    body_cta_image_block = ('cta_image', CTAImageBlock())
+    body_alt_hero_block = ('alt_hero', AltHeroBlock())
+    body_split_hero_block = ('split_hero', SplitHeroBlock())
+    body_primary_hero_block = ('primary_hero', PrimaryHeroBlock())
+    body_horizontal_tabs_block = ('horizontal_tabs', HorizontalTabsBlock())
+    body_text_card_grid_block = ('text_card_grid', TextCardGridBlock())
+    body_video_carousel_block = ('video_carousel', VideoCarouselBlock())
+    body_program_spotlight_block = ('program_spotlight', ProgramSpotlightBlock())
+    body_program_grid_block = ('program_grid', ProgramGridBlock())
+    body_programs_carousel_block = ('programs_carousel', ProgramsCarouselBlock())
+    body_experts_grid_block = ('experts_grid', ExpertsGridBlock())
+    body_experts_carousel_block = ('experts_carousel', ExpertsCarouselBlock())
+    body_resource_carousel_block = ('resource_carousel', ResourceCarouselBlock())
+    body_resource_bento_block = ('resource_bento', ResourceBentoBlock())
+    body_events_carousel_block = ('events_carousel', EventsCarouselBlock())
+    body_trending_issues_block = ('trending_issues', TrendingIssuesBlock())
+    body_jobs_list_block = ('jobs_list', JobsListBlock())
+    body_news_grid_block = ('news_grid', NewsGridBlock())
+    body_news_carousel_block = ('news_carousel', NewsCarouselBlock())
+    body_composable_tabs_block = ('composable_tabs', ComposableTabsBlock())
+    body_faceted_listing_block = ('faceted_listing', FacetedListingBlock())
+    body_form_block = ('form', FormSectionBlock())
+    body_general_inquiry_block = ('general_inquiry_form', GeneralInquiryBlock())
+    body_video_text_block = ('video_text', VideoTextBlock())
+    body_banner_block = ('banner', BannerBlock())
+    body_gallery_text_block = ('gallery_text', GalleryTextBlock())
+    body_supporting_materials_block = ('supporting_materials', SupportingMaterialsBlock())
     body_autoplay_video_block = ('autoplay_video', AutoPlayVideoBlock())
     body_chart_block = ('chart', ChartBlock())
     body_embedded_tiktok_block = ('embedded_tiktok', blocks.URLBlock(
@@ -305,9 +361,51 @@ class BasicPageAbstract(models.Model):
     additional_disclaimer_block = ('additional_disclaimer', AdditionalDisclaimerBlock())
     line_break_block = ('linebreak', LineBreakBlock())
     newsletter_subscription_block = ('newsletter_subscription', NewsletterSubscriptionBlock())
+    newsletter_signup_cta_block = ('newsletter_signup_cta', NewsletterSignupCTABlock())
+
+    # The full DS module library, available on EVERY body (BugHerd #116
+    # follow-ups) — content entry composes any page type with any module.
+    # Pages that override `body` and restate one of these tuples are fine:
+    # StreamBlock collapses duplicate names to one child.
+    body_module_blocks = [
+        body_composable_tabs_block,
+        body_faceted_listing_block,
+        body_alt_hero_block,
+        body_split_hero_block,
+        body_primary_hero_block,
+        body_accordion_module_block,
+        body_text_columns_block,
+        body_stats_block,
+        body_image_text_block,
+        body_cta_image_block,
+        body_banner_block,
+        body_text_card_grid_block,
+        body_video_carousel_block,
+        body_video_text_block,
+        body_gallery_text_block,
+        body_supporting_materials_block,
+        body_horizontal_tabs_block,
+        body_program_spotlight_block,
+        body_program_grid_block,
+        body_programs_carousel_block,
+        body_experts_grid_block,
+        body_experts_carousel_block,
+        body_resource_carousel_block,
+        body_resource_bento_block,
+        body_events_carousel_block,
+        body_news_carousel_block,
+        body_news_grid_block,
+        body_trending_issues_block,
+        body_jobs_list_block,
+        body_form_block,
+        body_general_inquiry_block,
+    ]
 
     body = StreamField(
-        body_default_blocks,
+        # Defaults + the DS module library — modules are placeable on every
+        # page type's body (BugHerd #116 follow-up: events/experts and the
+        # other archive pages previously offered the content blocks only).
+        body_default_blocks + body_module_blocks,
         blank=True,
         use_json_field=True,
     )
@@ -420,8 +518,8 @@ class BasicPageAbstract(models.Model):
     )
     images_panel = MultiFieldPanel(
         [
-            MediaValetImageChooserPanel('image_hero'),
-            MediaValetImageChooserPanel('image_banner'),
+            FieldPanel('image_hero'),
+            FieldPanel('image_banner'),
         ],
         heading='Images',
         classname='collapsible collapsed',
@@ -462,7 +560,7 @@ class FeatureablePageAbstract(models.Model):
         [
             FieldPanel('feature_title'),
             FieldPanel('feature_subtitle'),
-            MediaValetImageChooserPanel('image_feature'),
+            FieldPanel('image_feature'),
             FieldPanel('feature_url'),
         ],
         heading='Feature Information',
@@ -525,7 +623,7 @@ class ShareablePageAbstract(models.Model):
         [
             FieldPanel('social_title'),
             FieldPanel('social_description'),
-            MediaValetImageChooserPanel('image_social'),
+            FieldPanel('image_social'),
         ],
         heading='Social Media',
         classname='collapsible collapsed',
@@ -535,13 +633,40 @@ class ShareablePageAbstract(models.Model):
         abstract = True
 
 
+def _template_ancestors(name):
+    """The templates ``name`` extends, nearest first (stops at a dynamic
+    ``{% extends %}``)."""
+    from django.template.loader import get_template
+    from django.template.loader_tags import ExtendsNode
+    ancestors = []
+    while True:
+        nodes = get_template(name).template.nodelist.get_nodes_by_type(ExtendsNode)
+        parent = nodes[0].parent_name.var if nodes else None
+        if not isinstance(parent, str):
+            return ancestors
+        ancestors.append(parent)
+        name = parent
+
+
 class ThemeablePageAbstract(models.Model):
+    class Surface(models.TextChoices):
+        LIGHT = ('light', 'Light')
+        DARK = ('dark', 'Dark')
+
     theme = models.ForeignKey(
         'core.Theme',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
         related_name='+',
+    )
+    surface = models.CharField(
+        max_length=8,
+        choices=Surface.choices,
+        default=Surface.LIGHT,
+        help_text="Default light/dark surface for this page. Modules inherit it "
+                  "unless they set their own surface. (Brand surfaces like the "
+                  "podcast/DPH tints are applied automatically by page type.)",
     )
 
     theme_panel = MultiFieldPanel(
@@ -552,10 +677,166 @@ class ThemeablePageAbstract(models.Model):
         classname='collapsible collapsed',
     )
 
+    # Separate panel so the author light/dark control is exposed only on pages
+    # where it's a real choice (authored/composed bodies, e.g. BasicPage,
+    # ProjectPage). Fixed-design CPT singles/archives keep the `surface` field
+    # (defaults light) but DON'T include this panel — their templates set each
+    # section's surface, which overrides the page default locally.
+    surface_panel = MultiFieldPanel(
+        [
+            FieldPanel('surface'),
+        ],
+        heading='Surface (light / dark)',
+        classname='collapsible collapsed',
+    )
+
     def get_theme_dir(self):
         if self.theme:
             return self.theme.name.lower().replace(' ', '_').replace("-", '_')
         return ''
+
+    def themed_template(self, name, standard):
+        """The page's legacy theme fork ``themes/<dir>/<name>`` when the page
+        carries a theme AND that template exists, else ``standard``.
+
+        CIGI asked for the converted special-design content pages to go back
+        to their pre-redesign designs (sync 2026-09-21; the set is the themed
+        articles, episodes, series homes and the one themed event). The
+        existence check keeps a theme with no fork for this page type on the
+        DS template instead of raising TemplateDoesNotExist — Responsible
+        Technology and the Indigenous Lands person page never had one.
+        """
+        if not self.theme:
+            return standard
+        from django.template import TemplateDoesNotExist
+        from django.template.loader import get_template
+        fork = f'themes/{self.get_theme_dir()}/{name}'
+        try:
+            get_template(fork)
+        except TemplateDoesNotExist:
+            return standard
+        return fork
+
+    # The fork name a page type routes through themed_template() in its
+    # get_template (ArticlePage, MultimediaPage, EventPage); None = no fork.
+    legacy_fork_template = None
+
+    def theme_fork_template(self):
+        """The theme fork get_template routes this page to, or None. A page
+        type that picks its fork another way (ProjectPage) overrides this
+        and calls it from its own get_template."""
+        if not self.legacy_fork_template:
+            return None
+        return self.themed_template(self.legacy_fork_template, None)
+
+    @property
+    def renders_legacy_fork(self):
+        """True when this page renders a pre-redesign theme fork, so its
+        StreamField blocks pick their streams/legacy/ templates (John,
+        BugHerd #522: a Data Value Series chart came out as a bare DS figure
+        with no fixed-width container). Asks theme_fork_template() — the
+        same routing get_template uses — so Responsible Technology (theme,
+        no fork) and unthemed pages stay DS. A fork that extends the page
+        type's own DS single (the DPH event) is a DS hybrid, not a legacy
+        design. The Think 7 site's event/project templates, which
+        get_template checks first, aren't considered: no themed Think 7
+        event or project exists.
+        """
+        fork = self.theme_fork_template()
+        return bool(fork) and self.template not in _template_ancestors(fork)
+
+    class Meta:
+        abstract = True
+
+
+class HeroContentTogglesAbstract(models.Model):
+    """Author on/off toggles for the content-hero sections (Article/Opinion,
+    Event, Publication, Video). Default ON, except the banner on Events and
+    Publications (opt-in; BugHerd #520) — turning one off makes the presenter
+    drop that section (templates render each section only when its data is
+    present, so no template branching is needed). Breadcrumb + title are always on.
+    """
+    show_hero_banner = models.BooleanField(default=True, verbose_name='Show image banner')
+    show_hero_topics = models.BooleanField(default=True, verbose_name='Show topic pills')
+    show_hero_excerpt = models.BooleanField(default=True, verbose_name='Show excerpt')
+    show_hero_byline = models.BooleanField(default=True, verbose_name='Show byline (authors)')
+    show_hero_date = models.BooleanField(default=True, verbose_name='Show date')
+    show_hero_share = models.BooleanField(default=True, verbose_name='Show share links')
+    show_hero_action = models.BooleanField(default=True, verbose_name='Show action (audio / download / register / location / link)')
+
+    hero_options_panel = MultiFieldPanel(
+        [
+            FieldPanel('show_hero_banner'),
+            FieldPanel('show_hero_topics'),
+            FieldPanel('show_hero_excerpt'),
+            FieldPanel('show_hero_byline'),
+            FieldPanel('show_hero_date'),
+            FieldPanel('show_hero_share'),
+            FieldPanel('show_hero_action'),
+        ],
+        heading='Hero sections',
+        classname='collapsible collapsed',
+    )
+
+    class Meta:
+        abstract = True
+
+
+class HeroExpertTogglesAbstract(models.Model):
+    """Author on/off toggles for the Expert Bio hero sections. Headshot + name
+    always on."""
+    show_hero_breadcrumb = models.BooleanField(default=True, verbose_name='Show breadcrumb')
+    show_hero_role = models.BooleanField(default=True, verbose_name='Show role/position')
+    show_hero_bio = models.BooleanField(default=True, verbose_name='Show bio')
+    show_hero_expertise = models.BooleanField(default=True, verbose_name='Show Expertise pills')
+    show_hero_programs = models.BooleanField(default=True, verbose_name='Show Programs pills')
+    show_hero_social = models.BooleanField(default=True, verbose_name='Show social links')
+
+    hero_options_panel = MultiFieldPanel(
+        [
+            FieldPanel('show_hero_breadcrumb'),
+            FieldPanel('show_hero_role'),
+            FieldPanel('show_hero_bio'),
+            FieldPanel('show_hero_expertise'),
+            FieldPanel('show_hero_programs'),
+            FieldPanel('show_hero_social'),
+        ],
+        heading='Hero sections',
+        classname='collapsible collapsed',
+    )
+
+    class Meta:
+        abstract = True
+
+
+class HeroPodcastTogglesAbstract(HeroContentTogglesAbstract):
+    """Podcast hero = the content toggles PLUS podcast-only sections (logo, cover,
+    season/episode meta, Subscribe, Follow). For the audio (podcast) variant of
+    MultimediaPage; the content toggles cover the shared sections."""
+    show_hero_logo = models.BooleanField(default=True, verbose_name='Show series logo')
+    show_hero_cover = models.BooleanField(default=True, verbose_name='Show cover art')
+    show_hero_meta = models.BooleanField(default=True, verbose_name='Show #/season meta')
+    show_hero_subscribe = models.BooleanField(default=True, verbose_name='Show Subscribe links')
+    show_hero_follow = models.BooleanField(default=True, verbose_name='Show Follow links')
+
+    hero_options_panel = MultiFieldPanel(
+        [
+            FieldPanel('show_hero_banner'),
+            FieldPanel('show_hero_topics'),
+            FieldPanel('show_hero_excerpt'),
+            FieldPanel('show_hero_action'),
+            FieldPanel('show_hero_logo'),
+            FieldPanel('show_hero_cover'),
+            FieldPanel('show_hero_meta'),
+            FieldPanel('show_hero_byline'),
+            FieldPanel('show_hero_date'),
+            FieldPanel('show_hero_share'),
+            FieldPanel('show_hero_subscribe'),
+            FieldPanel('show_hero_follow'),
+        ],
+        heading='Hero sections',
+        classname='collapsible collapsed',
+    )
 
     class Meta:
         abstract = True
@@ -614,10 +895,13 @@ class ArchiveablePageAbstract(models.Model):
 class ContentPageForm(WagtailAdminPageForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        from research.models import TopicPage, CountryPage
+        from research.models import TopicPage
 
-        # filter out archived topics
-        self.fields['topics'].queryset = TopicPage.objects.filter(archive=0)
+        # filter out archived topics — some ContentPage subtypes (e.g. the
+        # Opinion Series list) don't expose topics in their panels, so the
+        # field may be absent from the form (500 on edit otherwise)
+        if 'topics' in self.fields:
+            self.fields['topics'].queryset = TopicPage.objects.filter(archive=0)
 
         # # order commonly used country tags first
         # common_countries = [
@@ -725,9 +1009,34 @@ class ContentPage(Page, SearchablePageAbstract):
 
         return [pages[x] for x in recommended_page_ids]
 
+    def get_body_recommended(self):
+        """Pages picked via in-body ``recommended`` blocks, in document order.
+        The reading shell suppresses the blocks themselves (the design has no
+        in-body recommended element); their picks surface in the page's
+        recommended carousel instead."""
+        if not self.body:
+            return []
+        pages = []
+        for block in self.body:
+            if block.block_type == 'recommended' and block.value and block.value.live:
+                pages.append(block.value.specific)
+        return pages
+
+    @staticmethod
+    def _dedup_pages(pages):
+        seen = set()
+        unique = []
+        for page in pages:
+            if page.id not in seen:
+                seen.add(page.id)
+                unique.append(page)
+        return unique
+
     @cached_property
     def recommended_content(self):
-        recommended_content = self.get_recommended()
+        recommended_content = self._dedup_pages(
+            self.get_recommended() + self.get_body_recommended()
+        )
         exclude_ids = [self.id]
         exclude_ids += [item.id for item in recommended_content]
 
@@ -743,7 +1052,7 @@ class ContentPage(Page, SearchablePageAbstract):
             publicationpage__publication_type__title__in=['Working Paper', 'DigiFin Policy Brief']
         ).exclude(
             path__startswith='00010002'
-        ).prefetch_related('authors__author', 'topics').distinct().order_by('-publishing_date')[:12 - len(recommended_content)])
+        ).prefetch_related('authors__author', 'topics').distinct().order_by('-publishing_date')[:max(0, 12 - len(recommended_content))])
 
         recommended_content = list(recommended_content) + additional_content
 
@@ -751,7 +1060,10 @@ class ContentPage(Page, SearchablePageAbstract):
 
     @cached_property
     def recommended_content_preview(self):
-        recommended_pages = [page.recommended_content_page.specific for page in self.recommended.all()[:3]]
+        recommended_pages = self._dedup_pages(
+            [page.recommended_content_page.specific for page in self.recommended.all()[:3]]
+            + self.get_body_recommended()
+        )
 
         exclude_ids = [self.id]
         exclude_ids += [item.id for item in recommended_pages]
@@ -762,7 +1074,7 @@ class ContentPage(Page, SearchablePageAbstract):
             eventpage__isnull=True
         ).exclude(id__in=exclude_ids).exclude(
             articlepage__article_type__title='CIGI in the News'
-        ).prefetch_related('authors__author', 'topics').distinct().order_by('-publishing_date')[:12 - len(recommended_pages)])
+        ).prefetch_related('authors__author', 'topics').distinct().order_by('-publishing_date')[:max(0, 12 - len(recommended_pages))])
 
         recommended_content = list(recommended_pages) + additional_content
 
@@ -906,6 +1218,7 @@ class ContentPageRecommendedContent(Orderable):
 
 
 class BasicPage(
+    RouterServeMixin,
     Page,
     BasicPageAbstract,
     FeatureablePageAbstract,
@@ -915,13 +1228,8 @@ class BasicPage(
 ):
     """Page with StreamField body"""
 
-    body = StreamField(
-        BasicPageAbstract.body_default_blocks + [
-            BasicPageAbstract.body_autoplay_video_block,
-        ],
-        blank=True,
-        use_json_field=True,
-    )
+    # The abstract body already carries the defaults + the full DS module
+    # library (BugHerd #116 follow-up) — no override needed.
 
     related_files = StreamField(
         [
@@ -979,6 +1287,7 @@ class BasicPage(
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
         ThemeablePageAbstract.theme_panel,
+        ThemeablePageAbstract.surface_panel,
         BasicPageAbstract.qr_code_panel,
     ]
 
@@ -991,9 +1300,7 @@ class BasicPage(
         'core.FundingPage',
         'core.TwentiethPage',
         'core.TwentiethPageSingleton',
-        'core.TwentyFifthPageSingleton',
         'core.FacilityRentalsPage',
-        'core.HumanAnalysisStandardPage',
         'people.PersonListPage',
         'research.ProjectPage',
     ]
@@ -1017,16 +1324,45 @@ class BasicPage(
             "alumni_theme_data": alumni_theme_data,
         }
 
+    # Theme dirs that still keep a legacy basic-page fork (retiring per
+    # legacy-page-conversion-plan §7a). Any other theme renders the DS template.
+    THEMED_FORK_DIRS = {'brandless', 'dph', 'igc'}
+
     def get_template(self, request, *args, **kwargs):
         standard_template = super(BasicPage, self).get_template(request, *args, **kwargs)
-        if self.theme:
+        if self.theme and self.get_theme_dir() in self.THEMED_FORK_DIRS:
             return f'themes/{self.get_theme_dir()}/basic_page.html'
         return standard_template
 
     def get_context(self, request):
+        from core.heroes import _breadcrumb
+
         context = super().get_context(request)
 
         context['featured_pages'] = self.get_featured_pages()
+        # For the image-banner alt hero (BugHerd #125): an authored image_banner
+        # switches the page header to the full-bleed alt hero, which renders
+        # these linked crumbs. The plain content hero builds its own trail.
+        context['hero_crumbs'] = _breadcrumb(self)
+
+        # Digital Policy Hub subtree → charcoal surface with the green accent
+        # (BugHerd #166/#168; KP 1595:93724 — charcoal header, charcoal tab band
+        # with a bright-green underline). This is the treatment the `dph-test`
+        # approximation below was built to; the live hub was still on green.
+        from core.heroes import is_dph_subtree
+        if is_dph_subtree(self):
+            context['header_surface'] = 'charcoal'
+            # Header accents (nav underline, panel-label hover) go green too —
+            # nothing on the hub hovers red (BugHerd #200).
+            context['header_accent_scheme'] = 'green'
+            context['main_surface'] = 'charcoal'
+            context['main_accent_scheme'] = 'green'
+        elif self.slug == 'dph-test':
+            # The composed hub approximation: charcoal site header + green page
+            # accent (tab underline etc.); module surfaces stay authored
+            # (DPH About 1595:93724 — charcoal/green bands, white sections).
+            context['header_surface'] = 'charcoal'
+            context['main_accent_scheme'] = 'green'
         return context
 
     class Meta:
@@ -1157,20 +1493,10 @@ class FacilityRentalsPage(
     def get_context(self, request, *args, **kwargs):
         ctx = super().get_context(request, *args, **kwargs)
         ctx["form"] = FacilityRentalInquiryForm()
-        ctx["turnstile_site_key"] = getattr(settings, "CLOUDFLARE_TURNSTILE_SITE_KEY", "")
         return ctx
 
     def serve(self, request, *args, **kwargs):
         if request.method == "POST":
-            from utils.security import verify_turnstile_token
-            turnstile_token = request.POST.get("cf-turnstile-response", "")
-            if not verify_turnstile_token(turnstile_token, request.META.get("REMOTE_ADDR")):
-                logger.warning("Turnstile verification failed for facility rentals form")
-                messages.error(request, "Security verification failed. Please try again.")
-                context = self.get_context(request)
-                context["form"] = FacilityRentalInquiryForm(request.POST)
-                return render(request, self.template, context)
-
             form = FacilityRentalInquiryForm(request.POST)
             if form.is_valid():
                 recipients = EmailFormSettings.for_request(request).recipients
@@ -1204,56 +1530,6 @@ class FacilityRentalsPage(
 
     class Meta:
         verbose_name = 'Facility Rentals Page'
-
-
-class HumanAnalysisStandardPage(
-    Page,
-    BasicPageAbstract,
-    FeatureablePageAbstract,
-    SearchablePageAbstract,
-    ShareablePageAbstract,
-):
-    body = StreamField(
-        BasicPageAbstract.body_default_blocks + [
-            BasicPageAbstract.body_text_border_block,
-            ('publication_visual_elements', PublicationVisualElementsBlock()),
-            ('conversion', HumanAnalysisConversionBlock()),
-            ('policy_download', HumanAnalysisPolicyDownloadBlock()),
-            ('has_image_pair', HumanAnalysisImagePairBlock()),
-        ],
-        blank=True,
-        use_json_field=True,
-    )
-
-    content_panels = [
-        BasicPageAbstract.title_panel,
-        MultiFieldPanel(
-            [
-                FieldPanel('body'),
-            ],
-            heading='Body',
-            classname='collapsible collapsed',
-        ),
-    ]
-    promote_panels = Page.promote_panels + [
-        FeatureablePageAbstract.feature_panel,
-        ShareablePageAbstract.social_panel,
-        SearchablePageAbstract.search_panel,
-    ]
-    settings_panels = Page.settings_panels + [
-        BasicPageAbstract.submenu_panel,
-        BasicPageAbstract.qr_code_panel,
-    ]
-
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
-
-    max_count = 1
-    parent_page_types = ['core.BasicPage']
-    subpage_types = []
-    template = 'core/human_analysis_standard_page.html'
-
-    class Meta:
-        verbose_name = 'Human Analysis Standard Page'
 
 
 class TwentiethPage(
@@ -1443,7 +1719,7 @@ class SlidePage(Page):
     content_panels = Page.content_panels + [
         FieldPanel('title_override'),
         FieldPanel('theme'),
-        MediaValetImageChooserPanel('image_background'),
+        FieldPanel('image_background'),
         FieldPanel('background_colour'),
         FieldPanel('body'),
         FieldPanel('timeline'),
@@ -1511,264 +1787,6 @@ class TwentiethPageSingleton(
 
     class Meta:
         verbose_name = 'Twentieth Page Singleton'
-
-
-class TwentyFifthPageSingleton(
-    ContentPage,
-    BasicPageAbstract,
-    FeatureablePageAbstract,
-    SearchablePageAbstract,
-    ShareablePageAbstract,
-    ThemeablePageAbstract,
-):
-    body = StreamField(
-        BasicPageAbstract.body_default_blocks + [
-            ('founder_letter', FounderLetterBlock()),
-            ('video_text', VideoTextBlock()),
-            ('anniversary_subscribe', AnniversarySubscribeBlock()),
-        ],
-        use_json_field=True,
-    )
-    history_timeline = StreamField(
-        [
-            ('gallery', TimelineGalleryBlock()),
-        ],
-        blank=True,
-        help_text='Timeline gallery shown in the History section.',
-        use_json_field=True,
-    )
-    splash_video = models.ForeignKey(
-        'wagtailmedia.Media',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        verbose_name='Splash Video',
-        help_text='Full-screen background video shown before the page content.',
-    )
-    splash_image = models.ForeignKey(
-        'images.CigionlineImage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        verbose_name='Splash Still Image',
-        help_text='Still image shown before the splash video loads, and used instead of video on mobile.',
-    )
-
-    content_panels = [
-        BasicPageAbstract.title_panel,
-        MultiFieldPanel(
-            [
-                MediaValetImageChooserPanel('splash_image'),
-                MediaChooserPanel('splash_video', media_type='video'),
-            ],
-            heading='Splash',
-            classname='collapsible',
-        ),
-        MultiFieldPanel(
-            [
-                FieldPanel('body'),
-            ]
-        ),
-        MultiFieldPanel(
-            [
-                InlinePanel('anniversary_events', label='Event'),
-            ],
-            heading='Events',
-            classname='collapsible',
-        ),
-        MultiFieldPanel(
-            [
-                FieldPanel('history_timeline'),
-            ],
-            heading='History',
-            classname='collapsible',
-        ),
-        BasicPageAbstract.images_panel,
-        BasicPageAbstract.hero_link_panel,
-        MultiFieldPanel(
-            [
-                FieldPanel('publishing_date'),
-            ],
-            heading='General Information',
-            classname='collapsible collapsed'
-        ),
-        MultiFieldPanel(
-            [
-                FieldPanel('topics'),
-            ],
-            heading='Related',
-            classname='collapsible collapsed',
-        )
-    ]
-
-    promote_panels = Page.promote_panels + [
-        FeatureablePageAbstract.feature_panel,
-        ShareablePageAbstract.social_panel,
-        SearchablePageAbstract.search_panel,
-    ]
-    settings_panels = Page.settings_panels + [
-        BasicPageAbstract.submenu_panel,
-        BasicPageAbstract.qr_code_panel,
-    ]
-
-    search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields
-
-    max_count = 1
-    parent_page_types = ['home.HomePage']
-    subpage_types = ['core.TwentyFifthFeatureLandingPage']
-    template = 'core/twenty_fifth_page_singleton.html'
-    anniversary_mailchimp_tag = '25 Anniversary'
-
-    def get_subscribe_page(self):
-        from subscribe.models import SubscribePage
-
-        subscribe_page = SubscribePage.objects.live().first()
-
-        if subscribe_page:
-            return subscribe_page
-
-        subscribe_page = object.__new__(SubscribePage)
-        subscribe_page.consent_text = SubscribePage._meta.get_field('consent_text').default
-        return subscribe_page
-
-    def get_anniversary_subscribe_form(self, data=None):
-        from subscribe.models import SubscribeForm
-
-        return SubscribeForm(
-            data,
-            consent_text=self.get_subscribe_page().consent_text,
-        )
-
-    def get_context(self, request, *args, **kwargs):
-        context = super().get_context(request, *args, **kwargs)
-        context.setdefault(
-            'anniversary_subscribe_form',
-            self.get_anniversary_subscribe_form(),
-        )
-        context['turnstile_site_key'] = getattr(settings, 'CLOUDFLARE_TURNSTILE_SITE_KEY', '')
-        return context
-
-    def serve(self, request, *args, **kwargs):
-        if request.method == 'POST' and request.POST.get('anniversary_newsletter_form'):
-            from mailchimp_marketing.api_client import ApiClientError
-            from subscribe.models import MailchimpSubscriptionError
-            from utils.security import verify_turnstile_token
-
-            is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest'
-            context = self.get_context(request, *args, **kwargs)
-            form = self.get_anniversary_subscribe_form(request.POST)
-            context['anniversary_subscribe_form'] = form
-            context['anniversary_subscribe_modal_open'] = True
-
-            turnstile_token = request.POST.get('cf-turnstile-response', '')
-            if not settings.DEBUG and not verify_turnstile_token(turnstile_token, request.META.get('REMOTE_ADDR')):
-                if is_ajax:
-                    return JsonResponse(
-                        {
-                            'success': False,
-                            'message': 'Security verification failed. Please try again.',
-                        },
-                        status=400,
-                    )
-
-                messages.error(request, 'Security verification failed. Please try again.')
-                return render(request, self.template, context)
-
-            if form.is_valid():
-                try:
-                    self.get_subscribe_page().subscribe_to_mailchimp(
-                        form,
-                        extra_tags=[self.anniversary_mailchimp_tag],
-                    )
-                except (ApiClientError, MailchimpSubscriptionError) as error:
-                    import logging
-
-                    error_text = getattr(error, 'text', str(error))
-                    logging.getLogger('cigionline').error(f'An error occurred with Mailchimp: {error_text}')
-                    if is_ajax:
-                        return JsonResponse(
-                            {
-                                'success': False,
-                                'message': 'There was a problem subscribing you. Please try again.',
-                            },
-                            status=502,
-                        )
-
-                    messages.error(request, 'There was a problem subscribing you. Please try again.')
-                else:
-                    if is_ajax:
-                        return JsonResponse(
-                            {
-                                'success': True,
-                                'message': 'Thanks for subscribing.',
-                            }
-                        )
-
-                    messages.success(request, 'Thanks for subscribing.')
-                    context['anniversary_subscribe_form'] = self.get_anniversary_subscribe_form()
-                    context['anniversary_subscribe_modal_open'] = True
-            elif is_ajax:
-                return JsonResponse(
-                    {
-                        'success': False,
-                        'message': 'Please correct the highlighted fields and try again.',
-                        'errors': form.errors.get_json_data(),
-                    },
-                    status=400,
-                )
-
-            return render(request, self.template, context)
-
-        return super().serve(request, *args, **kwargs)
-
-    class Meta:
-        verbose_name = 'Twenty-Fifth Anniversary Page'
-
-
-class EventPageAdminChooser(AdminPageChooser):
-    def __init__(self, **kwargs):
-        super().__init__(target_models=['events.EventPage'], **kwargs)
-
-    def get_js_init_options(self, id_, name, value_data):
-        opts = super().get_js_init_options(id_, name, value_data)
-
-        if 'parentId' not in opts:
-            from events.models import EventListPage
-
-            event_list_page = EventListPage.objects.order_by('path').first()
-
-            if event_list_page:
-                opts['parentId'] = event_list_page.pk
-
-        return opts
-
-
-class EventPageChooserPanel(FieldPanel):
-    def get_form_options(self):
-        opts = super().get_form_options()
-        opts.setdefault('widgets', {})[self.field_name] = EventPageAdminChooser()
-        return opts
-
-
-class TwentyFifthPageEvent(Orderable):
-    page = ParentalKey(
-        'core.TwentyFifthPageSingleton',
-        related_name='anniversary_events',
-    )
-    event_page = models.ForeignKey(
-        'events.EventPage',
-        null=False,
-        blank=False,
-        on_delete=models.CASCADE,
-        related_name='+',
-        verbose_name='Event',
-    )
-
-    panels = [
-        FieldPanel('event_page'),
-    ]
 
 
 class Theme(models.Model):
@@ -1985,25 +2003,3 @@ class QRCodeDocumentScan(models.Model):
 
     def __str__(self):
         return f'QR scans for document "{self.document.title}": {self.scan_count}'
-
-
-class TwentyFifthFeatureLandingPage(Page):
-    pages = StreamField(
-        [
-            (
-                "featured_page", blocks.PageChooserBlock(),
-            ),
-        ],
-        blank=True,
-        use_json_field=True,
-        verbose_name="Featured Pages",
-    )
-
-    max_count = 1
-    parent_page_types = ['core.TwentyFifthPageSingleton']
-    subpage_types = []
-    template = 'core/twenty_fifth_feature_landing_page.html'
-
-    content_panels = Page.content_panels + [
-        FieldPanel("pages"),
-    ]

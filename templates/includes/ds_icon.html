@@ -1,0 +1,21 @@
+{% comment %}
+  Single source for design-system inline SVG icons. Rendered via {% ds_icon %}
+  (core/templatetags/icons.py). Add new icons here, never paste SVG into templates.
+  `css_class` is applied to the <svg>.
+{% endcomment %}{% spaceless %}
+{% if name == 'chevron-left' %}<svg class="{{ css_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+{% elif name == 'chevron-right' %}<svg class="{{ css_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9.29 6.71 14.17 12l-4.88 4.88L10.71 18l6-6-6-6z"/></svg>
+{% elif name == 'chevron-right-stroke' %}<svg class="{{ css_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2" d="m9 6 6 6-6 6"/></svg>
+{% elif name == 'chevron-left-stroke' %}<svg class="{{ css_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2" d="m15 6-6 6 6 6"/></svg>
+{% elif name == 'search' %}<svg class="{{ css_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+{% elif name == 'play' %}<svg class="{{ css_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5v14l11-7z"/></svg>
+{% elif name == 'pause' %}<svg class="{{ css_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5h3v14H8zM13 5h3v14h-3z"/></svg>
+{% elif name == 'headphones' %}<svg class="{{ css_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3a9 9 0 0 0-9 9v5a3 3 0 0 0 3 3h1v-8H5v-0a7 7 0 0 1 14 0v0h-2v8h1a3 3 0 0 0 3-3v-5a9 9 0 0 0-9-9z"/></svg>
+{% elif name == 'email' %}<svg class="{{ css_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.5" d="M3 5.5h18v13H3zM3 6l9 7 9-7"/></svg>
+{% elif name == 'phone' %}<svg class="{{ css_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.5" d="M6 3h3l2 5-2.5 1.5a12 12 0 0 0 6 6L16 13l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 4 5a2 2 0 0 1 2-2z"/></svg>
+{% elif name == 'download' %}<svg class="{{ css_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg>
+{% elif name == 'fax' %}<svg class="{{ css_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.5" d="M7 7.5v-4h10v4M4.5 7.5h15v12h-15zM8 12h8M8 15.5h4"/></svg>
+{% elif name == 'pin' or name == 'address' %}<svg class="{{ css_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.5" d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11z"/><circle fill="none" stroke="currentColor" stroke-width="1.5" cx="12" cy="10" r="2.5"/></svg>
+{% elif name == 'person' %}<svg class="{{ css_class }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+{% endif %}
+{% endspaceless %}

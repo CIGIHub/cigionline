@@ -1,0 +1,13 @@
+{% comment %}
+  Shared Tag / pill — outlined pill with an accent dot + uppercase label. Reused
+  across modules. `.ds-surface--accent-*` sets the dot colour via --accent.
+  Context:
+    label   — the pill text (renders nothing if empty)
+    accent  — red | green | teal | blue | olive | mauve | grey (default grey — the
+              unmapped fallback is neutral, not brand red; BugHerd #326)
+    tag_url — optional. A topic pill links to its content type's router page
+              with the topic pre-selected; a program pill links to the program
+              page (Evan, 2026-09-10). No tag_url → a plain span, as before.
+              (Namespaced: many including templates already carry a `url`.)
+{% endcomment %}
+{% if label %}{% if tag_url %}<a class="ds-tag ds-tag--link ds-surface--accent-{{ accent|default:'grey' }}" href="{{ tag_url }}"><span class="ds-tag__dot" aria-hidden="true"></span><span class="ds-tag__label">{{ label }}</span></a>{% else %}<span class="ds-tag ds-surface--accent-{{ accent|default:'grey' }}"><span class="ds-tag__dot" aria-hidden="true"></span><span class="ds-tag__label">{{ label }}</span></span>{% endif %}{% endif %}

@@ -1,16 +1,46 @@
-{% load wagtailembeds_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% comment %}
+  Video + Text — section title (heading + intro + button row) over a full-bleed
+  video facade. The facade loads the embed/file on click (see video-facade.js):
+  an uploaded video_file takes precedence over a video_url (YouTube/Vimeo).
+  No video set → the poster renders as a plain full-bleed image: no overlay,
+  play button or facade hooks (BugHerd #535). The if/else tags sit inline so
+  the has-video markup stays byte-identical.
+{% endcomment %}
+<div class="ds-video-text">
+  {% if self.heading or self.intro_text or self.buttons %}
+    <div class="ds-container">
+      <div class="ds-video-text__title">
+        {% if self.heading %}<h2 class="ds-video-text__heading">{{ self.heading }}</h2>{% endif %}
+        {% if self.intro_text or self.buttons %}
+          <div class="ds-video-text__content">
+            {% if self.intro_text %}<div class="ds-video-text__intro">{{ self.intro_text|richtext }}</div>{% endif %}
+            {% if self.buttons %}
+              <div class="ds-video-text__buttons">
+                {% for button in self.buttons %}{% include_block button %}{% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
 
-<div class="container anniversary-video-text">
-  <div class="row align-items-center">
-    <div class="col-12 col-md-6 order-2 order-md-1">
-      <div class="anniversary-video-text-copy">
-        {{ self.paragraph }}
-      </div>
-    </div>
-    <div class="col-12 col-md-6 order-1 order-md-2">
-      <div class="anniversary-video-text-embed">
-        {% embed self.video_url max_width=900 %}
-      </div>
-    </div>
-  </div>
+  {% if self.video_file or self.video_url %}<div
+    class="ds-video"
+    data-ds-video
+    {% if self.video_file %}data-ds-video-file="{{ self.video_file.file.url }}"{% elif self.video_url %}data-ds-video-url="{{ self.video_url }}"{% endif %}
+    data-ds-video-title="{{ self.heading|default:'Video' }}"
+  >
+    {% image self.poster_image width-1920 class="ds-video__poster" %}
+    <span class="ds-video__overlay" aria-hidden="true"></span>
+    <button class="ds-video__play" data-ds-video-play type="button" aria-label="Play video">
+      <svg class="ds-video__play-icon" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <circle cx="32" cy="32" r="32" fill="currentColor" />
+        <path d="M26 21l18 11-18 11z" fill="#000" />
+      </svg>
+    </button>
+  </div>{% else %}<div class="ds-video ds-video--static">
+    {% image self.poster_image width-1920 class="ds-video__poster" %}
+  </div>{% endif %}
 </div>

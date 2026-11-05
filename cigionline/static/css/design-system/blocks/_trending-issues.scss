@@ -1,0 +1,130 @@
+// =============================================================================
+// Design System — Trending Issues banner
+// Slim full-width banner spotlighting one item between accent rules: a thicker
+// top rule + thin bottom rule, (date + title + excerpt + author) on the left and
+// a tertiary "Read More" link on the right. Surface-aware (--accent colours the
+// rules).
+// =============================================================================
+
+.ds-trending {
+  // Section padding sits OUTSIDE the rules (py-48 on the outer frame),
+  // so the bottom rule never touches the neighbouring module; the banner
+  // carries the rules with its own content padding INSIDE them (py-32).
+  padding-block: var(--space-48);
+
+  &__banner {
+    position: relative; // containing block for the stretched title link (BugHerd #117)
+    display: flex;
+    align-items: center;
+    gap: var(--space-32);
+    padding-block: var(--space-32);
+    // Both rules are brand red: a 6px top-rule motif above, a 1px divider below. This
+    // module has no accent field, so --accent isn't reliably red on an
+    // accent-less dark surface — hence the explicit brand token.
+    border-top: var(--border-rule-banner) solid var(--color-brand-red);
+    border-bottom: var(--border-divider) solid var(--color-brand-red);
+  }
+
+  &__content {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8); // date/title/excerpt sit tight; author is spaced below
+  }
+
+  // Meta row (BugHerd #13, Figma 1436:68071): red dot · AUTHOR │ numeric
+  // date, on one line, 24px apart.
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-24);
+    margin-top: var(--space-16);
+  }
+
+  &__date {
+    @include paragraph-3; // serif, matching the KP meta row
+    // Surface text, not grey — the KP banner renders the date white on dark
+    // (BugHerd #13 comment: match the KP family + colour).
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  // Vertical divider between the author and the date (30px hairline in the
+  // frame; the 24px flex gap spaces both sides).
+  &__author + &__date {
+    padding-left: var(--space-24);
+    border-left: var(--border-divider) solid var(--surface-border);
+  }
+
+  &__title {
+    @include header-5;
+    color: var(--surface-text);
+    text-decoration: none; // no hover underline on card titles (BugHerd #9)
+    @include transition(color); // banner-wide hover (BugHerd #139)
+
+    // Whole banner, one destination (BugHerd #117) — same stretched-link
+    // pattern as the shared card; text is no longer selectable.
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+  }
+
+  &__excerpt {
+    @include paragraph-2;
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  &__author {
+    // Figma 1436:68075 — the "Eyebrow" style: Futura Book 16 / 1.5,
+    // uppercase, zero tracking (BugHerd #13).
+    @include eyebrow;
+    text-transform: uppercase;
+    color: var(--surface-text);
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px; // dot-to-name gap per the frame
+
+    // Red dot before the author name (4px in the frame).
+    &::before {
+      content: '';
+      flex-shrink: 0;
+      width: var(--space-4);
+      height: var(--space-4);
+      border-radius: 50%;
+      background: var(--color-brand-red);
+    }
+  }
+
+  &__cta {
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2; // same-destination link stays clickable above the overlay
+  }
+
+  // Whole-banner hover (BugHerd #139): the stretched link makes the banner one
+  // target, so the title and the Read More button light up together — text and
+  // underline both in the accent (#139 reopen: the button text goes red too).
+  &__banner:hover,
+  &__banner:focus-within {
+    .ds-trending__title { color: var(--accent); }
+
+    .ds-button--tertiary {
+      color: var(--accent);
+      border-bottom-color: currentColor;
+    }
+  }
+
+  @media (max-width: 768px) {
+    &__banner {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-16);
+    }
+  }
+}

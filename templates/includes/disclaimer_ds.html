@@ -1,0 +1,21 @@
+{% comment %}
+  DS disclaimer / media-inquiry band (BugHerd #410): left-aligned in the
+  reading measure on the page surface — replaces the centred legacy
+  includes/disclaimer.html on DS templates (the legacy include stays for the
+  theme forks). Params: surface, multimedia_disclaimer, additional_disclaimers.
+{% endcomment %}
+<div class="ds-surface ds-surface--{{ surface|default:'light' }}">
+  <div class="ds-reading ds-reading--section ds-container">
+    <div class="ds-reading__main">
+      <div class="ds-disclaimer">
+        {% if multimedia_disclaimer %}
+          <p>For media inquiries, usage rights or other questions please <a href="/contact/">contact CIGI</a>.</p>
+        {% endif %}
+        {% for block in additional_disclaimers %}
+          <p>{{ block.disclaimer }}</p>
+        {% endfor %}
+        <p>The opinions expressed in this article/multimedia are those of the author(s) and do not necessarily reflect the views of CIGI or its Board of Directors.</p>
+      </div>
+    </div>
+  </div>
+</div>

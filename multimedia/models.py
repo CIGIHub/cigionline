@@ -5,15 +5,16 @@ from core.models import (
     ContentPage,
     FeatureablePageAbstract,
     FromTheArchivesPageAbstract,
+    HeroPodcastTogglesAbstract,
     SearchablePageAbstract,
     ShareablePageAbstract,
     ThemeablePageAbstract,
 )
 from django.db.models.fields import CharField
 from django.db import models
-from mediavalet.panels import MediaValetImageChooserPanel
 from modelcluster.fields import ParentalKey
 from streams.blocks import (
+    PodcastFollowButtonBlock,
     PodcastSubscribeButtonBlock,
     FeaturedEpisodeBlock,
     PodcastHostBlock,
@@ -128,6 +129,7 @@ class MultimediaListPageFeaturedMultimedia(Orderable):
 
 class MultimediaPage(
     BasicPageAbstract,
+    HeroPodcastTogglesAbstract,
     ContentPage,
     FeatureablePageAbstract,
     FromTheArchivesPageAbstract,
@@ -292,11 +294,45 @@ class MultimediaPage(
             return self.article_series.specific.series_items_description
         return None
 
+    @property
+    def ds_surface(self):
+        # Pink is the POLICY PROMPT brand, whole-single (hero to footer) — not
+        # a generic podcast treatment. Non-PP audio and video singles render
+        # on the default light surface, per the recorded multimedia single
+        # frame 1437:71269 (BugHerd #312; Evan, 2026-08-27; revisit with #408).
+        from core.heroes import POLICY_PROMPT_SERIES_SLUG
+        return 'pink' if (
+            self.multimedia_type == 'audio'
+            and self.multimedia_series is not None
+            and self.multimedia_series.slug == POLICY_PROMPT_SERIES_SLUG
+        ) else 'light'
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        # The <main> wrapper carries the page surface so every section —
+        # including the legacy disclaimer/archives ones — sits on it. The
+        # site header follows: podcast pages are pink from the nav down.
+        context['main_surface'] = self.ds_surface
+        if self.ds_surface == 'pink':
+            context['header_surface'] = 'pink'
+        # Series brand accent (Podcast Template): heading colours/rules pick
+        # it up via --accent on <main>. The hero re-scopes its own accent, so
+        # player chrome stays red.
+        if self.multimedia_type == 'audio' and self.multimedia_series:
+            colour = getattr(self.multimedia_series.specific, 'brand_colour', '')
+            if colour:
+                context['main_accent'] = colour
+        return context
+
+    legacy_fork_template = 'multimedia_page.html'
+
     def get_template(self, request, *args, **kwargs):
+        # A themed episode (Policy Prompt, Big Tech, series skins) keeps its
+        # pre-redesign design (CIGI, sync 2026-09-21). Unthemed audio/video
+        # renders the DS podcast single; series identity there comes from
+        # multimedia_series data, with the Policy Prompt logo as hero fallback.
         standard_template = super(MultimediaPage, self).get_template(request, *args, **kwargs)
-        if self.theme:
-            return f'themes/{self.get_theme_dir()}/multimedia_page.html'
-        return standard_template
+        return self.themed_template(self.legacy_fork_template, standard_template)
 
     def podcast_episode_minutes(self):
         return int(self.podcast_audio_duration.split(':')[0])
@@ -417,10 +453,10 @@ class MultimediaPage(
         ),
         MultiFieldPanel(
             [
-                MediaValetImageChooserPanel('image_hero'),
-                MediaValetImageChooserPanel('image_banner'),
-                MediaValetImageChooserPanel('image_square'),
-                MediaValetImageChooserPanel('image_poster'),
+                FieldPanel('image_hero'),
+                FieldPanel('image_banner'),
+                FieldPanel('image_square'),
+                FieldPanel('image_poster'),
             ],
             heading='Images',
             classname='collapsible collapsed',
@@ -447,6 +483,7 @@ class MultimediaPage(
             classname='collapsible collapsed',
         ),
         FromTheArchivesPageAbstract.from_the_archives_panel,
+        HeroPodcastTogglesAbstract.hero_options_panel,
     ]
     promote_panels = Page.promote_panels + [
         FeatureablePageAbstract.feature_panel,
@@ -541,6 +578,14 @@ class MultimediaSeriesPage(
         help_text='A list of subscribe links to various podcast providers',
         use_json_field=True,
     )
+    podcast_follow_buttons = StreamField([
+        ('podcast_follow_button', PodcastFollowButtonBlock())
+    ],
+        blank=True,
+        verbose_name='Podcast Follow Buttons',
+        help_text="The series' social accounts, shown as the hero 'Follow' group.",
+        use_json_field=True,
+    )
     podcast_hosts = StreamField([
         ('podcast_host', PodcastHostBlock())
     ],
@@ -548,6 +593,21 @@ class MultimediaSeriesPage(
         verbose_name='Podcast Hosts',
         help_text='Hosts of the podcast',
         use_json_field=True
+    )
+    podcast_hosts_description = RichTextField(
+        blank=True,
+        features=['bold', 'italic', 'link'],
+        verbose_name='Hosts description',
+        help_text='Short intro under the "Experts / Hosts" heading on every '
+                  'episode\'s sidebar.',
+    )
+    brand_colour = models.CharField(
+        blank=True,
+        max_length=7,
+        verbose_name='Brand colour (hex)',
+        help_text='Series brand accent, e.g. #325ab2 (Policy Prompt blue). '
+                  'Drives episode-page heading colours and rules; leave blank '
+                  'for the default red accent.',
     )
     podcast_live = models.BooleanField(default=False)
 
@@ -593,6 +653,18 @@ class MultimediaSeriesPage(
     # Reference field for the Drupal-Wagtail migrator. Can be removed after.
     drupal_node_id = models.IntegerField(blank=True, null=True)
 
+    # Body adds the placeable faceted-listing module so a series landing can host
+    # the "All Episodes" listing (episode_row cards + a Season facet,
+    # auto-scoped to this series) plus the composable Tabs block.
+    body = StreamField(
+        BasicPageAbstract.body_default_blocks + [
+            BasicPageAbstract.body_composable_tabs_block,
+            BasicPageAbstract.body_faceted_listing_block,
+        ],
+        blank=True,
+        use_json_field=True,
+    )
+
     content_panels = [
         BasicPageAbstract.title_panel,
         BasicPageAbstract.body_panel,
@@ -606,19 +678,22 @@ class MultimediaSeriesPage(
         ),
         MultiFieldPanel(
             [
-                MediaValetImageChooserPanel('image_hero'),
-                MediaValetImageChooserPanel('image_banner'),
-                MediaValetImageChooserPanel('image_poster'),
+                FieldPanel('image_hero'),
+                FieldPanel('image_banner'),
+                FieldPanel('image_poster'),
             ],
             heading='Images',
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
-                MediaValetImageChooserPanel('image_logo'),
+                FieldPanel('image_logo'),
                 FieldPanel('podcast_hosts'),
+                FieldPanel('podcast_hosts_description'),
+                FieldPanel('brand_colour'),
                 FieldPanel('podcast_season_tagline'),
                 FieldPanel('podcast_subscribe_buttons'),
+                FieldPanel('podcast_follow_buttons'),
                 FieldPanel('podcast_live'),
             ],
             heading='Podcast Details',
@@ -648,10 +723,88 @@ class MultimediaSeriesPage(
     templates = 'multimedia/multimedia_series_page.html'
 
     def get_template(self, request, *args, **kwargs):
+        # A themed series home keeps its pre-redesign design (CIGI, sync
+        # 2026-09-21: /pp/ and Big Tech revert to their legacy pages).
         standard_template = super(MultimediaSeriesPage, self).get_template(request, *args, **kwargs)
-        if self.theme:
-            return f'themes/{self.get_theme_dir()}/multimedia_series_page.html'
-        return standard_template
+        return self.themed_template('multimedia_series_page.html', standard_template)
+
+    def _episodes_listing_value(self):
+        """Faceted-listing value for the All Episodes router;
+        auto series scope resolves to this page."""
+        return {
+            'prefix': 'ep',
+            'card_type': 'episode_row',
+            'heading': 'All Episodes',
+            # Season list + collapsed Year facet (series-home design 1312:29981).
+            'facets': ['season', 'year'],
+            'per_page': 12,
+        }
+
+    def latest_episode(self):
+        from multimedia.models import MultimediaPage
+        return (MultimediaPage.objects.live().public()
+                .filter(multimedia_series=self, publishing_date__isnull=False)
+                .order_by('-publishing_date').first())
+
+    def is_podcast(self):
+        """Podcast (audio) series get the pink Podcast Template treatment; video
+        series (Speaker Series, Inside Issues, …) stay on the default light
+        surface. MultimediaSeriesPage has no media-type field, so derive it from
+        the episodes — same signal the episode single uses (multimedia_type)."""
+        from multimedia.models import MultimediaPage
+        return MultimediaPage.objects.live().filter(
+            multimedia_series=self, multimedia_type='audio').exists()
+
+    def get_context(self, request, *args, **kwargs):
+        from core.faceted_listing import build_listing_context
+        context = super().get_context(request, *args, **kwargs)
+        context.update(build_listing_context(request, self._episodes_listing_value(), page=self))
+        context['latest_episode'] = self.latest_episode()
+        # Pink is the POLICY PROMPT brand (BugHerd #312): only the PP series
+        # home gets the pink chrome; other series — podcast or video — render
+        # on the default light surface (gated in the template too).
+        from core.heroes import POLICY_PROMPT_SERIES_SLUG
+        context['is_podcast'] = self.is_podcast()
+        context['is_pp_series'] = self.slug == POLICY_PROMPT_SERIES_SLUG
+        if context['is_pp_series']:
+            context['header_surface'] = 'pink'
+        # Series brand accent on <main> (--brand-accent): the All Episodes
+        # router chrome takes it where set (1366:133899 — PP blue), same
+        # mechanism as the episode single.
+        if self.brand_colour:
+            context['main_accent'] = self.brand_colour
+
+        # "The Hosts" (series home): the shared experts-carousel module,
+        # data-driven — series hosts as expert cards on the pink surface, with
+        # the authorable podcast_hosts_description as the intro.
+        hosts = [
+            b.value['host'].specific for b in (self.podcast_hosts or [])
+            if b.value.get('host') and b.value['host'].live
+        ]
+        context['host_pages'] = [h for h in hosts if not getattr(h, 'archive', False)]
+        if context['host_pages']:
+            from people.models import PersonListPage
+            experts_page = PersonListPage.objects.live().filter(slug='experts').first()
+            context['hosts_cta_url'] = experts_page.get_url(request) if experts_page else None
+            context['hosts_cfg'] = {
+                'surface': 'pink' if context['is_pp_series'] else 'light',
+                'accent': 'red', 'heading': 'The Hosts',
+                'intro': self.podcast_hosts_description,
+                'cta_label': 'Browse All Experts',
+                'show_pagination': False,
+                'card_slots': {'show_title': True, 'show_read_bio': True},
+            }
+        return context
+
+    def serve(self, request, *args, **kwargs):
+        # AJAX filter/pagination requests get the results partial (same contract
+        # as RouterServeMixin's page-level shape).
+        from core.routers import is_ajax, router_partial_response
+        if is_ajax(request) and request.GET.get('router') == 'ep':
+            from core.faceted_listing import build_listing_context
+            context = build_listing_context(request, self._episodes_listing_value(), page=self)
+            return router_partial_response(request, context)
+        return super().serve(request, *args, **kwargs)
 
     class Meta:
         verbose_name = 'Multimedia Series'

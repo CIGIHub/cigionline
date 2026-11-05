@@ -1,0 +1,27 @@
+{% load wagtailimages_tags %}
+
+<div class="container">
+  <div class="row d-block">
+    {% if self.full_width %}
+      <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+    {% else %}
+      <div class="col col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+    {% endif %}
+      <div class="stream-block-chart">
+        {% if self.title %}
+          <h3 class="stream-block-chart-title">
+            {{ self.title }}
+          </h3>
+        {% endif %}
+        <figure>
+          {% image self.image width-1280 %}
+          {% if not self.hide_image_caption %}
+            <figcaption>
+              {{ self.image.caption }}
+            </figcaption>
+          {% endif %}
+        </figure>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+{% comment %}
+  Shared type-of-content molecule (.ds-type) — content-type icon + uppercase
+  label. Pass `label` + `icon` (a Font Awesome glyph class), or use the
+  {% templatetag openblock %} type_of_content page {% templatetag closeblock %}
+  tag which resolves them. Monochrome (currentColor); used on resource cards.
+{% endcomment %}
+{% if label %}
+  <span class="ds-type">
+    {% if icon %}<i class="ds-type__icon fal {{ icon }}" aria-hidden="true"></i>{% endif %}
+    <span class="ds-type__label">{{ label }}</span>
+  </span>
+{% endif %}

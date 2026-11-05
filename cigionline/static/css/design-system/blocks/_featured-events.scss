@@ -1,0 +1,55 @@
+// =============================================================================
+// Design System — Featured Events (Events listing, 1253:27953)
+// Module-title rail | one large image event card | two stacked text cards with
+// a hairline between them and a vertical rule separating the columns. Cards are
+// the shared `event-browse` variant; the feature column adds the image on top.
+// =============================================================================
+
+.ds-featured-events {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1.25fr);
+  gap: var(--space-48);
+  padding-block: var(--space-section-y);
+
+  &__feature {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+  }
+
+  &__image img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  &__stack {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+
+    // Vertical rule centred in the gutter to the feature column.
+    &::before {
+      content: '';
+      position: absolute;
+      left: calc(-1 * var(--space-24));
+      top: 0;
+      bottom: 0;
+      width: var(--border-divider);
+      background: var(--surface-border);
+    }
+  }
+
+  &__stack-item + &__stack-item {
+    border-top: var(--border-divider) solid var(--surface-border);
+    padding-top: var(--space-24);
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: var(--space-32);
+
+    &__stack::before { content: none; }
+  }
+}

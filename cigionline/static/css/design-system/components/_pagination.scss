@@ -1,0 +1,157 @@
+// =============================================================================
+// Design System — Carousel pagination
+// Shared Swiper pagination treatment used by every carousel: inactive slides
+// are small dots; the active slide shows its NUMBER in the section accent.
+// Pair with the `paginationBullet` renderer in js/design-system/carousel.js.
+// Colours: inactive = brand grey; active number = --accent (red by default).
+// =============================================================================
+
+.ds-pagination {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+
+  // Each bullet is an inline-flex box so a dot can become a number in place.
+  .swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    margin: 0 !important;
+    padding: 0;
+    border-radius: 50%;
+    // Surface token, not a scoped override: black on light, white on dark —
+    // resolved by the NEAREST surface. An ancestor-scoped `.ds-surface--dark &`
+    // rule painted white dots on light carousels inside dark pages (BugHerd
+    // #81, #37).
+    background: var(--surface-rule, var(--color-brand-black));
+    opacity: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    @include transition(background-color var(--motion-duration-fast) var(--motion-ease-standard));
+
+  }
+
+  // The number lives inside every bullet but only shows when active.
+  &__num { display: none; }
+
+  .swiper-pagination-bullet-active {
+    width: auto;
+    height: auto;
+    background: transparent;
+    // The box grows to the number instantly (width/height aren't transitioned),
+    // so a transitioned fill would linger as a full-size circle fading out —
+    // a white flash on dark surfaces. Drop the fill and the dot radius at once.
+    border-radius: 0;
+    transition: none;
+
+    .ds-pagination__num {
+      display: inline-block;
+      @include header-4; // 32px Futura Demi (per the carousel UI spec)
+      line-height: 1;
+      // Interactive accent: red on theme/topic pages, green on the DPH hub
+      // (BugHerd #244 — "should stay red, not the topics colour").
+      color: var(--accent-ui);
+      // Ease the number in on activation (BugHerd #105). Animated on the
+      // number itself, not the bullet fill, so the #37 white-flash stays fixed.
+      animation: ds-pagination-num-in var(--motion-duration-hover) var(--motion-ease-in-out) both;
+    }
+  }
+}
+
+@keyframes ds-pagination-num-in {
+  from { opacity: 0; transform: translateY(2px); }
+  to { opacity: 1; transform: none; }
+}
+
+// =============================================================================
+// Pager — numbered page links + prev/next arrows (Experts Grid). Distinct from
+// the carousel dot/number pagination above: every page number shows, sitting on
+// a grey baseline; the active number is larger (Header 4) + accent, with an
+// accent underline. Arrows reuse .ds-slider-arrow. Built by expert-grid.js.
+// =============================================================================
+.ds-pager {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-24);
+  // Shrink to the control cluster so the baseline below is partial-width —
+  // it underlines the pager itself, not the whole results column. The
+  // full-width divider ABOVE the pager is the results grid's last row rule.
+  width: fit-content;
+  margin-inline: auto;
+  // Never wider than the results column (BugHerd #490): a long page range
+  // outgrew phone viewports and panned the whole page sideways. The pager
+  // scrolls internally instead; every page link stays reachable.
+  max-width: 100%;
+  overflow-x: auto;
+
+  // The grey baseline spans the control cluster — arrows included (1366:131052).
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--border-divider);
+    background: var(--surface-border);
+  }
+
+  &__pages {
+    display: flex;
+    align-items: stretch; // equal-height boxes so the underline meets the baseline
+    align-self: stretch;
+  }
+
+  // Numbers (and the ellipsis) sit down on the baseline; the enlarged active
+  // number grows upward.
+  &__ellipsis {
+    display: flex;
+    align-items: flex-end;
+    padding: var(--space-24) var(--space-8);
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: var(--font-size-18);
+    line-height: 1;
+    color: var(--surface-text);
+  }
+
+  &__page {
+    display: flex;
+    align-items: flex-end;
+    font-family: var(--font-heading);
+    font-weight: 400; // Futura Book
+    font-size: var(--font-size-18);
+    letter-spacing: -0.54px;
+    line-height: 1;
+    color: var(--surface-text);
+    background: none;
+    border: 0;
+    border-bottom: 4px solid transparent;
+    padding: var(--space-24) var(--space-32);
+    cursor: pointer;
+    @include transition(color var(--motion-duration-fast) var(--motion-ease-standard));
+
+    &--active {
+      // Active number enlarged per the router frame: Futura Demi 32 accent
+      // over the 4px accent underline.
+      font-size: var(--font-size-32);
+      font-weight: 500;
+      letter-spacing: var(--tracking-heading);
+      // Interactive accent: a series --brand-accent where one is set (e.g. PP
+      // blue, 1366:133899), the DPH green on the hub, red under a theme or topic
+      // colour (BugHerd #244).
+      color: var(--accent-ui);
+      border-bottom-color: var(--accent-ui);
+    }
+  }
+
+  // Disabled prev/next at the ends of the range — rendered as <span>s
+  // (no href, hidden from AT), styled dim and inert.
+  .ds-slider-arrow[disabled],
+  span.ds-slider-arrow {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+}

@@ -8,12 +8,12 @@ from core.models import (
     ThemeablePageAbstract,
     Auth0ProtectedPageAbstract,
 )
+from core.routers import RouterServeMixin
 from django.db import models
 from django.db.models import F
-from mediavalet.panels import MediaValetImageChooserPanel
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from publications.models import T7PublicationPage
-from streams.blocks import AdditionalFileBlock, SurveyFindingsCountryBlock, Think7ChairBlock
+from streams.blocks import AdditionalFileBlock, FacetedListingBlock, SurveyFindingsCountryBlock, Think7ChairBlock
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
@@ -36,7 +36,31 @@ from streams.blocks import (
     GESSlideDeckBlock,
     GESDataBlock,
     GESRawDataBlock,
-    PersonsListBlock
+    PersonsListBlock,
+    AccordionModuleBlock,
+    BannerBlock,
+    ComposableTabsBlock,
+    CTAImageBlock,
+    EventsCarouselBlock,
+    ExpertsCarouselBlock,
+    ExpertsGridBlock,
+    GalleryTextBlock,
+    ImageTextBlock,
+    NewsCarouselBlock,
+    NewsGridBlock,
+    NewsletterSubscriptionBlock,
+    NewsletterSignupCTABlock,
+    ProgramGridBlock,
+    ProgramsCarouselBlock,
+    ProgramSpotlightBlock,
+    ResourceBentoBlock,
+    ResourceCarouselBlock,
+    StatsBlock,
+    SupportingMaterialsBlock,
+    TextCardGridBlock,
+    TrendingIssuesBlock,
+    VideoCarouselBlock,
+    VideoTextBlock,
 )
 
 
@@ -71,6 +95,7 @@ class ProjectListPage(Page):
 
 
 class ProjectPage(
+    RouterServeMixin,
     Auth0ProtectedPageAbstract,
     ArchiveablePageAbstract,
     BasicPageAbstract,
@@ -86,6 +111,7 @@ class ProjectPage(
     )
     body = StreamField(
         BasicPageAbstract.body_default_blocks + [
+            BasicPageAbstract.body_composable_tabs_block,
             BasicPageAbstract.body_poster_block,
             BasicPageAbstract.body_recommended_block,
             BasicPageAbstract.body_text_border_block,
@@ -116,6 +142,14 @@ class ProjectPage(
         on_delete=models.SET_NULL,
         related_name='+',
         verbose_name='Banner Video',
+    )
+    # The alt hero's top/bottom gradient keeps white text legible over any
+    # photo. Some hero images fight it (Tim, BugHerd #401: Space Governance),
+    # so editors can switch it off per program. Program pages only.
+    show_hero_overlay = models.BooleanField(
+        default=True,
+        verbose_name='Show photo vignette',
+        help_text='The dark gradient over the hero background image. Turn off when it works against the photo.',
     )
     project_contacts = StreamField(
         [
@@ -154,8 +188,6 @@ class ProjectPage(
         blank=True,
         use_json_field=True,
     )
-    primary_themes = ParentalManyToManyField('research.ThemePage', blank=True, related_name='primary_themes')
-    secondary_themes = ParentalManyToManyField('research.ThemePage', blank=True)
     survey_findings = StreamField(
         [
             ('country', SurveyFindingsCountryBlock()),
@@ -189,7 +221,6 @@ class ProjectPage(
 
     content_panels = [
         BasicPageAbstract.title_panel,
-        BasicPageAbstract.hero_link_panel,
         BasicPageAbstract.body_panel,
         MultiFieldPanel(
             [
@@ -213,8 +244,9 @@ class ProjectPage(
         ),
         MultiFieldPanel(
             [
-                MediaValetImageChooserPanel('image_hero'),
-                MediaValetImageChooserPanel('image_banner'),
+                FieldPanel('image_hero'),
+                FieldPanel('show_hero_overlay'),
+                FieldPanel('image_banner'),
                 FieldPanel('video_banner'),
             ],
             heading='Images',
@@ -222,8 +254,6 @@ class ProjectPage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('primary_themes'),
-                FieldPanel('secondary_themes'),
                 FieldPanel('topics'),
                 FieldPanel('related_files'),
                 FieldPanel('subscribe_page'),
@@ -264,6 +294,7 @@ class ProjectPage(
         ArchiveablePageAbstract.archive_panel,
         BasicPageAbstract.submenu_panel,
         ThemeablePageAbstract.theme_panel,
+        ThemeablePageAbstract.surface_panel,
         Auth0ProtectedPageAbstract.auth0_protected_panel,
     ]
 
@@ -299,6 +330,19 @@ class ProjectPage(
         ).in_bulk(featured_page_ids)
         return [pages[x] for x in featured_page_ids]
 
+    # Theme dirs that still keep a legacy microsite fork (retiring per
+    # legacy-page-conversion-plan §7a). Any other theme (e.g. net-new program
+    # shells like Responsible Technology) renders the DS template, mirroring
+    # ArticlePage.ART_DIRECTED_THEME_DIRS.
+    THEMED_FORK_DIRS = {'freedom_of_thought', 'ges', 'igc', 'nss', 'ogbv'}
+
+    def theme_fork_template(self):
+        # Shared with renders_legacy_fork, so a fork project's body blocks
+        # render their pre-redesign templates too (BugHerd #522).
+        if self.theme and self.get_theme_dir() in self.THEMED_FORK_DIRS:
+            return f'themes/{self.get_theme_dir()}/project_page.html'
+        return None
+
     def get_template(self, request, *args, **kwargs):
         site = self.get_site()
 
@@ -306,9 +350,7 @@ class ProjectPage(
             return 'think7/project_page.html'
 
         standard_template = super(ProjectPage, self).get_template(request, *args, **kwargs)
-        if self.theme:
-            return f'themes/{self.get_theme_dir()}/project_page.html'
-        return standard_template
+        return self.theme_fork_template() or standard_template
 
     def get_additional_files(self):
         body = self.body
@@ -326,6 +368,15 @@ class ProjectPage(
 
         context['featured_pages'] = self.get_featured_pages()
         context['additional_files'] = self.get_additional_files()
+        # Image alt-hero crumbs (BugHerd #77): same Home > Theme trail as the
+        # content-hero presenter (standardized trail, IA 2026-08-26) — the
+        # tree walk can't surface the theme, and both hero variants must agree.
+        from core.heroes import _rel_url
+        membership = self.theme_memberships.select_related('theme').first()
+        crumbs = [{'title': 'Home', 'url': '/'}]
+        if membership:
+            crumbs.append({'title': membership.theme.title, 'url': _rel_url(membership.theme)})
+        context['hero_crumbs'] = crumbs
         return context
 
     class Meta:
@@ -499,7 +550,7 @@ class TopicPage(
                     label='Page',
                 ),
             ],
-            heading='Featuerd Content',
+            heading='Featured Content',
             classname='collapsible collapsed',
         ),
     ]
@@ -587,19 +638,106 @@ class ThemeListPage(Page):
 
 
 class ThemePage(
+    # Serves the faceted listing's AJAX results partial (filter swaps, lazy tab
+    # loads) — without it a filter click on a theme listing got the whole page
+    # back. Needed now that the body hosts a listing directly (sync 2026-09-21).
+    RouterServeMixin,
     ArchiveablePageAbstract,
     BasicPageAbstract,
     SearchablePageAbstract,
     Page,
 ):
+    class Accents(models.TextChoices):
+        AI_TECH = 'ai-tech', 'AI & Tech (blue)'
+        DATA_ECONOMY = 'data-economy', 'Data & Economy (teal)'
+        SECURITY = 'security', 'Security (olive)'
+        GOVERNANCE = 'governance', 'Governance (mauve)'
+
     description = RichTextField(blank=True, null=False, features=['h2', 'h3', 'h4', 'hr', 'ol', 'ul', 'bold', 'italic', 'link'])
+    accent = models.CharField(
+        max_length=16,
+        blank=True,
+        choices=Accents.choices,
+        help_text='Topic accent colour applied to this theme across the site.',
+    )
+    # Module-composed landing page (theme_page.html: hero + body). Same DS module
+    # set as the homepage — themes are the same species of composed landing page —
+    # minus the hero blocks (the theme hero is dev-owned; an authored hero would
+    # double up). DS modules only, not the legacy prose blocks the
+    # BasicPageAbstract default would inherit.
+    body = StreamField(
+        [
+            ('banner', BannerBlock()),
+            ('news_grid', NewsGridBlock()),
+            ('news_carousel', NewsCarouselBlock()),
+            ('experts_grid', ExpertsGridBlock()),
+            ('experts_carousel', ExpertsCarouselBlock()),
+            ('program_spotlight', ProgramSpotlightBlock()),
+            ('program_grid', ProgramGridBlock()),
+            ('programs_carousel', ProgramsCarouselBlock()),
+            ('events_carousel', EventsCarouselBlock()),
+            ('resource_carousel', ResourceCarouselBlock()),
+            ('resource_bento', ResourceBentoBlock()),
+            ('cta_image', CTAImageBlock()),
+            ('image_text', ImageTextBlock()),
+            ('text_card_grid', TextCardGridBlock()),
+            ('stats', StatsBlock()),
+            ('video_text', VideoTextBlock()),
+            ('gallery_text', GalleryTextBlock()),
+            ('trending_issues', TrendingIssuesBlock()),
+            ('accordion_module', AccordionModuleBlock()),
+            ('composable_tabs', ComposableTabsBlock()),
+            ('supporting_materials', SupportingMaterialsBlock()),
+            ('video_carousel', VideoCarouselBlock()),
+            ('newsletter_subscription', NewsletterSubscriptionBlock()),
+            ('newsletter_signup_cta', NewsletterSignupCTABlock()),
+            # Top-level Faceted Listing (sync 2026-09-21): a topic pill lands on
+            # the theme page's resource listing with the topic pre-selected
+            # (core.router_links). The block already auto-scopes to the theme's
+            # programs; before this it was placeable only inside Tabs.
+            ('faceted_listing', FacetedListingBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
+
+    # semantic accent slug -> the colour-named accent classes in _surface.scss
+    ACCENT_COLOURS = {
+        Accents.AI_TECH: 'blue',
+        Accents.DATA_ECONOMY: 'teal',
+        Accents.SECURITY: 'olive',
+        Accents.GOVERNANCE: 'mauve',
+    }
 
     @property
     def theme_name(self):
         return self.title
 
+    @property
+    def accent_colour(self):
+        return self.ACCENT_COLOURS.get(self.accent, 'red')
+
+    @property
+    def accent_surface_class(self):
+        return f'ds-surface--accent-{self.accent_colour}' if self.accent else ''
+
     content_panels = Page.content_panels + [
         FieldPanel('description'),
+        FieldPanel('accent'),
+        # Hero background image (BugHerd #61): with an image the page renders
+        # the shared alt hero (image + breadcrumb + title + description);
+        # without one it falls back to the accent-surface content hero.
+        FieldPanel('image_hero', heading='Hero background image'),
+        InlinePanel(
+            'theme_programs',
+            heading='Programs',
+            label='Program',
+            help_text='The programs listed under this theme, in display order.',
+        ),
+        # The theme page renders hero + body (theme_page.html) — authors compose
+        # the programs/resource/expert/subscribe sections from DS modules. The
+        # body panel was missing here, so content entry could only add programs.
+        BasicPageAbstract.body_panel,
     ]
     promote_panels = Page.promote_panels + [
         SearchablePageAbstract.search_panel,
@@ -620,12 +758,57 @@ class ThemePage(
     subpage_types = []
     templates = 'research/theme_page.html'
 
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        # Theme pages are light. Body modules default to surface=inherit, which
+        # needs a base surface on <main> to resolve the --surface-* tokens —
+        # without one the token chain collapses and surface-drawn details (the
+        # module-title top rule) vanish (BugHerd #63/#69).
+        context['main_surface'] = 'light'
+        if self.accent:
+            context['main_accent_scheme'] = self.accent_colour
+        # Standardized trail (IA 2026-08-26, supersedes #341's Home > Topics):
+        # a theme sits right under Home in the trail, and the current page
+        # drops per #152 — so a theme page shows Home alone.
+        context['hero_crumbs'] = [{'title': 'Home', 'url': '/'}]
+        # Theme pages lead with the dark image hero, so the nav is dark too
+        # (BugHerd #73) — same treatment as the homepage.
+        context['header_surface'] = 'dark'
+        return context
+
     class Meta:
         indexes = [
             models.Index(fields=['archive'])
         ]
         verbose_name = 'Theme Page'
         verbose_name_plural = 'Theme Pages'
+
+
+class ThemeProgram(Orderable):
+    """
+    The authoritative theme -> program edge. A program appears under a theme
+    only if a row exists here; ordering is editorial (drag in the InlinePanel).
+    """
+    theme = ParentalKey('research.ThemePage', related_name='theme_programs')
+    program = models.ForeignKey(
+        'research.ProjectPage',
+        on_delete=models.CASCADE,
+        related_name='theme_memberships',
+    )
+    label = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text='Optional display label; defaults to the program page title.',
+    )
+
+    panels = [
+        PageChooserPanel('program', ['research.ProjectPage']),
+        FieldPanel('label'),
+    ]
+
+    @property
+    def display_title(self):
+        return self.label or self.program.title
 
 
 class CountryListPage(Page):
@@ -706,7 +889,7 @@ class CountryPage(
                     label='Page',
                 ),
             ],
-            heading='Featuerd Content',
+            heading='Featured Content',
             classname='collapsible collapsed',
         ),
     ]

@@ -1,0 +1,22 @@
+{% comment %}
+  Shared breadcrumb trail. Colour inherits (currentColor) so the host hero sets
+  light/dark; the ">" separator is always brand red.
+  Context: crumbs — list of {title, url, current}.
+{% endcomment %}
+{% if crumbs %}
+  <nav class="ds-breadcrumbs" aria-label="Breadcrumb">
+    <ol class="ds-breadcrumbs__list">
+      {% for crumb in crumbs %}
+        <li class="ds-breadcrumbs__item">
+          {% if not forloop.first %}<span class="ds-breadcrumbs__sep" aria-hidden="true">&gt;</span>{% endif %}
+          {% if crumb.url and not crumb.current %}
+            {# title attr: truncated crumbs (#343) still expose the full label on hover. #}
+            <a class="ds-breadcrumbs__crumb" href="{{ crumb.url }}" title="{{ crumb.title }}">{{ crumb.title }}</a>
+          {% else %}
+            <span class="ds-breadcrumbs__crumb"{% if crumb.current %} aria-current="page"{% endif %} title="{{ crumb.title }}">{{ crumb.title }}</span>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+  </nav>
+{% endif %}

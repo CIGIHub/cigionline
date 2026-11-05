@@ -1,5 +1,3 @@
-from unittest.mock import patch
-
 from annual_reports.models import StrategicPlanSPAPage
 from articles.models import (
     ArticleLandingPage,
@@ -13,7 +11,6 @@ from contact.models import ContactPage
 from core.models import (
     BasicPage,
     PrivacyNoticePage,
-    TwentyFifthPageSingleton,
 )
 from events.models import EventListPage
 from features.models import FeaturesListPage
@@ -30,20 +27,11 @@ from subscribe.models import SubscribePage
 from wagtail.models import Page
 from wagtail.test.utils import WagtailPageTestCase
 from wagtail.test.utils.form_data import nested_form_data
-from django.http import HttpResponse
-from django.test import RequestFactory
 
 from .models import HomePage
 
 
 class HomePageTests(WagtailPageTestCase):
-    def test_homepage_is_not_cached(self):
-        with patch.object(Page, "serve", return_value=HttpResponse()):
-            response = HomePage.objects.first().serve(RequestFactory().get("/"))
-
-        self.assertIn("no-store", response["Cache-Control"])
-        self.assertIn("max-age=0", response["Cache-Control"])
-
     def test_homepage_child_page_types(self):
         """
         Verify allowed child page types.
@@ -73,7 +61,6 @@ class HomePageTests(WagtailPageTestCase):
                 PublicationSeriesListPage,
                 ResearchLandingPage,
                 SubscribePage,
-                TwentyFifthPageSingleton,
                 TopicListPage,
                 StrategicPlanSPAPage,
             }

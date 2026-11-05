@@ -1,0 +1,145 @@
+// =============================================================================
+// Design System — Tabs component (shared)
+// Horizontal tab strip + content panels. Consumed by the Horizontal Tabs block
+// and the Secondary Hero. Full-bleed black bar; white tabs with a red active
+// underline; the active panel cross-fades in.
+// =============================================================================
+
+.ds-tabs {
+  // --- Tab strip (full-bleed charcoal bar, 1595:93752) ----------------------
+  &__bar {
+    // KP: black tab band (BugHerd #84). On a charcoal page the band follows the
+    // surface instead, so the DPH hub reads charcoal with its green active
+    // underline (BugHerd #168) — the underline already tracks --accent.
+    background: var(--ds-tabs-bar-bg, var(--color-brand-black));
+    padding-block: var(--space-24);
+    // The strip holds while its panel scrolls (Juode + Tia, BugHerd #218), and
+    // parks under the pinned header row rather than sliding beneath it. Below
+    // the site header (100) and the event hero's pin-bar (90) in the stack.
+    position: sticky;
+    top: var(--ds-header-pinned-height, 0px);
+    z-index: 80;
+  }
+
+  // The list is a .container too (gutters); one continuous white hairline runs
+  // under all tabs. Drawn as a pseudo inset by the container gutter — a border
+  // on the list spans its padding box, i.e. the full page width (BugHerd #84).
+  &__list {
+    display: flex;
+    align-items: stretch;
+    gap: var(--space-24);
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: var(--space-section-x);
+      right: var(--space-section-x);
+      bottom: 0;
+      height: var(--border-divider);
+      background: var(--color-border-white-black);
+    }
+  }
+
+  &__tab {
+    @include header-6;          // 18px Futura
+    font-weight: 400;           // Book (inactive)
+    color: var(--color-brand-white);
+    flex: 1 1 0;
+    min-width: 0;
+    text-align: center;
+    background: transparent;
+    border: 0;
+    border-bottom: var(--border-tab) solid transparent; // reserves space; red when active
+    padding: var(--space-24) var(--space-32);
+    margin-bottom: calc(-1 * var(--border-divider)); // overlap the list hairline
+    position: relative; // paint the active underline above the ::after hairline
+    z-index: 1;
+    cursor: pointer;
+    // No hover lift — the guide's tab spec has no hover motion ("no motion on
+    // every hover state"); only the colour/weight state change transitions.
+    @include transition(color var(--motion-duration-fast) var(--motion-ease-standard));
+
+    // Explicit hover colour: without one, the legacy global `a:hover
+    // { color: #bf0332 }` bled through and turned DPH tabs red (BugHerd #200).
+    // The accent resolves green on the hub, red elsewhere.
+    &:hover,
+    &:focus-visible { color: var(--accent, var(--color-brand-red)); }
+  }
+
+  &__tab--active {
+    font-weight: 500;           // Demi (active)
+    // Follows the page accent (red default; DPH hub tabs are green, 1567:80899).
+    border-bottom-color: var(--accent, var(--color-brand-red));
+  }
+
+  // --- Panels ---------------------------------------------------------------
+  &__panels {
+    padding-block: var(--space-section-y);
+  }
+
+  // Composable-tab panels hold full-bleed DS modules that carry their own
+  // section rhythm — no panel padding, so a surfaced module (e.g. the DPH
+  // stats band) sits flush under the strip (1567:80871: tabs → stats, 0 gap).
+  .ds-composable-tabs__panels { padding-block: 0; }
+
+  &__panel {
+    @include paragraph-1;
+    color: var(--color-text-black-white);
+
+    &[hidden] { display: none; }
+
+    // Cross-fade the active panel in on tab change (300ms), per the animation
+    // guide (editorial: fade, not slide).
+    &:not([hidden]) {
+      animation: ds-tabs-panel-in var(--motion-duration-hover) var(--motion-ease-standard);
+
+      @include reduce-motion-safe { animation: none; }
+    }
+  }
+
+  // --- Mobile: tabs scroll horizontally -------------------------------------
+  @media (max-width: 768px) {
+    &__list {
+      gap: var(--space-16);
+      overflow-x: auto;
+
+      // The strip's own scrollbar sat on the hairline, and iOS draws its thumb
+      // as a grey bar — so the line read as broken (Evan, BugHerd #216).
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      &::-webkit-scrollbar { display: none; }
+
+      // The hairline has to span the SCROLLED width, not the visible box. The
+      // absolutely positioned pseudo is laid out against the scrollport, so it
+      // stayed put while the tabs slid under it and the line came apart. A
+      // local-attachment gradient scrolls with the content and always runs the
+      // full strip.
+      &::after { content: none; }
+
+      background-image: linear-gradient(
+        to top,
+        var(--color-border-white-black) var(--border-divider),
+        transparent var(--border-divider)
+      );
+      background-attachment: local;
+    }
+
+    &__tab {
+      // Equal widths, evenly spaced (BugHerd #143): few tabs fill the bar so
+      // no bare hairline trails past the last tab. The max-content floor stops
+      // labels from wrapping — pages with many tabs still scroll.
+      flex: 1 1 0;
+      min-width: max-content;
+      padding: var(--space-16) var(--space-16);
+    }
+
+    &__panels { padding-block: var(--space-48); }
+  }
+}
+
+@keyframes ds-tabs-panel-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}

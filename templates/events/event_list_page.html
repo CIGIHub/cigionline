@@ -1,36 +1,44 @@
 {% extends "base.html" %}
-{% load webpack_loader %}
-
-{% block extra_css %}
-  {% render_bundle 'eventListPage' 'css' %}
-{% endblock %}
-{% block extra_js %}
-  {% render_bundle 'eventListPage' 'js' attrs='defer' %}
-{% endblock %}
+{% load cards heroes wagtailcore_tags %}
+{% comment %}
+  Events landing (EventListPage) — author-composed page (BugHerd #135). Image
+  alt-hero (breadcrumb · H1 · intro) over the authored body modules: the
+  Resource Bento, the browse listing as a faceted-listing block (card type:
+  Event — search · topic · location · type · date calendar, upcoming first;
+  core.faceted_listing._event_handler), and anything else from the module
+  library. RouterServeMixin serves the block's AJAX partial swaps. The old
+  hardcoded Featured Events section and page-level router are retired; Think 7
+  keeps its own template (get_template fork).
+{% endcomment %}
 
 {% block content %}
-  {% include "includes/heroes/hero_event_list.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
+{% if self.image_hero and not self.body|starts_with_hero %}
+  {% include "includes/alt_hero.html" with image=self.image_hero heading=self.title heading_tag="h1" crumbs=hero_crumbs description=self.subtitle %}
+{% endif %}
+{% comment %}
+  Surface inherits the page setting (base.html puts it on <main>) so the Dark
+  option reaches the page and the header together — BugHerd #136.
+{% endcomment %}
+<div class="ds-surface ds-surface--inherit ds-surface--accent-red">
+  {% if not self.image_hero and not self.body|starts_with_hero %}
+    {# No authored hero — the DS listing hero (breadcrumb · title · subtitle). #}
+    {% page_hero self %}
+  {% endif %}
 
-  <section class="events-page-featured-events">
-    <div class="container">
-      <h2>Featured</h2>
-      <div class="row featured-event-row">
-        {% for item in featured_events %}
-          <div class="col-md-4 featured-event-col">
-            {% include "includes/features/feature_event.html" with event=item %}
-          </div>
-        {% endfor %}
-      </div>
-    </div>
-  </section>
-  <section>
-    <div class="container">
-      <div class="row">
-        <div class="col">
-          <div id="events-search-table">
+  {% for section in self.body|body_sections %}
+    {% if section.kind == 'module' %}
+      {% include_block section.block %}
+    {% else %}
+      <div class="ds-surface ds-surface--light">
+        <div class="ds-reading ds-reading--section ds-container">
+          <div class="ds-reading__main">
+            <div class="ds-prose">
+              {% for block in section.blocks %}{% include_block block %}{% endfor %}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    {% endif %}
+  {% endfor %}
+</div>
 {% endblock content %}

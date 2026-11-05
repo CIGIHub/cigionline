@@ -1,0 +1,114 @@
+// =============================================================================
+// Design System — Motion mixins (interaction library primitives)
+//
+// The shared API for animation. Consumes the motion tokens (_tokens.scss) and
+// centralises the `prefers-reduced-motion` guard so NO component writes its own.
+// Authoritative spec + per-component registry: docs/redesign/animation-guide.md.
+//
+// Rules for agents adding motion:
+//   1. Never hardcode a duration/easing — use the tokens via these mixins.
+//   2. Never write a bare `transition:` — use @include transition() so
+//      reduced-motion is handled. For transforms/keyframes use reduce-motion-safe.
+//   3. Match the guide's intent: micro = 200ms, hover = 300ms, entry = 500–600ms.
+//   4. No bounce/overshoot/spring. No motion on every hover; only where it earns it.
+// =============================================================================
+
+// Standard transition. Pass any transition shorthand(s); the reduced-motion
+// guard is emitted automatically. A bare property name (no duration) gets the
+// hover tier by default — `transition: color` alone is 0s, i.e. no motion.
+//   .foo { @include transition(color var(--motion-duration-hover) var(--motion-ease-standard)); }
+//   .bar { @include transition(color, background-color); } // both at hover tier
+@mixin transition($props...) {
+  $out: ();
+
+  @each $prop in $props {
+    @if length($prop) == 1 {
+      $out: append($out, $prop var(--motion-duration-hover) var(--motion-ease-standard), comma);
+    } @else {
+      $out: append($out, $prop, comma);
+    }
+  }
+
+  transition: $out;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+// Wrap motion that a transition can't express (transform/scale, keyframes,
+// JS-driven reveals) so it is removed under reduced-motion.
+//   .foo { @include reduce-motion-safe { transform: none; } }
+@mixin reduce-motion-safe {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
+// --- Named interaction patterns ---------------------------------------------
+// Shared hover behaviours so "all buttons/links" feel identical. Extend this
+// list as patterns are confirmed (see the guide's registry); prefer adding a
+// pattern here over re-implementing in a component.
+
+// Underline-on-hover (tertiary links, "Read More", breadcrumb-style links).
+// text-decoration (not border-bottom) so the line follows each wrapped text
+// line — a border on a block/flex anchor would span the full row past the
+// text on multi-line links.
+@mixin hover-underline {
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+  @include transition(text-decoration-color var(--motion-duration-micro) var(--motion-ease-standard));
+
+  &:hover,
+  &:focus-visible {
+    // Restate the whole decoration, not just the color: the legacy global
+    // `a:hover { text-decoration: none }` (still in the bundle) outranks the
+    // BASE rule during hover and would strip the line.
+    text-decoration: underline;
+    text-decoration-color: currentColor;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
+  }
+}
+
+// hover-underline for links whose text sits inside an ATOMIC inline child
+// (e.g. the inline-flex .ds-icon-label): text-decoration doesn't propagate
+// into those boxes, so the inner text is decorated directly and driven from
+// the link's hover.
+@mixin hover-underline-within($target: '.ds-icon-label__text') {
+  text-decoration: none;
+
+  #{$target} {
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
+    @include transition(text-decoration-color var(--motion-duration-micro) var(--motion-ease-standard));
+  }
+
+  &:hover #{$target},
+  &:focus-visible #{$target} { text-decoration-color: currentColor; }
+}
+
+// Icon nudge — chevron/arrow slides in its travel direction on hover.
+//   $axis-translate e.g. translateX(4px)
+@mixin hover-nudge($transform) {
+  @include transition(transform var(--motion-duration-micro) var(--motion-ease-standard));
+
+  &:hover &__icon,
+  &:focus-visible &__icon { transform: $transform; }
+}
+
+// -----------------------------------------------------------------------------
+// Keyboard focus ring (BugHerd #376): text links and disclosure summaries fell
+// back to the UA default blue ring, which read as a random blue box against
+// the per-component focus styles. One consistent surface-aware ring — a colour
+// pair token guarantees contrast on every surface. Zero-specificity :where so
+// any component's richer focus treatment still wins; .ds-button repurposes
+// `outline` as its border ring, so it keeps its own.
+:where(a, summary):not(.ds-button):focus-visible {
+  outline: 2px solid var(--surface-text, var(--color-text-black-white));
+  outline-offset: 2px;
+}

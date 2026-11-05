@@ -1,0 +1,109 @@
+// =============================================================================
+// Design System — Audio player (Plyr, custom controls)
+// Skins Plyr's custom controls to the design: a rounded box
+// with a large circular blue play button, a current/duration time row, a
+// blue-fill / black-track seek bar, and rewind/forward skips below.
+// =============================================================================
+.ds-audio {
+  width: 100%;
+
+  // Player accent (the blue play circle + seek fill). No brand token for it yet —
+  // single source here; map to the Policy Prompt brand blue if/when tokenised.
+  --ds-player-accent: #2563eb;
+  // Box background: white in the podcast (pink) hero; light-grey in the opinion
+  // (light) content hero. Overridden per-hero below.
+  --ds-player-bg: var(--color-brand-white);
+
+  .plyr--audio { background: transparent; }
+
+  // The controls bar IS the box (audio has no media area).
+  .plyr__controls.ds-player {
+    display: flex;
+    align-items: center;
+    gap: var(--space-16);
+    width: 100%;
+    padding: var(--space-8) var(--space-16);
+    background: var(--ds-player-bg);
+    border-radius: var(--space-4);
+  }
+
+  // Large circular play button.
+  .ds-player__play {
+    flex: 0 0 auto;
+    width: 62px;
+    height: 62px;
+    padding: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--ds-player-accent);
+
+    svg { width: 100%; height: 100%; }
+    .icon--pressed { display: none; }
+  }
+
+  &.plyr--playing,
+  .plyr--playing {
+    .ds-player__play .icon--not-pressed { display: none; }
+    .ds-player__play .icon--pressed { display: block; }
+  }
+
+  .ds-player__body {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  // Time row: current (left) · duration (right).
+  .ds-player__times {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    .plyr__time {
+      font-family: var(--font-body, 'Source Serif 4', serif);
+      font-size: var(--font-size-14);
+      color: var(--color-brand-black);
+    }
+  }
+
+  // Seek bar: blue played fill, black remaining track.
+  .plyr__progress {
+    width: 100%;
+    --plyr-color-main: var(--ds-player-accent);
+    --plyr-range-fill-background: var(--ds-player-accent);
+    --plyr-audio-range-track-background: var(--color-brand-black);
+    --plyr-range-track-height: 3px;
+    --plyr-range-thumb-height: 0px;
+    --plyr-range-thumb-background: var(--ds-player-accent);
+  }
+
+  // Rewind / forward row.
+  .ds-player__skips {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    .ds-player__skip {
+      padding: 0;
+      background: transparent;
+      color: var(--color-brand-black);
+      svg { width: 24px; height: 16px; }
+    }
+
+    // Speed cycle chip (BugHerd #298) — same quiet type as the time labels.
+    .ds-player__speed {
+      padding: 0;
+      background: transparent;
+      color: var(--color-brand-black);
+      font-family: var(--font-body, 'Source Serif 4', serif);
+      font-size: var(--font-size-14);
+      line-height: 1;
+      min-width: 3.5em; // "0.75×" must not shift the skip buttons
+    }
+  }
+}
+
+// Opinion content hero shows the player on a light-grey box.
+.ds-hero--content .ds-audio { --ds-player-bg: var(--color-brand-light-grey); }

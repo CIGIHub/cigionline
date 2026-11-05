@@ -1,0 +1,6 @@
+{% comment %}Shared header search form (posts to the resources router).{% endcomment %}<form class="ds-header__search" role="search" action="{% url 'search' %}" method="get">
+  <input class="ds-header__search-input" type="search" name="q" placeholder="{{ settings.core.HeaderSettings.search_placeholder|default:'Search' }}" aria-label="Search the site">
+  <button class="ds-header__search-btn" type="submit" aria-label="Search">
+    <svg viewBox="0 0 19 19" aria-hidden="true" focusable="false"><path fill="currentColor" d="M10.707 16C8.93205 15.9996 7.20823 15.4054 5.81003 14.312L1.41403 18.708L3.05176e-05 17.294L4.39603 12.898C3.30203 11.4997 2.70746 9.77544 2.70703 8C2.70703 3.589 6.29603 0 10.707 0C15.118 0 18.707 3.589 18.707 8C18.707 12.411 15.118 16 10.707 16ZM10.707 2C7.39803 2 4.70703 4.691 4.70703 8C4.70703 11.309 7.39803 14 10.707 14C14.016 14 16.707 11.309 16.707 8C16.707 4.691 14.016 2 10.707 2Z"/></svg>
+  </button>
+</form>

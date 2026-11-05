@@ -1,0 +1,2 @@
+{% comment %} Card title — link when `url`, else plain. Context: url, title. {% endcomment %}
+{% if url %}<a class="ds-card__title" href="{{ url }}">{{ title }}</a>{% else %}<span class="ds-card__title">{{ title }}</span>{% endif %}

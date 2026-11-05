@@ -1,0 +1,20 @@
+{% load cards wagtailcore_tags %}
+<article class="ds-card ds-card--resource-compact ds-search-card">
+  <div class="ds-card__body">
+    {% include "includes/card/_pills.html" with pills=item.topics.all|topic_pills:item %}
+    <a class="ds-card__title" href="{% pageurl item %}">{{ item|display_title }}</a>
+    {% if item.search_highlights %}
+      {% comment %}ES highlight fragments — indexed body text with the matched terms wrapped in <em> (styled as the highlight), so they render unescaped.{% endcomment %}
+      <p class="ds-card__excerpt ds-search-card__snippet">&hellip;{% for fragment in item.search_highlights %}{{ fragment|safe }}&hellip;{% endfor %}</p>
+    {% else %}
+      {% with excerpt=item|card_excerpt %}{% if excerpt %}<p class="ds-card__excerpt">{{ excerpt }}</p>{% endif %}{% endwith %}
+    {% endif %}
+    {% if item.authors.all %}
+      <p class="ds-search-card__byline">
+        {% for a in item.authors.all %}{{ a.author.title }}{% if not forloop.last %}, {% endif %}{% endfor %}{% if item.authors.all|length == 1 and item.authors.first.author.specific.position %}, {{ item.authors.first.author.specific.position }}{% endif %}
+      </p>
+    {% endif %}
+    {% if item.publishing_date %}<p class="ds-card__date">{{ item.publishing_date|date:"F j, Y" }}</p>{% endif %}
+    {% type_of_content item %}
+  </div>
+</article>

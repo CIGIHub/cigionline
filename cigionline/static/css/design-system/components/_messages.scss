@@ -1,0 +1,23 @@
+// =============================================================================
+// Design System — Flash messages (Django messages framework)
+// Rendered in base.html (outside any cache fragment) so form success/error
+// banners survive the PRG redirect. A left accent rule + restrained styling.
+// =============================================================================
+
+.ds-messages {
+  padding-block: var(--space-24);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+
+  &__item {
+    @include paragraph-1;
+    color: var(--color-text-black-white);
+    border-left: var(--border-rule) solid var(--color-brand-grey);
+    padding-left: var(--space-16);
+    margin: 0;
+
+    &--success { border-left-color: var(--color-accent-security, var(--color-brand-red)); }
+    &--error { border-left-color: var(--color-brand-red); }
+  }
+}

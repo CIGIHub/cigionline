@@ -1,0 +1,14 @@
+{% load wagtailimages_tags %}{% comment %}
+  Shared header logo. An authored HeaderSettings.logo image overrides everything.
+  Otherwise the 25th-anniversary pair renders (BugHerd #246, Tim): the wordmark
+  shows at rest and the acronym takes over once the header pins — CSS swaps them
+  on .ds-header--scrolled, which header.js already toggles. The drawer always
+  shows the acronym (CSS).
+{% endcomment %}<a class="ds-header__logo" href="/" aria-label="CIGI home">
+  {% if settings.core.HeaderSettings.logo %}
+    {% image settings.core.HeaderSettings.logo width-240 alt="CIGI" class="ds-header__logo-img" %}
+  {% else %}
+    <span class="ds-header__logo-full">{% include "includes/cigi_25_wordmark.svg" %}</span>
+    <span class="ds-header__logo-mark">{% include "includes/cigi_25_acronym.svg" %}</span>
+  {% endif %}
+</a>

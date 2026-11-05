@@ -1,0 +1,11 @@
+{% comment %}
+  Resource Carousel — dynamic module. A swipeable rail of resources (any content
+  type). First cell = section title (heading + intro + "View All"); then one
+  feature card (image + pill + date + title + excerpt), then columns of two
+  stacked compact cards (same, no image). Resources auto (most recent) or manual.
+  Surface-aware (light default).
+
+  The rail itself is the shared includes/resource_carousel.html, also placed
+  directly by page templates (e.g. the article single's "Explore Recommended").
+{% endcomment %}
+{% include "includes/resource_carousel.html" with surface=self.surface accent=self.accent heading=self.heading intro=self.intro cta_url=cta_url cta_label=self.cta_label cta_scheme=cta_scheme feature=feature compact_cards=compact_cards show_pagination=self.show_pagination loop=self.loop %}

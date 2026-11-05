@@ -1,0 +1,6 @@
+{% load icons %}{% comment %} Card pills (capped at 3). Context: pills [{label,accent,url?}]. {% endcomment %}
+{% if pills %}
+  <div class="ds-card__pills">
+    {% for pill in pills|slice:":3" %}{% include "includes/tag.html" with label=pill.label accent=pill.accent tag_url=pill.url %}{% endfor %}
+  </div>
+{% endif %}

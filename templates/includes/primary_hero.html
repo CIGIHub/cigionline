@@ -1,0 +1,28 @@
+{% load wagtailcore_tags %}
+{% comment %}
+  Shared Primary Hero — solid surface, no image. Left-aligned breadcrumb, title
+  and description, anchored to the top. Rendered from the block and a page
+  template; keep markup here.
+
+  Context:
+    surface, accent  — ds-surface modifiers (accent also colours the breadcrumb >)
+    crumbs           — breadcrumb list [{title, url, current}]
+    heading          — title string
+    heading_tag      — "h1" for a page hero, otherwise "h2"
+    description      — rich text value / HTML
+{% endcomment %}
+<div class="ds-surface ds-surface--{{ surface|default:'dark' }} ds-surface--accent-{{ accent|default:'red' }}">
+  <div class="ds-primary-hero ds-container">
+    {% comment %}Load-entry stagger — heading then description fade up in sequence (components/_reveal.scss).{% endcomment %}
+    {% if heading %}
+      {% if heading_tag == "h1" %}
+        <h1 class="ds-primary-hero__heading" data-ds-hero-entry-item="0">{{ heading }}</h1>
+      {% else %}
+        <h2 class="ds-primary-hero__heading" data-ds-hero-entry-item="0">{{ heading }}</h2>
+      {% endif %}
+    {% endif %}
+    {% if description %}
+      <div class="ds-primary-hero__description" data-ds-hero-entry-item="1">{{ description|richtext }}</div>
+    {% endif %}
+  </div>
+</div>

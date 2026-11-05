@@ -1,0 +1,34 @@
+{% load wagtailcore_tags %}
+{% comment %}
+  Stats — full-bleed coloured surface (.ds-surface, outside the .container so the
+  background spans edge to edge) with a section title over an N-up row of stats.
+  Surface + accent come from the block's pickers; the stat underline uses --accent.
+{% endcomment %}
+<div class="ds-surface ds-surface--{{ self.surface }} ds-surface--accent-{{ self.accent }}">
+  <div class="ds-stats ds-container">
+    {% if self.heading or self.intro_text or self.buttons %}
+      <div class="ds-stats__title">
+        {% if self.heading %}<h2 class="ds-stats__heading">{{ self.heading }}</h2>{% endif %}
+        {% if self.intro_text or self.buttons %}
+          <div class="ds-stats__aside">
+            {% if self.intro_text %}<div class="ds-stats__intro">{{ self.intro_text|richtext }}</div>{% endif %}
+            {% if self.buttons %}
+              <div class="ds-stats__buttons">
+                {% for button in self.buttons %}{% include_block button with button_surface=self.surface %}{% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="ds-stats__items" data-ds-reveal data-ds-reveal-stagger="80">
+      {% for stat in self.stats %}
+        <div class="ds-stats__item" data-ds-reveal-item>
+          <span class="ds-stats__number">{{ stat.number }}</span>
+          <p class="ds-stats__label">{{ stat.label }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>

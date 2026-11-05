@@ -1,11 +1,8 @@
-<div class="container">
-  <div class="row d-block">
-    <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-      <div class="text-border-block">
-        <div class="block-contents" {% if self.border_color|length %} style="border-color:{{ self.border_color}}" {% endif %}>
-          {{ self.text|safe }}
-        </div>
-      </div>
-    </div>
-  </div>
+{% comment %}
+  Text border — bordered callout, prose-derived (1px surface border, token
+  spacing). The legacy per-block border colour is intentionally not honoured;
+  accents come from the surface system.
+{% endcomment %}
+<div class="ds-prose__callout">
+  {{ self.text|safe }}
 </div>

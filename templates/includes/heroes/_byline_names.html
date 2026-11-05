@@ -1,0 +1,6 @@
+{% comment %}
+  Hero byline credit list (BugHerd #324): each name links to the person's bio
+  page when one exists; archived/plain-text credits stay unlinked. `people` =
+  [{name, url}] from core.heroes._author_names / _editor_names.
+{% endcomment %}
+{% for p in people %}{% if p.url %}<a class="ds-hero__byline-link" href="{{ p.url }}">{{ p.name }}</a>{% else %}{{ p.name }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}

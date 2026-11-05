@@ -1,0 +1,182 @@
+// =============================================================================
+// Design System — Expert card
+// Person/expert card: one base archetype (avatar + name) plus toggleable slots
+// (role, bio, expertise tags, latest activity). Slots stack with a 32px rhythm;
+// the consuming module sets visibility + the cell width. Surface-aware.
+// =============================================================================
+
+.ds-expert-card {
+  position: relative; // containing block for the stretched name link
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-32);
+
+
+  // --- Identity (always on): name + role | circular avatar --------------------
+  &__identity {
+    display: flex;
+    // Top-aligned, not centred (Kay, BugHerd #278/#280): varying position
+    // lengths made centred rows read as misaligned across a grid/carousel.
+    align-items: flex-start;
+    gap: var(--space-16);
+    width: 100%;
+  }
+
+  &__name-title {
+    flex: 1 1 0;
+    min-width: 0; // wrap a long name instead of squeezing the avatar
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-4);
+  }
+
+  &__name {
+    @include header-5;
+    color: var(--surface-text);
+    text-decoration: none; // no hover underline on card titles (BugHerd #9)
+    @include transition(color);
+  }
+
+  // Hover takes the interactive accent — green on the DPH hub, red elsewhere
+  // (BugHerd #178), and red on a theme/topic page too: the topic colour is
+  // decorative and never hovers (BugHerd #243). Driven from the card so the
+  // whole stretched target lights the name, matching the shared card behaviour.
+  &:hover &__name,
+  &__name:focus-visible {
+    color: var(--accent-ui);
+  }
+
+  // Whole card, one destination (guide hard guardrail, Figma 1423:47357): the
+  // name link stretches over the card so the headshot/role/bio click through to
+  // the expert page. Adds no tab stops — only the name anchor's hit area grows.
+  &__name:is(a)::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1; // above any positioned slot content later in the DOM
+  }
+
+  &__role {
+    @include paragraph-1;
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  // "Read Bio" slot (hosts frame 1312:28443): accent label + chevron over a
+  // persistent accent rule.
+  &__bio-link {
+    @include button-small;
+    // Same destination as the stretched name link; stays independently
+    // clickable/focusable above the overlay.
+    position: relative;
+    z-index: 2;
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
+    margin-top: var(--space-8);
+    color: var(--accent);
+    text-decoration: none;
+    padding-bottom: 2px;
+    border-bottom: 2px solid currentColor;
+  }
+
+  &__bio-chevron {
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+    fill: currentColor;
+  }
+
+  &__avatar {
+    flex-shrink: 0;
+    // Headshot ≈ 28% of the card column;
+    // proportional so it scales with the column rather than a fixed design px.
+    width: 28%;
+    max-width: 120px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    overflow: hidden;
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      @include transition(transform var(--motion-duration-hover) var(--motion-ease-standard));
+    }
+  }
+
+  // Hover: headshot crops tighter (scale 1.05). The whole card IS the link —
+  // the name anchor stretches over the card (above); crop is removed under
+  // reduced motion (animation-guide expert card hover). No name underline —
+  // card titles don't underline on hover (BugHerd #9).
+  &:hover &__avatar img,
+  &:focus-within &__avatar img { transform: scale(1.05); }
+
+  @include reduce-motion-safe {
+    &:hover &__avatar img,
+    &:focus-within &__avatar img { transform: none; }
+  }
+
+  // --- Bio (toggleable) -------------------------------------------------------
+  &__bio {
+    @include paragraph-2;
+    color: var(--surface-text);
+
+    p {
+      margin: 0 0 var(--space-16);
+
+      &:last-child { margin-bottom: 0; }
+    }
+  }
+
+  // --- Expertise / Latest Activity (toggleable) -------------------------------
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+    width: 100%;
+  }
+
+  // Subheader sits under a short 3px rule spanning just its text (experts
+  // listing keypage 1199:30118 — supersedes the full-width read of the card
+  // component frame).
+  &__subheader {
+    @include header-6;
+    color: var(--surface-text);
+    align-self: flex-start;
+    margin: 0;
+    border-top: 3px solid var(--surface-text);
+    padding-top: var(--space-4);
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+
+  &__activity {
+    @include paragraph-3;
+    color: var(--surface-text);
+    // Plain black at rest per the card frame; underline on hover only.
+    text-decoration: none;
+    @include hover-underline;
+    // Design-sanctioned second destination (router/aside variants): a different
+    // page from the card's, so it must stay clickable above the stretched name.
+    position: relative;
+    z-index: 2;
+    @include transition(color);
+  }
+
+  // Latest Activity is a second destination, so it hovers independently
+  // (BugHerd #302, supersedes the card-driven hover from #178): only a direct
+  // hover on the activity link lights it; card hover lights the name alone.
+  &__activity:hover,
+  &__activity:focus-visible {
+    color: var(--accent-ui);
+  }
+}

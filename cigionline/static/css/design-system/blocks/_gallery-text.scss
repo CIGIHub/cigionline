@@ -1,0 +1,161 @@
+// =============================================================================
+// Design System — Gallery + Text block
+// Section title (heading + intro + buttons) over a Swiper carousel (centred
+// larger active slide, captions). Full-bleed carousel; section title gutters
+// from .container.
+// =============================================================================
+
+.ds-gallery-text {
+  padding-block: var(--space-section-y); // top AND bottom (BugHerd #134)
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-80);
+
+  // --- Section title (heading left, intro/buttons right) --------------------
+  &__title {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-24);
+    align-items: flex-start;
+  }
+
+  // Proportional 1:2 (basis 0) so heading + content stay side by side and don't
+  // wrap when the container is narrower than 410+845.
+  &__heading {
+    @include header-3;
+    color: var(--surface-text);
+    flex: 1 1 0;
+    min-width: 0;
+    margin: 0;
+    padding-top: var(--space-24);
+    border-top: var(--border-rule) solid var(--surface-rule);
+  }
+
+  &__content {
+    flex: 2 1 0;
+    min-width: 0;
+    padding-top: var(--space-24);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-32);
+  }
+
+  @media (max-width: 768px) {
+    &__title { flex-direction: column; }
+  }
+
+  &__intro {
+    @include flush-last-paragraph; // BugHerd #175
+    @include paragraph-1;
+    color: var(--surface-text);
+
+    // Richtext lists lost the browser defaults inside the reset — same
+    // treatment as Image + Text (BugHerd #162): indent, markers, item
+    // spacing, and bottom spacing; a trailing list drops it.
+    ul,
+    ol {
+      margin: var(--space-16) 0 var(--space-32);
+      padding-left: var(--space-24);
+
+      &:last-child { margin-bottom: 0; }
+    }
+
+    ul { list-style: disc; }
+    ol { list-style: decimal; }
+
+    li { margin-top: var(--space-8); }
+    li:first-child { margin-top: 0; }
+  }
+
+  &__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-24);
+  }
+}
+
+// --- Carousel ---------------------------------------------------------------
+.ds-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-48); // carousel → controls row
+
+  &__swiper {
+    width: 100%;
+  }
+
+  // Slide widths come from Swiper (slidesPerView); centre slides vertically so
+  // the taller active slide extends above and below its neighbours.
+  .swiper-wrapper { align-items: center; }
+
+  // Compound with .swiper-slide so display:flex out-specifies Swiper's
+  // `.swiper-slide{display:block}` (loaded after, equal specificity).
+  &__slide.swiper-slide {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+
+  // Side slides are shorter (landscape); the active (centred) slide grows taller.
+  // Use a transitionable padding-bottom ratio (not aspect-ratio, which snaps) so
+  // the active slide grows smoothly — animation-guide gallery active-slide.
+  // 500ms matches the Swiper rail speed (gallery-init.js) so the crop grows in
+  // lockstep with the slide travel — change both together.
+  &__img-wrap {
+    position: relative;
+    height: 0;
+    padding-bottom: 56.25%; // 16:9 (side slides)
+    overflow: hidden;
+    @include transition(padding-bottom 500ms var(--motion-ease-standard));
+  }
+
+  &__img {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__caption {
+    @include header-7; // small Futura label
+    color: var(--surface-text);
+  }
+
+  // --- Controls row: pagination (left) + nav (right) ------------------------
+  &__controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-24);
+  }
+
+  // Pagination treatment is the shared .ds-pagination component; just undo
+  // Swiper's absolute positioning here.
+  .ds-pagination {
+    position: static;
+    width: auto;
+  }
+}
+
+// Active slide grows to a square only where there are 3 across (desktop); on
+// mobile the single slide stays landscape. padding-bottom transitions smoothly
+// (vs aspect-ratio, which snaps).
+@media (min-width: 768px) {
+  // Every slide box is pinned at the ACTIVE state's proportions (frame
+  // 1236:24429: 416-wide slide in a 472-high row — ratio constants, not
+  // sizes), side content vertically centred within it. The container height
+  // therefore NEVER changes; the only motion is the image crop growing
+  // inside its own box (motion guide: no layout shift beyond the animated
+  // element — the old per-slide height animation bounced the whole module).
+  .ds-gallery .ds-gallery__slide.swiper-slide {
+    aspect-ratio: 416 / 472;
+    justify-content: center;
+  }
+
+  .ds-gallery .swiper-slide-active .ds-gallery__img-wrap {
+    padding-bottom: 100%; // 1:1
+  }
+}

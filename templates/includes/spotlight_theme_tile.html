@@ -1,0 +1,21 @@
+{% load wagtailcore_tags icons %}
+{% comment %}
+  One Program Spotlight theme tile. Shared by the desktop themes grid and the
+  mobile themes carousel (BugHerd #150) so the two render identically. The tile
+  is a filter (BugHerd #381 — Juode/Kay: the mobile treatment applies at every
+  width): the title button selects the theme and the program list below shows
+  only that theme's programs; a second click clears it (none active on load).
+  "Learn More" is the link to the theme page. On
+  desktop the button's stretched target covers the tile; on mobile the link's
+  does, so a tap still navigates and the swipe stays the filter. Context: theme
+  (ThemePage).
+{% endcomment %}
+<div class="ds-program-spotlight__tile">
+  <span class="ds-program-spotlight__theme-head">
+    <button type="button" class="ds-program-spotlight__theme-toggle" data-ds-spotlight-theme-toggle aria-pressed="false">
+      <span class="ds-program-spotlight__theme-title">{{ theme.title }}</span>
+    </button>
+    <span class="ds-program-spotlight__theme-dot" aria-hidden="true"></span>
+  </span>
+  <a href="{% pageurl theme %}" class="ds-program-spotlight__learn-more" aria-label="Learn more about {{ theme.title }}">Learn More {% ds_icon 'chevron-right' %}</a>
+</div>

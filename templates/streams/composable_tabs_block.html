@@ -1,0 +1,49 @@
+{% load wagtailcore_tags %}
+{% comment %}
+  Composable Tabs block — author-defined tab strip whose panels hold an arbitrary
+  StreamField of DS modules (incl. the faceted-listing module). Reuses the shared
+  .ds-tabs chrome; enhanced by tabs.js (URL ?tab= state, lazy router panels). Tab
+  controls are real <a href="?tab=slug"> so the right tab renders with JS off.
+
+  IMPORTANT: panels include_block WITHOUT `only` (+ tab_active) so nested dynamic
+  modules' program/theme auto-scope (which reads context['page']) keeps working,
+  and inactive panels' routers know to render lazily. See audit blocker #4.
+
+  Context: tabs [{label, slug, content, active}], group_id, heading.
+{% endcomment %}
+{% if tabs %}
+  <div class="ds-tabs ds-composable-tabs" data-ds-tabs data-ds-tabs-url>
+    <div class="ds-tabs__bar">
+      <div class="ds-tabs__list ds-container" role="tablist" aria-label="{{ heading|default:'Section' }} tabs">
+        {% for tab in tabs %}
+          <a
+            class="ds-tabs__tab{% if tab.active %} ds-tabs__tab--active{% endif %}"
+            id="{{ group_id }}-tab-{{ forloop.counter0 }}"
+            role="tab"
+            href="?tab={{ tab.slug }}"
+            data-tab-slug="{{ tab.slug }}"
+            aria-controls="{{ group_id }}-panel-{{ forloop.counter0 }}"
+            aria-selected="{% if tab.active %}true{% else %}false{% endif %}"
+            tabindex="{% if tab.active %}0{% else %}-1{% endif %}"
+          >{{ tab.label }}</a>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% comment %}Panels are NOT .ds-container: the DS modules inside each panel
+    bring their own .ds-surface + .ds-container wrappers (full-bleed surfaces,
+    gutters).{% endcomment %}
+    <div class="ds-tabs__panels ds-composable-tabs__panels">
+      {% for tab in tabs %}
+        <div
+          class="ds-tabs__panel"
+          id="{{ group_id }}-panel-{{ forloop.counter0 }}"
+          role="tabpanel"
+          aria-labelledby="{{ group_id }}-tab-{{ forloop.counter0 }}"
+          tabindex="0"
+          {% if not tab.active %}hidden{% endif %}
+        >{% include_block tab.content with tab_active=tab.active tab_slug=tab.slug %}</div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}

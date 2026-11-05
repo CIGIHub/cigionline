@@ -10,7 +10,7 @@
         {% with block.value.specific as person %}
         <li>
           <div class="person-info">
-            <a href="{{ person.url }}" class="person-photo">
+            <a href="{% pageurl person %}" class="person-photo">
               <div class="img-wrapper">
                 {% if person.image_square %}
                   {% image person.image_square fill-300x300 %}
@@ -19,7 +19,7 @@
             </a>
     
             <div>
-              <a href="{{ person.url }}" class="person-name">{{ person.title }}</a>
+              <a href="{% pageurl person %}" class="person-name">{{ person.title }}</a>
               <div class="person-function">
                 {% if page == 'dph_landing' and person.position_dph %}
                   {{ person.position_dph }}
@@ -57,7 +57,7 @@
             {% with block.value.specific as person %}
             <li>
               <div class="person-info">
-                <a href="{{ person.url }}" class="person-photo">
+                <a href="{% pageurl person %}" class="person-photo">
                   <div class="img-wrapper">
                     {% if person.image_square %}
                       {% image person.image_square fill-300x300 %}
@@ -66,7 +66,7 @@
                 </a>
         
                 <div>
-                  <a href="{{ person.url }}" class="person-name">{{ person.title }}</a>
+                  <a href="{% pageurl person %}" class="person-name">{{ person.title }}</a>
                   <div class="person-function">
                     {% if page == 'dph_landing' and person.position_dph %}
                       {{ person.position_dph }}

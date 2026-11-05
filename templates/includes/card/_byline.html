@@ -1,0 +1,8 @@
+{% comment %}Card byline — author name(s) linked to their bio page. Shown when the
+module opts in (show_author) and the page has authors. Raised above the card's
+whole-card title-link overlay so the author links stay clickable.{% endcomment %}
+{% if show_author and authors %}
+  <p class="ds-card__authors">
+    {% for author in authors %}<a class="ds-card__author" href="{{ author.url }}">{{ author.name }}</a>{% if not forloop.last %}<span aria-hidden="true">, </span>{% endif %}{% endfor %}
+  </p>
+{% endif %}

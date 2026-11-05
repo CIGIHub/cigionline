@@ -1,11 +1,5 @@
 {% load wagtailembeds_tags %}
-
-<div class="container">
-  <div class="row d-block">
-    <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-      <div class="tweet-block">
-        {% embed self.tweet_url %}
-      </div>
-    </div>
-  </div>
+{% comment %}Tweet — centered in the prose measure at the embed's natural width.{% endcomment %}
+<div class="ds-prose__tweet">
+  {% embed self.tweet_url %}
 </div>

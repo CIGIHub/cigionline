@@ -1,35 +1,74 @@
 {% extends "base.html" %}
-{% load wagtailimages_tags %}
+{% load wagtailimages_tags wagtailcore_tags heroes cards %}
+{% comment %}
+  BasicPage — DS shell (about-section / informational pages, router landings,
+  composed QA pages). Hero resolves in tiers: a body that opens with an
+  authored hero module (split/primary/alt hero) supplies its own; else an
+  authored image_banner selects the full-bleed image alt hero (breadcrumb ·
+  title · subtitle over the photo — BugHerd #125, the venue page); else the
+  content hero (breadcrumb · title · subtitle). Body renders via
+  body_sections: DS modules full-bleed, contiguous prose in a reading measure.
+  Theme-forked pages keep their own templates (get_template).
+{% endcomment %}
 
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-  {% if self.image_hero %}
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col col-md-10 col-lg-8">
-          <figure>
-            {% image self.image_hero width-1280 %}
-            {% if self.image_hero.caption %}
-              <figcaption>
-                {{ self.image_hero.caption }}
-              </figcaption>
-            {% endif %}
-          </figure>
+  {% if not self.body|starts_with_hero %}
+    {% if self.image_banner %}
+      {% include "includes/alt_hero.html" with image=self.image_banner heading=self.title heading_tag="h1" crumbs=hero_crumbs description=self.subtitle %}
+    {% else %}
+      {% page_hero self %}
+    {% endif %}
+  {% endif %}
+
+  {% comment %}
+    Skip the lead figure on any page that already leads with a photo: the
+    banner-hero page, or a body that opens with an authored hero module. On the
+    DPH hub the figure otherwise dropped a white band between the header and the
+    charcoal split hero (BugHerd #167).
+  {% endcomment %}
+  {% if self.image_hero and not self.image_banner and not self.body|starts_with_hero %}
+    {# Follows the page surface — hardcoded light drew a white band inside the charcoal DPH hub (BugHerd #167). #}
+    <div class="ds-surface ds-surface--{{ main_surface|default:'light' }}">
+      <div class="ds-reading ds-reading--section ds-container">
+        <div class="ds-reading__main">
+          <div class="ds-prose">
+            <figure>
+              {% image self.image_hero width-1280 %}
+              {% if self.image_hero.caption %}
+                <figcaption>{{ self.image_hero.caption }}</figcaption>
+              {% endif %}
+            </figure>
+          </div>
         </div>
       </div>
     </div>
   {% endif %}
-  {% include "includes/body.html" with body=self.body %}
+
+  {% for section in self.body|body_sections %}
+    {% if section.kind == 'module' %}
+      {% include_block section.block %}
+    {% else %}
+      <div class="ds-surface ds-surface--light">
+        <div class="ds-reading ds-reading--section ds-container">
+          <div class="ds-reading__main">
+            <div class="ds-prose">
+              {% for block in section.blocks %}{% include_block block %}{% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
 
   {% if self.related_files %}
-    <section class="related-files">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col col-md-10 col-lg-8">
+    <div class="ds-surface ds-surface--light">
+      <div class="ds-reading ds-reading--section ds-container">
+        <div class="ds-reading__main">
+          <div class="ds-prose">
             {% include "includes/core_related_files_table.html" with file_blocks=self.related_files %}
           </div>
         </div>
       </div>
-    </section>
+    </div>
   {% endif %}
 {% endblock content %}

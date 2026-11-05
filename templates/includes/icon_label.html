@@ -1,0 +1,19 @@
+{% comment %}
+  Shared icon-label molecule (.ds-icon-label) — a Font Awesome icon + text on one
+  line. Pass `icon` (FA glyph class, e.g. "fa-calendar-alt") + `label`. Generic:
+  event date/location rows, meta lines, the inline calendar+date form. The icon
+  scales with the surrounding font-size and inherits colour, so callers set the
+  text style on the context.
+
+  `icon_style` picks the Font Awesome family and defaults to Pro Light. Brand
+  glyphs (fa-x-twitter, fa-linkedin-in) ship ONLY in the Brands font, so a caller
+  showing one must pass icon_style="fa-brands". Under `fal` the glyph resolves to
+  a codepoint the Pro font has no outline for, and the icon renders blank
+  (BugHerd #189).
+{% endcomment %}
+{% if label %}
+  <span class="ds-icon-label">
+    {% if icon %}<i class="ds-icon-label__icon {{ icon_style|default:'fal' }} {{ icon }}" aria-hidden="true"></i>{% endif %}
+    <span class="ds-icon-label__text">{{ label }}</span>
+  </span>
+{% endif %}

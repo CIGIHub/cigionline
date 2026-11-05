@@ -1,0 +1,5 @@
+{% comment %}
+  Primary Hero (StreamField block). Markup lives in the shared partial so the
+  block and page-template versions stay in sync. crumbs from get_context.
+{% endcomment %}
+{% include "includes/primary_hero.html" with surface=self.surface accent=self.accent heading=self.heading description=self.description heading_tag="h1" %}

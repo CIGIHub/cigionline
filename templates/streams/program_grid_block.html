@@ -1,0 +1,34 @@
+{% load wagtailcore_tags cards %}
+{% comment %}
+  Program Grid — dynamic module. A grid of content cards belonging to one program
+  (ProgramGridBlock.get_context). The author picks the program — which sets the
+  section context and the theme accent; content cards show their own topic
+  pills, program cards none (BugHerd #519) — and how the grid is populated:
+  auto (the program's most-recent live content) or manual (hand-picked,
+  ordered). Cards are the shared media-vertical archetype.
+
+  Shared components: section_header (heading + intro, lead-narrow layout) and the
+  card (.ds-card via {% card %}). Cards stagger in on scroll via scroll-reveal.js
+  (data-ds-reveal).
+{% endcomment %}
+{# An empty module renders nothing (BugHerd #297). #}
+{% if grid_pages %}
+<div class="ds-surface ds-surface--light">
+  <div class="ds-program-grid ds-container">
+    {% if self.heading or self.intro %}
+      {# Default proportions — heading grows, intro caps at 410 (KP; BugHerd #71). #}
+      {% include "includes/section_header.html" with heading=self.heading heading_level=2 intro=self.intro %}
+    {% endif %}
+
+    {% if grid_pages %}
+      <ul class="ds-program-grid__grid{% if grid_pages|length == 2 %} ds-program-grid__grid--two{% endif %}" data-ds-reveal data-ds-reveal-stagger="80">
+        {% for content, pills in grid_cards %}
+          <li class="ds-program-grid__card {{ grid_accent_class }}" data-ds-reveal-item>
+            {% card content variant="media-vertical" pills=pills %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</div>
+{% endif %}

@@ -1,0 +1,22 @@
+{% load wagtailcore_tags %}
+{% comment %}
+  Banner — slim full-bleed announcement bar. Accent top rule, heading +
+  description left, button(s) right. Surface-aware; each element has an
+  enable/disable toggle (show_rule / show_heading / show_description /
+  show_buttons) so authors can hide any element without deleting its content.
+{% endcomment %}
+<div class="ds-surface ds-surface--{{ self.surface }} ds-surface--accent-{{ self.accent }} ds-banner{% if self.show_rule %} ds-banner--ruled{% endif %}">
+  <div class="ds-banner__inner ds-container">
+    {% if self.show_heading and self.heading or self.show_description and self.description %}
+      <div class="ds-banner__text">
+        {% if self.show_heading and self.heading %}<p class="ds-banner__heading">{{ self.heading }}</p>{% endif %}
+        {% if self.show_description and self.description %}<div class="ds-banner__description">{{ self.description|richtext }}</div>{% endif %}
+      </div>
+    {% endif %}
+    {% if self.show_buttons and self.buttons %}
+      <div class="ds-banner__buttons">
+        {% for button in self.buttons %}{% include_block button with button_surface=self.surface %}{% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>

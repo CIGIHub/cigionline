@@ -1,0 +1,107 @@
+// =============================================================================
+// Design System — Button component
+// Variant (outline | tertiary) × scheme (on-light | on-dark | on-red) × state.
+// All values are tokens; no hardcoded colours/sizes.
+// =============================================================================
+
+.ds-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  padding: var(--space-16) var(--space-24);
+  border: var(--border-divider) solid transparent;
+  background: transparent;
+  text-decoration: none;
+  cursor: pointer;
+  @include transition(
+    color var(--motion-duration-fast) var(--motion-ease-standard),
+    background-color var(--motion-duration-fast) var(--motion-ease-standard),
+    border-color var(--motion-duration-fast) var(--motion-ease-standard)
+  );
+  @include button-small;
+
+  &__icon {
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+    fill: currentColor;
+  }
+
+  // --- Outline variant -------------------------------------------------------
+  // Surface-aware: reads the --surface-* tokens so the same markup is correct
+  // on light, dark, and colour surfaces — the on-light/on-dark scheme classes
+  // are no longer styled (blocks with surface=inherit couldn't pick the right
+  // scheme server-side, BugHerd #64/#70). Fallbacks cover buttons rendered
+  // outside any .ds-surface.
+  &--outline {
+    // The --button-primary-* tokens default to the plain outline; a surface can
+    // promote them to the accent-filled primary (DPH charcoal — BugHerd #215).
+    color: var(--button-primary-text, var(--color-text-red-white));
+    background: var(--button-primary-bg, transparent);
+    border-color: var(--button-primary-border, var(--color-border-black-white));
+
+    // Hover fills with the accent and flips the label to its contrasting
+    // colour (Kay, BugHerd #121) — red fill + white text on a light band.
+    // A surface that already ships the filled primary overrides the trio.
+    // No hover ring: the double-border treatment on dark/colour surfaces
+    // read as inconsistent with the other buttons (Tia, BugHerd #203).
+    &:hover,
+    &:focus-visible {
+      color: var(--button-primary-hover-text, var(--color-text-black-white));
+      background: var(--button-primary-hover-bg, var(--color-surface-white-black));
+      border-color: var(--button-primary-hover-border, var(--color-border-black-white));
+    }
+
+    // On the (always-red) CTA panel the button is a solid white fill with black
+    // text; hover flips to a solid black fill with white text. Brand tokens
+    // (not light/dark pairs) so it stays correct regardless of page theme.
+    &.ds-button--on-red {
+      color: var(--color-brand-black);
+      background: var(--color-brand-white);
+      border-color: var(--color-brand-white);
+
+      &:hover,
+      &:focus-visible {
+        color: var(--color-brand-white);
+        background: var(--color-brand-black);
+        border-color: var(--color-brand-black);
+      }
+    }
+  }
+
+  // --- Solid variant (accent-filled primary) ---------------------------------
+  // Fills with the in-scope accent and uses its contrasting text colour; hover
+  // inverts to the contrasting fill. Works on any surface via --accent.
+  &--solid {
+    color: var(--accent-on);
+    background: var(--accent);
+    border-color: var(--accent);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--accent);
+      background: var(--accent-on);
+    }
+  }
+
+  // --- Tertiary variant (text + chevron, underline on hover) -----------------
+  &--tertiary {
+    padding: 0 0 2px;
+    gap: var(--space-10);
+    border: 0;
+    border-bottom: 2px solid transparent;
+    // Surface-aware: red on light, white on dark/colour surfaces (#64/#70).
+    color: var(--surface-red-text, var(--color-text-red-white));
+
+    &:hover,
+    &:focus-visible {
+      border-bottom-color: currentColor; // underline matches the text colour
+    }
+
+    // The (always-red) CTA panel isn't a .ds-surface — pin white explicitly.
+    &.ds-button--on-red {
+      color: var(--color-brand-white);
+    }
+  }
+}

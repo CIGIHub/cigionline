@@ -1,0 +1,41 @@
+{% load wagtailcore_tags core_tags icons %}
+{% comment %}
+  One aside rail group of the reading body — a ruled heading over person rows
+  (name + position + round headshot + short bio). Params:
+    group_heading — e.g. "About the Author" / "About the Editor"
+    group_items   — authorship rows (each with .author or .editor)
+    group_count   — pluralizes the heading
+    group_intro   — optional short intro under the heading (podcast rail)
+    group_key     — unique per page ("authors" / "editors" / "guests"); ids
+                    the folded rows for the toggle's aria-controls
+    card_mode     — 'expert' renders persons via the shared expert card
+                    (expertise pills + latest activity, no bio — frame
+                    1360:69160, podcast "Experts / Hosts"); default is the
+                    bio row.
+  A group of 5+ rendered people shows the first 3 and folds the rest behind
+  a "Show N more" toggle (BugHerd #523 revision; split_aside_rows). Without
+  JS every row shows and the toggle stays hidden (_reading.scss keys both on
+  html.js); reading-rail.js wires it.
+{% endcomment %}
+{% with rows=group_items|split_aside_rows %}
+<details class="ds-collapse ds-reading__aside-group{% if card_mode == 'expert' %} ds-reading__aside-group--expert{% endif %}" open>
+  <summary>
+    <h2 class="ds-reading__aside-heading">{{ group_heading }}{{ group_count|default:1|pluralize }}</h2>
+    {% ds_icon 'chevron-right' css_class='ds-collapse__chevron' %}
+  </summary>
+{% if group_intro %}<div class="ds-reading__aside-intro">{{ group_intro|richtext }}</div>{% endif %}
+{% for item in rows.shown %}{% include "includes/reading_author_row.html" %}{% endfor %}
+{% if rows.more %}
+  {% with more_id="ds-reading-more-"|add:group_key %}
+  <div class="ds-reading__aside-more" id="{{ more_id }}" data-ds-aside-more>
+    {% for item in rows.more %}{% include "includes/reading_author_row.html" %}{% endfor %}
+  </div>
+  <button type="button" class="ds-button ds-button--tertiary ds-reading__aside-toggle"
+    aria-expanded="false" aria-controls="{{ more_id }}" data-ds-aside-toggle data-ds-label-less="Show fewer">
+    <span class="ds-button__label">Show {{ rows.more|length }} more</span>
+    {% ds_icon 'chevron-right' css_class='ds-button__icon' %}
+  </button>
+  {% endwith %}
+{% endif %}
+</details>
+{% endwith %}

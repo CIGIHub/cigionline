@@ -3,6 +3,7 @@ from django.shortcuts import render
 from wagtail.contrib.search_promotions.models import Query
 
 from .search import cigi_search, cigi_search_promoted
+from core.routers import pager_range
 
 
 def process_item(page, request):
@@ -68,8 +69,88 @@ def process_item(page, request):
     return item
 
 
-def search(request):  # pragma: no cover
-    return render(request, 'search/search.html')
+def search(request):
+    """Resources Router — DS faceted browse over Elasticsearch (cigi_search),
+    server-rendered with the shared .ds-router chrome. In-place filtering is
+    progressive enhancement: an AJAX request (router.js) gets just the results
+    partial; with no JS the GET form full-reloads."""
+    from django.core.paginator import Paginator
+    from research.models import TopicPage
+    from core.models import ContentPage
+    from core.routers import is_ajax, router_partial_response
+
+    get = request.GET
+    q = (get.get('q') or '').strip()
+    topics = [t for t in get.getlist('topic') if t.isdigit()]
+    contenttypes = get.getlist('contenttype')
+    years = [y for y in get.getlist('year') if y.isdigit() and 1000 <= int(y) <= 9999]
+
+    if q:
+        Query.get(q).add_hit()
+
+    # A text query ranks by relevance (ES _score); browsing without one stays
+    # newest-first. Without this, get_sort()'s date default buried strong
+    # matches under whatever was published last.
+    results = cigi_search(
+        searchtext=q or None,
+        topics=topics or None,
+        contenttypes=contenttypes or None,
+        years=years or None,
+        sort=get.get('sort') or ('relevance' if q else None),
+    )
+
+    paginator = Paginator(results, 12)
+    # Elasticsearch refuses from+size beyond index.max_result_window (13000
+    # here) — deep pages, including Paginator's own last-page clamp on a 13k+
+    # result set, 500. Cap the cursor to the deepest ES-servable page.
+    max_es_page = (13000 - 12) // 12
+    try:
+        requested = int(get.get('page') or 1)
+    except (TypeError, ValueError):
+        requested = 1
+    page = paginator.get_page(max(1, min(requested, max_es_page)))
+    # ES attaches its highlight fragments (`<em>`-marked body excerpts) to the
+    # base Page hit; `.specific` refetches, so carry them across under a
+    # template-readable name (a leading underscore is invisible to Django
+    # templates). Whole fragments only, to a ~350-char budget — a substring
+    # cut can split an <em> tag open.
+    items = []
+    for p in page.object_list:
+        item = p.specific
+        fragments, total = [], 0
+        for fragment in getattr(p, '_highlights', None) or []:
+            if fragments and total + len(fragment) > 350:
+                break
+            fragments.append(fragment)
+            total += len(fragment)
+        item.search_highlights = fragments
+        items.append(item)
+
+    params = get.copy()
+    params.pop('page', None)
+
+    context = {
+        'page_title': 'Search Results',
+        'router_results': items,
+        'router_results_template': 'includes/router_items/resource.html',
+        'router_empty': 'No resources match your filters.',
+        'router_clear_url': request.path,
+        'router_page': page,
+        'router_total': paginator.count,
+        'router_range_start': page.start_index(),
+        'router_range_end': page.end_index(),
+        'router_page_range': pager_range(page),  # five-page window + last page (BugHerd #431)
+        'router_querystring': params.urlencode(),
+        'facet_topics': TopicPage.objects.live().filter(archive=0).order_by('title'),
+        'facet_types': ['Publication', 'Opinion', 'Multimedia', 'Event'],
+        'facet_years': [d.year for d in (ContentPage.objects.live().public()
+                        .exclude(publishing_date__isnull=True)
+                        .dates('publishing_date', 'year', order='DESC'))],
+        'selected': {'q': q, 'topics': set(topics), 'types': set(contenttypes), 'years': set(years)},
+    }
+    if is_ajax(request):
+        return router_partial_response(request, context)
+    return render(request, 'search/search.html', context)
 
 
 def search_api(request):

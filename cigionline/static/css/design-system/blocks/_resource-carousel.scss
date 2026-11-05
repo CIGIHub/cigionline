@@ -1,0 +1,80 @@
+// =============================================================================
+// Design System — Resource Carousel block
+// A swipeable rail of resources: section-title cell, a feature card (image), then
+// columns of two stacked compact cards. Built on the shared .ds-carousel shell +
+// Swiper init (gallery-init.js, data-ds-space=48). Vertical dividers between
+// slides + a horizontal rule between the two stacked compact cards
+// (--surface-border). Surface-aware (light default).
+// =============================================================================
+
+.ds-resource-carousel {
+  padding-block: var(--space-section-y);
+
+  // Desktop: title fixed in the first column, the resource rail scrolling
+  // beside it, controls spanning the full width below — the intro is NOT a
+  // slide (BugHerd #67, same treatment as the Experts Carousel). The shared
+  // shell is a flex column — override to a grid here.
+  &__carousel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    grid-template-areas:
+      "intro rail"
+      "controls controls";
+    column-gap: var(--space-48);
+    row-gap: var(--space-48);
+  }
+
+  // Every grid child needs min-width: 0 — the rail's .swiper carries
+  // `overflow: visible` (shared shell), so its min-content is the sum of all
+  // slides; a track that can shrink below that keeps the grid in the viewport.
+  &__intro,
+  .ds-carousel__swiper,
+  .ds-carousel__controls { min-width: 0; }
+
+  &__intro { grid-area: intro; }
+  .ds-carousel__swiper { grid-area: rail; }
+  .ds-carousel__controls { grid-area: controls; }
+
+  // Mask the rail's LEFT edge only: advancing slides disappear rather than
+  // paint over the static intro column (BugHerd #67). The right side stays
+  // open so cards keep bleeding to the viewport edge (the section-level
+  // overflow-x clip crops them there). Generous vertical slack so the
+  // reveal-entry translate is never cut.
+  .ds-carousel__swiper.swiper {
+    clip-path: inset(-100px -100vw -100px 0);
+  }
+
+  // Title column → shared includes/module_title.html (--stacked). The heading
+  // rule comes from the shared text-hugging span (BugHerd #104) — the old
+  // full-width override doubled it (BugHerd #132).
+
+  // --- Slides + vertical dividers -------------------------------------------
+  &__slide {
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: calc(-1 * var(--space-24));
+      top: 0;
+      bottom: 0;
+      width: var(--border-divider);
+      background: var(--surface-border);
+    }
+  }
+
+  // --- Mobile: stack. Content on top, then the controls (arrows + pagination)
+  //     above the first card, then the rail — mirrors the Experts Carousel. ---
+  @media (max-width: 768px) {
+    &__carousel {
+      // minmax(0, 1fr), never a bare `1fr` — `1fr` is minmax(auto, 1fr), so the
+      // track would floor at the rail's min-content (every slide side by side).
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas:
+        "intro"
+        "controls"
+        "rail";
+      row-gap: var(--space-24);
+    }
+  }
+}

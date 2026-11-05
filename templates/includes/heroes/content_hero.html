@@ -1,0 +1,190 @@
+{% load wagtailcore_tags wagtailimages_tags wagtailembeds_tags cards icons %}
+{% comment %}
+  Content hero — Article/Opinion, Video/Multimedia, Publication, Event, CIGI News.
+  Shared LIGHT anatomy: optional full-bleed image banner on top → breadcrumb →
+  topic pills → title → excerpt → per-type affordance (audio / Download /
+  Register+location / external link), beside a byline · date · share aside split
+  by a vertical rule. `hero` = a core.heroes presenter dict.
+{% endcomment %}
+{% comment %}
+  `hero.surface` defaults light: every CPT hero omits it, so only presenters
+  that opt in (the router landings, which follow the page's light/dark setting
+  — BugHerd #136) render on another surface.
+{% endcomment %}
+{# ds-hero--registration: the event registration pages' dark variant (Event Form 1705:20340) — date stamp beside the title, ruled aside, no divider. #}
+<header class="ds-hero ds-hero--content ds-surface ds-surface--{{ hero.surface|default:'light' }} ds-surface--accent-{{ hero.accent|default:'red' }}{% if hero.simple %} ds-hero--simple{% endif %}{% if hero.is_registration %} ds-hero--registration{% endif %}">
+  {% if hero.image and hero.banner %}
+    <div class="ds-hero__banner">
+      {% if hero.image.file.name|lower|slice:"-4:" == ".gif" %}
+        {# Renditions flatten animated GIFs — serve the original, as legacy did. #}
+        <img src="{{ hero.image.file.url }}" alt="{{ hero.image.caption|default:'' }}">
+      {% else %}
+        {# 21:9 to match the banner's aspect box (Kay, BugHerd #296). #}
+        {% image hero.image fill-2400x1029 %}
+      {% endif %}
+    </div>
+  {% endif %}
+  <div class="ds-hero__inner ds-container">
+    {% include "includes/breadcrumbs.html" with crumbs=hero.breadcrumb %}
+
+    <div class="ds-hero__body">
+      <div class="ds-hero__main">
+        {% if hero.eyebrow %}
+          <div class="ds-hero__pills">
+            {% for t in hero.eyebrow %}{% include "includes/tag.html" with label=t.title accent=t.accent %}{% endfor %}
+          </div>
+        {% endif %}
+
+        {# Publication type + number ("Policy Brief No. 240") above the title, in the byline's type (Kay's mock, BugHerd #461). #}
+        {% if hero.kicker %}<p class="ds-hero__kicker">{{ hero.kicker }}</p>{% endif %}
+
+        {% if hero.date_stamp and hero.date %}
+          {# Red month/day stamp beside the title (Event Form 1705:20344) — the event card's molecule, one size up. #}
+          <div class="ds-hero__title-row">
+            {% include "includes/date_stamp.html" with date=hero.date size="lg" %}
+            <h1 class="ds-hero__title">{{ hero.title }}</h1>
+          </div>
+        {% else %}
+          <h1 class="ds-hero__title">{{ hero.title }}</h1>
+        {% endif %}
+
+        {% for m in hero.meta %}<p class="ds-hero__meta">{{ m }}</p>{% endfor %}
+
+        {% if hero.excerpt %}<p class="ds-hero__excerpt">{{ hero.excerpt }}</p>{% endif %}
+
+        {% if hero.audio.type == 'file' %}
+          <div class="ds-hero__audio">{% include "includes/audio_player.html" with src=hero.audio.src %}</div>
+        {% elif hero.audio.type == 'embed' %}
+          <div class="ds-hero__audio ds-hero__audio--embed">{% embed hero.audio.url max_width="1080" %}</div>
+        {% endif %}
+
+        {% comment %}
+          `actions` is the multi-button form (a publication's editions — BugHerd
+          #474); every other hero sets a single `action`. Falling back keeps
+          those untouched.
+        {% endcomment %}
+        {% with hero_actions=hero.actions|default_if_none:'' %}
+          {% if hero_actions %}
+            <div class="ds-hero__actions">
+              {% for act in hero_actions %}
+                <a class="ds-button ds-button--{{ act.style|default:'solid' }}{% if act.external %}" target="_blank" rel="noopener{% endif %}" href="{{ act.url }}">
+                  <span class="ds-button__label">{{ act.label }}</span>
+                  {% if act.icon %}<i class="ds-button__icon-fa fal {{ act.icon }}" aria-hidden="true"></i>{% else %}{% ds_icon 'chevron-right' css_class='ds-button__icon' %}{% endif %}
+                </a>
+              {% endfor %}
+            </div>
+          {% elif hero.action %}
+            <a class="ds-button ds-button--{{ hero.action.style|default:'solid' }} ds-hero__action{% if hero.action.external %}" target="_blank" rel="noopener{% endif %}" href="{{ hero.action.url }}">
+              <span class="ds-button__label">{{ hero.action.label }}</span>
+              {% if hero.action.icon %}<i class="ds-button__icon-fa fal {{ hero.action.icon }}" aria-hidden="true"></i>{% else %}{% ds_icon 'chevron-right' css_class='ds-button__icon' %}{% endif %}
+            </a>
+          {% endif %}
+        {% endwith %}
+
+        {% if hero.book %}
+          {# Books-only data (cover · editors · metadata · excerpt · purchase). #}
+          {# Placement/look provisional — no book-hero design yet; iterated in QA. #}
+          <div class="ds-hero__book">
+            {% if hero.book.cover %}
+              <div class="ds-hero__book-cover">{% image hero.book.cover width-360 %}</div>
+            {% endif %}
+            <div class="ds-hero__book-detail">
+              {# Editor credit lives in the hero byline (aside), not here. #}
+              {% if hero.book.meta %}
+                <dl class="ds-hero__book-meta">
+                  {% for m in hero.book.meta %}
+                    <div class="ds-hero__book-meta-row">
+                      <dt>{{ m.label }}</dt>
+                      <dd>{% if m.url %}<a href="{{ m.url }}" target="_blank" rel="noopener noreferrer">{{ m.value }}</a>{% else %}{{ m.value }}{% endif %}</dd>
+                    </div>
+                  {% endfor %}
+                </dl>
+              {% endif %}
+              {% if hero.book.excerpt_url or hero.book.purchase_links %}
+                <div class="ds-hero__book-actions">
+                  {% if hero.book.excerpt_url %}
+                    <a class="ds-button ds-button--outline ds-button--on-light" href="{{ hero.book.excerpt_url }}">
+                      <span class="ds-button__label">Download Excerpt</span>
+                    </a>
+                  {% endif %}
+                  {% for l in hero.book.purchase_links %}
+                    <a class="ds-button ds-button--solid" href="{{ l.url }}" target="_blank" rel="noopener noreferrer">
+                      <span class="ds-button__label">{{ l.label }}</span>
+                    </a>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      {% comment %}
+        Only render the aside when something fills it. Every child is optional, so
+        on a page with no byline, date, location or share it collapsed to a bare
+        vertical rule beside the title — visible on the DPH hub.
+      {% endcomment %}
+      {% if hero.authors or hero.byline_editors or hero.date or hero.aside_meta or hero.location or hero.share %}
+      {# The rule is its own 1px column, exactly as in the reading shell below, #}
+      {# so the two align at every width (Kay, BugHerd #191). #}
+      <span class="ds-hero__divider" aria-hidden="true"></span>
+
+      <div class="ds-hero__aside">
+        {# Byline names link to the bio page, like the reading rail (BugHerd #324). #}
+        {% if hero.authors %}<p class="ds-hero__byline">By {% include "includes/heroes/_byline_names.html" with people=hero.authors %}</p>
+        {% elif hero.byline_editors %}<p class="ds-hero__byline">Edited by {% include "includes/heroes/_byline_names.html" with people=hero.byline_editors %}</p>{% endif %}
+        {% if hero.date %}<p class="ds-hero__date">{{ hero.date|date:"F j, Y" }}</p>{% endif %}
+        {# Registration hero (1705:20386): the access · type · format line under the date. #}
+        {% for m in hero.aside_meta %}<p class="ds-hero__meta">{{ m }}</p>{% endfor %}
+        {% if hero.location %}
+          {# Event design (1360:114601): red map pin + address in the aside. #}
+          <p class="ds-hero__location">
+            {% if hero.location_url %}<a href="{{ hero.location_url }}" target="_blank" rel="noopener noreferrer">{% endif %}
+            {% include "includes/icon_label.html" with icon="fa-location-dot" label=hero.location %}
+            {% if hero.location_url %}</a>{% endif %}
+          </p>
+        {% endif %}
+        {% if hero.share %}<div class="ds-hero__share">{% share_buttons hero.share heading=hero.share_heading %}</div>{% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {% comment %}
+    Sticky pin-bar (events, BugHerd #202): a condensed title · date · location
+    bar that fixes below the site header once the hero scrolls out of view.
+    hero-pinbar.js observes the hero and toggles --visible; without JS it never
+    shows. The location link stays clickable; the rest is duplicate hero text.
+  {% endcomment %}
+  {% if hero.sticky_meta %}
+    <div class="ds-hero__pinbar" data-ds-hero-pinbar>
+      <div class="ds-hero__pinbar-inner ds-container">
+        <p class="ds-hero__pinbar-title">{{ hero.title }}</p>
+        <span class="ds-hero__divider" aria-hidden="true"></span>
+        <div class="ds-hero__pinbar-meta">
+          {% if hero.audio.type == 'file' %}
+            {# Compact TTS dock (BugHerd #298): drives the hero's Plyr audio — #}
+            {# one <audio> element, no second player (hero-pinbar.js wires it). #}
+            <div class="ds-hero__pinbar-audio">
+              <button type="button" class="ds-hero__pinbar-play" data-ds-pinbar-play aria-pressed="false">
+                <svg class="icon--not-pressed" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="32" fill="var(--accent-ui)"/><path d="M26 20l20 12-20 12z" fill="#fff"/></svg>
+                <svg class="icon--pressed" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="32" fill="var(--accent-ui)"/><rect x="23" y="20" width="6" height="24" rx="1" fill="#fff"/><rect x="35" y="20" width="6" height="24" rx="1" fill="#fff"/></svg>
+                <span class="label--not-pressed plyr__sr-only">Listen to this article</span>
+                <span class="label--pressed plyr__sr-only">Pause</span>
+              </button>
+              <span class="ds-hero__pinbar-time" data-ds-pinbar-time>00:00</span>
+            </div>
+          {% endif %}
+          {% if hero.date %}<p class="ds-hero__date">{{ hero.date|date:"F j, Y" }}</p>{% endif %}
+          {% if hero.location %}
+            <p class="ds-hero__location">
+              {% if hero.location_url %}<a href="{{ hero.location_url }}" target="_blank" rel="noopener noreferrer">{% endif %}
+              {% include "includes/icon_label.html" with icon="fa-location-dot" label=hero.location %}
+              {% if hero.location_url %}</a>{% endif %}
+            </p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</header>

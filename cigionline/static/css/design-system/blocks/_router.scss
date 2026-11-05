@@ -1,0 +1,806 @@
+// =============================================================================
+// Design System — Router (CPT listing) chrome
+// Faceted listing layout shared by the router pages (Events first; reused by the
+// other routers). Lead-narrow title → filter bar → left filter sidebar (search +
+// collapsible <details> facets) + right results grid → .ds-pager. Server-side
+// filtering; surface-aware. NOTE: CIGI routers use this sidebar layout, NOT the
+// PBA filter-drawer pattern. Chrome specs from the router frame 1366:129318
+// (parity sweep 2026-07-19: boxed facets, Futura options, coloured checks,
+// applied chips, ruled results grid).
+//
+// Router chrome (search rules, checked boxes, calendar, contact links) reads
+// --accent-ui, the interactive accent, not the decorative --accent. A theme or
+// topic colour therefore stays out of the filter UI and it stays red, while the
+// DPH green and a series --brand-accent still carry through (BugHerd #242–#244).
+// =============================================================================
+
+.ds-router {
+  padding-block: var(--space-section-y);
+
+  // --- Filter bar: Filters · Clear All | count ------------------------------
+  &__bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-16);
+    align-items: center;
+    justify-content: space-between;
+    margin-top: var(--space-48);
+    padding-block: var(--space-16);
+    border-block: var(--border-divider) solid var(--surface-border);
+  }
+
+  &__bar-filters { margin: 0; display: flex; align-items: center; gap: var(--space-8); }
+  &__bar-label { @include header-7; color: var(--surface-text); }
+  &__bar-sep { color: var(--surface-border); }
+  &__clear,
+  &__count { @include eyebrow; color: var(--surface-text); margin: 0; }
+  &__clear { text-decoration: none; @include hover-underline; }
+
+  // --- Body: sidebar | results ----------------------------------------------
+  &__body {
+    display: grid;
+    // Sidebar measures --width-410 minus 16 in the frame; the 48px gutter is
+    // split around the full-height rule the results column carries.
+    grid-template-columns: calc(var(--width-410) - var(--space-16)) 1fr;
+    gap: 0;
+    margin-top: var(--space-32);
+  }
+
+  &__sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding-right: var(--space-48);
+  }
+
+  // Drawer controls exist only in the mobile layout (BugHerd #213); the desktop
+  // sidebar is always open, so both buttons stay out of the flow and the a11y
+  // tree here.
+  &__drawer-toggle,
+  &__drawer-close,
+  &__drawer-actions { display: none; }
+
+  &__facet-label {
+    @include header-7b;
+    color: var(--surface-text);
+    text-transform: uppercase;
+  }
+
+  // Search field: single row — uppercase placeholder + magnifier over a 3px
+  // accent rule (no separate label row; the input carries the aria-label).
+  &__search {
+    display: block;
+    padding-bottom: var(--space-16);
+  }
+
+  &__search-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-bottom: 3px solid var(--accent-ui);
+
+    input {
+      flex: 1 1 0;
+      min-width: 0;
+      border: 0;
+      background: none;
+      padding: var(--space-8) 0;
+      @include paragraph-2;
+      color: var(--surface-text);
+      &:focus { outline: none; }
+
+      &::placeholder {
+        @include button-small;
+        color: var(--surface-text);
+        opacity: 1;
+      }
+    }
+  }
+
+  &__search-icon { width: 24px; height: 24px; fill: var(--surface-text); flex-shrink: 0; }
+
+  // Facet group = native <details> rendered as a bordered box: 48px heading row
+  // with 12px side padding, hairline under the heading when open, options
+  // padded inside. Adjacent boxes collapse their shared edge.
+  &__facet {
+    border: var(--border-divider) solid var(--surface-border);
+
+    // Boxes stack with a gap (1253:39873 rail), not shared edges.
+    &:not(:first-of-type) { margin-top: var(--space-16); }
+
+    summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-8);
+      min-height: var(--space-48);
+      padding: var(--space-12);
+      cursor: pointer;
+      list-style: none;
+      &::-webkit-details-marker { display: none; }
+
+      // Thin drawn 16px plus; the vertical stroke hides when open (minus).
+      &::after {
+        content: '';
+        width: var(--space-16);
+        height: var(--space-16);
+        flex-shrink: 0;
+        background:
+          linear-gradient(var(--surface-text), var(--surface-text)) center / var(--space-16) var(--border-divider) no-repeat,
+          linear-gradient(var(--surface-text), var(--surface-text)) center / var(--border-divider) var(--space-16) no-repeat;
+      }
+    }
+
+    &[open] summary {
+      border-bottom: var(--border-divider) solid var(--surface-border);
+
+      &::after {
+        background:
+          linear-gradient(var(--surface-text), var(--surface-text)) center / var(--space-16) var(--border-divider) no-repeat;
+      }
+    }
+  }
+
+  // Search-within-facet (rendered when a facet has >10 options; annotation on
+  // 1366:129503). Client-side filter only — no fetch.
+  &__facet-search {
+    display: flex;
+    align-items: center;
+    margin: var(--space-12) var(--space-12) 0;
+    border-bottom: 2px solid var(--accent-ui);
+
+    input {
+      flex: 1 1 0;
+      min-width: 0;
+      border: 0;
+      background: none;
+      padding: var(--space-4) 0;
+      @include paragraph-3;
+      color: var(--surface-text);
+      &:focus { outline: none; }
+    }
+  }
+
+  &__facet-search-icon { width: var(--space-16); height: var(--space-16); fill: var(--surface-text); flex-shrink: 0; }
+
+  &__options {
+    list-style: none;
+    margin: 0;
+    padding: var(--space-12);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+    // Long option lists (the Experts facet ran the page) cap at ~8 rows and
+    // scroll inside the box (John + Tia, BugHerd #455): 8 × 24px rows + 7 gaps
+    // + the box padding. Short lists are unaffected.
+    max-height: calc(8 * var(--space-24) + 7 * var(--space-12) + 2 * var(--space-12));
+    overflow-y: auto;
+  }
+
+  // Option label: Futura Book 16 (header-7b tracking) with a drawn checkbox —
+  // checked fills with the option's accent (--option-accent, set per option by
+  // the template when the handler supplies one; falls back to the interactive
+  // accent) and the label goes Demi.
+  &__option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-16);
+    font-weight: 400;
+    letter-spacing: var(--tracking-heading);
+    line-height: 1.3;
+    color: var(--surface-text);
+    cursor: pointer;
+
+    input {
+      position: absolute;
+      width: var(--space-16);
+      height: var(--space-16);
+      margin: 0;
+      opacity: 0;
+    }
+
+    span {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-8);
+
+      &::before {
+        content: '';
+        width: var(--space-16);
+        height: var(--space-16);
+        border: var(--border-divider) solid var(--surface-text);
+        flex-shrink: 0;
+      }
+    }
+
+    input:checked + span { font-weight: 500; }
+
+    input:checked + span::before {
+      background: var(--option-accent, var(--accent-ui));
+      border-color: var(--option-accent, var(--accent-ui));
+    }
+
+    // White '>' glyph over the filled box (1253:39873 checked parent).
+    input:checked + span::after {
+      content: '>';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: var(--space-16);
+      transform: translateY(-50%);
+      text-align: center;
+      font-family: var(--font-heading);
+      font-weight: 500;
+      font-size: var(--font-size-14);
+      line-height: 1;
+      color: var(--color-brand-white);
+    }
+
+    input:focus-visible + span::before {
+      outline: 2px solid var(--accent-ui);
+      outline-offset: 2px;
+    }
+  }
+
+  // Child options under a checked parent (1680:96033: indented tag list; the
+  // parent input carries data-router-parent and selects all its children).
+  &__children {
+    list-style: none;
+    margin: var(--space-8) 0 0;
+    padding: 0;
+    display: none;
+    flex-direction: column;
+    gap: var(--space-8);
+
+    // Each child row carries an accent indent bar (1253:39873).
+    > li {
+      border-left: 2px solid var(--option-accent, var(--accent-ui));
+      padding-left: var(--space-16);
+    }
+  }
+
+  &__options li:has(> .ds-router__option input:checked) > &__children { display: flex; }
+
+  // Applied-filter chips below a facet box: removable grey "value ×" tokens
+  // (visible in 1689:101275 / 1321:53357 / 1312:29981). Server-rendered on
+  // load; router.js keeps them in sync.
+  &__chips {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-8);
+    margin: var(--space-8) 0;
+    padding: 0;
+
+    &:empty { display: none; }
+    li { margin: 0; }
+  }
+
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
+    padding: var(--space-4) var(--space-8);
+    border: 0;
+    background: var(--color-brand-light-grey);
+    color: var(--color-brand-black);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-14);
+    font-weight: 400;
+    line-height: 1.5;
+    cursor: pointer;
+  }
+
+  // Date facet (1253:39873): bold "Date" title (not uppercase) + "Today" link
+  // in the header with a chevron collapse glyph; body is Month/Year selects
+  // over a Monday-first calendar grid (built by router-calendar.js).
+  &__facet--date {
+    summary {
+      justify-content: flex-start;
+
+      &::after {
+        width: 8px;
+        height: 8px;
+        background: none;
+        border-right: 2px solid var(--surface-text);
+        border-bottom: 2px solid var(--surface-text);
+        transform: rotate(45deg); // points down (expand)
+      }
+    }
+
+    &[open] summary::after {
+      background: none;
+      transform: rotate(225deg); // points up (collapse)
+    }
+  }
+
+  &__date-title {
+    @include header-6;
+    text-transform: none;
+    color: var(--surface-text);
+  }
+
+  &__today {
+    margin-left: auto;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: var(--font-size-16);
+    letter-spacing: var(--tracking-heading);
+    color: var(--surface-text);
+    text-decoration: underline;
+  }
+
+  &__date {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+    margin: var(--space-12); // inside the facet box
+
+    select {
+      @include paragraph-2;
+      color: var(--surface-text);
+      padding: var(--space-8) var(--space-12);
+      border: var(--border-divider) solid var(--surface-border);
+      background: var(--surface-bg, transparent);
+    }
+
+    // Year chip is solid dark with white text (1253:39873).
+    select.ds-router__year-select {
+      background: var(--color-surface-black-white);
+      color: var(--color-text-white-black);
+      border-color: transparent;
+    }
+  }
+
+  &__date-selects {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-8);
+  }
+
+  &__cal-head,
+  &__cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+  }
+
+  &__cal-head span {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: var(--font-size-14);
+    letter-spacing: var(--tracking-heading);
+    color: var(--accent-ui);
+    text-align: center;
+    padding-block: var(--space-4);
+  }
+
+  &__cal-day {
+    border: 0;
+    background: none;
+    cursor: pointer;
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: var(--font-size-14);
+    letter-spacing: var(--tracking-heading);
+    color: var(--surface-text);
+    text-align: center;
+    padding-block: var(--space-8);
+
+    &.is-outside {
+      color: var(--color-brand-light-grey);
+      cursor: default;
+    }
+
+    &.is-today { font-weight: 500; }
+
+    &.is-selected {
+      background: var(--accent-ui);
+      color: var(--color-brand-white);
+    }
+  }
+
+  // --- Results --------------------------------------------------------------
+  &__results {
+    min-width: 0;
+    border-left: var(--border-divider) solid var(--surface-border);
+    padding-left: var(--space-48);
+
+    // In-place filtering (router.js): dim + lock while the swap fetch is in flight.
+    &.is-loading {
+      opacity: 0.6;
+      pointer-events: none;
+      @include transition(opacity var(--motion-duration-fast) var(--motion-ease-standard));
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    // Full-width horizontal-row cards (episode_row) stack one per row and
+    // carry their own row dividers.
+    &--rows { grid-template-columns: 1fr; }
+
+
+    // Bordered-card grids (annual reports, 1429:74226): plain grid, no rules,
+    // gap/gap-48 both axes (the frame's spacing token).
+    &--plain { gap: var(--space-48); }
+
+    // No-filter person grids (DPH Speakers, 1595:82296): 3-up with the same
+    // ruled treatment (column rules via cells, rows via hairlines).
+    &--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
+  &__grid--three {
+    .ds-router__cell {
+      position: relative;
+      padding: var(--space-48) var(--space-24);
+      border-bottom: var(--border-divider) solid var(--surface-border);
+
+      &:nth-child(3n + 1) { padding-left: 0; }
+      &:nth-child(3n) { padding-right: 0; }
+      &:nth-child(-n + 3) { padding-top: 0; }
+
+      &:not(:nth-child(3n + 1))::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: var(--space-48);
+        bottom: var(--space-48);
+        width: var(--border-divider);
+        background: var(--surface-border);
+      }
+      &:nth-child(-n + 3)::before { top: 0; }
+    }
+  }
+
+  &__cell { min-width: 0; }
+
+  // Ruled results grid (default 2-col): hairline between rows, vertical rule
+  // between the two columns (same construction as .ds-experts-grid).
+  &__grid:not(&__grid--rows):not(&__grid--three):not(&__grid--plain) {
+    .ds-router__cell {
+      position: relative;
+      padding: var(--space-48) var(--space-24);
+      border-bottom: var(--border-divider) solid var(--surface-border);
+
+      &:nth-child(odd) { padding-left: 0; }
+      &:nth-child(even) { padding-right: 0; }
+      &:nth-child(-n + 2) { padding-top: 0; }
+      // The last row keeps its rule — it's the keypage's full-width divider
+      // above the pagination.
+
+      // Vertical rule centred in the gutter, clearing the row rules.
+      &:nth-child(even)::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: var(--space-48);
+        bottom: var(--space-48);
+        width: var(--border-divider);
+        background: var(--surface-border);
+      }
+      &:nth-child(-n + 2)::before { top: 0; }
+    }
+  }
+
+  &__pager { margin-top: var(--space-24); }
+
+  &__empty { @include paragraph-1; color: var(--surface-text); }
+
+  // --- Laptop: the fixed 410px sidebar ate ~40% of a 1024 viewport (Yang,
+  // BugHerd #272) — Kay: filters take 1/3, results 2/3 at this breakpoint.
+  @media (max-width: 1024px) {
+    &__body { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
+  }
+
+  // --- Mobile: sidebar above results ----------------------------------------
+  @media (max-width: 768px) {
+    &__body { grid-template-columns: 1fr; gap: var(--space-32); }
+    &__sidebar { padding-right: 0; }
+
+    // --- Filters drawer (BugHerd #213) --------------------------------------
+    // The facets ate the screen above the results. On mobile the sidebar keeps
+    // only the search + a Filters trigger; the facets slide in from the right
+    // as a panel. router.js toggles --open and locks the body scroll.
+    &__drawer-toggle {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      margin-top: var(--space-16);
+    }
+
+    &__drawer-close {
+      position: absolute;
+      top: var(--space-16);
+      right: var(--space-16);
+      display: none; // revealed with the open panel
+      width: 44px;   // 44px touch target
+      height: 44px;
+      font-size: var(--font-size-32);
+      line-height: 1;
+      color: var(--surface-text);
+      background: none;
+      border: 0;
+      cursor: pointer;
+    }
+
+    // Facets (and their chips) hide until the drawer opens; search + trigger stay.
+    &__facet,
+    &__chips { display: none; }
+
+    &__sidebar--open {
+      position: fixed;
+      inset: 0;
+      z-index: 120; // over the site header (100), as the nav drawer does
+      overflow-y: auto;
+      // The panel is its own surface — it floats over page content, so it can't
+      // inherit a transparent one.
+      background: var(--surface-bg, var(--color-brand-white));
+      padding: calc(var(--space-48) + var(--space-16)) var(--space-24) var(--space-48);
+
+      .ds-router__facet,
+      .ds-router__chips { display: block; }
+
+      .ds-router__drawer-close { display: block; }
+      // The trigger is the way in, not a control inside the panel.
+      .ds-router__drawer-toggle { display: none; }
+
+      // Apply / Clear row (Juode, BugHerd #213). It sticks to the panel's
+      // bottom edge so a long facet list can't bury it, and it carries the
+      // panel's own background so the facets scroll behind it. The negative
+      // inline margins and the padding put the rule and the fill across the
+      // panel's full width, past its 24px gutter.
+      .ds-router__drawer-actions {
+        display: flex;
+        // Stacked, not side by side: at 375px an equal-width pair wrapped
+        // "Clear Filters" onto a second line while "Apply Filters" held one.
+        flex-direction: column;
+        gap: var(--space-16);
+        position: sticky;
+        bottom: calc(-1 * var(--space-48));
+        margin: var(--space-32) calc(-1 * var(--space-24)) calc(-1 * var(--space-48));
+        padding: var(--space-16) var(--space-24) var(--space-24);
+        background: var(--surface-bg, var(--color-brand-white));
+        border-top: var(--border-divider) solid var(--surface-border);
+
+        .ds-button { flex: 1 1 0; justify-content: center; }
+      }
+    }
+    &__results { border-left: 0; padding-left: 0; }
+    &__grid { grid-template-columns: 1fr; }
+    &__grid:not(&__grid--rows):not(&__grid--three):not(&__grid--plain) .ds-router__cell {
+      padding: var(--space-24) 0;
+      // :nth-child(even) matches the desktop divider's specificity — the bare
+      // ::before suppression lost to it, so every other stacked card kept its
+      // vertical rule and read as a box (BugHerd #145).
+      &::before,
+      &:nth-child(even)::before { content: none; }
+      &:nth-child(-n + 2) { padding-top: var(--space-24); }
+      &:first-child { padding-top: 0; }
+    }
+    &__grid--three .ds-router__cell {
+      padding: var(--space-24) 0;
+      border-bottom: var(--border-divider) solid var(--surface-border);
+      &::before,
+      &:not(:nth-child(3n + 1))::before { content: none; }
+      &:nth-child(-n + 3) { padding-top: var(--space-24); }
+      &:first-child { padding-top: 0; }
+    }
+  }
+}
+
+// --- Annual report card (Annual Reports Router results) ----------------------
+// Cover image + title + a list of download/explore links (EN / FR report,
+// financial statement, interactive). Accent links with a trailing icon.
+.ds-report-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  border: var(--border-divider) solid var(--surface-text);
+  padding: var(--space-16);
+
+  &__cover {
+    display: block;
+    img { display: block; width: 100%; height: auto; }
+  }
+
+  &__title {
+    @include header-5;
+    margin: 0;
+    a { color: var(--surface-text); text-decoration: none; @include hover-underline; }
+  }
+
+  &__links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+
+    a {
+      @include button-small;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-8);
+      color: var(--accent-ui);
+      text-decoration: none;
+      @include hover-underline;
+    }
+  }
+
+  &__icon { width: 1em; height: 1em; fill: currentColor; flex-shrink: 0; }
+}
+
+// --- Search resource card (Resources Router results) -------------------------
+// Reuses .ds-card--resource-compact (pills + title + excerpt + date) and adds an
+// author byline + type-of-content row.
+.ds-search-card {
+  // Byline: "AUTHOR NAME, POSITION" — uppercase Futura Book 16 (1689:102185).
+  &__byline {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: var(--font-size-16);
+    letter-spacing: var(--tracking-heading);
+    text-transform: uppercase;
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  // Body snippet with the matched terms — ES wraps each match in <em>, drawn
+  // as an accent-tinted mark (not italic; the fragment is prose, not emphasis).
+  &__snippet em {
+    font-style: normal;
+    background-color: color-mix(in srgb, var(--accent-ui) 16%, transparent);
+  }
+}
+
+// --- Faceted-listing module (router as a placeable block) --------------------
+// Reuses the .ds-router chrome. As a page section it keeps the section
+// padding it inherits from .ds-router; inside a composable-tab panel the
+// panel supplies the rhythm, so it zeroes there.
+.ds-faceted-listing {
+  // NOTE: inside composable-tab panels the listing keeps its section-y padding
+  // — the panels themselves are flush (see _tabs.scss) and the surface band
+  // covers the padding (DPH listing tabs, 1595:97064: 80px block).
+
+  // The optional module heading sits above the filter bar.
+  .ds-section-header { margin-bottom: var(--space-32); }
+
+  // No-filter variant (e.g. DPH Speakers): a plain card grid + pager, full width.
+  &--plain {
+    // Section title → grid gap is 80 (1595:97064; sibling margins collapse).
+    .ds-router__results { margin-top: var(--space-80); border-left: 0; padding-left: 0; }
+  }
+
+  &__loading,
+  .ds-router__loading {
+    @include paragraph-2;
+    color: var(--surface-text);
+    opacity: 0.7;
+    padding-block: var(--space-48);
+  }
+}
+
+// --- Staff card (Staff Directory results) ------------------------------------
+// name · position · phone · email · optional avatar + Read Bio. Uses existing
+// PersonPage.position/email/phone_number — no new field.
+// Single divider, per Kay (BugHerd #230). The card drew its own bottom rule AND
+// sat in the default ruled grid, whose cell draws one too — two hairlines 25px
+// apart. The cell owns the rule and the padding for every other card in that
+// grid (.ds-expert-card carries neither), so the card drops both. A card that
+// rules itself belongs in a --rows grid, like .ds-episode-row.
+.ds-staff-card {
+  display: flex;
+  gap: var(--space-16);
+
+  &__avatar {
+    flex: 0 0 auto;
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
+    border-radius: 50%;
+    img { width: 100%; height: 100%; object-fit: cover; }
+  }
+
+  // No photo: a quiet person glyph in the same circle, so the text columns
+  // keep the avatar offset and rows align (Kay, BugHerd #334).
+  &__avatar--default {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-brand-light-grey);
+
+    svg { width: 44px; height: 44px; fill: var(--color-brand-grey); }
+  }
+
+  &__body { display: flex; flex-direction: column; gap: var(--space-4); }
+  &__name { @include header-5; color: var(--surface-text); text-decoration: none; @include hover-underline; }
+  &__position { @include paragraph-2; color: var(--surface-text); margin: 0; }
+  &__contact {
+    list-style: none; margin: var(--space-4) 0 0; padding: 0;
+    display: flex; flex-wrap: wrap; gap: var(--space-16);
+    a { @include paragraph-3; color: var(--accent-ui); text-decoration: none; @include hover-underline; }
+  }
+  &__bio-link {
+    @include button-small;
+    margin-top: var(--space-8);
+    color: var(--accent-ui);
+    text-decoration: none;
+    @include hover-underline;
+  }
+}
+
+// --- Episode row (Podcast All-Episodes results) ------------------------------
+// 1314:33169: one column — small grey date stacked over the title + excerpt —
+// then a short vertical divider and a circled headphones icon.
+.ds-episode-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-24);
+  padding-block: var(--space-24);
+  border-bottom: var(--border-divider) solid var(--surface-border);
+
+  &__main { flex: 1 1 0; min-width: 0; }
+
+  &__date {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: var(--font-size-14); // smallest ramp size (frame shows 12; no 12 token)
+    letter-spacing: var(--tracking-heading);
+    color: var(--color-brand-grey);
+    margin: 0 0 var(--space-8);
+  }
+
+  &__title { @include header-5; color: var(--surface-text); text-decoration: none; @include hover-underline; }
+  &__excerpt { @include paragraph-2; color: var(--surface-text); margin: var(--space-8) 0 0; }
+
+  // Series · Season, Episode line (BugHerd #274) — same quiet type as the date.
+  &__meta {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: var(--font-size-14);
+    letter-spacing: var(--tracking-heading);
+    color: var(--color-brand-grey);
+    margin: var(--space-8) 0 0;
+  }
+
+  // Short per-row divider, then the outlined circle around the glyph.
+  &__icon-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    border: var(--border-divider) solid var(--surface-border);
+    border-radius: 50%;
+    margin-left: var(--space-24);
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: calc(-1 * var(--space-24));
+      top: 0;
+      bottom: 0;
+      width: var(--border-divider);
+      background: var(--surface-border);
+    }
+  }
+
+  &__icon { width: 28px; height: 28px; fill: var(--surface-text); }
+
+  @media (max-width: 768px) {
+    &__icon-wrap { display: none; }
+  }
+}

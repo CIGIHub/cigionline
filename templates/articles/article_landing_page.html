@@ -1,93 +1,27 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags webpack_loader core_tags cache %}
+{% load cards heroes wagtailcore_tags %}
+{% comment %}
+  Opinions landing (ArticleLandingPage) — image alt-hero (breadcrumb + H1 +
+  subtitle) over the authored body modules (BugHerd #124: the page composes
+  with DS modules, e.g. a Resource Bento; the hardcoded faceted listing is
+  retired). RouterServeMixin still serves AJAX partial swaps for any authored
+  faceted-listing block. The legacy Featured grid retired with the old template.
+{% endcomment %}
 
-{% block extra_css %}
-  {% render_bundle 'articleLandingPage' 'css' %}
-{% endblock %}
-{% block extra_js %}
-  {% render_bundle 'articleLandingPage' 'js' attrs='defer' %}
+{% block meta_description %}
+  {% if self.subtitle %}<meta name="description" content="{{ self.subtitle|striptags|truncatewords:40 }}" />{% endif %}
 {% endblock %}
 
 {% block content %}
-  {% preview_cache_bust as is_preview %}
-  {% cache 86400 article_landing_featured_items self.pk self.latest_revision_created_at|date:"c" request.GET.urlencode is_preview %}
-    {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-    <section class="featured">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h2 class="paragraph-heading">Featured</h2>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12">
-            {% if featured_articles|length > 0 %}
-              {% include "includes/features/feature_content_xlarge.html" with content=featured_articles.0 %}
-            {% endif %}
-          </div>
-        </div>
-        <hr>
-        <div class="row">
-          <div class="col-12 col-md-8">
-            {% if featured_articles|length > 1 %}
-              {% include "includes/features/feature_content_large.html" with content=featured_articles.1 %}
-            {% endif %}
-          </div>
-          <hr>
-          <div class="col-12 col-md-4 featured-small">
-            {% with featured_articles|slice:"2:7" as featured_small %}
-              {% for item in featured_small %}
-                {% if forloop.counter > 1 %}
-                  <hr>
-                {% endif %}
-                {% include "includes/features/feature_content_small.html" with content=item %}
-              {% endfor %}
-            {% endwith %}
-          </div>
-        </div>
-        <hr>
-        <div class="row">
-          {% with featured_articles|slice:"7:9" as featured_medium %}
-            {% for item in featured_medium %}
-              {% if forloop.counter > 1 %}
-                <hr>
-              {% endif %}
-              <div class="col-12 col-md-6">
-                {% include "includes/features/feature_content_medium.html" with content=item with_subtitle=True %}
-              </div>
-            {% endfor %}
-          {% endwith %}
-        </div>
-        <hr>
-        <div class="row">
-          <div class="col-12 col-md-4 featured-small">
-            {% with featured_articles|slice:"10:15" as featured_small %}
-              {% for item in featured_small %}
-                {% if forloop.counter > 1 %}
-                  <hr>
-                {% endif %}
-                {% include "includes/features/feature_content_small.html" with content=item %}
-              {% endfor %}
-            {% endwith %}
-          </div>
-          <hr>
-          <div class="col-12 col-md-8">
-            {% if featured_articles|length > 9 %}
-              {% include "includes/features/feature_content_large.html" with content=featured_articles.9 %}
-            {% endif %}
-          </div>
-        </div>
-      </div>
-    </section>
-  {% endcache %}
-  <section>
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <div id="opinions-search-table">
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  {% if self.image_hero and not self.body|starts_with_hero %}
+    {% include "includes/alt_hero.html" with image=self.image_hero heading=self.title heading_tag="h1" crumbs=hero_crumbs description=self.subtitle %}
+  {% elif not self.body|starts_with_hero %}
+    {# No authored hero — the DS listing hero (breadcrumb · title · subtitle). #}
+    {% page_hero self %}
+  {% endif %}
+
+  {# Authored modules (e.g. the Programs Carousel, BugHerd #116) compose the page. #}
+  {% for block in self.body %}
+    {% include_block block %}
+  {% endfor %}
 {% endblock content %}

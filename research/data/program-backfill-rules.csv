@@ -1,0 +1,59 @@
+kind,source_id,source_title,target_program_slug,note
+legacy_program,119,Global Commission on Internet Governance (2014-2016),supporting-safer-digital-spaces,"internet-governance lineage: GCIG -> GPGN -> SSDS"
+legacy_program,123,Strengthening Canada's National Security in a Complex World,national-security-and-cybersecurity,direct successor (worksheet tentative match)
+legacy_program,124,Global Platform Governance Network,supporting-safer-digital-spaces,platform-governance successor
+legacy_program,23096,Space Governance 4.0,space-governance,same program; legacy activity page
+legacy_program,21490,Legitimate Influence or Unlawful Manipulation?,freedom-of-thought,content is influence ops / cognitive liberty
+legacy_program,22226,The Impact of Artificial Intelligence on Military Defence and Security,global-ai-risks,military AI risk
+legacy_program,122,World Refugee Council,multilateral-and-institutional-reform,refugee-system / UN reform content
+legacy_program,120,Canada-India Track 1.5 Dialogue on Innovation Growth and Prosperity,india-and-china-in-a-multipolar-world,worksheet-named predecessor
+legacy_program,22925,Digital Assets in a Deglobalized World,governance-of-digital-money-and-assets,direct successor (worksheet tentative match)
+legacy_program,22551,Canada at Economic War,canada-us-relations-in-the-second-century,"tariff war / Trump / Canada-US content"
+legacy_program,121,Research Related to the International Grand Committee,supporting-safer-digital-spaces,platform governance / disinformation content
+legacy_program,21657,Waterloo Security Dialogue,national-security-and-cybersecurity,cybersecurity dialogue series
+legacy_program,22950,Next-Generation Economies: Middle Powers in a Changing World,next-generation-economies,same program lineage
+legacy_program,22468,Digitalization of the Global Economy,next-generation-economies,productivity / standard-of-living content
+legacy_program,21644,Global Economic Scenarios,next-generation-economies,global economic order scenarios
+legacy_program,22470,Global Peace and Security,multilateral-and-institutional-reform,single T7/G7 piece
+legacy_program,22467,Transformative Technologies - AI and Quantum,multilateral-and-institutional-reform,single T7/G7 piece
+legacy_program,22469,"Environment, Energy and Sustainable Development",multilateral-and-institutional-reform,single T7/G7 piece
+legacy_program,23326,"Social Cohesion, Economic Transformation and Open Societies",next-generation-economies,productivity lecture series
+topic,81,Trade,next-generation-economies,"trade / tariffs / WTO content"
+topic,49,Emerging Technologies,responsible-technology,broad emerging-tech governance
+topic,48,Financial Governance,next-generation-economies,"bulk is pre-digital macro-finance (IMF / banking / euro zone); digital-money pieces reach GDMA via other rules"
+topic,21810,Multilateral Institutions,multilateral-and-institutional-reform,direct match
+topic,21808,Geopolitics,india-and-china-in-a-multipolar-world,"multipolarity content; matches prior provisional GCG mapping"
+topic,44,Platform Governance,supporting-safer-digital-spaces,direct match
+topic,41,Democracy,supporting-safer-digital-spaces,"disinformation / election-security content"
+topic,40,National Security,national-security-and-cybersecurity,direct match
+topic,31,AI,global-ai-risks,"AI governance / regulation / safety content"
+topic,32,Data Governance,responsible-technology,"data policy / digital sovereignty; no DES program fits"
+topic,54,Human Rights,freedom-of-thought,"FoT topic merged into Human Rights (tag worksheet)"
+topic,63,IP,next-generation-economies,innovation-economics home
+topic,21803,Digital Economy,next-generation-economies,digital-economy / productivity content
+topic,21811,Privacy,supporting-safer-digital-spaces,"surveillance / online-harms content"
+topic,21805,Digital Governance,responsible-technology,digital sovereignty / tech governance
+topic,21802,Cybersecurity,national-security-and-cybersecurity,direct match
+topic,21812,Quantum,responsible-technology,quantum governance
+topic,39,Climate Change,multilateral-and-institutional-reform,archived; global-cooperation content
+topic,37,Conflict Management,national-security-and-cybersecurity,"archived; Ukraine / NATO / intelligence content"
+topic,45,Diplomacy,multilateral-and-institutional-reform,archived; Canadian foreign policy / multilateralism
+topic,78,Sustainable Development,next-generation-economies,archived; development economics / SDGs
+topic,67,Monetary Policy,governance-of-digital-money-and-assets,"archived; central banking / digital-currency lean"
+topic,33,Brexit,multilateral-and-institutional-reform,archived; leaving a multilateral institution
+topic,59,Indigenous Peoples,freedom-of-thought,archived; rights content
+topic,75,Sovereign Debt,next-generation-economies,archived; macro-finance
+topic,74,Refugees,multilateral-and-institutional-reform,archived; consistent with World Refugee Council rule
+topic,65,Investor State Arbitration,next-generation-economies,archived; trade / investment law
+topic,30,Arctic,national-security-and-cybersecurity,archived; Arctic security content
+topic,46,Diversity & Inclusion,supporting-safer-digital-spaces,archived; digital divide / online GBV content
+topic,76,Standards,responsible-technology,archived; standardization / digital rulemaking
+topic,53,Future of Work,next-generation-economies,archived; automation / labour economics
+topic,36,Clean Technology,next-generation-economies,archived; cleantech innovation
+topic,80,Traditional Knowledge,freedom-of-thought,archived; consistent with Indigenous Peoples rule
+topic,79,Systemic Risk,national-security-and-cybersecurity,archived; pandemic-intelligence / ransomware content
+topic,69,Oceans,multilateral-and-institutional-reform,archived; law-of-the-sea / seabed liability
+topic,70,Patents,next-generation-economies,archived; IP home
+topic,72,Productivity,next-generation-economies,archived; direct match
+topic,34,Central Banking,next-generation-economies,archived; single productivity piece
+topic,58,IMF,multilateral-and-institutional-reform,archived; single development-finance piece

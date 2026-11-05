@@ -1,0 +1,54 @@
+{% load static wagtailcore_tags wagtailimages_tags icons %}
+{% comment %}
+  Newsletter Sign-up CTA — the full red sign-up panel (mod library CTA/15,
+  1360:106698). Photo underlay + hard-light red wash (same treatment as the
+  slim .ds-subscribe band); ruled heading top-left, serif text bottom-left,
+  first/last/email form bottom-right. Posts the /subscribe/ prefill hand-off
+  (POST keeps PII out of URLs; CSRF-exempted in middleware.py). Consent line
+  from FooterSettings, matching the footer + slim band.
+{% endcomment %}
+{# Authored Light/Dark surface wraps the band so it flows with the module above (BugHerd #111). #}
+<div class="ds-surface ds-surface--{{ self.surface|default:'light' }}">
+{% comment %} Green repaints the panel itself, not just the band behind it (BugHerd #171). The panel no longer depends on the authored band: on the hub the page accent is green, so a Light band keeps the green panel instead of dropping back to brand red (Kay, BugHerd #240). main_accent_scheme is green only in the DPH subtree — theme accents are blue/teal/olive/mauve — and a missing variable is simply falsy here. Same page-context read as includes/resource_carousel.html. {% endcomment %}
+<div class="ds-newsletter-cta ds-container{% if self.surface == 'green' or main_accent_scheme == 'green' %} ds-newsletter-cta--green{% endif %}">
+  <section class="ds-newsletter-cta__panel" aria-label="Newsletter sign-up">
+    {% if self.image %}
+      {% image self.image width-1600 class="ds-newsletter-cta__bg" %}
+    {% else %}
+      <img class="ds-newsletter-cta__bg" src="{% static 'assets/ds-subscribe-bg.png' %}" alt="" aria-hidden="true">
+    {% endif %}
+    <span class="ds-newsletter-cta__wash" aria-hidden="true"></span>
+
+    <div class="ds-newsletter-cta__inner">
+      <div class="ds-newsletter-cta__lead">
+        {% if self.heading %}
+          <h2 class="ds-newsletter-cta__heading"><span class="ds-newsletter-cta__heading-text">{{ self.heading }}</span></h2>
+        {% endif %}
+        {% if self.text %}<div class="ds-newsletter-cta__text">{{ self.text|richtext }}</div>{% endif %}
+      </div>
+
+      <div class="ds-newsletter-cta__signup">
+        {# data-ds-subscribe: submit swaps the label for a spinner (subscribe-form.js + _spinner.scss) #}
+        <form class="ds-newsletter-cta__form" title="Newsletter Sign Up" action="/subscribe/" method="post" data-ds-subscribe>
+          <input type="hidden" name="prefill" value="1">
+          <div class="ds-newsletter-cta__names">
+            <input class="ds-newsletter-cta__field" type="text" name="first_name" placeholder="First Name" aria-label="First name" autocomplete="given-name">
+            <input class="ds-newsletter-cta__field" type="text" name="last_name" placeholder="Last Name" aria-label="Last name" autocomplete="family-name">
+          </div>
+          <div class="ds-newsletter-cta__row">
+            <input class="ds-newsletter-cta__field" type="email" name="email" placeholder="Enter your email" aria-label="Email" required="required" aria-required="true" autocomplete="email">
+            <button class="ds-newsletter-cta__submit" type="submit">
+              <span class="ds-newsletter-cta__submit-label">Subscribe</span>
+              {% ds_icon 'chevron-right' css_class='ds-newsletter-cta__submit-icon' %}
+              <span class="ds-spinner" aria-hidden="true"></span>
+            </button>
+          </div>
+        </form>
+        {% if settings.core.FooterSettings.newsletter_consent %}
+          <div class="ds-newsletter-cta__consent">{{ settings.core.FooterSettings.newsletter_consent|richtext }}</div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+</div>
+</div>

@@ -22,15 +22,6 @@ from django.utils.text import slugify
 from wagtail.documents.models import Document
 
 from .models import Registrant
-from .forms import CHOICE_LIMIT_FIELD_TYPES, is_non_answer_field_type, parse_choice_limits
-
-
-def _as_values(value: Any) -> list[str]:
-    if value in (None, "", False):
-        return []
-    if isinstance(value, (list, tuple, set)):
-        return [str(v).strip() for v in value if str(v).strip()]
-    return [str(value).strip()]
 
 
 def build_type_rows(event) -> list[dict[str, Any]]:
@@ -56,56 +47,6 @@ def build_type_rows(event) -> list[dict[str, Any]]:
     return type_rows
 
 
-def build_choice_summary_rows(event) -> list[dict[str, Any]]:
-    """Count active registrants by answer option for choice-style questions."""
-
-    form_template = getattr(event, "registration_form_template", None)
-    if not form_template:
-        return []
-
-    form_fields = [
-        ff
-        for ff in form_template.fields.all().order_by("sort_order")
-        if ff.field_type in CHOICE_LIMIT_FIELD_TYPES
-    ]
-    if not form_fields:
-        return []
-
-    registrant_answers = list(
-        Registrant.objects.filter(event=event)
-        .exclude(status=Registrant.Status.CANCELLED)
-        .values_list("answers", flat=True)
-    )
-
-    rows = []
-    for ff in form_fields:
-        key = f"f_{ff.field_key}"
-        options = [choice.strip() for choice in (ff.choices or "").splitlines() if choice.strip()]
-        counts = {option: 0 for option in options}
-        for answers in registrant_answers:
-            for value in _as_values((answers or {}).get(key)):
-                if value in counts:
-                    counts[value] += 1
-
-        limits = parse_choice_limits(ff)
-        rows.append(
-            {
-                "label": ff.label,
-                "field_type": ff.field_type,
-                "options": [
-                    {
-                        "label": option,
-                        "count": counts[option],
-                        "limit": limits.get(option),
-                    }
-                    for option in options
-                ],
-            }
-        )
-
-    return rows
-
-
 @dataclass(frozen=True)
 class AnswerColumn:
     label: str
@@ -129,9 +70,6 @@ def build_answer_columns(event) -> list[AnswerColumn]:
     columns: list[AnswerColumn] = []
 
     for ff in form_fields:
-        if is_non_answer_field_type(ff.field_type):
-            continue
-
         base = f"f_{ff.field_key}"
 
         if ff.field_type in {"conditional_dropdown_other", "conditional_multiselect_other"}:
@@ -277,7 +215,6 @@ def registrants_csv_response(
     event,
     registrants_qs,
     filename_prefix: str,
-    include_attendance: bool = False,
 ) -> HttpResponse:
     """CSV download for a registrants queryset (event-wide or per-type)."""
 
@@ -305,8 +242,7 @@ def registrants_csv_response(
 
     form_template = getattr(event, "registration_form_template", None)
     form_fields = list(form_template.fields.all().order_by("sort_order")) if form_template else []
-    answer_fields = [ff for ff in form_fields if not is_non_answer_field_type(ff.field_type)]
-    file_fields = [ff for ff in answer_fields if ff.field_type == "file"]
+    file_fields = [ff for ff in form_fields if ff.field_type == "file"]
 
     header = [
         "Registrant ID",
@@ -320,10 +256,8 @@ def registrants_csv_response(
         "Invited?",
         "Invite Email",
     ]
-    if include_attendance:
-        header.insert(3, "Attended?")
 
-    for ff in answer_fields:
+    for ff in form_fields:
         if ff.field_type == "file":
             continue
         if ff.field_type == "conditional_text":
@@ -372,13 +306,11 @@ def registrants_csv_response(
             "Yes" if getattr(r, "invite_id", None) else "No",
             getattr(r.invite, "email", "") if getattr(r, "invite_id", None) else "",
         ]
-        if include_attendance:
-            base_row.insert(3, "Yes" if getattr(r, "attended", False) else "No")
 
         answers = getattr(r, "answers", {}) or {}
 
         non_file_cells: list[str] = []
-        for ff in answer_fields:
+        for ff in form_fields:
             if ff.field_type == "file":
                 continue
 

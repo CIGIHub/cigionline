@@ -1,0 +1,18 @@
+{% load wagtailcore_tags %}
+{% comment %}
+  One design-system footer column. Expects `col` = a menus.Menu (or None).
+  Heading = Menu.name; links = its MenuItems (page chooser or external URL).
+{% endcomment %}
+{% if col %}
+<div class="ds-footer__col">
+  <h3 class="ds-footer__col-heading">{{ col.name }}</h3>
+  {% if col.menu_items.all %}
+  <ul class="ds-footer__links">
+    {% for link in col.menu_items.all %}
+      {# data-label reserves the bold hover width (header pattern, BugHerd #154). #}
+      <li><a href="{% if link.link_page %}{% pageurl link.link_page %}{% elif link.link_url %}{{ link.link_url }}{% else %}#{% endif %}" data-label="{{ link.title }}">{{ link.title }}</a></li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</div>
+{% endif %}

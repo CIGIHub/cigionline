@@ -1,0 +1,13 @@
+{% load cards wagtailimages_tags icons wagtailcore_tags %}
+<article class="ds-report-card">
+  {% if item.image_poster %}
+    <a class="ds-report-card__cover" href="{% pageurl item %}">{% image item.image_poster fill-560x420 %}</a>
+  {% endif %}
+  <h2 class="ds-report-card__title"><a href="{% pageurl item %}">{{ item|display_title }}</a></h2>
+  <ul class="ds-report-card__links">
+    {% if item.report_english %}<li><a href="{{ item.report_english.url }}">Explore Report {{ item.year }}{% ds_icon 'chevron-right' css_class='ds-report-card__icon' %}</a></li>{% endif %}
+    {% if item.report_french %}<li><a href="{{ item.report_french.url }}">Explore Report {{ item.year }} (FR){% ds_icon 'chevron-right' css_class='ds-report-card__icon' %}</a></li>{% endif %}
+    {% if item.report_financial %}<li><a href="{{ item.report_financial.url }}">{{ item.year }} Financial Statement<svg class="ds-report-card__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20h14v-2H5v2zm7-16-5.5 5.5L8 11l3-3v8h2V8l3 3 1.5-1.5L12 4z"/></svg></a></li>{% endif %}
+    {% if item.report_interactive %}<li><a href="{{ item.report_interactive }}">Interactive Report{% ds_icon 'chevron-right' css_class='ds-report-card__icon' %}</a></li>{% endif %}
+  </ul>
+</article>

@@ -1,0 +1,79 @@
+{% load icons %}{% comment %}
+  Shared DS inquiry form renderer (#163): any DsSteppedFormMixin form rendered
+  to the design-system form contract — [data-ds-form] wrapper, [data-ds-field]
+  rows, step-break headings that multistep-form.js pages between (progress
+  bar + per-step validation; a single-step form renders as one plain page,
+  and without JS everything does). `next` returns the visitor to the hosting
+  page. Success message renders globally in base.html (outside the page
+  cache). Params: form (bound or unbound), form_action (POST target URL;
+  defaults to the venue rental view), next_url.
+{% endcomment %}
+<div class="ds-form" data-ds-form>
+  <form action="{% if form_action %}{{ form_action }}{% else %}{% url 'venue_rental_inquiry' %}{% endif %}" method="post" novalidate>
+    {% csrf_token %}
+    {# get_full_path, not path: inside a tab panel the ?tab= slug must survive #}
+    {# the round trip, or a submit lands the visitor on the first tab (#163). #}
+    <input type="hidden" name="next" value="{{ next_url|default:request.get_full_path }}">
+
+    {% if form.non_field_errors %}
+      <div class="ds-form__errors">
+        {% for error in form.non_field_errors %}<p class="ds-form__error">{{ error }}</p>{% endfor %}
+      </div>
+    {% endif %}
+
+    {% for step_label, step_rows in form.steps %}
+      {# Empty stepper marker — the frame (1360:106549) shows no step headings. #}
+      <div class="ds-form__field ds-form__field--step-break" data-ds-field></div>
+      {% for row in step_rows %}
+        {# Paired fields (First/Last, City/Postal) share a 2-up row; the row #}
+        {# carries data-ds-field so the stepper shows/hides it as one unit. #}
+        {% if row|length > 1 %}
+          <div class="ds-form__row" data-ds-field>
+            {% for field in row %}
+              <div class="ds-form__field{% if field.errors %} ds-form__field--error{% endif %}">
+                <label class="ds-form__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}<p class="ds-form__help">{{ field.help_text }}</p>{% endif %}
+                {% for error in field.errors %}<p class="ds-form__error">{{ error }}</p>{% endfor %}
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          {% with field=row.0 %}
+            {% if field.name == form.HONEYPOT %}
+              {# Spam trap: the row must not be visible or announced — a filled value blocks the submission (BugHerd #354). #}
+              <div class="ds-form__field ds-form__field--hp" data-ds-field aria-hidden="true">
+                <label class="ds-form__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+              </div>
+            {% elif field.widget_type == 'checkbox' %}
+              {# Checkbox rows sit input-beside-label (BugHerd #353); the stacked label-over-widget layout stranded the box on its own line. #}
+              <div class="ds-form__field ds-form__field--checkbox{% if field.errors %} ds-form__field--error{% endif %}" data-ds-field>
+                <label class="ds-form__checkbox" for="{{ field.id_for_label }}">
+                  {{ field }}
+                  <span class="ds-form__checkbox-text">{{ field.label }}</span>
+                </label>
+                {% if field.help_text %}<p class="ds-form__help">{{ field.help_text }}</p>{% endif %}
+                {% for error in field.errors %}<p class="ds-form__error">{{ error }}</p>{% endfor %}
+              </div>
+            {% else %}
+              <div class="ds-form__field{% if field.errors %} ds-form__field--error{% endif %}" data-ds-field>
+                <label class="ds-form__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}<p class="ds-form__help">{{ field.help_text }}</p>{% endif %}
+                {% for error in field.errors %}<p class="ds-form__error">{{ error }}</p>{% endfor %}
+              </div>
+            {% endif %}
+          {% endwith %}
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+
+    <div class="ds-form__actions" data-ds-form-actions>
+      <button class="ds-button ds-button--solid ds-button--on-light" type="submit">
+        <span class="ds-button__label">Submit</span>
+        {% ds_icon 'chevron-right' css_class='ds-button__icon' %}
+      </button>
+    </div>
+  </form>
+</div>

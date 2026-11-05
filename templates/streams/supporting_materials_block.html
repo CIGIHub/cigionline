@@ -1,0 +1,9 @@
+{% comment %}
+  Supporting Material Carousel — section title over a 3-up card carousel of
+  downloadables. Always visible (no collapse). The carousel itself is the shared
+  includes/supporting_materials.html, also rendered data-driven inside the
+  reading body from a page's attached documents.
+{% endcomment %}
+<div class="ds-container">
+  {% include "includes/supporting_materials.html" with heading=self.heading intro=self.intro_text items=self.items loop=self.loop autoplay=self.autoplay autoplay_speed=self.autoplay_speed show_pagination=self.show_pagination %}
+</div>

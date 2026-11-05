@@ -1,0 +1,134 @@
+{% load wagtailcore_tags wagtailembeds_tags cards icons core_tags %}
+{% comment %}
+  Shared reading body ("Blog Post") — the single-page content area used by every
+  CPT single: main prose column · vertical divider · About the Author(s) aside.
+  Params:
+    page        — the page (drives the data-driven supporting-materials carousel)
+    body        — the page's body StreamField (rendered inside .ds-prose)
+    intro_note  — optional short italic note above the body (e.g. a disclaimer)
+    lead_embed  — optional embed rendered ABOVE the prose, at the top of the
+                  reading measure (the video single's player — Multimedia
+                  Template 1437:71269; video-above-prose order)
+    embed_url   — optional embed rendered after the body (e.g. the Issuu
+                  in-page PDF viewer on "longer PDF" publications)
+    series_page — optional series page → the "About the Work / Part of the
+                  [Series]" section
+    footnotes   — optional rich text (numbered red-numeral treatment)
+    works_cited — optional rich text (cited section with heading)
+    authors     — optional page.authors queryset for the aside rail
+    author_count— optional count (pluralizes the aside heading)
+    editors     — optional page.editors queryset (second aside group)
+    editor_count— optional count (pluralizes the editors heading)
+    surface     — optional surface variant for the shell (default light;
+                  the podcast single passes its page surface)
+    measure     — optional measure modifier; 'video' centres the main column at
+                  the video single's narrow 818/1280 measure (1437:71519) when
+                  there is no author aside
+{% endcomment %}
+<div class="ds-surface ds-surface--{{ surface|default:'light' }}">
+  {# Reading progress — thin red line at the top of the viewport (reading-progress.js) #}
+  <div class="ds-reading-progress" data-ds-reading-progress aria-hidden="true"></div>
+  {# No author/editor/guest data → the rail + divider are omitted below and #}
+  {# the main column (flex-grow) spans gutter to gutter on its own. #}
+  <div class="ds-reading ds-container{% if measure == 'video' %} ds-reading--video{% endif %}">
+    <div class="ds-reading__main">
+      {% if lead_embed %}
+        {# Video single's player, above the prose (Multimedia Template 1437:71269). #}
+        {# titled_embed = {% embed %} + iframe title (WCAG 4.1.2, wcag-audit.md) #}
+        <div class="ds-reading__embed ds-reading__embed--lead">{% titled_embed lead_embed page.title %}</div>
+      {% endif %}
+      {# data-ds-reveal-media: figures + pull quotes fade in place on scroll (scroll-reveal.js) #}
+      {# external_links_new_tab: external citation links open in a new tab (BugHerd #464). #}
+      <div class="ds-prose" data-ds-reveal-media>
+        {% filter external_links_new_tab %}
+        {% if intro_note %}<p class="ds-reading__note"><em>{{ intro_note }}</em></p>{% endif %}
+        {% if body_html %}
+          {# Pre-rendered body HTML (e.g. the news excerpt, truncated) — no #}
+          {# block loop, so no mid-body insertions. #}
+          {{ body_html }}
+        {% else %}
+          {% for block in body %}
+            {# recommended is suppressed: the design has no in-body recommended element; #}
+            {# the page-level "Explore Recommended" carousel carries recommendations. #}
+            {# newsletter_subscription is suppressed too (Tim, BugHerd #320): 44 legacy #}
+            {# bodies author it mid-read — the single end-of-body band below replaces it. #}
+            {% if block.block_type != 'additional_disclaimer' and block.block_type != 'additional_file' and block.block_type != 'recommended' and block.block_type != 'newsletter_subscription' %}
+              {# DS section modules get a prose boundary: the wrapper opts them #}
+              {# out of the .ds-prose element rules (p/a/h* typography is for #}
+              {# reading content, not module internals) — see _reading.scss. #}
+              {% if block|is_ds_module %}
+                <div class="ds-prose__module">{% include_block block %}</div>
+              {% elif promote_labels %}
+                {# Podcast shell: label paragraphs ("Credits:") become h3s so #}
+                {# they take the brand heading treatment (core_tags filter). #}
+                {% filter promote_section_labels %}{% include_block block %}{% endfilter %}
+              {% else %}
+                {% include_block block %}
+              {% endif %}
+            {% endif %}
+            {# Fixed Subscribe CTA at the END of the body (Tim, BugHerd #320 — #}
+            {# mid-read it broke the reading flow). Not on page types that #}
+            {# place the band after the body themselves (news). #}
+            {% if not suppress_subscribe and forloop.last %}
+              <div class="ds-prose__module">{% include "includes/subscribe_cta.html" %}</div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        {% endfilter %}
+      </div>
+
+      {% if embed_url %}
+        {# titled_embed = {% embed %} + iframe title (WCAG 4.1.2, wcag-audit.md) #}
+        <div class="ds-reading__embed">{% titled_embed embed_url page.title %}</div>
+      {% endif %}
+
+      {% if series_page and series_page.live %}
+        <div class="ds-reading__series">
+          <h2 class="ds-reading__series-heading">About the Work</h2>
+          <p class="ds-reading__series-note">Part of the <a href="{% pageurl series_page %}">{{ series_page.title }}</a>.</p>
+        </div>
+      {% endif %}
+
+      {# Page-type tail sections rendered INSIDE the main column (e.g. the #}
+      {# podcast's Chapters/Transcript) so the aside rail stays sticky beside #}
+      {# them — sticky travel is bounded by the shell. #}
+      {% if tail_template %}{% include tail_template %}{% endif %}
+
+      {% if footnotes %}
+        <div class="ds-reading__footnotes">{{ footnotes|richtext }}</div>
+      {% endif %}
+
+      {% if works_cited %}
+        <details class="ds-collapse ds-reading__works-cited" open>
+          <summary>
+            <h2 class="ds-reading__works-cited-heading">Works Cited</h2>
+            {% ds_icon 'chevron-right' css_class='ds-collapse__chevron' %}
+          </summary>
+          {{ works_cited|richtext }}
+        </details>
+      {% endif %}
+
+      {% if page %}{% supporting_materials page %}{% endif %}
+    </div>
+
+    {# Groups are filtered to the rows that would actually render (archived #}
+    {# people drop out) — a rail with nothing renderable is omitted entirely. #}
+    {% with authors=authors|renderable_people editors=editors|renderable_people guests=guests|renderable_people %}
+    {% if authors or editors or guests %}
+      <span class="ds-reading__divider" aria-hidden="true"></span>
+
+      <aside class="ds-reading__aside">
+        {% if authors %}
+          {% include "includes/reading_author_group.html" with group_heading=authors_heading|default:"About the Author" group_items=authors group_count=author_count group_intro=authors_intro card_mode=author_card_mode group_key="authors" %}
+        {% endif %}
+        {% if editors %}
+          {% include "includes/reading_author_group.html" with group_heading="About the Editor" group_items=editors group_count=editor_count group_key="editors" %}
+        {% endif %}
+        {% if guests %}
+          {% include "includes/reading_author_group.html" with group_heading=guests_heading|default:"About the Speaker" group_items=guests group_count=guest_count card_mode=author_card_mode group_key="guests" %}
+        {% endif %}
+      </aside>
+    {% endif %}
+    {% endwith %}
+  </div>
+</div>

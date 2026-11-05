@@ -30,7 +30,43 @@ CIGI_EVENT_SPACE_CHOICES = [
 ]
 
 
-class FacilityRentalInquiryForm(forms.Form):
+class DsSteppedFormMixin:
+    """Step/row grouping consumed by includes/venue_rental_form.html — the
+    shared DS form renderer. STEPS drives the multistep pager
+    (multistep-form.js; a single step renders as one plain page) and
+    PAIRED_FIELDS puts two fields on one ds-form__row."""
+
+    STEPS = []
+    PAIRED_FIELDS = []
+    # The spam-trap field name — the renderer hides its whole row (label
+    # included) from humans (BugHerd #354).
+    HONEYPOT = 'website'
+
+    def steps(self):
+        """Yield (label, rows) per step — each row is a list of 1–2 bound
+        fields (adjacent PAIRED_FIELDS share a row); leftovers on the last."""
+        by_name = {bf.name: bf for bf in self.visible_fields()}
+        stepped = {name for _, names in self.STEPS for name in names}
+        leftovers = [name for name in by_name if name not in stepped]
+        pair_partner = dict(self.PAIRED_FIELDS)
+        for i, (label, names) in enumerate(self.STEPS):
+            names = [n for n in names if n in by_name]
+            if i == len(self.STEPS) - 1:
+                names += leftovers
+            rows, skip = [], set()
+            for j, n in enumerate(names):
+                if n in skip:
+                    continue
+                partner = pair_partner.get(n)
+                if partner and j + 1 < len(names) and names[j + 1] == partner:
+                    rows.append([by_name[n], by_name[partner]])
+                    skip.add(partner)
+                else:
+                    rows.append([by_name[n]])
+            yield label, rows
+
+
+class FacilityRentalInquiryForm(DsSteppedFormMixin, forms.Form):
     first_name = forms.CharField(label="First Name", max_length=100, widget=forms.TextInput(attrs={"autocomplete": "given-name"}))
     last_name = forms.CharField(label="Last Name", max_length=100, widget=forms.TextInput(attrs={"autocomplete": "family-name"}))
     email = forms.EmailField(label="Email Address", widget=forms.EmailInput(attrs={"autocomplete": "email"}))
@@ -91,3 +127,60 @@ class FacilityRentalInquiryForm(forms.Form):
         if not values:
             raise forms.ValidationError("Select at least one space.")
         return values
+
+    # Step grouping for the design-system multi-step rendering (multistep-form.js pages through these).
+    # Fields not listed (the honeypot) render appended to the last step.
+    STEPS = [
+        ("Contact details", [
+            "first_name", "last_name", "email", "phone", "company",
+            "org_mission", "other_orgs",
+            "street", "city_province", "postal_code",
+        ]),
+        ("Event details", [
+            "event_title", "purpose",
+            "start_date", "end_date", "start_time", "end_time",
+            "space", "space_other_details", "attendees",
+        ]),
+        ("Anything else?", [
+            "details", "can_provide_liability", "liability_contact_if_cannot",
+        ]),
+    ]
+
+    # Field pairs rendered side by side (ds-form__row) per the venue frame
+    # (1360:106549): First/Last, Email/Phone, City & Province/Postal Code.
+    PAIRED_FIELDS = [
+        ("first_name", "last_name"),
+        ("email", "phone"),
+        ("city_province", "postal_code"),
+    ]
+
+
+class GeneralInquiryForm(DsSteppedFormMixin, forms.Form):
+    """General Inquiries form (BugHerd #163; wireframe 764:16168 — the About
+    page's General Inquiries section): name pair, email, message, consent.
+    Single step, so multistep-form.js leaves it as one plain page. Copy is as
+    drawn on the wireframe — label changes go to Kay, not code."""
+
+    first_name = forms.CharField(label="First Name", max_length=100, widget=forms.TextInput(attrs={"autocomplete": "given-name"}))
+    last_name = forms.CharField(label="Last Name", max_length=100, widget=forms.TextInput(attrs={"autocomplete": "family-name"}))
+    email = forms.EmailField(label="Email Address", widget=forms.EmailInput(attrs={"autocomplete": "email"}))
+    message = forms.CharField(label="Message", widget=forms.Textarea(attrs={"placeholder": "Type your message"}))
+    consent = forms.BooleanField(
+        label="I consent to CIGI collecting and using the information provided to respond to my inquiry",
+    )
+
+    # Simple honeypot (same trap as the venue form).
+    website = forms.CharField(label="Website", required=False, widget=forms.TextInput(attrs={"autocomplete": "off", "tabindex": "-1", "style": "position:absolute;left:-9999px;"}))
+
+    def clean(self):
+        cleaned = super().clean()
+        if cleaned.get("website"):  # honeypot trip
+            raise ValidationError("Submission blocked.")
+        return cleaned
+
+    STEPS = [
+        ("", ["first_name", "last_name", "email", "message", "consent"]),
+    ]
+    PAIRED_FIELDS = [
+        ("first_name", "last_name"),
+    ]

@@ -1,0 +1,403 @@
+// =============================================================================
+// Design System — Form (wagtailstreamforms)
+// Rendered by includes/venue_rental_form.html. Labels Header 7, boxed
+// inputs (1px rule, red on focus/error), step headings + the multi-step
+// stepper controls (multistep-form.js). Surface-aware (BugHerd #163, Evan):
+// text/borders read the --surface-* tokens so the authored Light/Dark/Charcoal
+// band works; error, required, focus and progress reds stay brand red on every
+// surface (the semantic colour — flag to Kay if dark needs its own treatment).
+// =============================================================================
+
+// Housing module — module-level heading + intro above the embedded form.
+// Two columns per the frame (1360:106549): the aside (ruled heading + serif
+// description + contact rows) beside the form, which fills the rest.
+.ds-form-section {
+  padding-block: var(--space-section-y);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-24);
+
+  &__aside {
+    flex: 0 1 var(--width-410);
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+  }
+
+  &__body {
+    flex: 1 1 0;
+    min-width: 0;
+
+    // The frame's form spans the wide column with 2-up rows — lift the
+    // standalone single-column cap.
+    .ds-form { max-width: none; }
+  }
+
+  &__heading {
+    @include header-3;
+    color: var(--surface-text);
+    margin: 0;
+    padding-top: var(--space-16);
+    border-top: var(--border-rule) solid var(--surface-rule); // top-rule motif
+  }
+
+  &__text {
+    @include paragraph-1;
+    color: var(--surface-text);
+
+    p:last-child { margin-bottom: 0; }
+  }
+
+  // Contact group (1360:106576): small Demi heading over icon + text rows.
+  &__contact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+    padding-block: var(--space-8);
+    margin-top: var(--space-8); // the frame's 32px gap to the description
+  }
+
+  &__contact-heading {
+    @include header-6;
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  &__contact-row {
+    @include header-7b;
+    display: flex;
+    align-items: center;
+    gap: var(--space-16);
+    margin: 0;
+    color: var(--surface-text);
+
+    a {
+      color: inherit;
+      text-decoration: none;
+
+      &:hover,
+      &:focus-visible { color: var(--accent-ui); }
+    }
+  }
+
+  &__contact-icon {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    color: var(--surface-red-text); // red glyphs per the frame; white on dark (#34)
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+
+    &__aside { flex: 0 0 auto; }
+  }
+}
+
+.ds-form {
+  max-width: var(--width-628); // readable single-column measure
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    margin-bottom: var(--space-24);
+  }
+
+  &__label {
+    @include header-7; // 16 Futura Demi
+    color: var(--surface-text);
+  }
+
+  &__required {
+    color: var(--color-brand-red);
+    margin-left: var(--space-4);
+  }
+
+  // Boxed inputs — element selectors so Django's default widgets need no extra
+  // classes. Checkbox/radio lists keep their natural inline layout. tel/time/
+  // file joined the list for the registration builder's field types (Event
+  // Form 1705:20569), which the venue form never used.
+  input[type='text'],
+  input[type='email'],
+  input[type='url'],
+  input[type='tel'],
+  input[type='number'],
+  input[type='date'],
+  input[type='time'],
+  input[type='datetime-local'],
+  input[type='file'],
+  select,
+  textarea {
+    @include paragraph-2;
+    color: var(--surface-text);
+    background: transparent;
+    border: var(--border-divider) solid var(--surface-rule);
+    padding: var(--space-8) var(--space-16);
+    width: 100%;
+    @include transition(border-color var(--motion-duration-micro) var(--motion-ease-standard));
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-brand-red);
+    }
+
+    &::placeholder { color: var(--surface-text-muted); }
+  }
+
+  textarea { min-height: 8em; }
+
+  // Honeypot row (BugHerd #354): offscreen, not display:none — naive bots
+  // still see and fill the input, while humans never do.
+  &__field--hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  // Checkbox rows: input beside label on one line (BugHerd #353). The box
+  // aligns to the first text line so multi-line labels hang cleanly.
+  &__checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-8);
+    cursor: pointer;
+
+    input[type='checkbox'] {
+      flex-shrink: 0;
+      width: var(--space-16);
+      height: var(--space-16);
+      margin: 0.2em 0 0;
+      accent-color: var(--color-brand-red);
+    }
+  }
+
+  &__checkbox-text {
+    @include paragraph-2;
+    color: var(--surface-text);
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+
+    label { @include paragraph-2; display: inline-flex; align-items: center; gap: var(--space-8); }
+  }
+
+  // Choice groups (radio / checkbox lists — Event Form 1705:20596): stacked
+  // options, the control beside its label. Radios are drawn (appearance:none)
+  // so the frame's black ring + red dot hold on every surface; checkboxes
+  // keep the accent-color treatment of the single checkbox row above.
+  &__options {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  &__option {
+    @include header-7;
+    color: var(--surface-text-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-10);
+    cursor: pointer;
+
+    input[type='radio'],
+    input[type='checkbox'] {
+      flex-shrink: 0;
+      width: calc(var(--space-10) * 2);
+      height: calc(var(--space-10) * 2);
+      margin: 0;
+      accent-color: var(--color-brand-red);
+    }
+
+    input[type='radio'] {
+      appearance: none;
+      display: inline-grid;
+      place-content: center;
+      background: transparent;
+      border: var(--border-divider) solid var(--surface-text);
+      border-radius: 50%;
+
+      &::before {
+        content: '';
+        width: var(--space-10);
+        height: var(--space-10);
+        border-radius: 50%;
+        background: var(--color-brand-red);
+        transform: scale(0);
+        @include transition(transform var(--motion-duration-micro) var(--motion-ease-standard));
+      }
+
+      &:checked::before { transform: scale(1); }
+
+      &:focus-visible {
+        outline: var(--border-divider) solid var(--color-brand-red);
+        outline-offset: var(--space-4);
+      }
+    }
+  }
+
+  // File inputs: the boxed control plus the chosen file name(s) beneath
+  // (registration-form.js fills the meta span).
+  &__file {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  &__file-meta {
+    @include paragraph-3;
+    color: var(--surface-text-muted);
+
+    &:empty { display: none; }
+  }
+
+  // Grouped sub-form (a guest's fields on the registration form): ruled box,
+  // heading + remove action on one line, fields below.
+  &__group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+    padding: var(--space-24);
+    margin-bottom: var(--space-24);
+    border: var(--border-divider) solid var(--surface-border);
+
+    .ds-form__field:last-child,
+    .ds-form__row:last-child { margin-bottom: 0; }
+  }
+
+  &__group-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-16);
+  }
+
+  &__group-title {
+    @include header-7;
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  // 2-up field rows (First/Last, City/Postal per the venue frame): paired
+  // fields share a row, stacking back to a single column at mobile.
+  &__row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-24);
+    margin-bottom: var(--space-24);
+
+    .ds-form__field { margin-bottom: 0; }
+
+    @media (max-width: 768px) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  &__help {
+    @include paragraph-3;
+    color: var(--surface-text-muted);
+    margin: 0;
+  }
+
+  &__error {
+    @include paragraph-3;
+    color: var(--color-brand-red);
+    margin: 0;
+    // Guide (Forms — error state): the message fades in below the field.
+    animation: ds-form-error-in var(--motion-duration-micro) var(--motion-ease-standard) both;
+  }
+
+  &__errors { margin-bottom: var(--space-24); }
+
+  // Guide (Forms — error state): the border goes red (transition above) and the
+  // field shakes laterally — 3px, two oscillations. form-errors.js clears the
+  // state as soon as the user types again. Scoped under .ds-form so it
+  // outranks the boxed `input[type=…]` rules above (same specificity, later
+  // source) — as a bare `.ds-form__field--error input` it lost to them and
+  // errored text inputs kept their black border.
+  & &__field--error {
+    input, select, textarea {
+      border-color: var(--color-brand-red);
+      animation: ds-form-shake var(--motion-duration-press) var(--motion-ease-standard);
+    }
+  }
+
+  @include reduce-motion-safe {
+    &__error { animation: none; }
+    & &__field--error {
+      input, select, textarea { animation: none; }
+    }
+  }
+
+  // --- Steps -----------------------------------------------------------------
+  // Empty JS marker — the frame (1360:106549) shows no step headings, so the
+  // break contributes no space.
+  &__field--step-break { margin: 0; }
+
+  // --- Multi-step progress + actions ----------------------------------------
+  // Progress per the frame: a full-width segment track (red fill up to the
+  // current step, outlined ahead) with "Step x of y" right-aligned BELOW it.
+  &__progress {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-16);
+    margin-top: var(--space-24);
+  }
+
+  &__progress-track {
+    width: 100%;
+    display: flex;
+    gap: var(--space-8);
+  }
+
+  &__progress-seg {
+    flex: 1 1 0;
+    height: 8px; // frame: 8px bars
+    border: var(--border-divider) solid var(--surface-rule);
+    background: transparent;
+    @include transition(background-color var(--motion-duration-fast) var(--motion-ease-standard));
+
+    &--filled {
+      background: var(--color-brand-red);
+      border-color: var(--color-brand-red);
+    }
+  }
+
+  &__step-indicator {
+    @include paragraph-3; // 14, serif per the frame
+    color: var(--surface-text);
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-24);
+    flex-wrap: wrap;
+    margin-top: var(--space-32);
+  }
+}
+
+@keyframes ds-form-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-3px); }
+  40%, 80% { transform: translateX(3px); }
+}
+
+@keyframes ds-form-error-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

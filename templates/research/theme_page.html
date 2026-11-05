@@ -1,5 +1,26 @@
 {% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader heroes cards %}
+{% comment %}
+  Research Theme page. The accent-surfaced theme hero is the only dev-owned
+  section — everything else is the body StreamField; authors compose the
+  programs/resource/expert/subscribe sections from DS modules (see
+  author-build-checklist.md). Program cards are placeable in the manual card
+  modules (ProjectPage is a ContentPage).
+{% endcomment %}
+
+{% block meta_description %}
+  {% if self.description %}<meta name="description" content="{{ self.description|striptags|truncatewords:40 }}" />{% endif %}
+{% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title submenu=self.submenu %}
+  {% if self.image_hero %}
+    {# Image alt-hero (breadcrumb · H1 · description) when a hero background is authored — BugHerd #61. #}
+    {% include "includes/alt_hero.html" with image=self.image_hero heading=self.title heading_tag="h1" crumbs=hero_crumbs description=self.description %}
+  {% else %}
+    {% page_hero self %}
+  {% endif %}
+
+  {% for block in self.body %}
+    {% include_block block %}
+  {% endfor %}
 {% endblock content %}

@@ -1,0 +1,49 @@
+// =============================================================================
+// Solo collapsible section — native <details> disclosure for standalone
+// sections (Works Cited, Supporting Materials, aside author groups). Same
+// mechanism as the accordion module's items, but skinned as a reading-section
+// header: the call site keeps its own heading class inside the <summary>;
+// this component only supplies the disclosure row + chevron. Expanded by
+// default (author `open` at the call site — confirmed design intent).
+// =============================================================================
+
+.ds-collapse {
+  > summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-16);
+
+    &::-webkit-details-marker { display: none; }
+
+    // The section's own heading keeps its treatment and spans the row.
+    > :first-child { flex: 1 1 auto; min-width: 0; }
+  }
+
+  &__chevron {
+    flex-shrink: 0;
+    // 42px fixed in the design for BOTH the 24px aside headings and the 40px
+    // main-column section headings — so not em-based.
+    width: 42px;
+    height: 42px;
+    transform: rotate(90deg); // points down when closed
+    @include transition(transform var(--motion-duration-micro) var(--motion-ease-standard));
+  }
+
+  &[open] > summary .ds-collapse__chevron {
+    transform: rotate(-90deg); // points up when open, per the frame
+  }
+}
+
+// Podcast surface (frame 1199:35683): collapse chrome follows the brand
+// accent — the heading itself is covered by the prose/aside heading rules;
+// the chevron matches it here. The heading must NOT flex-grow (the generic
+// summary rule stretches it), or its text-length rule spans the full row;
+// space-between still pushes the chevron to the right edge.
+.ds-surface--pink .ds-collapse > summary {
+  > :first-child { flex: 0 1 auto; }
+
+  .ds-collapse__chevron { fill: var(--brand-accent, var(--accent)); }
+}

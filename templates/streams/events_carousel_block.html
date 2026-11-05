@@ -1,0 +1,39 @@
+{% load wagtailcore_tags cards %}
+{% comment %}
+  Events Carousel — dynamic module. A section header (heading + intro + "View
+  all") over a swipeable rail of event cards (shared `event` variant). Events auto
+  (most recent) or manual. Surface-aware (light default).
+{% endcomment %}
+{# An empty module renders nothing (BugHerd #297). #}
+{% if events %}
+<div class="ds-surface ds-surface--{{ self.surface }} ds-surface--accent-{{ self.accent }}">
+  <div class="ds-events-carousel ds-container">
+    {% if cta_url %}
+      {% include "includes/section_header.html" with heading=self.heading heading_level=2 intro=self.intro action_label=self.cta_label|default:"View all" action_url=cta_url action_button=True action_scheme=cta_scheme %}
+    {% else %}
+      {% include "includes/section_header.html" with heading=self.heading heading_level=2 intro=self.intro %}
+    {% endif %}
+
+    {% if events %}
+      <div class="ds-carousel ds-events-carousel__carousel" data-ds-carousel
+        data-ds-loop="{{ self.loop|yesno:'1,0' }}"
+        data-ds-pagination="{{ self.show_pagination|yesno:'1,0' }}">
+        <div class="swiper ds-carousel__swiper">
+          <div class="swiper-wrapper" data-ds-reveal data-ds-reveal-stagger="80">
+            {% for event in events %}
+              <div class="swiper-slide ds-events-carousel__slide" data-ds-reveal-item>
+                {% card event variant="event" %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="ds-carousel__controls">
+          <div class="swiper-pagination ds-pagination"></div>
+          {% include "includes/carousel_nav.html" with prefix="carousel" %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}

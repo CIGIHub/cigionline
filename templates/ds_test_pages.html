@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% comment %}
+  Dev/QA index of design-system block test pages. Served at /ds-test-pages/ by
+  core.views.ds_test_pages. The list lives in core/views.py → DS_TEST_PAGES.
+{% endcomment %}
+{% block content %}
+<div class="ds-container" style="padding-block: var(--space-section-y, 80px);">
+  <h1 class="ds-header-2">Design System — Test Pages</h1>
+  <p class="ds-paragraph-1" style="max-width: var(--width-628, 628px);">
+    Dev/QA index of every design-system block test page. To add one, append its
+    <code>(label, slug)</code> to <code>DS_TEST_PAGES</code> in
+    <code>core/views.py</code> — links resolve automatically.
+  </p>
+
+  {% for group in groups %}
+    <h2 class="ds-header-4" style="margin-top: 2rem;">{{ group.name }}</h2>
+    <ul>
+      {% for item in group.items %}
+        <li style="margin-bottom: .25rem;">
+          {% if item.url %}
+            <a href="{{ item.url }}">{{ item.label }}</a>
+          {% else %}
+            {{ item.label }} <em>— missing (slug: {{ item.slug }})</em>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
+</div>
+{% endblock %}

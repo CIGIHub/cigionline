@@ -1,0 +1,13 @@
+{% load wagtailimages_tags %}
+<div class="tool-tip-block {{ self.anchor }}">
+  {{ self.text }}
+  <div class="person-info">
+    {% image self.image width-100 %}
+    <div>
+      <div class="person-name">{{ self.name }}</div>
+      <div class="person-title">{{ self.title }}</div>
+    </div>
+  </div>
+  <div class="triangle"></div>
+  <div class="tooltip-close"><i class="fa fa-times-circle"></i></div>
+</div>

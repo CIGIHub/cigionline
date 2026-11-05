@@ -1,0 +1,591 @@
+// =============================================================================
+// Design System — CPT heroes
+// Page-model-specific heroes (core.heroes presenters → includes/heroes/*.html).
+// Three layouts: content (article/opinion/news/publication/event/video), expert
+// (headshot + bio), podcast (two-column + cover art). Surface-aware; all spacing
+// + colour from tokens.
+// =============================================================================
+
+.ds-hero {
+  position: relative;
+  background-color: var(--surface-bg);
+  color: var(--surface-text);
+
+  // Full-bleed image banner on top (content layout; optional per type).
+  &__banner {
+    width: 100%;
+    // 21:9, down from 3:1 — the flatter crop cut too much out of the art
+    // (Kay, BugHerd #296). Keep the fill-2400x1029 rendition in step.
+    aspect-ratio: 21 / 9;
+    overflow: hidden;
+
+    img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  }
+
+  &__inner {
+    padding-block: var(--space-section-y);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-32);
+  }
+
+  // --- Shared text elements --------------------------------------------------
+  &__eyebrow {
+    @include paragraph-2;
+    font-style: italic;
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  &__eyebrow-link { color: inherit; @include hover-underline; }
+  &__eyebrow-sep { color: var(--accent); margin-inline: var(--space-4); }
+  &__eyebrow-name { font-style: normal; font-weight: 600; }
+
+  &__pills { display: flex; flex-wrap: wrap; gap: var(--space-8); }
+
+  &__title {
+    @include header-1;
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  // Publication type + number ("POLICY BRIEF NO. 240") above the title —
+  // same treatment as the byline across the rule (Kay, BugHerd #461).
+  &__kicker {
+    @include header-6;
+    text-transform: uppercase;
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  &__meta,
+  &__authors {
+    @include header-6;
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  &__excerpt {
+    @include paragraph-1;
+    color: var(--surface-text);
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  &__date {
+    @include paragraph-2;
+    font-size: var(--font-size-14);
+    color: var(--color-text-grey-white);
+    margin: 0;
+  }
+
+  // Location row (event frame 1360:114601): red map pin + address, in the
+  // aside under byline/date. No rule — that read as the figcaption treatment.
+  &__location {
+    margin: 0;
+    @include header-6;
+    color: var(--surface-text);
+
+    a { color: inherit; @include hover-underline-within; }
+
+    .ds-icon-label__icon { color: var(--accent); }
+  }
+
+  // --- Sticky pin-bar (events, BugHerd #202) --------------------------------
+  // Condensed title · date · location bar, fixed below the pinned header row
+  // once the hero scrolls out of view (hero-pinbar.js toggles --visible).
+  // z-index sits under the header (100) and over the page content.
+  &__pinbar {
+    position: fixed;
+    top: var(--ds-header-pinned-height, 0px);
+    left: 0;
+    right: 0;
+    z-index: 90;
+    background: var(--color-brand-white);
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    @include transition(
+      transform var(--motion-duration-base) var(--motion-ease-standard),
+      opacity var(--motion-duration-base) var(--motion-ease-standard)
+    );
+
+    &--visible {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    // Desktop-only (Yang, BugHerd #333): on small screens the fixed bar ate
+    // the viewport and its two-column layout broke.
+    @media (max-width: 768px) {
+      display: none;
+    }
+
+    @include reduce-motion-safe { transition: none; }
+  }
+
+  // Compact TTS dock in the pinbar (BugHerd #298): play toggle + elapsed time.
+  &__pinbar-audio {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
+  }
+
+  &__pinbar-play {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    display: inline-flex;
+
+    svg { width: 32px; height: 32px; display: block; }
+    .icon--pressed { display: none; }
+
+    &--playing .icon--not-pressed { display: none; }
+    &--playing .icon--pressed { display: block; }
+  }
+
+  &__pinbar-time {
+    font-family: var(--font-body, 'Source Serif 4', serif);
+    font-size: var(--font-size-14);
+    color: var(--color-brand-black);
+    min-width: 3.2em;
+  }
+
+  // Mirror the hero body's geometry so the title and the date/location column
+  // hold the same horizontal positions in the pinned state (Evan): the same
+  // 2.4fr/1fr grid, 48px gap, and the aside's rule + 48px inset on the meta.
+  &__pinbar-inner {
+    display: flex;
+    gap: var(--space-24);
+    align-items: stretch; // as the hero body — the meta rule spans the row
+    padding-block: var(--space-12);
+  }
+
+  &__pinbar-title {
+    @include header-1; // same size as the hero title it stands in for (Evan)
+    color: var(--color-brand-black);
+    margin: 0;
+    flex: 1 1 var(--width-845);
+    min-width: 0;
+    // No truncation — the bar reads as the hero itself pinning, so long titles
+    // wrap exactly as they do in the hero (Evan).
+  }
+
+  &__pinbar-meta {
+    flex: 0 1 var(--width-394);
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16); // the hero aside's own gap
+    align-self: stretch;
+    // Top-aligned like the hero aside — the bar is the hero pinning, not a
+    // recomposed strip.
+    justify-content: flex-start;
+
+    // The bar is always light — pin the location/date colours rather than
+    // inheriting whatever surface the hero ran on.
+    .ds-hero__location { color: var(--color-brand-black); }
+  }
+
+  // The bar is always light, whatever surface the hero ran on.
+  &__pinbar &__divider { background: var(--color-brand-grey); }
+
+  @media (max-width: 768px) {
+    // Small screens: the title alone; date/location won't fit beside it.
+    &__pinbar-meta { display: none; }
+  }
+
+  &__audio { width: 100%; max-width: var(--width-screen-readable, 720px); }
+  &__audio-el { width: 100%; }
+
+  // Embedded players (SoundCloud) hardcode their width attribute (1080), which
+  // overflowed the hero column (Tia, BugHerd #465). Fill the slot instead; the
+  // attribute height stands — an iframe has no intrinsic ratio to keep.
+  &__audio--embed iframe {
+    display: block;
+    width: 100%;
+    border: 0;
+  }
+
+  &__action { align-self: flex-start; }
+
+  // A publication's editions sit side by side, wrapping on narrow screens
+  // (BugHerd #474).
+  &__actions {
+    align-self: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-16);
+  }
+
+  &__actions .ds-button__icon-fa { margin-left: var(--space-8); }
+  &__action .ds-button__icon-fa { margin-left: var(--space-8); }
+
+  // --- Books-only region (cover · editors · metadata · excerpt · purchase) ----
+  // Provisional layout — no book-hero design yet; placement/look iterated in QA.
+  &__book {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-32);
+    align-items: flex-start;
+    padding-top: var(--space-24);
+    border-top: var(--border-divider) solid var(--surface-border);
+  }
+
+  &__book-cover {
+    flex: 0 0 auto;
+    width: 180px;
+    max-width: 40%;
+
+    img { width: 100%; height: auto; display: block; }
+  }
+
+  &__book-detail {
+    flex: 1 1 var(--width-345, 320px);
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+
+  &__book-meta {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  &__book-meta-row {
+    display: flex;
+    gap: var(--space-8);
+    // Label (Futura, line-height 1) and value (serif, line-height 1.5) have
+    // different line-box heights; align on the shared text baseline so they
+    // don't sit at different vertical offsets.
+    align-items: baseline;
+
+    dt {
+      @include header-7;
+      flex: 0 0 auto;
+      color: var(--surface-text);
+    }
+    dd {
+      @include paragraph-2;
+      margin: 0;
+      color: var(--surface-text);
+
+      a { color: inherit; @include hover-underline; }
+    }
+  }
+
+  &__book-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-16);
+  }
+
+  // --- Content layout: banner → breadcrumb → (main | rule | aside) -----------
+  // Same split as the reading shell below (Kay, BugHerd #191): the reading
+  // basis pair (845/394) at the reading gutter, so the hero's vertical rule
+  // lands on the same x as the author rail's divider at every width. The old
+  // 2.4fr/1fr grid at a 48px gutter put it ~54px to the right of the rail's.
+  &__body {
+    width: 100%;
+    display: flex;
+    gap: var(--space-24);
+    // stretch, not start: the aside's vertical rule spans the main column's
+    // full height — eyebrow through description (BugHerd #161). Its own
+    // content stays top-aligned via the column's flex-start default.
+    align-items: stretch;
+  }
+
+  &__main {
+    flex: 1 1 var(--width-845);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-24);
+    min-width: 0;
+  }
+
+  &--content &__title { max-width: none; }
+
+  // The content hero's own bottom padding, halved (Tia, BugHerd #501): with
+  // the reading shell's matching 80 above its first line, the gap read as
+  // 160px of empty page. 40 + 40 now. Mobile is unchanged — --space-section-y
+  // is already 40 there, so the literal token matches what it renders today.
+  &--content &__inner { padding-bottom: var(--space-40); }
+
+  // The vertical rule, as its own 1px column — the reading shell's divider
+  // construction (BugHerd #191). Stretches to the taller column, which is what
+  // BugHerd #161 asked of the rule the aside's border used to draw.
+  &__divider {
+    align-self: stretch;
+    width: var(--border-divider);
+    flex-shrink: 0;
+    background: var(--surface-border);
+  }
+
+  &__aside {
+    // Rail measure mirrors .ds-reading__aside (BugHerd #191).
+    flex: 0 1 var(--width-394);
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+
+    // A thin rule separates the byline/date from the Share group, per the KP
+    // hero aside (Tia, BugHerd #449). Content heroes only — the expert hero
+    // lays its share row out in __expert-body. The faint hairline token, not
+    // --surface-border: the KP line is light grey (~#c2c0bc), and #4d4d4d at
+    // 1px read as black (Evan).
+    > .ds-hero__share {
+      width: 100%;
+      padding-top: var(--space-24);
+      border-top: var(--border-divider) solid var(--color-border-divider);
+    }
+  }
+
+  &__byline {
+    @include header-6;
+    text-transform: uppercase;
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  // Byline names link to the bio page (BugHerd #324) — quiet like the plain
+  // byline, with the DS hover underline as the affordance.
+  &__byline-link {
+    color: inherit;
+    text-decoration: none;
+    @include hover-underline;
+  }
+
+  // Tighter rhythm on the compact ("simple") variant.
+  &--simple &__inner { gap: var(--space-16); }
+
+  // --- Registration variant (Event Form 1705:20340) -------------------------
+  // The on-site registration pages' dark hero: the date stamp sits beside the
+  // title, the aside carries a top rule instead of the vertical divider, and
+  // the frame keeps the full section padding below (no reading shell follows).
+  &--registration &__inner {
+    gap: var(--space-32);
+    padding-bottom: var(--space-section-y);
+  }
+
+  &__title-row {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-24);
+
+    .ds-date-stamp { margin-top: var(--space-4); } // optical: cap-height of the title
+    .ds-hero__title { min-width: 0; }
+  }
+
+  &--registration &__divider { display: none; }
+
+  &--registration &__aside {
+    padding-top: var(--space-24);
+    border-top: var(--border-divider) solid var(--surface-text); // white rule on the dark surface
+    gap: var(--space-8);
+  }
+
+  // Date and type line are the 16 Futura Book of the frame, in the surface
+  // text colour (the content hero's grey date would sink into the dark band).
+  &--registration &__date,
+  &--registration &__meta {
+    @include header-7b;
+    color: var(--surface-text);
+  }
+
+  &--registration &__location { margin-top: var(--space-16); }
+
+  // --- Expert layout: headshot | (eyebrow · name · role · bio · follow) ------
+  &--expert &__inner {
+    display: grid;
+    grid-template-columns: var(--width-410) 1fr;
+    gap: var(--space-48);
+    align-items: center;
+  }
+
+  // No headshot (most speakers): the text took the 410px image column, so the
+  // hero read as a narrow strip (Juode, BugHerd #223 — "text in hero needs to
+  // be wider"). With nothing beside it the body takes the container.
+  &--expert &__inner:not(:has(.ds-hero__headshot)) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  &__headshot {
+    aspect-ratio: 1;
+    overflow: hidden;
+    img { width: 100%; height: 100%; object-fit: cover; }
+  }
+
+  &__expert-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-16);
+
+    // A touch more room before the social icons than the 16px body rhythm
+    // (Juode, BugHerd #207).
+    > .ds-hero__share { margin-top: var(--space-8); }
+  }
+
+  &__role {
+    @include paragraph-1;
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  &__bio {
+    @include paragraph-2;
+    color: var(--surface-text);
+    // No measure cap: the KP (1321:53136) runs the hero bio the full width of
+    // the text column, and the 65ch cap wrapped it at ~540px (BugHerd #223).
+    p { margin: 0 0 var(--space-16); &:last-child { margin-bottom: 0; } }
+  }
+
+  // Expertise / Programs pill groups (expert hero).
+  // Expertise / Programs groups: a rule above each, per the KP (BugHerd #207).
+  // The first one separates the bio from the tag groups; the second separates
+  // Programs from Expertise.
+  &__taglist {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    width: 100%;
+    padding-top: var(--space-24);
+    border-top: var(--border-divider) solid var(--surface-border);
+  }
+  &__taglist-label {
+    @include header-6;
+    text-transform: uppercase;
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  // --- Podcast layout: pink surface; breadcrumb → (main | rule | aside) ------
+  &--podcast &__inner { gap: var(--space-48); }
+
+  &__podcast-cols {
+    width: 100%;
+    display: flex;
+    // The hero's divider must sit on the SAME line as the reading body's rail
+    // divider below it (BugHerd #378, round 2). Proportional fr tracks only
+    // matched the reading rail at exactly 1440, and a fixed track misses its
+    // flex shrink. Mirror .ds-reading's flex scheme instead — same bases,
+    // same gap — so both dividers move identically at every width. The aside
+    // basis adds the divider + its 24 padding (they live inside the aside
+    // here, not as a separate flex item).
+    gap: var(--space-24);
+    align-items: start;
+
+    // Mobile: the two columns stack. The width bases must reset — in a
+    // column they would act as HEIGHT bases.
+    @media (max-width: 992px) {
+      flex-direction: column;
+
+      .ds-hero__podcast-main,
+      .ds-hero__podcast-aside { flex: 1 1 auto; width: 100%; }
+    }
+  }
+
+  &__podcast-main {
+    // Same basis as .ds-reading__main so the shrink math matches (#378).
+    flex: 1 1 var(--width-845);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-32);
+    min-width: 0;
+  }
+
+  &__logo {
+    max-width: var(--width-240, 240px);
+    img { width: 100%; height: auto; display: block; }
+  }
+
+  &__podcast-aside {
+    // .ds-reading__aside's fixed-rail behaviour, plus the divider + 24
+    // padding this aside carries itself (#378).
+    flex: 0 1 calc(var(--width-394) + var(--space-24) + var(--border-divider));
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+    padding-left: var(--space-24); // 24 each side of the divider (#378)
+    border-left: var(--border-divider) solid var(--surface-border);
+  }
+
+  &__cover {
+    width: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+    img { width: 100%; height: 100%; object-fit: cover; }
+  }
+
+  &__pod-meta {
+    @include header-6;
+    text-transform: uppercase;
+    color: var(--surface-text);
+    margin: 0;
+  }
+
+  &__pod-byline,
+  &__pod-links {
+    width: 100%;
+    padding-top: var(--space-24);
+    border-top: var(--border-divider) solid var(--surface-border);
+  }
+
+  &__pod-byline { display: flex; flex-direction: column; gap: var(--space-8); }
+  // Frame 1360:68860: groups spread edge to edge — outer groups hug the row's
+  // left/right, slack distributes between them. The gaps only matter when the
+  // row wraps (row-gap keeps wrapped rows apart; the 24px column-gap is the
+  // wrap-trigger minimum between groups, not the resting spacing).
+  &__pod-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-24);
+  }
+
+  &__linkgroup { display: flex; flex-direction: column; gap: var(--space-16); }
+
+  // --- Mobile ---------------------------------------------------------------
+  @media (max-width: 768px) {
+    &__body { flex-direction: column; gap: var(--space-24); }
+
+    &__main,
+    &__aside { flex: 1 1 auto; width: 100%; }
+
+    // Stacked: the rule lies across the top of the aside instead.
+    &__divider { display: none; }
+
+    &__aside {
+      padding-top: var(--space-24);
+      border-top: var(--border-divider) solid var(--surface-border);
+    }
+
+    &__banner { aspect-ratio: 16 / 9; }
+
+    // Registration hero: the stamp stacks above the title — beside it, the
+    // title column shrank to ~200px and ran a dozen lines.
+    &__title-row { flex-direction: column; gap: var(--space-16); }
+
+    &--expert &__inner,
+    &__podcast-cols {
+      grid-template-columns: 1fr;
+      gap: var(--space-32);
+    }
+
+    &__podcast-aside { padding-left: 0; border-left: 0; }
+
+    &__title { @include header-2; }
+  }
+}

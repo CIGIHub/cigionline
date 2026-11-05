@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags %}
+{% load wagtailcore_tags wagtailimages_tags webpack_loader core_tags heroes %}
 
 {% block meta_description %}
   {% if self.short_description %}
@@ -25,44 +25,32 @@
   {% endif %}
 {% endblock %}
 
-{% block extra_css %}
-  {% render_bundle 'multimediaSeriesPage' 'css' %}
-{% endblock %}
-{% block extra_js %}
-  <script type="text/javascript">
-    var multimediaSeriesId = {{ self.id }};
-  </script>
-  {% render_bundle 'multimediaSeriesPage' 'js' attrs='defer' %}
-{% endblock %}
-
 {% block body_class %}multimedia-series-page{% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title="Video Series: "|add:self.title topics=self.topics image_banner=self.image_banner %}
-  <section class="about-the-series">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col col-md-10 col-lg-8">
-          <h2 class="paragraph-heading">
-            About the Series
-          </h2>
-          <div class="series-text">
-            {{ self.subtitle }}
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  {# Branded hero (1360:113331) carries the series description (body #}
+  {# paragraphs) — no standalone about section. #}
+  {% page_hero self %}
 
-  <section class="in-the-series">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col col-md-10 col-lg-8">
-          <h2 class="paragraph-heading">In the Series</h2>
-          <div id="multimedia-list">
-          </div>
-        </div>
+  {% if host_pages %}
+    {# "The Hosts" (frame 1312:28443) — the shared experts-carousel module on #}
+    {# the pink surface; intro = the series' authorable hosts description. #}
+    {% include_with_self "streams/experts_carousel_block.html" hosts_cfg experts=host_pages cta_url=hosts_cta_url cta_scheme='on-light' %}
+  {% endif %}
+
+  {% if latest_episode %}
+    {# Pink is Policy Prompt only (BugHerd #312); band matches the episode hero's surface. #}
+    <div class="ds-surface ds-surface--{{ is_pp_series|yesno:'pink,light' }} ds-surface--accent-red">
+      <div class="ds-container ds-series-latest-title">
+        {% include "includes/section_header.html" with heading="Latest Episode" heading_level=2 %}
       </div>
     </div>
-  </section>
+    {% page_hero latest_episode embedded=True %}
+  {% endif %}
+
+  {# All Episodes router — faceted episodes listing scoped #}
+  {# to this series (Season facet when the series has seasons). #}
+  <div class="ds-surface ds-surface--light">
+    {% include "streams/faceted_listing_block.html" %}
+  </div>
 {% endblock content %}

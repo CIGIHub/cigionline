@@ -1,0 +1,28 @@
+// =============================================================================
+// Design System — Skip link
+// First tab stop on every page (base.html): visually hidden until keyboard
+// focus, then a small pinned banner. Targets #main-content on <main>.
+// WCAG 2.4.1 (wcag-audit.md — keyboard pass finding 1).
+// =============================================================================
+
+.ds-skip-link {
+  position: fixed;
+  top: var(--space-8);
+  left: var(--space-8);
+  z-index: 1000;
+  padding: var(--space-8) var(--space-16);
+  background: var(--color-brand-red);
+  color: var(--color-brand-white);
+  text-decoration: none;
+  @include header-7;
+
+  // Off-screen (not display:none — must stay focusable) until focused.
+  &:not(:focus) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}

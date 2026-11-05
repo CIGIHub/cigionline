@@ -1,0 +1,17 @@
+{% load cards icons wagtailcore_tags %}{% comment %}
+  Podcast episode row — All-Episodes listing (1314:33169): date stacked above
+  the title in one column · short vertical divider · circled headphones icon.
+  MultimediaPage (audio).
+{% endcomment %}
+<article class="ds-episode-row">
+  <div class="ds-episode-row__main">
+    {% if item.publishing_date %}<p class="ds-episode-row__date">{{ item.publishing_date|date:"F j, Y" }}</p>{% endif %}
+    <a class="ds-episode-row__title" href="{% pageurl item %}">{{ item|display_title }}</a>
+    {# Podcast meta — series · season/episode (BugHerd #274); every part is optional. #}
+    {% if item.multimedia_series or item.podcast_season or item.podcast_episode %}
+      <p class="ds-episode-row__meta">{% if item.multimedia_series %}{{ item.multimedia_series.title }}{% endif %}{% if item.podcast_season %}{% if item.multimedia_series %} · {% endif %}Season {{ item.podcast_season }}{% endif %}{% if item.podcast_episode %}{% if item.podcast_season %}, {% elif item.multimedia_series %} · {% endif %}Episode {{ item.podcast_episode }}{% endif %}</p>
+    {% endif %}
+    {% if item.search_result_description %}<p class="ds-episode-row__excerpt">{{ item.search_result_description }}</p>{% endif %}
+  </div>
+  <span class="ds-episode-row__icon-wrap" aria-hidden="true">{% ds_icon 'headphones' css_class='ds-episode-row__icon' %}</span>
+</article>

@@ -1,0 +1,31 @@
+{% load static wagtailcore_tags icons %}
+{% comment %}
+  Subscribe CTA — the red newsletter band. Rendered fixed mid-body by reading_body.html and
+  by the author-placed newsletter_subscription block. Copy comes from
+  FooterSettings (same source as the footer form); posts to /subscribe/ like
+  the footer.
+{% endcomment %}
+<section class="ds-subscribe{% if subscribe_scheme and subscribe_scheme != 'red' %} ds-subscribe--{{ subscribe_scheme }}{% endif %}" aria-label="Newsletter sign-up">
+  <img class="ds-subscribe__bg" src="{% static 'assets/ds-subscribe-bg.png' %}" alt="" aria-hidden="true">
+  <span class="ds-subscribe__wash" aria-hidden="true"></span>
+  <div class="ds-subscribe__inner">
+    <h2 class="ds-subscribe__heading">{{ settings.core.FooterSettings.newsletter_heading|default:"Subscribe to Our Newsletter" }}</h2>
+    <div class="ds-subscribe__actions">
+      {# data-ds-subscribe: submit swaps the label for a spinner (subscribe-form.js + _spinner.scss) #}
+      {# POST hand-off: email stays out of URLs/logs; prefill=1 = stateless #}
+      {# prefill render, CSRF-exempted (middleware.py). #}
+      <form class="ds-subscribe__form" title="Newsletter Sign Up" action="/subscribe/" method="post" data-ds-subscribe>
+        <input type="hidden" name="prefill" value="1">
+        <input class="ds-subscribe__field" type="email" name="email" placeholder="Enter your email" aria-label="Email" required="required" aria-required="true">
+        <button class="ds-subscribe__submit" type="submit">
+          <span class="ds-subscribe__submit-label">Subscribe</span>
+          {% ds_icon 'chevron-right' css_class='ds-subscribe__submit-icon' %}
+          <span class="ds-spinner" aria-hidden="true"></span>
+        </button>
+      </form>
+      {% if settings.core.FooterSettings.newsletter_consent %}
+        <div class="ds-subscribe__consent">{{ settings.core.FooterSettings.newsletter_consent|richtext }}</div>
+      {% endif %}
+    </div>
+  </div>
+</section>

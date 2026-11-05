@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% comment %}
+  Standalone re-render of the venue-rental form after an invalid POST (the
+  form module normally lives on a composed page; posting back there would lose
+  the visitor's input, so errors re-render here with the bound form).
+{% endcomment %}
+
+{% block title %}Venue Rental Inquiry{% endblock %}
+
+{% block content %}
+  <div class="ds-surface ds-surface--light">
+    <div class="ds-form-section ds-container">
+      <div class="ds-form-section__intro">
+        <h2 class="ds-form-section__heading">Venue Rental Inquiry</h2>
+        <div class="ds-form-section__text"><p>Please correct the errors below and resubmit.</p></div>
+      </div>
+      {% include "includes/venue_rental_form.html" %}
+    </div>
+  </div>
+{% endblock %}

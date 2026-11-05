@@ -1,0 +1,96 @@
+{% load wagtailcore_tags wagtailimages_tags icons %}
+{% comment %}
+  Shared content card (.ds-card) — rendered via {% card page variant=... %}
+  (core.cards.card_data). The card representing a page across dynamic modules.
+  Variants:
+    - article-list-row — pill(s) + title (Spotlight latest-content list).
+    - media-vertical    — accent image + pill(s) + title + serif excerpt + CTA
+                          (Programs Grid/Carousel, resource feature/card).
+    …extend as modules need them (media-compact, person, event).
+  Pills are the page's projects (theme accent) unless overridden; display capped at 3.
+{% endcomment %}
+<div class="ds-card ds-card--{{ variant }}">
+  {% if variant == "media-vertical" %}
+    {% if image %}
+      <div class="ds-accent-media ds-card__media ds-card__media--wide">{% image image fill-740x416 %}</div>
+    {% endif %}
+    <div class="ds-card__body">
+      {% include "includes/card/_pills.html" %}
+      {% include "includes/card/_title.html" %}
+      {% include "includes/card/_excerpt.html" %}
+      {% if cta %}
+        <a class="ds-button ds-button--outline ds-button--{{ cta.scheme|default:'on-light' }} ds-card__cta" href="{{ cta.url }}">
+          <span class="ds-button__label">{{ cta.label }}</span>
+          {% ds_icon 'chevron-right' css_class='ds-button__icon' %}
+        </a>
+      {% endif %}
+    </div>
+  {% elif variant == "media-compact" %}
+    <div class="ds-card__body">
+      {% include "includes/card/_pills.html" %}
+      {# Date sits between the pills and the title in every bento column (matches the feature card). #}
+      {% if date and show_date %}<p class="ds-card__date">{{ date|date:"F j, Y" }}</p>{% endif %}
+      {% include "includes/card/_title.html" %}
+      {% include "includes/type_of_content.html" with label=type_label icon=type_icon %}
+      {% include "includes/card/_byline.html" %}
+    </div>
+    {% if image %}<div class="ds-card__thumb">{% image image fill-350x350 %}</div>{% endif %}
+  {% elif variant == "media-stacked" %}
+    {# Image on top, then taxonomy pill(s), title, type-of-content (BugHerd #7 — bento left column). #}
+    {% if image %}<div class="ds-accent-media ds-card__media ds-card__media--wide">{% image image fill-740x416 %}</div>{% endif %}
+    <div class="ds-card__body">
+      {% include "includes/card/_pills.html" %}
+      {% if date and show_date %}<p class="ds-card__date">{{ date|date:"F j, Y" }}</p>{% endif %}
+      {% include "includes/card/_title.html" %}
+      {% if show_excerpt %}{% include "includes/card/_excerpt.html" %}{% endif %}
+      {% include "includes/type_of_content.html" with label=type_label icon=type_icon %}
+      {% include "includes/card/_byline.html" %}
+    </div>
+  {% elif variant == "resource-feature" or variant == "resource-compact" %}
+    {% if variant == "resource-feature" and image %}
+      {# tall_media: duo-bento features crop square — 1:1 per BugHerd #108 (supersedes #31's 740x800). #}
+      <div class="ds-accent-media ds-card__media ds-card__media--{% if tall_media %}square{% else %}wide{% endif %}">{% if tall_media %}{% image image fill-740x740 %}{% else %}{% image image fill-740x416 %}{% endif %}</div>
+    {% endif %}
+    <div class="ds-card__body">
+      {% include "includes/card/_pills.html" %}
+      {% if date and show_date %}<p class="ds-card__date">{{ date|date:"F j, Y" }}</p>{% endif %}
+      {% include "includes/card/_title.html" %}
+      {% include "includes/card/_excerpt.html" %}
+      {% include "includes/type_of_content.html" with label=type_label icon=type_icon %}
+      {% include "includes/card/_byline.html" %}
+    </div>
+  {% elif variant == "event-browse" %}
+    {# Events-listing browse card (1253:41198): borderless. ONE form for past and #}
+    {# upcoming events — pills · date · title · excerpt · left CTA (Tia, BugHerd #}
+    {# #463; retires the past foot-row variant 1253:41513, whose right-aligned #}
+    {# CTA and bottom bullet date read as inconsistency in the mixed grid). #}
+    {% include "includes/card/_pills.html" %}
+    {# No ordinal suffix — "November 5, 2026", not "5th" (CIGI style, BugHerd #434). #}
+    {% if date %}<p class="ds-card__event-date">{{ date|date:"F j, Y" }}</p>{% endif %}
+    {% if days_until is not None %}
+      <p class="ds-card__countdown">
+        {% if days_until == 0 %}Today{% else %}In&nbsp;<span data-ds-countdown-num>{{ days_until }}</span>&nbsp;day{{ days_until|pluralize }}{% endif %}
+      </p>
+    {% endif %}
+    {% include "includes/card/_title.html" %}
+    {% include "includes/card/_excerpt.html" %}
+    <a class="ds-card__rsvp" href="{{ cta.url }}">{{ cta.label }} <span aria-hidden="true">&gt;</span></a>
+  {% elif variant == "event" %}
+    {% include "includes/date_stamp.html" with date=date %}
+    <div class="ds-card__event-content">
+      {% if date %}<p class="ds-card__event-datetime">{{ date|date:"F j, Y, g:iA" }}</p>{% endif %}
+      {% comment %}Date-proximity chip — set only for events within 30 days (core.cards);
+      the number ticks up from 0 on load (countdown.js).{% endcomment %}
+      {% if days_until is not None %}
+        <p class="ds-card__countdown">
+          {% if days_until == 0 %}Today{% else %}In&nbsp;<span data-ds-countdown-num>{{ days_until }}</span>&nbsp;day{{ days_until|pluralize }}{% endif %}
+        </p>
+      {% endif %}
+      {% include "includes/card/_title.html" %}
+      {% include "includes/card/_excerpt.html" %}
+    </div>
+  {% else %}
+    {% include "includes/card/_pills.html" %}
+    {% include "includes/card/_title.html" %}
+  {% endif %}
+</div>
