@@ -42,106 +42,6 @@ body:has(.annual-report-map) {
       transparent
     );
   }
-
-  .leaflet-tooltip {
-    background-color: $black;
-    color: $white;
-    border: 2px solid $cigi-primary-colour;
-    border-radius: 8px;
-    box-shadow: none;
-
-    &::before {
-      display: none;
-    }
-
-    &.map-story-title-tooltip {
-      color: $white;
-      border: 1px solid $cigi-primary-colour;
-      border-radius: 6px;
-      padding: 0.5rem 0.75rem;
-      font-size: 0.9rem;
-      font-weight: 500;
-      line-height: 1.4;
-      white-space: nowrap;
-      max-width: none;
-      width: max-content;
-      text-align: left;
-      pointer-events: none;
-
-      &::before {
-        display: none;
-      }
-    }
-  }
-
-  .leaflet-top.leaflet-right {
-    top: 3rem;
-    right: 2rem;
-
-    @media (min-width: 2560px) {
-      left: auto;
-      right: 25vw;
-    }
-
-    @media (max-width: 768px) {
-      top: auto;
-      bottom: 4rem;
-      left: 1rem;
-      right: auto;
-    }
-  }
-
-  .leaflet-top.leaflet-right .leaflet-control-zoom {
-    margin-top: 0;
-  }
-
-  .leaflet-control-zoom {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin: 0;
-    border: none;
-    background: transparent;
-    box-shadow: none;
-
-    a.leaflet-control-zoom-in,
-    a.leaflet-control-zoom-out {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 36px;
-      height: 36px;
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      background-color: $white;
-      color: $black;
-      border: none;
-      border-radius: 50%;
-      line-height: 1;
-
-      &:first-child,
-      &:last-child {
-        border-radius: 50%;
-      }
-
-      &:hover {
-        background-color: $cigi-light-grey;
-        color: $black;
-      }
-
-      &.leaflet-disabled {
-        background-color: $white;
-        color: #999;
-        opacity: 0.5;
-      }
-
-      span {
-        font-size: 20px;
-        line-height: 1;
-      }
-    }
-  }
 }
 
 .annual-report-map-controls {
@@ -308,7 +208,7 @@ body:has(.annual-report-map) {
   }
 }
 
-.annual-report-map-container.leaflet-container {
+.annual-report-map-container {
   width: 100%;
   height: 100%;
   background-color: $ar-map-waters;
@@ -335,23 +235,16 @@ body:has(.annual-report-map) {
 }
 
 .map-ocean-label {
-  background: transparent;
-  border: none;
+  color: $cigi-light-grey;
+  opacity: 0.7;
+  font-size: 0.65rem;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
   pointer-events: none;
-
-  span {
-    display: block;
-    position: absolute;
-    transform: translate(-50%, -50%);
-    color: $cigi-light-grey;
-    opacity: 0.7;
-    font-size: 0.65rem;
-    font-style: italic;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
+  user-select: none;
 }
 
 .map-story-node {
@@ -609,7 +502,7 @@ body:has(.annual-report-map) {
 .map-story-node-highlight {
   .map-story-node-circle {
     background-color: $cigi-light-pink;
-    box-shadow: 0 0 0 4px $white;
+    box-shadow: 0 0 0 2px $white;
   }
 }
 
@@ -649,5 +542,97 @@ body:has(.annual-report-map) {
     max-width: none;
     max-height: 55vh;
     padding: 1.25rem;
+  }
+}
+
+.annual-report-map {
+  .map-story-tooltip {
+    z-index: 1000;
+    pointer-events: none;
+
+    .maplibregl-popup-content {
+      background-color: $black;
+      color: $white;
+      border: 1px solid $cigi-primary-colour;
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      box-shadow: none;
+    }
+
+    .maplibregl-popup-tip {
+      display: none;
+    }
+
+    .map-story-title-tooltip {
+      font-size: 0.9rem;
+      font-weight: 500;
+      line-height: 1.4;
+      white-space: nowrap;
+    }
+  }
+}
+
+.annual-report-map {
+  .maplibregl-ctrl-top-right {
+    top: 3rem;
+    right: 2rem;
+
+    @media (min-width: 2560px) {
+      right: 25vw;
+    }
+
+    @media (max-width: 768px) {
+      top: auto;
+      bottom: 4rem;
+      left: 1rem;
+      right: auto;
+    }
+  }
+
+  .maplibregl-ctrl-top-right .maplibregl-ctrl {
+    margin: 0;
+  }
+
+  .maplibregl-ctrl-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+
+    button.maplibregl-ctrl-zoom-in,
+    button.maplibregl-ctrl-zoom-out {
+      width: 36px;
+      height: 36px;
+      margin: 0;
+      padding: 0;
+      background-color: $white;
+      border: none;
+
+      &,
+      &:hover,
+      &:focus,
+      &:active,
+      &:first-child,
+      &:last-child {
+        border-radius: 50%;
+      }
+
+      &:hover {
+        background-color: $cigi-light-grey;
+      }
+
+      &:disabled {
+        background-color: $white;
+        opacity: 0.5;
+        cursor: default;
+      }
+    }
+
+    button + button {
+      border-top: none;
+    }
   }
 }
