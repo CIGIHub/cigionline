@@ -1,6 +1,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import { motion } from 'framer-motion';
 import * as maplibregl from 'maplibre-gl';
 maplibregl.setWorkerUrl(
   new URL('maplibre-gl/dist/maplibre-gl-worker.mjs', import.meta.url).toString()
@@ -135,6 +136,9 @@ function AnnualReportMap({ slide }) {
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(
     window.innerWidth <= 768
+  );
+  const [isLargeScreen, setIsLargeScreen] = useState(
+    window.innerWidth >= 992
   );
 
   const themeDropdownRef = useRef(null);
@@ -449,12 +453,19 @@ function AnnualReportMap({ slide }) {
   }, [searchQuery, selectedTheme]);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 768px)');
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
+    const largeQuery = window.matchMedia('(min-width: 992px)');
+
     const updateMobile = (event) => setIsMobile(event.matches);
+    const updateLarge = (event) => setIsLargeScreen(event.matches);
 
-    mediaQuery.addEventListener('change', updateMobile);
+    mobileQuery.addEventListener('change', updateMobile);
+    largeQuery.addEventListener('change', updateLarge);
 
-    return () => mediaQuery.removeEventListener('change', updateMobile);
+    return () => {
+      mobileQuery.removeEventListener('change', updateMobile);
+      largeQuery.removeEventListener('change', updateLarge);
+    };
   }, []);
 
   useEffect(() => {
@@ -485,7 +496,15 @@ function AnnualReportMap({ slide }) {
   }, [themeDropdownOpen]);
 
   return (
-    <div className="annual-report-map">
+    <motion.div
+      className="annual-report-map"
+      initial={isLargeScreen ? { opacity: 0, y: 20 } : false}
+      animate={isLargeScreen ? {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.5, ease: 'easeInOut' },
+      } : false}
+    >
       <div className="annual-report-map-controls">
         <div className="map-search-input">
           <input
@@ -630,7 +649,7 @@ function AnnualReportMap({ slide }) {
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
 
