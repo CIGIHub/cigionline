@@ -34,7 +34,6 @@
     "chartjs-plugin-datalabels": "^2.2.0",
     "framer-motion": "12.4.7",
     "jquery": "3.6.0",
-    "leaflet": "^1.9.4",
     "maplibre-gl": "^6.16.0",
     "mediaelement": "7.0.5",
     "normalize.css": "8.0.1",

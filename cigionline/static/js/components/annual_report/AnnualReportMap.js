@@ -108,12 +108,79 @@ const customIcons = {
   ),
 };
 
+const storyMatches = (story, query, selectedTheme) => {
+  const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+
+  const matchesSearch = !words.length || [
+    story.title,
+    story.location,
+    story.country,
+    story.research_theme,
+  ].some((value) => {
+    const text = String(value || '').toLowerCase();
+    return words.every((word) => text.includes(word));
+  });
+
+  return matchesSearch && (
+    !selectedTheme || story.research_theme === selectedTheme
+  );
+};
+
 function AnnualReportMap({ slide }) {
   const mapContainerRef = useRef(null);
+  const oceanMarkersRef = useRef([]);
   const [activeStory, setActiveStory] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedTheme, setSelectedTheme] = useState('');
+  const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(
+    window.innerWidth <= 768
+  );
+
+  const themeDropdownRef = useRef(null);
+  const highlightMarkersRef = useRef([]);
+
+  const stories = slide.slide_content?.map_stories || [];
+
+  const researchThemes = [...new Set(
+    stories
+      .map((story) => story.research_theme)
+      .filter(Boolean)
+  )].sort();
+
+  useEffect(() => {
+    if (!activeStory) return undefined;
+
+    const handleOutsideClick = (event) => {
+      if (
+        event.target.closest('.map-story-panel') ||
+        event.target.closest('.map-story-node')
+      ) {
+        return;
+      }
+
+      setActiveStory(null);
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setActiveStory(null);
+      }
+    };
+
+    document.addEventListener('click', handleOutsideClick);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [activeStory]);
 
   useEffect(() => {
     if (!mapContainerRef.current) return undefined;
+
+    let highlightAnimation = null;
 
     const map = new maplibregl.Map({
       container: mapContainerRef.current,
@@ -135,9 +202,16 @@ function AnnualReportMap({ slide }) {
       minZoom: 1,
       maxZoom: 5,
       attributionControl: false,
+      trackResize: true,
     });
 
-    map.addControl(new maplibregl.NavigationControl(), 'top-right');
+    map.addControl(
+      new maplibregl.NavigationControl({
+        showCompass: false,
+        showZoom: true,
+      }),
+      'top-right'
+    );
 
     map.on('load', () => {
       map.addSource('countries', {
@@ -165,7 +239,6 @@ function AnnualReportMap({ slide }) {
         },
       });
 
-      let highlightAnimation = null;
       let currentOpacity = 1;
       let highlightedCountry = null;
 
@@ -221,6 +294,29 @@ function AnnualReportMap({ slide }) {
       const stories = slide.slide_content?.map_stories || [];
       const countries = slide.slide_content?.countries || {};
 
+      const oceans = [
+        { name: 'Pacific Ocean', coordinates: [-145, 0] },
+        { name: 'Atlantic Ocean', coordinates: [-35, 30] },
+        { name: 'Indian Ocean', coordinates: [80, -25] },
+        { name: 'Southern Ocean', coordinates: [0, -62] },
+        { name: 'Arctic Ocean', coordinates: [0, 82] },
+      ];
+
+      oceans.forEach(({ name, coordinates }) => {
+        const element = document.createElement('div');
+        element.className = 'map-ocean-label';
+        element.textContent = name;
+
+        const marker = new maplibregl.Marker({
+          element,
+          anchor: 'center',
+        })
+          .setLngLat(coordinates)
+          .addTo(map);
+
+        oceanMarkersRef.current.push(marker);
+      });
+
       const countryGroups = {};
 
       stories.forEach((story) => {
@@ -232,6 +328,7 @@ function AnnualReportMap({ slide }) {
       });
 
       const markers = [];
+      highlightMarkersRef.current = markers;
 
       Object.entries(countryGroups).forEach(([country, group]) => {
         const coordinates = countries[country];
@@ -288,7 +385,7 @@ function AnnualReportMap({ slide }) {
             });
           });
 
-          markers.push({ marker, coordinates, index });
+          markers.push({ marker, coordinates, index, story, element, tooltip });
         });
       });
 
@@ -316,16 +413,149 @@ function AnnualReportMap({ slide }) {
     });
 
     return () => {
+      if (highlightAnimation !== null) {
+        cancelAnimationFrame(highlightAnimation);
+        highlightAnimation = null;
+      }
+
+      highlightMarkersRef.current.forEach(({ marker, tooltip }) => {
+        tooltip.remove();
+        marker.remove();
+      });
+
+      highlightMarkersRef.current = [];
+
+      oceanMarkersRef.current.forEach((marker) => {
+        marker.remove();
+      });
+
+      oceanMarkersRef.current = [];
+
       map.remove();
     };
   }, []);
 
+  useEffect(() => {
+    const hasActiveSearch = Boolean(searchQuery.trim() || selectedTheme);
+
+    highlightMarkersRef.current.forEach(({ story, element }) => {
+      element.classList.toggle(
+        'map-story-node-highlight',
+        hasActiveSearch && storyMatches(story, searchQuery, selectedTheme)
+      );
+    });
+  }, [searchQuery, selectedTheme]);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 768px)');
+    const updateMobile = (event) => setIsMobile(event.matches);
+
+    mediaQuery.addEventListener('change', updateMobile);
+
+    return () => mediaQuery.removeEventListener('change', updateMobile);
+  }, []);
+
+  useEffect(() => {
+    if (!themeDropdownOpen) return undefined;
+
+    const handlePointerDown = (event) => {
+      if (!themeDropdownRef.current?.contains(event.target)) {
+        setThemeDropdownOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setThemeDropdownOpen(false);
+        themeDropdownRef.current
+          ?.querySelector('.map-theme-trigger')
+          ?.focus();
+      }
+    };
+
+    document.addEventListener('pointerdown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [themeDropdownOpen]);
+
   return (
     <div className="annual-report-map">
+      <div className="annual-report-map-controls">
+        <div className="map-search-input">
+          <input
+            type="search"
+            placeholder="Search stories..."
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            aria-label="Search stories"
+          />
+          <i className="fa-solid fa-magnifying-glass" aria-hidden="true" />
+        </div>
+
+        <div className="map-theme-select" ref={themeDropdownRef}>
+          <button
+            type="button"
+            className="map-theme-trigger"
+            aria-expanded={themeDropdownOpen}
+            onClick={() => setThemeDropdownOpen(!themeDropdownOpen)}
+          >
+            <span>
+              {selectedTheme || (isMobile ? 'All' : 'All research themes')}
+            </span>
+            <i className="fa-solid fa-chevron-down" aria-hidden="true" />
+          </button>
+
+          {themeDropdownOpen && (
+            <div className="map-theme-options">
+              <button
+                type="button"
+                aria-pressed={!selectedTheme}
+                onClick={() => {
+                  setSelectedTheme('');
+                  setThemeDropdownOpen(false);
+                }}
+              >
+                All research themes
+              </button>
+
+              {researchThemes.map((theme) => (
+                <button
+                  key={theme}
+                  type="button"
+                  aria-pressed={selectedTheme === theme}
+                  onClick={() => {
+                    setSelectedTheme(theme);
+                    setThemeDropdownOpen(false);
+                  }}
+                >
+                  {theme}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {(searchQuery || selectedTheme) && (
+          <button
+            type="button"
+            className="map-search-clear"
+            onClick={() => {
+              setSearchQuery('');
+              setSelectedTheme('');
+              setThemeDropdownOpen(false);
+            }}
+          >
+            Clear
+          </button>
+        )}
+      </div>
       <div
         ref={mapContainerRef}
         className="annual-report-map-container"
-        style={{ width: '100%', height: '100%' }}
       />
 
       {activeStory && (
