@@ -651,3 +651,30 @@ body:has(.annual-report-map) {
     padding: 1.25rem;
   }
 }
+
+.annual-report-map {
+  .map-story-tooltip {
+    z-index: 1000;
+    pointer-events: none;
+
+    .maplibregl-popup-content {
+      background-color: $black;
+      color: $white;
+      border: 1px solid $cigi-primary-colour;
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      box-shadow: none;
+    }
+
+    .maplibregl-popup-tip {
+      display: none;
+    }
+
+    .map-story-title-tooltip {
+      font-size: 0.9rem;
+      font-weight: 500;
+      line-height: 1.4;
+      white-space: nowrap;
+    }
+  }
+}
