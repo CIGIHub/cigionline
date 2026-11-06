@@ -824,6 +824,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                     'publishing_date': story.publishing_date.strftime('%B %-d, %Y') if story.publishing_date else '',
                     'location': story.location,
                     'country': story.location.rsplit(',', 1)[-1].strip(),
+                    'coordinates': coordinates,
                     'research_theme': story.research_theme.title if story.research_theme else None,
                     'related_pages': [
                         {

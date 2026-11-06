@@ -317,21 +317,23 @@ function AnnualReportMap({ slide }) {
         oceanMarkersRef.current.push(marker);
       });
 
-      const countryGroups = {};
+      const locationGroups = {};
 
       stories.forEach((story) => {
-        if (!countryGroups[story.country]) {
-          countryGroups[story.country] = [];
+        const location = story.location.trim();
+
+        if (!locationGroups[location]) {
+          locationGroups[location] = [];
         }
 
-        countryGroups[story.country].push(story);
+        locationGroups[location].push(story);
       });
 
       const markers = [];
       highlightMarkersRef.current = markers;
 
-      Object.entries(countryGroups).forEach(([country, group]) => {
-        const coordinates = countries[country];
+      Object.entries(locationGroups).forEach(([location, group]) => {
+        const coordinates = group[0].coordinates || countries[group[0].country];
 
         if (!coordinates) return;
 
