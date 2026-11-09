@@ -113,6 +113,11 @@ class PurgeCloudflareCacheTests(WagtailPageTestCase):
 
 
 class LatestContentFeedTests(WagtailPageTestCase):
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
+        Site.clear_site_root_paths_cache()
+
     def setUp(self):
         self.user = get_user_model().objects.create_user(username='feed-editor')
         self.site = Site.objects.get(is_default_site=True)
@@ -145,7 +150,7 @@ class LatestContentFeedTests(WagtailPageTestCase):
 
     def test_feed_contains_requested_content_types_newest_first(self):
         now = timezone.now()
-        self._publish(
+        article = self._publish(
             self.article_list,
             ArticlePage(
                 title='Feed Article',
@@ -178,6 +183,11 @@ class LatestContentFeedTests(WagtailPageTestCase):
             self._item_titles(response),
             ['Feed Multimedia', 'Feed Publication', 'Feed Article'],
         )
+        root = ElementTree.fromstring(response.content)
+        article_item = root.findall('./channel/item')[2]
+        self.assertEqual(root.findtext('./channel/ttl'), '15')
+        self.assertEqual(article_item.findtext('guid'), f'urn:cigionline:content:{article.pk}')
+        self.assertEqual(article_item.find('guid').attrib, {'isPermaLink': 'false'})
         self.assertContains(response, 'Article summary')
         self.assertNotContains(response, '&lt;b&gt;Article summary&lt;/b&gt;')
 

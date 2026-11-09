@@ -11,6 +11,8 @@ class LatestContentFeed(Feed):
     title = "CIGI — Latest Research and Analysis"
     link = "/"
     description = "The latest articles, publications, and multimedia from CIGI."
+    ttl = "15"
+    item_guid_is_permalink = False
 
     def get_object(self, request):
         self.request = request
@@ -40,6 +42,9 @@ class LatestContentFeed(Feed):
 
     def item_link(self, item):
         return item.get_url(request=self.request)
+
+    def item_guid(self, item):
+        return f"urn:cigionline:content:{item.pk}"
 
     def item_pubdate(self, item):
         return item.publishing_date
