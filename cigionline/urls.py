@@ -3,6 +3,7 @@ from django.conf.urls import include
 from django.urls import path, re_path
 from django.views.decorators.cache import cache_control
 from core import views as core_views
+from core.feeds import LatestContentFeed
 from uploads.views import DocumentZipAPIView
 from events.feeds import EventFeed
 from images.views import favicon_view
@@ -32,6 +33,7 @@ if settings.ADMIN_ENABLED:
         re_path(r'^admin/', include(wagtailadmin_urls)),
     ]
 urlpatterns = urlpatterns + [
+    path('feed/', LatestContentFeed(), name='latest_content_feed'),
     path('qr/<int:page_id>/', core_views.qr_redirect, name='qr_redirect'),
     path('qr/doc/<int:doc_id>/', core_views.qr_document_redirect, name='qr_document_redirect'),
     path('api/annual-report/<int:page_id>/slides/', annual_report_views.get_ordered_slides_annual_report, name='ordered_slides_api'),

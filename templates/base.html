@@ -59,6 +59,9 @@
     {% block canonical_link %}
       {# Override this in templates to add canonical link #}
     {% endblock %}
+    {% if self.get_site.site_name == "Centre for International Governance Innovation" %}
+      <link rel="alternate" type="application/rss+xml" title="CIGI — Latest Research and Analysis" href="{% url 'latest_content_feed' %}">
+    {% endif %}
     <link rel="shortcut icon" type="image/png" href="{% static 'assets/favicon.ico' %}">
   </head>
   <body class="{% block body_class %}{% endblock %}">
