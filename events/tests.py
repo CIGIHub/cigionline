@@ -286,6 +286,58 @@ class DuplicateRegistrationTests(TestCase):
         self.assertEqual(after, before + 1)
 
 
+class RegistrantStatusEmailTests(TestCase):
+    def setUp(self):
+        from events.models import RegistrationType, Registrant
+        from wagtail.models import Site
+
+        root = Site.objects.get(is_default_site=True).root_page
+        self.event = EventPage(
+            title="Status Email Test Event",
+            publishing_date=timezone.now(),
+            owner=test_owner(),
+        )
+        root.add_child(instance=self.event)
+        self.registration_type = RegistrationType.objects.create(
+            event=self.event,
+            name="General",
+            slug="general",
+            sort_order=0,
+        )
+        self.registrant = Registrant.objects.create(
+            event=self.event,
+            registration_type=self.registration_type,
+            email="waitlisted@example.com",
+            status=Registrant.Status.WAITLISTED,
+        )
+
+    @patch("events.emailing.send_confirmation_email")
+    def test_waitlisted_to_confirmed_sends_confirmation_email(self, send_mock):
+        from events.models import Registrant
+
+        self.registrant.status = Registrant.Status.CONFIRMED
+        self.registrant.save(update_fields=["status"])
+
+        send_mock.assert_called_once_with(self.registrant, confirmed=True)
+
+    @patch("events.emailing.send_confirmation_email")
+    def test_other_saves_do_not_send_confirmation_email(self, send_mock):
+        self.registrant.first_name = "Updated"
+        self.registrant.save(update_fields=["first_name"])
+
+        send_mock.assert_not_called()
+
+    @patch("events.emailing.send_confirmation_email", side_effect=RuntimeError("Send failed"))
+    def test_email_failure_does_not_undo_status_change(self, _send_mock):
+        from events.models import Registrant
+
+        self.registrant.status = Registrant.Status.CONFIRMED
+        self.registrant.save(update_fields=["status"])
+
+        self.registrant.refresh_from_db()
+        self.assertEqual(self.registrant.status, Registrant.Status.CONFIRMED)
+
+
 class EventListPageTests(WagtailPageTestCase):
     def test_eventlistpage_parent_page_types(self):
         self.assertAllowedParentPageTypes(

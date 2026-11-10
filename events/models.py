@@ -51,6 +51,9 @@ import urllib.parse
 import uuid
 
 
+logger = logging.getLogger(__name__)
+
+
 def _safe_int(value, default=0) -> int:
     """Parse an integer from a query param, returning *default* on failure."""
     try:
@@ -2561,6 +2564,28 @@ class Registrant(models.Model):
 
     def __str__(self) -> str:
         return f"{self.email} @ {self.event.title} ({self.registration_type.name})"
+
+    def save(self, *args, **kwargs):
+        update_fields = kwargs.get("update_fields")
+        was_waitlisted = (
+            self.pk
+            and self.status == self.Status.CONFIRMED
+            and (update_fields is None or "status" in update_fields)
+            and type(self).objects.filter(pk=self.pk, status=self.Status.WAITLISTED).exists()
+        )
+        super().save(*args, **kwargs)
+
+        if was_waitlisted:
+            try:
+                from .emailing import send_confirmation_email
+
+                send_confirmation_email(self, confirmed=True)
+            except Exception:
+                logger.exception(
+                    "Failed to send waitlist promotion email registrant_id=%s event_id=%s",
+                    self.pk,
+                    self.event_id,
+                )
 
     def confirm_with_capacity(self) -> bool:
         """
