@@ -13,10 +13,13 @@ heroku git:clone -a cigionline-staging-takt
 
 ## Before you deploy
 
-1. **Merge with your `master`.** Your `master` and the redesign use the same
-   migration numbers in some apps (for example `core/0052`–`0057` and
-   `research/0065`–`0068`). Add merge migrations (`makemigrations --merge`).
-   Do not renumber the redesign migrations.
+1. **Complete the selective production ports.** Follow
+   [`master-to-redesign-porting.md`](master-to-redesign-porting.md). Do not rely
+   on the current `staging-takt` ancestry to prove that production work is
+   present. Some apps contain the same migration identity with different
+   operations; `makemigrations --merge` alone cannot resolve those collisions.
+   Reconcile them against production's applied migration history and rehearse
+   the result on a production database copy.
 2. **Size the release dyno.** Deploy runs about 430 migrations through
    `bin/release-migrate.sh`. A 512 MB release dyno ran out of memory on
    staging. Use Standard-2X for the release.
