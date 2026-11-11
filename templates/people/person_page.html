@@ -100,7 +100,7 @@
     {% endif %}
 
     {% if not page.archive %}
-      {% if page.expertise or page.programs_as_team_member or page.email or page.twitter_username or page.website or page.linkedin_url or page.image_media or page.phone_number_clean or page.curriculum_vitae %}
+      {% if page.expertise or page.programs_as_team_member or page.email or page.twitter_username or page.website or page.linkedin_url or page.orcid_id or page.image_media or page.phone_number_clean or page.curriculum_vitae %}
         <section class="expertise">
           <div class="container">
             <div class="row justify-content-center">
@@ -132,7 +132,7 @@
                     </div>
                   {% endif %}
 
-                  {% if page.email or page.twitter_username or page.website or page.linkedin_url or page.image_media or page.phone_number_clean or page.curriculum_vitae %}
+                  {% if page.email or page.twitter_username or page.website or page.linkedin_url or page.orcid_id or page.image_media or page.phone_number_clean or page.curriculum_vitae %}
                     <hr>
                     <div class="contact">
                       {% if page.phone_number_clean %}
@@ -160,6 +160,13 @@
                         <div class="contact-item">
                           <i class="fa-brands fa-linkedin-in" aria-hidden="true"></i>
                           <a href="{{ page.linkedin_url }}" target="_blank" rel="noopener noreferrer">{{ page.linkedin_url|no_protocol }}</a>
+                        </div>
+                      {% endif %}
+
+                      {% if page.orcid_id %}
+                        <div class="contact-item">
+                          <i class="fa-brands fa-orcid" aria-hidden="true"></i>
+                          <a href="https://orcid.org/{{ page.orcid_id }}" target="_blank" rel="noopener noreferrer">{{ page.orcid_id }}</a>
                         </div>
                       {% endif %}
 

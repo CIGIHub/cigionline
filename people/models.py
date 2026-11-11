@@ -213,6 +213,7 @@ class PersonPage(
     )
     last_name = models.CharField(blank=True, max_length=255)
     linkedin_url = models.URLField(blank=True)
+    orcid_id = models.CharField(blank=True, max_length=255)
     person_types = ParentalManyToManyField('people.PersonType', blank=True)
     person_weight = models.IntegerField(blank=False, null=False, default=0)
     phone_number = models.CharField(blank=True, max_length=32)
@@ -404,7 +405,8 @@ class PersonPage(
                 FieldPanel('phone_number'),
                 FieldPanel('twitter_username'),
                 FieldPanel('linkedin_url'),
-                FieldPanel('website')
+                FieldPanel('website'),
+                FieldPanel('orcid_id'),
             ],
             heading='Contact Information',
             classname='collapsible collapsed'

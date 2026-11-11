@@ -63,14 +63,19 @@
         }
 
         .contact {
-          @include media-breakpoint-up(md) {
-            columns: 3;
-          }
-          columns: 2;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          grid-column-gap: 2rem;
 
           .contact-item {
             @include link($color: $black, $hover-color: $cigi-dark-pink);
             line-height: 1.25em;
+            display: flex;
+            overflow: auto;
+
+            .fa-orcid {
+              color: $black;
+            }
 
             a {
               display: inline-block;
