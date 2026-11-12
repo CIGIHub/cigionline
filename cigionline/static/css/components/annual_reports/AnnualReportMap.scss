@@ -509,7 +509,12 @@ body:has(.annual-report-map) {
 }
 
 .map-search-clear {
-  padding: 0.5rem 1rem;
+  height: 36px;
+  box-sizing: border-box;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: $white;
   color: $black;
   border: 1px solid transparent;
