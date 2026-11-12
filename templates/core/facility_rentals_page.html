@@ -7,6 +7,9 @@
 
 {% block extra_js %}
 {% render_bundle 'facilityRentalsPage' 'js' attrs='defer' %}
+{% if turnstile_site_key %}
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -185,6 +188,9 @@
           {% endif %}
 
           <button class="button">Send Inquiry</button>
+          {% if turnstile_site_key %}
+            <div class="cf-turnstile mb-3" data-sitekey="{{ turnstile_site_key }}" data-appearance="invisible"></div>
+          {% endif %}
         </form>
 
       </div>
