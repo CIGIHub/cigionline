@@ -396,25 +396,53 @@ function AnnualReportMap({ slide }) {
       });
 
       const updateStoryPositions = () => {
-        markers.forEach(({ marker, coordinates, index }) => {
+        const placedPositions = [];
+        const minimumDistance = 26;
+
+        markers.forEach(({ marker, coordinates, index, story }) => {
           const center = map.project([
             coordinates.longitude,
             coordinates.latitude,
           ]);
 
-          const angle = index * 2.39996;
-          const radius = 22 * Math.sqrt(index);
+          let x = center.x;
+          let y = center.y;
 
-          const position = map.unproject([
-            center.x + radius * Math.cos(angle),
-            center.y + radius * Math.sin(angle),
-          ]);
+          for (let attempt = 0; attempt < 200; attempt += 1) {
+            const angle = (index + attempt) * 2.39996;
+            const radius = 22 * Math.sqrt(index + attempt);
 
-          marker.setLngLat(position);
+            const candidateX = center.x + radius * Math.cos(angle);
+            const candidateY = center.y + radius * Math.sin(angle);
+
+            const countriesAtPoint = map.queryRenderedFeatures(
+              [candidateX, candidateY],
+              { layers: ['countries-fill'] },
+            );
+
+            const insideCountry = countriesAtPoint.some(
+              (feature) => feature.properties.ADMIN === story.country,
+            );
+
+            if (!insideCountry) continue;
+
+            const overlaps = placedPositions.some(([px, py]) => (
+              Math.hypot(candidateX - px, candidateY - py) < minimumDistance
+            ));
+
+            if (!overlaps) {
+              x = candidateX;
+              y = candidateY;
+              break;
+            }
+          }
+
+          placedPositions.push([x, y]);
+          marker.setLngLat(map.unproject([x, y]));
         });
       };
 
-      updateStoryPositions();
+      map.once('idle', updateStoryPositions);
       map.on('zoomend', updateStoryPositions);
     });
 
