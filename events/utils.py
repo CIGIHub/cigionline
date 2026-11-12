@@ -11,6 +11,10 @@ import logging
 
 logger = logging.getLogger('cigionline')
 
+# Re-export for backwards compatibility — canonical location is utils/security.py
+from utils.security import verify_turnstile_token  # noqa: F401
+
+
 
 def _jsonable(value):
     """Make form values safe to stash in a JSONField/TextField."""

@@ -11,6 +11,12 @@
 {# Landing-type chrome: the dark site header, like the other landings (Tia, BugHerd #265). #}
 {% block header %}{% include "includes/header.html" with header_surface='dark' %}{% endblock %}
 
+{% block extra_js %}
+  {% if turnstile_site_key %}
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  {% endif %}
+{% endblock %}
+
 {% block content %}
   {% page_hero self %}
 
@@ -90,6 +96,10 @@
               </button>
               {% if self.button_help_text %}<p class="ds-form__help">{{ self.button_help_text }}</p>{% endif %}
             </div>
+
+            {% if turnstile_site_key %}
+              <div class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}" data-appearance="invisible"></div>
+            {% endif %}
           </form>
         </div>
 

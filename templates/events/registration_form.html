@@ -13,6 +13,12 @@
 {% endcomment %}
 {% block title %}Register — {{ event.title }} · {{ reg_type.name }}{% endblock %}
 
+{% block extra_js %}
+  {% if turnstile_site_key %}
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  {% endif %}
+{% endblock %}
+
 {% block content %}
 {% page_hero event variant='registration' %}
 
@@ -101,6 +107,10 @@
               {% ds_icon 'chevron-right' css_class='ds-button__icon' %}
             </button>
           </div>
+
+          {% if turnstile_site_key %}
+            <div class="cf-turnstile mt-3 mb-3" data-sitekey="{{ turnstile_site_key }}" data-appearance="invisible"></div>
+          {% endif %}
         </form>
       </div>
     </div>
