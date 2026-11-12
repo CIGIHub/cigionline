@@ -23,6 +23,18 @@
 }
 
 section {
+  &.body {
+    .paragraph-block {
+      p {
+        a {
+          overflow-wrap: anywhere;
+        }
+      }
+    }
+  }
+}
+
+section {
   &.recommended {
     margin-top: 2em;
 

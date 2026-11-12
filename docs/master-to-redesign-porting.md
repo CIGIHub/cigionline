@@ -179,7 +179,7 @@ notes as work is completed.
 | Responsible Technology theme | `1ea73e2b` | Pending | Confirm whether still active. |
 | Shared footer, icons, and social links | `eccf89b2`, `ad58b003`, `1a929cc1` | Pending | Adapt rather than restoring legacy markup wholesale. |
 | Policy Prompt changes | `c4da3de4`, `23563b2a` | Pending | Episode download action and follow-up fix. |
-| Multimedia link wrapping | `582775a7` | Pending | Candidate migration-free pilot. |
+| Multimedia link wrapping | `582775a7` | Ported | Candidate migration-free pilot. |
 | RSS feed | `b7482ee4` | Pending | Added after the original inventory; inspect related URL and feed changes. |
 | DPH sidebar updates | `8584374a`, `6b791bad`, `8ad8bca1`, `07ea26e6` | Pending | Reconcile copy against current approved content. |
 
