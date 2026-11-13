@@ -714,11 +714,11 @@ def event_hero_data(page, simple=False, invite=None, variant=None):
     data['location'] = getattr(page, 'location_name', '') or address
     if address:
         data['location_url'] = page.location_map_url()
-    # On-site registration wins over the external registration_url. Private
-    # events show it only with an invite (token carried into the flow).
+    # On-site registration wins over the external registration_url. The model
+    # applies invite visibility and effective per-type deadlines.
     is_past = page.is_past() if callable(getattr(page, 'is_past', None)) else False
-    onsite = (getattr(page, 'registration_open', False) and not is_past
-              and (not getattr(page, 'is_private_registration', False) or invite))
+    types = page.open_registration_types(invite) if hasattr(page, 'open_registration_types') else []
+    onsite = bool(types)
     reg_url = getattr(page, 'registration_url', '') or getattr(page, 'website_url', '') or ''
     # Register is the outline treatment in the event frame (1360:114601) —
     # red label + chevron, not the solid fill.
@@ -726,25 +726,18 @@ def event_hero_data(page, simple=False, invite=None, variant=None):
         # One button per open registration type ("In Person", "Virtual" —
         # Event Template 1705:20640), each deep-linking to that type's form.
         # The type list is the chooser's own (EventPage.open_registration_types),
-        # so staff-only and closed types stay hidden here too. With no
-        # resolvable type the single Register keeps pointing at register/,
-        # which renders the no-types page.
+        # so staff-only and closed types stay hidden here too.
         token = f'?invite={invite.token}' if invite else ''
-        types = page.open_registration_types(invite) if hasattr(page, 'open_registration_types') else []
-        if types:
-            base = _rel_url(page) + 'register/type/'
-            # Labels (client, 2026-09-17): several types read "Register: <type>";
-            # a single type reads "Register" — or the authorable registration_text,
-            # which stays the editor's manual copy control for a lone button.
-            if len(types) > 1:
-                data['actions'] = [{'label': f'Register: {t.name}', 'url': f'{base}{t.slug}/{token}',
-                                    'style': 'outline'} for t in types]
-            else:
-                data['action'] = {'label': getattr(page, 'registration_text', '') or 'Register',
-                                  'url': f'{base}{types[0].slug}/{token}', 'style': 'outline'}
+        base = _rel_url(page) + 'register/type/'
+        # Labels (client, 2026-09-17): several types read "Register: <type>";
+        # a single type reads "Register" — or the authorable registration_text,
+        # which stays the editor's manual copy control for a lone button.
+        if len(types) > 1:
+            data['actions'] = [{'label': f'Register: {t.name}', 'url': f'{base}{t.slug}/{token}',
+                                'style': 'outline'} for t in types]
         else:
-            data['action'] = {'label': getattr(page, 'registration_text', '') or 'Register Now',
-                              'url': _rel_url(page) + 'register/' + token, 'style': 'outline'}
+            data['action'] = {'label': getattr(page, 'registration_text', '') or 'Register',
+                              'url': f'{base}{types[0].slug}/{token}', 'style': 'outline'}
     elif reg_url and not is_past:
         # Legacy hero parity: past events never show Register — 269 live past
         # events still carry stale external registration_url values.

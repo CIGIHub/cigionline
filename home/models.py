@@ -55,6 +55,7 @@ from wagtail.admin.panels import (
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from django.utils import timezone
+from django.utils.cache import add_never_cache_headers
 from people.models import PersonPage
 from multimedia.models import MultimediaPage
 import random
@@ -307,6 +308,11 @@ class HomePage(Page):
         # DS homepage leads with the dark primary hero, so the nav is dark too.
         context['header_surface'] = 'dark'
         return context
+
+    def serve(self, request, *args, **kwargs):
+        response = super().serve(request, *args, **kwargs)
+        add_never_cache_headers(response)
+        return response
 
     max_count = 1
     subpage_types = [

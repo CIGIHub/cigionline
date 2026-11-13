@@ -341,7 +341,7 @@ class RegistrationReportViewSet(ViewSet):
         sort_field = sort_map.get(sort, "publishing_date")
         prefix = "-" if direction != "asc" else ""
 
-        events_qs = EventPage.objects.live().filter(registration_open=True)
+        events_qs = EventPage.objects.filter(registrants__isnull=False).distinct()
         if q:
             events_qs = events_qs.filter(title__icontains=q)
 
