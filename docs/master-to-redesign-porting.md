@@ -157,7 +157,7 @@ notes as work is completed.
 
 | Change group | Important source commits | Status | PR / decision / verification |
 |---|---|---|---|
-| AI guidance and PR template | `b967088e`, `cabeff55` | Pending | This root briefing supersedes only the missing entry point, not all source guidance. |
+| AI guidance and PR template | `b967088e`, `cabeff55` | Adapted | Restored and updated for redesign paths, commands, migration reconciliation, and review disclosure. |
 | Turnstile validation | `81bafe9e` | Ported | Security boundary for event, subscription, and facility forms. |
 | Event form rich text | `d0363f39` | Pending | Port with storage, reports, admin, templates, email, and tests. |
 | Event choice limits | `d3d73c76` | Pending | Includes sold-out handling and reports. |
