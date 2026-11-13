@@ -145,6 +145,7 @@ function toggleConditionalSettingsForItem(item) {
   ]).has(val) && !isRichText;
 
   showFields(['choices'], needsChoices);
+  showFields(['choice_limits'], needsChoices);
 
   // ---- Default value: show only where it makes sense
   const needsDefaultValue = new Set([
