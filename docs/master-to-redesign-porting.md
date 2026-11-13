@@ -159,7 +159,7 @@ notes as work is completed.
 |---|---|---|---|
 | AI guidance and PR template | `b967088e`, `cabeff55` | Adapted | Restored and updated for redesign paths, commands, migration reconciliation, and review disclosure. |
 | Turnstile validation | `81bafe9e` | Ported | Security boundary for event, subscription, and facility forms. |
-| Event form rich text | `d0363f39` | Pending | Port with storage, reports, admin, templates, email, and tests. |
+| Event form rich text | `d0363f39` | Adapted | Production migration preserved alongside the Takt branch; DS rendering adapted. Focused tests, template compilation, event migration graph, and changed-file ESLint pass. Production-clone migration checks are blocked by pre-existing `annual_reports.0062`-before-`0061` history; the full event suite has unrelated baseline failures. |
 | Event choice limits | `d3d73c76` | Pending | Includes sold-out handling and reports. |
 | Event conditional questions | `3635ff68`, `68c6fede`, `25156c59` | Pending | Include ordering and required-field fixes. |
 | Event close dates | `dd5fb93c` | Pending | Affects listings, pages, features, reports, and caching. |

@@ -101,12 +101,19 @@ function toggleConditionalSettingsForItem(item) {
     'conditional_dropdown_other',
     'conditional_multiselect_other',
   ]).has(val);
+  const isRichText = val === 'rich_text';
+  const isFile = val === 'file';
 
   // Show/hide the "group" wrappers if present
   showGroupHeading('Conditional form settings', isConditionalText);
   showGroupHeading("Conditional 'Other' settings", isConditionalOther);
+  showGroupHeading('Requiredness rules', !isRichText);
 
   // Show/hide underlying fields too (in case the group wrapper isn't there)
+  showFields(['rich_text'], isRichText);
+  showFields(['help_text', 'required', 'required_rule', 'required_type_slugs'], !isRichText);
+  showFields(['file_allowed_types', 'file_max_mb'], isFile);
+
   showFields(
     [
       'conditional_label',
@@ -135,7 +142,7 @@ function toggleConditionalSettingsForItem(item) {
     'multiselect',
     'conditional_dropdown_other',
     'conditional_multiselect_other',
-  ]).has(val);
+  ]).has(val) && !isRichText;
 
   showFields(['choices'], needsChoices);
 
@@ -151,7 +158,7 @@ function toggleConditionalSettingsForItem(item) {
     'dropdown',
     'radio',
     'hidden',
-  ]).has(val);
+  ]).has(val) && !isRichText;
 
   showFields(['default_value'], needsDefaultValue);
 }

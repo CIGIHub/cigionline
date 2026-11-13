@@ -14,6 +14,8 @@ logger = logging.getLogger('cigionline')
 # Re-export for backwards compatibility — canonical location is utils/security.py
 from utils.security import verify_turnstile_token  # noqa: F401
 
+from .forms import is_non_answer_field_type, strip_non_answer_data
+
 
 
 def _jsonable(value):
@@ -45,6 +47,9 @@ def _try_mailchimp_optin(email, first_name, last_name, answers, form_template, m
     should_subscribe = False
     merge_fields_extra = {}
     for ff in form_template.fields.all():
+        if is_non_answer_field_type(getattr(ff, "field_type", "")):
+            continue
+
         is_optin_type = ff.field_type == "mailchimp_optin"
         is_legacy = (
             ff.field_type == "radio"
@@ -131,6 +136,8 @@ def save_registrant_from_form(event, reg_type, form, invite=None):
 
         if invite and getattr(invite, "email", None):
             email = invite.email
+
+        strip_non_answer_data(event, cleaned)
 
         uploaded_doc_ids = []
         # Convert uploaded files to Wagtail Documents.
