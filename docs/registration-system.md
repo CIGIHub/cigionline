@@ -10,6 +10,7 @@ This guide maps the event registration system for future AI agents and maintaine
   - `RegistrationFormTemplate`: reusable container for custom registration questions.
   - `RegistrationFormField`: one dynamic question or display block in a template. `field_type` controls how `events/forms.py` builds the runtime form/layout.
     - `rich_text` is display-only content stored on `RegistrationFormField.rich_text`; it is not an answer field.
+    - `choice_limits` optionally limits individual choice values using one `Choice label | limit` entry per line.
   - `Registrant`: stores submitted identity fields and dynamic answers in `answers` JSON.
   - `RegistrationGroup`: links primary and guest registrants for group registrations.
   - `Invite`: private/invite-only registration access and use limits.
@@ -21,6 +22,8 @@ This guide maps the event registration system for future AI agents and maintaine
   - `form.layout_items()` returns ordered render items so templates can interleave Django fields and display-only blocks.
   - `rich_text` rows are display-only layout blocks. They render with the form but are not Django fields and are never stored in `Registrant.answers`.
   - `strip_non_answer_data(event, data)` removes display-only keys before answer storage as a final safety guard.
+  - Choice limits disable sold-out options and are validated again while holding an event-row lock before registration or answer edits are saved.
+  - Pending, confirmed, and waitlisted registrants consume limits; cancelled registrants do not. Existing registrants may retain a choice that has since filled.
   - Standard dynamic answers are stored under `f_<field_key>`.
   - `conditional_text` stores:
     - `f_<field_key>__enabled`
@@ -84,6 +87,7 @@ This guide maps the event registration system for future AI agents and maintaine
   - Wagtail admin registration-template editor UX.
   - Shows/hides conditional settings based on `RegistrationFormField.field_type`.
   - Shows the `rich_text` editor only for `rich_text` rows and hides answer-only settings for those rows.
+  - Shows `choice_limits` only for choice-style field types.
   - Also drives conditional show/hide on the Wagtail admin registrant answer edit form.
 
 ## Admin And Reports
@@ -100,6 +104,7 @@ This guide maps the event registration system for future AI agents and maintaine
   - `attach_answer_cells(...)` formats table cells.
   - `registrants_csv_response(...)` exports event/type registrants to CSV.
   - Display-only field types such as `rich_text` are skipped in report columns and CSV exports.
+  - `build_choice_summary_rows(...)` reports active answer counts and configured limits for choice-style questions.
 
 - `templates/events/admin/registration_report_*.html`
   - Wagtail admin report views.
@@ -123,7 +128,7 @@ This guide maps the event registration system for future AI agents and maintaine
 ## Tests
 
 - `events/tests.py`
-  - Existing coverage for duplicate registrations, guest exclusion, group double opt-in, conditional multiselect "Other" behavior, and rich text display-only registration blocks.
+  - Existing coverage for duplicate registrations, guest exclusion, group double opt-in, conditional multiselect "Other" behavior, rich text display-only blocks, and choice-limit enforcement/reporting.
 
 ## Adding A New Registration Field Type
 

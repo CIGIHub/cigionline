@@ -39,6 +39,7 @@ logger = logging.getLogger(__name__)
 from .reporting import (
     attach_answer_cells,
     build_answer_columns,
+    build_choice_summary_rows,
     build_type_rows,
     filter_registrants_queryset,
     paginate_queryset,
@@ -170,7 +171,13 @@ class RegistrantViewSet(ModelViewSet):
 
     def edit_answers_view(self, request, pk: int):
         """Admin view to edit a registrant's dynamic form answers with labelled fields."""
-        from .forms import build_dynamic_form, strip_non_answer_data
+        from django.db import transaction
+        from .forms import (
+            add_choice_limit_errors,
+            build_dynamic_form,
+            strip_non_answer_data,
+            validate_choice_limits,
+        )
         from .utils import _jsonable
         from wagtail.documents.models import Document
 
@@ -192,6 +199,7 @@ class RegistrantViewSet(ModelViewSet):
             registrant.invite,
             require_email=False,
             include_honeypot=False,
+            current_registrant=registrant,
         )
 
         if request.method == "POST":
@@ -206,38 +214,49 @@ class RegistrantViewSet(ModelViewSet):
                 cleaned.pop("email", None)  # email not changed here; keep existing
                 strip_non_answer_data(event, cleaned)
 
-                # Handle file fields: if no new file was uploaded for a key, preserve
-                # the existing stored value so we don't silently wipe document refs.
-                existing = registrant.answers if isinstance(registrant.answers, dict) else {}
-                uploaded_doc_ids = list(registrant.uploaded_document_ids or [])
-                file_answer_keys = set()
-                tpl = getattr(event, "registration_form_template", None)
-                if tpl:
-                    file_answer_keys = {
-                        f"f_{ff.field_key}"
-                        for ff in tpl.fields.all().only("field_key", "field_type")
-                        if getattr(ff, "field_type", "") == "file"
-                    }
+                with transaction.atomic():
+                    EventPage.objects.select_for_update().get(pk=event.pk)
+                    quota_errors = validate_choice_limits(
+                        event,
+                        reg_type,
+                        [cleaned],
+                        current_registrant=registrant,
+                    )
+                    if quota_errors:
+                        add_choice_limit_errors(form, quota_errors)
+                    else:
+                        # Handle file fields only after quota validation, so failed edits
+                        # do not create orphaned Document rows.
+                        existing = registrant.answers if isinstance(registrant.answers, dict) else {}
+                        uploaded_doc_ids = list(registrant.uploaded_document_ids or [])
+                        file_answer_keys = set()
+                        tpl = getattr(event, "registration_form_template", None)
+                        if tpl:
+                            file_answer_keys = {
+                                f"f_{ff.field_key}"
+                                for ff in tpl.fields.all().only("field_key", "field_type")
+                                if getattr(ff, "field_type", "") == "file"
+                            }
 
-                for key, val in list(cleaned.items()):
-                    if hasattr(val, "read"):
-                        doc = Document.objects.create(
-                            title=getattr(val, "name", "upload"),
-                            file=val,
-                        )
-                        uploaded_doc_ids.append(doc.id)
-                        cleaned[key] = {"document_id": doc.id, "name": getattr(val, "name", "upload")}
-                    elif key in file_answer_keys and val in (None, ""):
-                        # Keep the existing stored value rather than overwriting with blank.
-                        if key in existing:
-                            cleaned[key] = existing[key]
+                        for key, val in list(cleaned.items()):
+                            if hasattr(val, "read"):
+                                doc = Document.objects.create(
+                                    title=getattr(val, "name", "upload"),
+                                    file=val,
+                                )
+                                uploaded_doc_ids.append(doc.id)
+                                cleaned[key] = {"document_id": doc.id, "name": getattr(val, "name", "upload")}
+                            elif key in file_answer_keys and val in (None, ""):
+                                # Keep the existing stored value rather than overwriting with blank.
+                                if key in existing:
+                                    cleaned[key] = existing[key]
 
-                registrant.answers = _jsonable(cleaned)
-                registrant.uploaded_document_ids = uploaded_doc_ids
-                registrant.save(update_fields=["first_name", "last_name", "answers", "uploaded_document_ids"])
+                        registrant.answers = _jsonable(cleaned)
+                        registrant.uploaded_document_ids = uploaded_doc_ids
+                        registrant.save(update_fields=["first_name", "last_name", "answers", "uploaded_document_ids"])
 
-                messages.success(request, f"Answers updated for {registrant.email}.")
-                return redirect(reverse("registrants:edit", args=[pk]))
+                        messages.success(request, f"Answers updated for {registrant.email}.")
+                        return redirect(reverse("registrants:edit", args=[pk]))
         else:
             # Pre-populate from stored answers + core identity.
             initial = dict(registrant.answers) if isinstance(registrant.answers, dict) else {}
@@ -353,6 +372,7 @@ class RegistrationReportViewSet(ViewSet):
         event = get_object_or_404(EventPage.objects.specific(), pk=pk)
 
         type_rows = build_type_rows(event)
+        choice_summary_rows = build_choice_summary_rows(event)
 
         return TemplateResponse(
             request,
@@ -361,6 +381,7 @@ class RegistrationReportViewSet(ViewSet):
                 "view": self,
                 "event": event,
                 "type_rows": type_rows,
+                "choice_summary_rows": choice_summary_rows,
                 "index_url_name": self.get_url_name("index"),
                 "detail_url_name": self.get_url_name("detail"),
                 "export_csv_url_name": self.get_url_name("export_csv"),
