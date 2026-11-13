@@ -83,7 +83,7 @@ class EmailCampaignTestSendPanel(Panel):
 
 
 class RegistrationFormFieldPanel(InlinePanel):
-    """InlinePanel that filters show_for_types / required_for_types to this event's types."""
+    """InlinePanel tweaks for registration form template fields."""
 
     def get_form_options(self):
         opts = super().get_form_options()  # this returns {"formsets": {relation_name: formset_opts}}
@@ -94,6 +94,7 @@ class RegistrationFormFieldPanel(InlinePanel):
         if BaseChildForm is None:
             BaseChildForm = get_form_for_model(self.db_field.related_model)
 
+        RegistrationFormField = apps.get_model("events", "RegistrationFormField")
         RegistrationType = apps.get_model("events", "RegistrationType")
 
         # Build a new form class that filters the M2M fields using the parent page
@@ -116,6 +117,17 @@ class RegistrationFormFieldPanel(InlinePanel):
                         f = self.fields[fname]
                         f.queryset = type_qs
                         f.label_from_instance = lambda rt: rt.name  # nicer labels
+
+                if "conditional_parent" in self.fields:
+                    template = getattr(self, "for_parent", None) or getattr(self.instance, "template", None)
+                    qs = RegistrationFormField.objects.none()
+                    if getattr(template, "pk", None):
+                        qs = (
+                            RegistrationFormField.objects.filter(template=template)
+                            .exclude(pk=getattr(self.instance, "pk", None))
+                            .order_by("sort_order", "label")
+                        )
+                    self.fields["conditional_parent"].queryset = qs
 
         # Tell InlinePanel to use our filtered child form
         formset_opts["form"] = FilteredChildForm

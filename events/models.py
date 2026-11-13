@@ -1,5 +1,9 @@
 from .forms_admin import EventPageAdminForm
-from .panels import EmailCampaignPreviewPanel, EmailCampaignTestSendPanel
+from .panels import (
+    EmailCampaignPreviewPanel,
+    EmailCampaignTestSendPanel,
+    RegistrationFormFieldPanel,
+)
 from core.routers import RouterServeMixin
 from core.models import (
     BasicPageAbstract,
@@ -277,6 +281,10 @@ class EventPage(
         verbose_name='Event agenda',
     )
     event_access = models.IntegerField(choices=EventAccessOptions.choices, default=EventAccessOptions.PUBLIC, null=True, blank=True)
+    add_to_calendar = models.BooleanField(
+        default=True,
+        help_text='Show this event on the event list page calendar.',
+    )
     event_end = models.DateTimeField(blank=True, null=True)
     event_format = models.CharField(
         blank=True,
@@ -1782,6 +1790,7 @@ class EventPage(
         FieldPanel('publishing_date', heading='Event start'),
         FieldPanel('event_end'),
         FieldPanel('time_zone'),
+        FieldPanel('add_to_calendar'),
         MultiFieldPanel(
             [
                 FieldPanel('event_format'),
@@ -2200,6 +2209,9 @@ class RegistrationFormField(AbstractFormField):
         default="singleline",
     )
 
+    def __str__(self):
+        return self.label or "Untitled field"
+
     class Rule(models.TextChoices):
         ALL = "all", "All types"
         ONLY = "only", "Only these types"
@@ -2247,6 +2259,18 @@ class RegistrationFormField(AbstractFormField):
         default=True,
         help_text="Require textbox when 'Other' is selected.",
     )
+    conditional_parent = models.ForeignKey(
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="conditional_children",
+        help_text="Show this field only when the selected question has one of the values below.",
+    )
+    conditional_parent_values = models.TextField(
+        blank=True,
+        help_text="Trigger values, one per line. Example: Yes",
+    )
 
     exclude_from_guest_forms = models.BooleanField(
         default=False,
@@ -2258,6 +2282,14 @@ class RegistrationFormField(AbstractFormField):
 
     def clean(self):
         super().clean()
+        if self.conditional_parent_id:
+            if self.conditional_parent_id == self.id:
+                raise ValidationError({"conditional_parent": "A field cannot depend on itself."})
+            if self.conditional_parent and self.conditional_parent.template_id != self.template_id:
+                raise ValidationError({"conditional_parent": "Choose a field from the same form template."})
+            if not self.conditional_parent_values.strip():
+                raise ValidationError({"conditional_parent_values": "Enter at least one trigger value."})
+
         if not self.choice_limits.strip():
             return
 
@@ -2327,6 +2359,14 @@ class RegistrationFormField(AbstractFormField):
                 FieldPanel("conditional_other_required"),
             ],
             heading="Conditional 'Other' settings",
+            classname="collapsible collapsed",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("conditional_parent"),
+                FieldPanel("conditional_parent_values"),
+            ],
+            heading="Conditional visibility",
             classname="collapsible collapsed",
         )
     ]
@@ -2757,7 +2797,7 @@ class EmailCampaignSend(models.Model):
 
 
 @register_snippet
-class RegistrationFormTemplate(ClusterableModel):
+class RegistrationFormTemplate(PreviewableMixin, ClusterableModel):
     title = models.CharField(max_length=120, unique=True)
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -2767,7 +2807,7 @@ class RegistrationFormTemplate(ClusterableModel):
         FieldPanel("description"),
         MultiFieldPanel(
             [
-                InlinePanel("fields", label="Fields"),
+                RegistrationFormFieldPanel("fields", label="Fields"),
             ],
             heading="Form Fields",
             classname="js-registration-fields-inline"
@@ -2776,3 +2816,36 @@ class RegistrationFormTemplate(ClusterableModel):
 
     def __str__(self):
         return self.title
+
+    preview_modes = [
+        ("form", "Form"),
+    ]
+
+    def serve_preview(self, request, mode_name):
+        from django.template.response import TemplateResponse
+        from types import SimpleNamespace
+        from .forms import build_dynamic_form
+
+        event = SimpleNamespace(
+            pk=None,
+            title=f"{self.title} Preview",
+            registration_form_template=self,
+        )
+        reg_type = SimpleNamespace(name="Preview", slug="preview")
+        form_class = build_dynamic_form(
+            event,
+            reg_type,
+            include_honeypot=False,
+            include_invisible_fields=True,
+        )
+
+        return TemplateResponse(
+            request,
+            "events/admin/registration_form_template_preview.html",
+            {
+                "template": self,
+                "event": event,
+                "reg_type": reg_type,
+                "form": form_class(),
+            },
+        )

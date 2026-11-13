@@ -47,6 +47,14 @@ from .reporting import (
 )
 
 
+def registration_form_template_title(obj):
+    return format_html(
+        '<a href="{}">{}</a>',
+        reverse("wagtailsnippets_events_registrationformtemplate:edit", args=[obj.pk]),
+        obj.title,
+    )
+
+
 class EventPageIndexView(ModelIndexView):
     def get_add_url(self):
         parent = EventListPage.objects.first()
@@ -533,7 +541,7 @@ class RegistrationFormTemplate(ModelViewSet):
     menu_order = 105
     name = "registrationformtemplate"
     list_display = [
-        'title',
+        Column(registration_form_template_title, label="Title", sort_key="title"),
         Column(
             "created_at",
             label="Created",

@@ -1,0 +1,47 @@
+{% load wagtailcore_tags webpack_loader %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Preview - {{ template.title }}</title>
+    {% render_bundle 'cigionline' 'css' %}
+    {% render_bundle 'eventPage' 'css' %}
+  </head>
+  <body>
+    <div class="ds-surface ds-surface--light">
+      <div class="ds-container ds-registration">
+        <div class="ds-registration__main">
+          <div class="ds-form" data-ds-form>
+            <p class="ds-form__help">Registration type: {{ reg_type.name }}</p>
+
+            <form onsubmit="return false;">
+              <div class="ds-form__row" data-ds-field>
+                {% include "includes/ds_form_field.html" with field=form.first_name in_row=True %}
+                {% include "includes/ds_form_field.html" with field=form.last_name in_row=True %}
+              </div>
+
+              {% include "includes/ds_form_field.html" with field=form.email %}
+
+              {% for item in form.layout_items %}
+                {% if item.kind == "rich_text" %}
+                  <div class="ds-form__field ds-prose">{{ item.content|richtext }}</div>
+                {% else %}
+                  {% include "includes/ds_form_field.html" with field=item.field %}
+                {% endif %}
+              {% endfor %}
+
+              <div class="ds-form__actions">
+                <button type="submit" class="ds-button ds-button--solid">
+                  <span class="ds-button__label">Submit registration</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% render_bundle 'cigionline' 'js' attrs='defer' %}
+    {% render_bundle 'eventPage' 'js' %}
+  </body>
+</html>

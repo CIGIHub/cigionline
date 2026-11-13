@@ -4,7 +4,7 @@ This is the working agreement for reconciling production `master` with the
 Takt redesign. Read it before changing `staging-takt`, porting a production
 feature, resolving migrations, or preparing cutover.
 
-Last reviewed: November 10, 2026.
+Last reviewed: November 13, 2026.
 
 ## Current state
 
@@ -161,10 +161,10 @@ notes as work is completed.
 | Turnstile validation | `81bafe9e` | Ported | Security boundary for event, subscription, and facility forms. |
 | Event form rich text | `d0363f39` | Adapted | Production migration preserved alongside the Takt branch; DS rendering adapted. Focused tests, template compilation, event migration graph, and changed-file ESLint pass. Production-clone migration planning remains blocked by pre-existing `annual_reports.0062`-before-`0061` history. |
 | Event choice limits | `d3d73c76` | Ported | Production `0057` preserved and already applied on the production clone; merge `0087` joins the Takt graph. Eleven focused and all 33 event tests pass; templates compile, changed-file ESLint and the frontend build pass. The source test repairs also cleared the prior event-suite baseline failures. |
-| Event conditional questions | `3635ff68`, `68c6fede`, `25156c59` | Pending | Include ordering and required-field fixes. |
+| Event conditional questions | `3635ff68`, `68c6fede`, `25156c59` | Adapted | Multiple conditional questions, ordering fix, requiredness fix, snippet preview, admin editing, email filtering, and DS field rendering retained. Exact production `0058`/`0059` migrations are preserved; merge `0088` joins the Takt graph. All 45 event tests, changed-file ESLint, migration checks, and the frontend build pass. The production clone already records `0057`–`0059`; migration planning remains blocked by its pre-existing `annual_reports.0062`-before-`0061` history. |
 | Event close dates | `dd5fb93c` | Pending | Affects listings, pages, features, reports, and caching. |
 | Attendance and registrant reports | `f22248a7`, `3ddaf642`, `e614fe35` | Pending | Attendance, sorting, and registration-type filtering. |
-| Event calendar and agenda | `91f98b02`, `12ec8e3f`, `04567543` | Pending | Preserve editor flag and feed behaviour. |
+| Event calendar and agenda | `91f98b02`, `12ec8e3f`, `04567543` | Pending | The exact production `0058_eventpage_add_to_calendar` migration and matching model/admin field were carried early as a dependency of conditional questions. Agenda presentation, calendar API filtering, and calendar-link/feed behaviour still need review. |
 | Event email fixes | `9b27ff21`, `5341fbf1`, `dd87b205`, `f7684015` | Pending | Includes attachments, footer, and guest merge data. |
 | MediaValet | `6b82f81c`, `16c7e35c` | Pending | Cross-app editor image chooser integration. |
 | Cloudflare purge admin | `9524b726` | Pending | Preserve validation, permissions, and tests. |
