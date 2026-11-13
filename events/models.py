@@ -1219,7 +1219,7 @@ class EventPage(
             get_registrant_for_manage_link,
             get_registrant_for_group_manage_link,
         )
-        from .forms import build_dynamic_form
+        from .forms import build_dynamic_form, strip_non_answer_data
 
         token = request.GET.get("t", "")
         rid = request.GET.get("rid", "")
@@ -1360,6 +1360,7 @@ class EventPage(
         # We intentionally do NOT allow changing email via self-service.
         # Ignore posted value and also prevent storing it into answers.
         cleaned.pop("email", None)
+        strip_non_answer_data(self, cleaned)
 
         # Persist answers (basic JSON-ability). File handling isn't supported in update yet.
         registrant.answers = _jsonable(cleaned)
@@ -2084,6 +2085,7 @@ class RegistrationFormField(AbstractFormField):
         ("conditional_dropdown_other", _("Conditional dropdown (Other + textbox)")),
         ("conditional_multiselect_other", _("Conditional multiselect (Other + textbox)")),
         ("mailchimp_optin", _("Opt-in mailing list (Yes/No)")),
+        ("rich_text", _("Rich text block")),
     )
     field_key = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     template = ParentalKey(
@@ -2100,6 +2102,7 @@ class RegistrationFormField(AbstractFormField):
         null=True, blank=True,
         help_text="Max file size (MB). Leave blank for no limit."
     )
+    rich_text = RichTextField(blank=True)
 
     field_type = models.CharField(
         max_length=32,
@@ -2164,6 +2167,7 @@ class RegistrationFormField(AbstractFormField):
     )
 
     panels = AbstractFormField.panels + [
+        FieldPanel("rich_text"),
         FieldPanel("exclude_from_guest_forms"),
         MultiFieldPanel(
             [

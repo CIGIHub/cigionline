@@ -5,8 +5,8 @@
   registration hero over a centred single column on the ds-form contract.
   Fields come from the event's RegistrationFormTemplate via
   events.forms.build_dynamic_form (first/last/email fixed, the rest editor-
-  authored, visibility per registration type); includes/ds_form_field.html
-  renders each. Guests (per-type option) are ds-form__group boxes cloned
+  authored, visibility per registration type); fields use ds_form_field.html
+  while display blocks render in sequence. Guests are ds-form__group boxes cloned
   client-side from the <template> below (registration-form.js). Conditional
   detail fields start hidden; the server still validates everything.
   Notices render from base.html's ds-messages region, not here.
@@ -44,9 +44,11 @@
           {% include "includes/ds_form_field.html" with field=form.email %}
 
           {# The type's authored fields, in the template's sort order. #}
-          {% for field in form %}
-            {% if field.name != 'first_name' and field.name != 'last_name' and field.name != 'email' and field.name != form.hp_field %}
-              {% include "includes/ds_form_field.html" with field=field %}
+          {% for item in form.layout_items %}
+            {% if item.kind == "rich_text" %}
+              <div class="ds-form__field ds-prose">{{ item.content|richtext }}</div>
+            {% else %}
+              {% include "includes/ds_form_field.html" with field=item.field %}
             {% endif %}
           {% endfor %}
 

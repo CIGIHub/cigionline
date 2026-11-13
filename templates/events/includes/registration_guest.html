@@ -1,4 +1,4 @@
-{% load icons %}{% comment %}
+{% load icons wagtailcore_tags %}{% comment %}
   One guest's sub-form on the registration form (no frame — the DS form
   contract applied: ds-form__group box, "Guest n" + Remove on one line, the
   name pair 2-up, then the type's other fields). Rendered for bound guest
@@ -17,9 +17,11 @@
     {% include "includes/ds_form_field.html" with field=gf.first_name in_row=True %}
     {% include "includes/ds_form_field.html" with field=gf.last_name in_row=True %}
   </div>
-  {% for field in gf %}
-    {% if field.name != 'first_name' and field.name != 'last_name' %}
-      {% include "includes/ds_form_field.html" with field=field %}
+  {% for item in gf.layout_items %}
+    {% if item.kind == "rich_text" %}
+      <div class="ds-form__field ds-prose">{{ item.content|richtext }}</div>
+    {% else %}
+      {% include "includes/ds_form_field.html" with field=item.field %}
     {% endif %}
   {% endfor %}
 </div>
