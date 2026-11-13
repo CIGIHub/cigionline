@@ -396,14 +396,9 @@ def card_data(page, variant='media-vertical', pills=None, cta_label='Read More',
         # render the compact foot (bullet date left, RSVP right).
         data['excerpt'] = _card_excerpt(page)
         data['date'] = getattr(page, 'publishing_date', None)
-        # RSVP only while registration is genuinely open (John, BugHerd #293):
-        # future + registration_open + not private — the same gate as the event
-        # hero's Register action. Everything else links as View Event.
-        registration_gate = (
-            getattr(page, 'registration_open', False)
-            and not getattr(page, 'is_private_registration', False)
-            and not (data['date'] and data['date'] < timezone.now())
-        )
+        # Use the model's effective deadline and visibility rules, shared with
+        # the event hero and registration flow.
+        registration_gate = getattr(page, 'public_registration_available', False)
         data['cta'] = {'label': 'RSVP' if registration_gate else 'View Event',
                        'url': data['url'], 'scheme': cta_scheme}
         if data['date']:

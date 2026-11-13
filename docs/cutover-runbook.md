@@ -31,6 +31,15 @@ heroku git:clone -a cigionline-staging-takt
 
 4. **Rehearse on a copy of production first.**
 
+   The events migration name `0061_alter_eventlistpage_body_alter_eventpage_body`
+   collided between production and Takt. The reconciled graph keeps the exact
+   production migration, replays the Takt operation as
+   `0061_takt_alter_eventlistpage_body_alter_eventpage_body`, merges the branches
+   at `0089`, and restores current field state at `0090`. These are field-state
+   reconciliations with no new irreversible data operation, but they must be
+   included in the production-copy rehearsal. Do not reuse a test database that
+   recorded the old Takt file under the production `0061` identity.
+
 ## Deploy
 
 Deploy the merged code. The release phase applies all migrations. Then check

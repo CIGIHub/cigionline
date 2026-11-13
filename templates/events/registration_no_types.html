@@ -20,6 +20,8 @@
         <p>We couldn’t find any registration options for <strong>{{ event.title }}</strong>.</p>
         {% if not event.registration_open %}
           <p>Registration for this event is currently closed.</p>
+        {% elif registration_closed %}
+          <p>Registration for this event is closed.</p>
         {% elif event.is_private_registration %}
           <p>This event uses private invitations. Please open the registration link from your invitation email. If you believe this is an error, contact the organizer.</p>
         {% else %}

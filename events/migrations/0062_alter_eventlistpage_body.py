@@ -7,7 +7,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('events', '0061_alter_eventlistpage_body_alter_eventpage_body'),
+        ('events', '0061_takt_alter_eventlistpage_body_alter_eventpage_body'),
     ]
 
     operations = [
