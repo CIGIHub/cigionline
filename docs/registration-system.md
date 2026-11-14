@@ -11,7 +11,7 @@ This guide maps the event registration system for future AI agents and maintaine
   - `RegistrationFormField`: one dynamic question or display block in a template. `field_type` controls how `events/forms.py` builds the runtime form/layout.
     - `rich_text` is display-only content stored on `RegistrationFormField.rich_text`; it is not an answer field.
     - `choice_limits` optionally limits individual choice values using one `Choice label | limit` entry per line.
-  - `Registrant`: stores submitted identity fields and dynamic answers in `answers` JSON.
+  - `Registrant`: stores submitted identity fields and dynamic answers in `answers` JSON. The `attended` flag is managed by authorized staff from the registration report.
   - `RegistrationGroup`: links primary and guest registrants for group registrations.
   - `Invite`: private/invite-only registration access and use limits.
 
@@ -102,6 +102,9 @@ This guide maps the event registration system for future AI agents and maintaine
   - Registers Wagtail admin viewsets for events, registrants, invites, registration reports, form templates, and email tools.
   - `RegistrantViewSet.edit_answers_view(...)` lets admins edit labelled dynamic answers and strips non-answer keys before saving.
   - `RegistrationReportViewSet` routes admin registration reports and CSV exports.
+    - Its all-registrants view supports name/email search, registration-type filtering, sortable columns, pagination, and attendance toggling.
+    - Attendance changes require `events.change_registrant` and constrain the registrant lookup to the selected event.
+    - Event-wide CSV exports include the attendance value.
   - `registration_fields_admin_js()` injects the admin registration JavaScript globally.
 
 - `events/reporting.py`

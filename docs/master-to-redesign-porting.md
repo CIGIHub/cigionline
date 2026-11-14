@@ -4,7 +4,7 @@ This is the working agreement for reconciling production `master` with the
 Takt redesign. Read it before changing `staging-takt`, porting a production
 feature, resolving migrations, or preparing cutover.
 
-Last reviewed: November 13, 2026.
+Last reviewed: November 14, 2026.
 
 ## Current state
 
@@ -163,7 +163,7 @@ notes as work is completed.
 | Event choice limits | `d3d73c76` | Ported | Production `0057` preserved and already applied on the production clone; merge `0087` joins the Takt graph. Eleven focused and all 33 event tests pass; templates compile, changed-file ESLint and the frontend build pass. The source test repairs also cleared the prior event-suite baseline failures. |
 | Event conditional questions | `3635ff68`, `68c6fede`, `25156c59` | Adapted | Multiple conditional questions, ordering fix, requiredness fix, snippet preview, admin editing, email filtering, and DS field rendering retained. Exact production `0058`/`0059` migrations are preserved; merge `0088` joins the Takt graph. All 45 event tests, changed-file ESLint, migration checks, and the frontend build pass. The production clone already records `0057`–`0059`; migration planning remains blocked by its pre-existing `annual_reports.0062`-before-`0061` history. |
 | Event close dates | `dd5fb93c` | Adapted | Effective per-type deadlines, invite/type URL enforcement, transaction-time deadline checks, report visibility, no-cache headers, and redesigned hero/card CTAs retained. Exact production `0060`–`0063` migrations are preserved; the colliding Takt `0061` is replayed under a new identity before its downstream migrations, merge `0089` joins the branches, and `0090` restores current redesign field state. A fresh database traverses the full graph; all 15 focused tests and all 55 event tests pass. A broader 17-test run found only the pre-existing `HomePageTests.test_homepage_child_page_types` omission of `PolicyPopupGroupPage`. The production-clone plan is valid after bypassing its separately known `annual_reports` history inconsistency; migrations have not yet been applied to that clone. Legacy React/listing changes were superseded by redesign cards and heroes. |
-| Attendance and registrant reports | `f22248a7`, `3ddaf642`, `e614fe35` | Pending | Attendance, sorting, and registration-type filtering. |
+| Attendance and registrant reports | `f22248a7`, `3ddaf642`, `e614fe35` | Ported | Registrant attendance, permission-checked event-scoped toggling, admin/CSV display, search, column sorting, pagination, and registration-type filtering retained. Exact production `0064_registrant_attended` is preserved and already applied on the production clone; no-op `0091` joins it to the Takt graph. All 8 focused tests and all 63 event tests pass; migration drift and the production-clone plan were checked while bypassing only the separately known `annual_reports` history inconsistency. |
 | Event calendar and agenda | `91f98b02`, `12ec8e3f`, `04567543` | Pending | The exact production `0058_eventpage_add_to_calendar` migration and matching model/admin field were carried early as a dependency of conditional questions. Agenda presentation, calendar API filtering, and calendar-link/feed behaviour still need review. |
 | Event email fixes | `9b27ff21`, `5341fbf1`, `dd87b205`, `f7684015` | Pending | Includes attachments, footer, and guest merge data. |
 | MediaValet | `6b82f81c`, `16c7e35c` | Pending | Cross-app editor image chooser integration. |
