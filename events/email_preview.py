@@ -13,6 +13,7 @@ from sendgrid.helpers.mail import Mail
 from .email_rendering import render_email_subject, render_streamfield_email_html
 from .emailing import (
     _absolute_event_base,
+    _attach_campaign_attachment,
     _event_email_merge_vars,
     _from_email,
     _render_registrant_answers,
@@ -241,6 +242,7 @@ def send_email_campaign_test(*, request, campaign) -> list[str]:
             plain_text_content=_html_to_text(preview.html),
             html_content=preview.html,
         )
+        _attach_campaign_attachment(message, campaign.attachment)
         response = sg.send(message)
         if response.status_code != 202:
             raise RuntimeError(
