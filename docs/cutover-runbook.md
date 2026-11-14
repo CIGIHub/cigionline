@@ -40,6 +40,12 @@ heroku git:clone -a cigionline-staging-takt
    included in the production-copy rehearsal. Do not reuse a test database that
    recorded the old Takt file under the production `0061` identity.
 
+   Production already records `events.0064_registrant_attended`; the port keeps
+   that migration byte-for-byte and joins it to Takt with no-op merge `0091`.
+   On a fresh database `0064` adds a Boolean column defaulting existing rows to
+   not attended. Reversing it drops recorded attendance, so use the database
+   backup if rollback must preserve attendance data.
+
 ## Deploy
 
 Deploy the merged code. The release phase applies all migrations. Then check
