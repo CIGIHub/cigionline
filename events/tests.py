@@ -1,3 +1,4 @@
+import base64
 import importlib
 from datetime import datetime, timedelta, timezone as datetime_timezone
 from urllib.parse import parse_qs, urlparse
@@ -16,7 +17,7 @@ from wagtail.test.utils import WagtailPageTestCase
 from .models import EventListPage, EventPage, EventRegistrationReportPage
 from .email_rendering import render_streamfield_email_html
 
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 
 def test_owner():
@@ -147,6 +148,116 @@ class EventCalendarLinkTests(TestCase):
         response = self.client.get(event.calendar_feed_url)
 
         self.assertNotIn("BEGIN:VEVENT", response.content.decode())
+
+
+class EmailCampaignAttachmentTests(SimpleTestCase):
+    def test_attach_campaign_attachment_adds_wagtail_document_to_sendgrid_message(self):
+        from sendgrid.helpers.mail import Mail
+
+        from events.emailing import _attach_campaign_attachment
+
+        class DummyFile:
+            name = "event-campaigns/agenda.pdf"
+
+            def __init__(self):
+                self.opened = False
+                self.closed = False
+
+            def open(self, mode):
+                self.opened = mode == "rb"
+
+            def read(self):
+                return b"%PDF-1.4"
+
+            def close(self):
+                self.closed = True
+
+        dummy_file = DummyFile()
+        document = SimpleNamespace(file=dummy_file, title="Agenda")
+        message = Mail(
+            from_email="events@example.com",
+            to_emails="recipient@example.com",
+            subject="Campaign",
+            plain_text_content="Body",
+        )
+
+        _attach_campaign_attachment(message, document)
+
+        attachment = message.get()["attachments"][0]
+        self.assertTrue(dummy_file.opened)
+        self.assertTrue(dummy_file.closed)
+        self.assertEqual(attachment["content"], base64.b64encode(b"%PDF-1.4").decode())
+        self.assertEqual(attachment["filename"], "agenda.pdf")
+        self.assertEqual(attachment["type"], "application/pdf")
+        self.assertEqual(attachment["disposition"], "attachment")
+
+    def test_scheduled_campaign_send_includes_attachment(self):
+        from events.emailing import send_event_campaign_email
+
+        attachment = object()
+        campaign = SimpleNamespace(
+            event=object(),
+            template=SimpleNamespace(subject="Subject"),
+            attachment=attachment,
+        )
+        registrant = SimpleNamespace(
+            pk=123,
+            email="recipient@example.com",
+            registration_type=object(),
+            status="confirmed",
+            ensure_manage_token=lambda: "token",
+        )
+        message = object()
+        sendgrid = Mock()
+        sendgrid.send.return_value.status_code = 202
+
+        with (
+            patch("events.emailing._absolute_event_base", return_value="/events/test/"),
+            patch("events.emailing._event_email_merge_vars", return_value={}),
+            patch("events.emailing._render_registrant_answers", return_value=("", "")),
+            patch("events.emailing.render_email_subject", return_value="Subject"),
+            patch("events.emailing.render_streamfield_email_html", return_value=("HTML", "Text")),
+            patch("events.emailing._from_email", return_value=("events@example.com", "CIGI Events")),
+            patch("events.emailing.Mail", return_value=message),
+            patch("events.emailing.SendGridAPIClient", return_value=sendgrid),
+            patch("events.emailing._attach_campaign_attachment") as attach_mock,
+            patch(
+                "events.models.EmailCampaignSend.objects.get_or_create",
+                return_value=(Mock(), True),
+            ),
+        ):
+            send_event_campaign_email(campaign, registrant)
+
+        attach_mock.assert_called_once_with(message, attachment)
+
+    def test_campaign_test_send_includes_attachment(self):
+        from events.email_preview import send_email_campaign_test
+
+        attachment = object()
+        campaign = SimpleNamespace(
+            test_recipient_emails="recipient@example.com",
+            template=object(),
+            event=object(),
+            include_statuses="",
+            include_type_slugs="",
+            attachment=attachment,
+        )
+        preview = SimpleNamespace(subject="Subject", html="<p>Body</p>")
+        message = object()
+        sendgrid = Mock()
+        sendgrid.send.return_value.status_code = 202
+
+        with (
+            patch("events.email_preview.build_email_campaign_preview", return_value=preview),
+            patch("events.email_preview._from_email", return_value=("events@example.com", "CIGI Events")),
+            patch("events.email_preview.Mail", return_value=message),
+            patch("events.email_preview.SendGridAPIClient", return_value=sendgrid),
+            patch("events.email_preview._attach_campaign_attachment") as attach_mock,
+        ):
+            recipients = send_email_campaign_test(request=object(), campaign=campaign)
+
+        self.assertEqual(recipients, ["recipient@example.com"])
+        attach_mock.assert_called_once_with(message, attachment)
 
 
 class DuplicateRegistrationTests(TestCase):
@@ -1508,6 +1619,10 @@ class GroupRegistrationConfirmTests(TestCase):
         self.assertNotIn("s=pending", resp["Location"])
         self.assertTrue(send_mock.called)
 
+        result = self.client.get(resp["Location"])
+        self.assertEqual(result.status_code, 200)
+        self.assertContains(result, "Thanks, Primary.")
+
         from events.models import Registrant
 
         statuses = list(Registrant.objects.filter(event=event).values_list("status", flat=True))
@@ -1931,6 +2046,17 @@ class EventsAPITests(WagtailPageTestCase):
 
 
 class EmailTemplateRenderingTests(WagtailPageTestCase):
+    def test_group_guest_name_lists_guests(self):
+        from events.emailing import _group_guest_name
+
+        registrants = [
+            SimpleNamespace(first_name="Primary", last_name="Registrant"),
+            SimpleNamespace(first_name="Guest", last_name="One"),
+            SimpleNamespace(first_name="Guest", last_name="Two"),
+        ]
+
+        self.assertEqual(_group_guest_name(registrants), "Guest One, Guest Two")
+
     def test_streamfield_email_rendering_outputs_email_safe_wrapper(self):
         class DummyTemplate:
             def __init__(self, body):
@@ -1962,6 +2088,7 @@ class EmailTemplateRenderingTests(WagtailPageTestCase):
                 "registrant": type("R", (), {"first_name": "Jane", "email": "jane@example.com"})(),
                 "registration_type": type("T", (), {"name": "General"})(),
                 "confirmed": True,
+                "manage_url": "https://example.com/manage/",
             },
         )
 
@@ -1969,6 +2096,9 @@ class EmailTemplateRenderingTests(WagtailPageTestCase):
         self.assertIn("View details", html)
         self.assertIn("https://example.com/logo.png", html)
         self.assertIn("Test Event", html)
+        self.assertIn("Manage Registration", html)
+        self.assertIn("Contact CIGI Events", html)
+        self.assertIn("CIGI-logo-full-RBG_v3.original.jpg", html)
         self.assertTrue(len(text) > 0)
 
     def test_registrant_answers_merge_variable_renders(self):
