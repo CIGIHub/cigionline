@@ -1,10 +1,13 @@
 import uuid
 from datetime import date
 from types import SimpleNamespace
+from unittest.mock import patch
 
+from articles.models import ArticleListPage, ArticlePage, ArticleTypePage
+from django import forms
 from annual_reports.models import AnnualReportListPage
 from careers.models import JobPostingListPage
-from django.test import RequestFactory, SimpleTestCase, TestCase
+from django.test import RequestFactory, SimpleTestCase, TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 from home.models import HomePage, Think7HomePage
@@ -19,17 +22,136 @@ from research.models import (
 from streams.blocks import FacetedListingBlock, VideoTextBlock
 from wagtail.admin.panels import MultiFieldPanel
 from wagtail.blocks import StructValue
+from wagtail.models import PageViewRestriction, Site
 from wagtail.test.utils import WagtailPageTestCase
 
 from .faceted_listing import build_listing_context, default_listing_prefix
 from .heroes import _topic_eyebrow, hero_data, person_hero_data
+from .wagtail_hooks import get_filter_purge_cache_urls, get_purge_cache_url
 from .models import (
     BasicPage,
     FundingPage,
     PrivacyNoticePage,
+    Theme,
     TwentiethPage,
     TwentiethPageSingleton,
 )
+
+
+class PurgeCloudflareCacheTests(WagtailPageTestCase):
+    def setUp(self):
+        Site.clear_site_root_paths_cache()
+        self.addCleanup(Site.clear_site_root_paths_cache)
+        Site.objects.update(hostname='www.cigionline.org', port=443)
+
+    def test_get_purge_cache_url_accepts_full_urls(self):
+        url = 'https://www.cigionline.org/articles/example/'
+
+        self.assertEqual(get_purge_cache_url(url), url)
+
+    def test_get_purge_cache_url_uses_default_site_for_paths(self):
+        self.assertEqual(
+            get_purge_cache_url('/articles/example/'),
+            'https://www.cigionline.org/articles/example/',
+        )
+
+    def test_get_purge_cache_url_ignores_blank_lines(self):
+        self.assertIsNone(get_purge_cache_url('   '))
+
+    def test_get_purge_cache_url_rejects_invalid_input(self):
+        with self.assertRaises(forms.ValidationError):
+            get_purge_cache_url('articles/example/')
+
+    def test_get_purge_cache_url_rejects_non_http_urls(self):
+        with self.assertRaises(forms.ValidationError):
+            get_purge_cache_url('ftp://www.cigionline.org/articles/example/')
+
+    def test_get_filter_purge_cache_urls_filters_articles_by_theme_and_article_type(self):
+        home_page = HomePage.objects.get()
+
+        article_list = ArticleListPage(title='Opinions')
+        home_page.add_child(instance=article_list)
+
+        article_type = ArticleTypePage(title='Op-Eds')
+        article_list.add_child(instance=article_type)
+
+        theme = Theme.objects.create(name='Policy Prompt')
+        matching_article = ArticlePage(
+            title='Matching Article',
+            article_type=article_type,
+            theme=theme,
+            publishing_date=timezone.now(),
+        )
+        article_list.add_child(instance=matching_article)
+
+        other_article = ArticlePage(
+            title='Other Article',
+            article_type=article_type,
+            publishing_date=timezone.now(),
+        )
+        article_list.add_child(instance=other_article)
+        restricted_article = article_list.add_child(instance=ArticlePage(
+            title='Restricted Article',
+            article_type=article_type,
+            theme=theme,
+            publishing_date=timezone.now(),
+        ))
+        PageViewRestriction.objects.create(
+            page=restricted_article,
+            restriction_type=PageViewRestriction.PASSWORD,
+            password='secret',
+        )
+
+        urls = get_filter_purge_cache_urls({
+            'page_types': ['articles.ArticlePage'],
+            'themes': [theme],
+            'article_types': [article_type],
+        })
+
+        self.assertEqual(urls, [matching_article.get_full_url()])
+
+    def test_view_requires_admin_access(self):
+        from django.contrib.auth import get_user_model
+
+        self.client.force_login(get_user_model().objects.create_user(
+            username='staff', password=None, is_staff=True))
+
+        response = self.client.get(reverse('purge_cloudflare_cache'))
+
+        self.assertEqual(response.status_code, 302)
+
+    @override_settings(WAGTAILFRONTENDCACHE={'cloudflare': {}})
+    @patch('core.wagtail_hooks.purge_urls_from_cache')
+    def test_preview_does_not_purge(self, purge_mock):
+        from django.contrib.auth import get_user_model
+
+        self.client.force_login(get_user_model().objects.create_superuser(
+            username='admin', password=None))
+
+        response = self.client.post(
+            reverse('purge_cloudflare_cache'),
+            {'pages': 'https://www.cigionline.org/example/', 'preview': '1'},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        purge_mock.assert_not_called()
+
+    @override_settings(WAGTAILFRONTENDCACHE={'cloudflare': {}})
+    @patch('core.wagtail_hooks.purge_urls_from_cache')
+    def test_purge_deduplicates_urls(self, purge_mock):
+        from django.contrib.auth import get_user_model
+
+        self.client.force_login(get_user_model().objects.create_superuser(
+            username='admin', password=None))
+        url = 'https://www.cigionline.org/example/'
+
+        response = self.client.post(
+            reverse('purge_cloudflare_cache'),
+            {'pages': f'{url}\n{url}'},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        purge_mock.assert_called_once_with([url])
 
 
 class BasicPageTests(WagtailPageTestCase):
