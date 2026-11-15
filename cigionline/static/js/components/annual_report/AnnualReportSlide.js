@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useParams, Navigate, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import AnnualReportRegularSlide from './AnnualReportRegularSlide';
 import AnnualReportTOCSlide from './AnnualReportTOCSlide';
 import AnnualReportTitleSlide from './AnnualReportTitleSlide';
@@ -14,6 +13,7 @@ import AnnualReportTimelineSlide from './AnnualReportTimelineSlide';
 import AnnualReportsFinancialsSlide from './AnnualReportFinancialsSlide';
 import AnnualReportOutputsSlide from './AnnualReportOutputsSlide';
 import AnnualReportTOC from './AnnualReportTOC';
+import AnnualReportMap from './AnnualReportMap';
 
 const slideComponents = {
   title: AnnualReportTitleSlide,
@@ -24,6 +24,7 @@ const slideComponents = {
   timeline: AnnualReportTimelineSlide,
   financials: AnnualReportsFinancialsSlide,
   outputs_and_activities: AnnualReportOutputsSlide,
+  map: AnnualReportMap,
 };
 
 const backgroundStyles = {
@@ -38,7 +39,7 @@ const loadedImages = new Set();
 const preloadImage = (src) => {
   if (!src || loadedImages.has(src)) return;
 
-  const img = new Image();
+  const img = new window.Image();
   img.onload = () => loadedImages.add(src);
   img.onerror = () => {};
   img.src = src;
@@ -59,17 +60,6 @@ function AnnualReportSlide({ slides, basePath }) {
   const [lightHeader, setLightHeader] = useState(false);
 
   const currentIndex = slides.findIndex((slide) => slide.slug === slug);
-
-  if (currentIndex === -1) {
-    return (
-      <Navigate
-        to={`${basePath}${currentLang === 'fr' ? '/fr' : '/en'}/${
-          slides[0].slug
-        }`}
-        replace
-      />
-    );
-  }
 
   const fadeableClass = useMemo(
     () => `hover-reveal-hide${dimUI ? ' is-dimmed' : ''}`,
@@ -113,7 +103,8 @@ function AnnualReportSlide({ slides, basePath }) {
   useEffect(() => {
     canScrollRef.current = checkScrollCondition();
 
-    const handleNavigation = (direction) => {
+    const handleNavigation = (direction, event) => {
+      if (event?.target?.closest?.('.annual-report-map')) return;
       if (!canScrollRef.current || isScrolling) return;
       setIsScrolling(true);
       setTimeout(() => setIsScrolling(false), 2000);
@@ -144,17 +135,17 @@ function AnnualReportSlide({ slides, basePath }) {
       }, 2000);
 
       if (event.deltaY > 0) {
-        handleNavigation('next');
+        handleNavigation('next', event);
       } else {
-        handleNavigation('prev');
+        handleNavigation('prev', event);
       }
     };
 
     const handleKeyDown = (event) => {
       if (['ArrowDown', 'PageDown'].includes(event.key)) {
-        handleNavigation('next');
+        handleNavigation('next', event);
       } else if (['ArrowUp', 'PageUp'].includes(event.key)) {
-        handleNavigation('prev');
+        handleNavigation('prev', event);
       }
     };
 
@@ -171,12 +162,23 @@ function AnnualReportSlide({ slides, basePath }) {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('resize', handleResize);
     };
-  }, [currentIndex, navigate, isScrolling, slides]);
+  }, [basePath, currentLang, currentIndex, isScrolling, navigate, nextSlide, prevSlide, slides]);
 
   useEffect(() => {
     setHoverNav(false);
     setLightHeader(false);
   }, [currentIndex]);
+
+  if (currentIndex === -1) {
+    return (
+      <Navigate
+        to={`${basePath}${currentLang === 'fr' ? '/fr' : '/en'}/${
+          slides[0].slug
+        }`}
+        replace
+      />
+    );
+  }
 
   const currentSlide = slides[currentIndex];
   const SlideComponent =
@@ -277,25 +279,7 @@ function AnnualReportSlide({ slides, basePath }) {
           lang={currentLang}
         />
       </div>
-      <motion.div
-        className="overlay"
-        initial={false}
-        animate={hoverNav ? 'open' : 'closed'}
-        variants={{
-          open: {
-            opacity: 1,
-            zIndex: 3,
-            pointerEvents: 'auto',
-            transition: { duration: 0.25, ease: 'easeOut' },
-          },
-          closed: {
-            opacity: 0,
-            pointerEvents: 'none',
-            transition: { duration: 0.25, ease: 'easeIn' },
-            transitionEnd: { zIndex: -1 },
-          },
-        }}
-      />
+      <div className={`overlay${hoverNav ? ' is-visible' : ''}`} />
     </>
   );
 }
