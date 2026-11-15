@@ -1,0 +1,131 @@
+{% extends "wagtailadmin/base.html" %}
+{% load i18n %}
+
+{% block titletag %}MediaValet{% endblock %}
+
+{% block content %}
+<div class="nice-padding">
+  <header class="w-header">
+    <div class="w-header__wrapper">
+      <div class="w-header__title-wrapper">
+        <h1 class="w-header__title">
+          <svg class="icon icon-image w-header__glyph" aria-hidden="true" focusable="false">
+            <use href="#icon-image"></use>
+          </svg>
+          MediaValet
+        </h1>
+        <p class="w-header__subtitle">{% trans "Browse and import assets from MediaValet into the Wagtail image library." %}</p>
+      </div>
+    </div>
+  </header>
+
+  <div id="mediavalet-notifications" style="margin-bottom:1rem;" aria-live="polite"></div>
+  <div id="mediavalet-progress" style="display:none;margin-bottom:1rem;" aria-live="polite">
+    <p>{% trans "Importing selected images, please wait…" %}</p>
+  </div>
+
+  <iframe
+    id="mediavalet-picker-frame"
+    src="{{ picker_url }}"
+    style="width:100%;height:78vh;border:1px solid #e0e0e0;border-radius:4px;"
+    title="{% trans "MediaValet Asset Picker" %}"
+    sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms"
+    referrerpolicy="strict-origin-when-cross-origin"
+  ></iframe>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  'use strict';
+
+  var MEDIAVALET_ORIGIN = '{{ picker_origin|escapejs }}';
+  var importUrl = '{% url "mediavalet_import_asset" %}';
+  var pickerFrame = document.getElementById('mediavalet-picker-frame');
+  var pendingCount = 0;
+
+  function notificationsEl() { return document.getElementById('mediavalet-notifications'); }
+  function progressEl() { return document.getElementById('mediavalet-progress'); }
+
+  function getCsrfToken() {
+    var match = document.cookie.match(/(?:^|;\s*)csrftoken=([^;]+)/);
+    return match ? decodeURIComponent(match[1]) : '';
+  }
+
+  function showMessage(text, type) {
+    var div = document.createElement('div');
+    div.className = 'help-block help-' + (type === 'success' ? 'block' : 'block--' + type);
+    div.classList.add('w-field__help');
+    if (type === 'error') {
+      div.style.color = '#cd4444';
+    } else if (type === 'success') {
+      div.style.color = '#1a7a1a';
+    }
+    div.textContent = text;
+    notificationsEl().appendChild(div);
+  }
+
+  function importAsset(fileUrl, fileName, title) {
+    pendingCount++;
+    progressEl().style.display = '';
+
+    return fetch(importUrl, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCsrfToken(),
+      },
+      body: JSON.stringify({ file_url: fileUrl, file_name: fileName, title: title }),
+    })
+      .then(function (response) { return response.json(); })
+      .then(function (data) {
+        if (data.success) {
+          showMessage('✓ Imported "' + data.title + '" (ID ' + data.image_id + ')', 'success');
+        } else {
+          showMessage('✗ Import failed: ' + (data.error || 'unknown error'), 'error');
+        }
+      })
+      .catch(function (error) {
+        showMessage('✗ Request error: ' + error, 'error');
+      })
+      .finally(function () {
+        pendingCount--;
+        if (!pendingCount) progressEl().style.display = 'none';
+      });
+  }
+
+  window.addEventListener('message', function (event) {
+    if (event.origin !== MEDIAVALET_ORIGIN) return;
+    if (event.source !== pickerFrame.contentWindow) return;
+    if (!event.data || event.data.type !== 'insertedAssets') return;
+
+    var assets = (event.data.payload && event.data.payload.assets) || [];
+    notificationsEl().innerHTML = '';
+    if (!assets.length) {
+      showMessage('No assets were returned by the picker.', 'info');
+      return;
+    }
+
+    assets.forEach(function (assetItem) {
+      var asset = assetItem.asset || {};
+      var file = asset.file || {};
+      var media = asset.media || {};
+      var fileUrl = assetItem.cdnLink || assetItem.link || media.download || '';
+      var fileName =
+        file.fileName ||
+        (fileUrl && fileUrl.split('/').pop().split('?')[0]) ||
+        'mediavalet-image.jpg';
+      var title = asset.title || file.title || fileName;
+
+      if (!fileUrl) {
+        showMessage('✗ Could not find a download URL for asset: ' + title, 'error');
+        return;
+      }
+      importAsset(fileUrl, fileName, title);
+    });
+  });
+}());
+</script>
+{% endblock %}

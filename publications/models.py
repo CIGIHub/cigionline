@@ -11,6 +11,7 @@ from core.models import (
 from django.apps import apps
 from django.db import models
 from django.http import Http404
+from mediavalet.panels import MediaValetImageChooserPanel
 from modelcluster.fields import ParentalKey
 from streams.blocks import (
     BookPurchaseLinkBlock,
@@ -529,8 +530,8 @@ class PublicationPage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('image_cover'),
-                FieldPanel('image_poster'),
+                MediaValetImageChooserPanel('image_cover'),
+                MediaValetImageChooserPanel('image_poster'),
             ],
             heading='Images',
             classname='collapsible collapsed',
@@ -673,8 +674,8 @@ class PublicationSeriesPage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('image_hero'),
-                FieldPanel('image_poster'),
+                MediaValetImageChooserPanel('image_hero'),
+                MediaValetImageChooserPanel('image_poster'),
             ],
             heading='Images',
             classname='collapsible collapsed',
@@ -838,8 +839,8 @@ class T7PublicationPage(Page):
         ),
         MultiFieldPanel(
             [
-                FieldPanel('image_feature'),
-                FieldPanel('image_poster'),
+                MediaValetImageChooserPanel('image_feature'),
+                MediaValetImageChooserPanel('image_poster'),
                 FieldPanel('pdf_attachment'),
                 FieldPanel('pdf_attachment_fr'),
             ],
