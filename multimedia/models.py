@@ -12,6 +12,7 @@ from core.models import (
 )
 from django.db.models.fields import CharField
 from django.db import models
+from mediavalet.panels import MediaValetImageChooserPanel
 from modelcluster.fields import ParentalKey
 from streams.blocks import (
     PodcastFollowButtonBlock,
@@ -453,10 +454,10 @@ class MultimediaPage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('image_hero'),
-                FieldPanel('image_banner'),
-                FieldPanel('image_square'),
-                FieldPanel('image_poster'),
+                MediaValetImageChooserPanel('image_hero'),
+                MediaValetImageChooserPanel('image_banner'),
+                MediaValetImageChooserPanel('image_square'),
+                MediaValetImageChooserPanel('image_poster'),
             ],
             heading='Images',
             classname='collapsible collapsed',
@@ -678,16 +679,16 @@ class MultimediaSeriesPage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('image_hero'),
-                FieldPanel('image_banner'),
-                FieldPanel('image_poster'),
+                MediaValetImageChooserPanel('image_hero'),
+                MediaValetImageChooserPanel('image_banner'),
+                MediaValetImageChooserPanel('image_poster'),
             ],
             heading='Images',
             classname='collapsible collapsed',
         ),
         MultiFieldPanel(
             [
-                FieldPanel('image_logo'),
+                MediaValetImageChooserPanel('image_logo'),
                 FieldPanel('podcast_hosts'),
                 FieldPanel('podcast_hosts_description'),
                 FieldPanel('brand_colour'),

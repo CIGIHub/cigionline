@@ -10,6 +10,7 @@ from core.models import (
 )
 from core.routers import RouterServeMixin
 from django.db import models
+from mediavalet.panels import MediaValetImageChooserPanel
 from modelcluster.fields import ParentalKey
 from publications.models import PublicationPage
 from streams.blocks import SeriesItemImageBlock
@@ -569,10 +570,10 @@ class ArticlePage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('image_hero'),
-                FieldPanel('image_poster'),
-                FieldPanel('image_banner'),
-                FieldPanel('image_banner_small'),
+                MediaValetImageChooserPanel('image_hero'),
+                MediaValetImageChooserPanel('image_poster'),
+                MediaValetImageChooserPanel('image_banner'),
+                MediaValetImageChooserPanel('image_banner_small'),
             ],
             heading='Images',
             classname='collapsible collapsed',
@@ -925,10 +926,10 @@ class ArticleSeriesPage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('image_hero'),
-                FieldPanel('image_banner'),
-                FieldPanel('image_banner_small'),
-                FieldPanel('image_poster'),
+                MediaValetImageChooserPanel('image_hero'),
+                MediaValetImageChooserPanel('image_banner'),
+                MediaValetImageChooserPanel('image_banner_small'),
+                MediaValetImageChooserPanel('image_poster'),
             ],
             heading='Image',
             classname='collapsible collapsed',
@@ -1189,8 +1190,8 @@ class OpinionSeriesPage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('image_hero'),
-                FieldPanel('image_banner'),
+                MediaValetImageChooserPanel('image_hero'),
+                MediaValetImageChooserPanel('image_banner'),
             ],
             heading='Images',
             classname='collapsible collapsed',

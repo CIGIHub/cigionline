@@ -13,6 +13,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.shortcuts import render, redirect
 from django.utils.text import slugify
+from mediavalet.panels import MediaValetImageChooserPanel
 from streams.blocks import ARFinancialPositionBlock, ARFinancialsAuditorReportBlock, ARFundBalancesBlock, AROutputsBlock, ARSlideBoardBlock, ARSlideChooserBlock, ARSlideColumnBlock, SPSlideBoardBlock, SPSlideChooserBlock, SPSlideFrameworkBlock
 from wagtail.admin.panels import (
     FieldPanel,
@@ -149,7 +150,7 @@ class AnnualReportPage(FeatureablePageAbstract, Page, SearchablePageAbstract):
         ),
         MultiFieldPanel(
             [
-                FieldPanel('image_poster'),
+                MediaValetImageChooserPanel('image_poster'),
             ],
             heading='Images',
             classname='collapsible collapsed',

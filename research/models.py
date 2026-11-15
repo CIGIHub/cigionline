@@ -11,6 +11,7 @@ from core.models import (
 from core.routers import RouterServeMixin
 from django.db import models
 from django.db.models import F
+from mediavalet.panels import MediaValetImageChooserPanel
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from publications.models import T7PublicationPage
 from streams.blocks import AdditionalFileBlock, FacetedListingBlock, SurveyFindingsCountryBlock, Think7ChairBlock
@@ -244,9 +245,9 @@ class ProjectPage(
         ),
         MultiFieldPanel(
             [
-                FieldPanel('image_hero'),
+                MediaValetImageChooserPanel('image_hero'),
                 FieldPanel('show_hero_overlay'),
-                FieldPanel('image_banner'),
+                MediaValetImageChooserPanel('image_banner'),
                 FieldPanel('video_banner'),
             ],
             heading='Images',

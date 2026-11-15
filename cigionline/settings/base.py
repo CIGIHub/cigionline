@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'home',
     'images',
     'menus',
+    'mediavalet',
     'multimedia',
     'newsletters',
     'people',
@@ -192,6 +193,16 @@ WAGTAILEMBEDS_FINDERS = [
 ]
 
 WAGTAILIMAGES_IMAGE_MODEL = 'images.CigionlineImage'
+
+# MediaValet Asset Picker integration
+MEDIAVALET_ASSET_PICKER_URL = 'https://assetpicker.mediavalet.com'
+MEDIAVALET_ASSET_PICKER_APP_ID = os.environ.get('MEDIAVALET_ASSET_PICKER_APP_ID', '')
+MEDIAVALET_ALLOWED_HOSTNAMES = [
+    'mediavalet.com',
+    '.mediavalet.com',
+    'mediavaletcdn.com',
+    '.mediavaletcdn.com',
+]
 
 
 # Database
