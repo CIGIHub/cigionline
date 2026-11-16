@@ -2,16 +2,18 @@ from unittest import mock
 
 from articles.models import ArticlePage, ArticleTypePage
 from core.models import Theme
-from django.test import RequestFactory, TestCase
+from django.test import RequestFactory, SimpleTestCase, TestCase
 from django.utils import timezone
 from events.models import EventPage
 from home.models import HomePage
 from multimedia.models import MultimediaPage
 from publications.models import PublicationPage, PublicationTypePage
 from research.models import ProjectPage
+from wagtail import blocks
 
 from .blocks import (
     AutoPlayVideoBlock,
+    ButtonBlock,
     ChartBlock,
     CollapsibleParagraphBlock,
     EmbeddedMultimediaBlock,
@@ -227,3 +229,14 @@ class LegacyBlockTemplateTests(TestCase):
                     EmbeddedVideoBlock().get_template(None, {'page': page}),
                     'streams/embedded_video_block.html')
                 self.assertNotIn('text-border-block', self.render_text_border(page))
+
+
+class ButtonBlockTests(SimpleTestCase):
+    def test_requires_a_link_target(self):
+        with self.assertRaises(blocks.StructBlockValidationError):
+            ButtonBlock().clean({
+                'label': 'Read more',
+                'link_page': None,
+                'link_document': None,
+                'link_url': '',
+            })
