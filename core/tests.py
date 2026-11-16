@@ -8,6 +8,7 @@ from django import forms
 from annual_reports.models import AnnualReportListPage
 from careers.models import JobPostingListPage
 from django.test import RequestFactory, SimpleTestCase, TestCase, override_settings
+from django.template.loader import get_template
 from django.urls import reverse
 from django.utils import timezone
 from home.models import HomePage, Think7HomePage
@@ -19,7 +20,7 @@ from research.models import (
     ThemeProgram,
     TopicPage,
 )
-from streams.blocks import FacetedListingBlock, VideoTextBlock
+from streams.blocks import AnniversaryVideoTextBlock, FacetedListingBlock, VideoTextBlock
 from wagtail.admin.panels import MultiFieldPanel
 from wagtail.blocks import StructValue
 from wagtail.models import PageViewRestriction, Site
@@ -30,9 +31,12 @@ from .heroes import _topic_eyebrow, hero_data, person_hero_data
 from .wagtail_hooks import get_filter_purge_cache_urls, get_purge_cache_url
 from .models import (
     BasicPage,
+    FacilityRentalsPage,
     FundingPage,
     PrivacyNoticePage,
     Theme,
+    TwentyFifthFeatureLandingPage,
+    TwentyFifthPageSingleton,
     TwentiethPage,
     TwentiethPageSingleton,
 )
@@ -175,8 +179,61 @@ class BasicPageTests(WagtailPageTestCase):
         """
         self.assertAllowedSubpageTypes(
             BasicPage,
-            {AnnualReportListPage, BasicPage, FundingPage, PersonListPage, ProjectPage, TwentiethPage, TwentiethPageSingleton}
+            {
+                AnnualReportListPage,
+                BasicPage,
+                FacilityRentalsPage,
+                FundingPage,
+                PersonListPage,
+                ProjectPage,
+                TwentiethPage,
+                TwentiethPageSingleton,
+            }
         )
+
+
+class TwentyFifthPageSingletonTests(WagtailPageTestCase):
+    def test_twentyfifthpagesingleton_parent_page_types(self):
+        self.assertAllowedParentPageTypes(
+            TwentyFifthPageSingleton,
+            {HomePage},
+        )
+
+    def test_twentyfifthpagesingleton_child_page_types(self):
+        self.assertAllowedSubpageTypes(
+            TwentyFifthPageSingleton,
+            {TwentyFifthFeatureLandingPage},
+        )
+
+    def test_anniversary_body_uses_legacy_video_shape_without_replacing_ds_block(self):
+        body = TwentyFifthPageSingleton._meta.get_field('body').stream_block
+
+        self.assertIsInstance(body.child_blocks['video_text'], AnniversaryVideoTextBlock)
+        self.assertIn('paragraph', body.child_blocks['video_text'].child_blocks)
+        self.assertIn('heading', VideoTextBlock().child_blocks)
+
+    @override_settings(DEBUG=False)
+    @patch('utils.security.verify_turnstile_token', return_value=False)
+    def test_ajax_subscription_rejects_failed_turnstile(self, verify_turnstile_token):
+        request = RequestFactory().post(
+            '/',
+            {'anniversary_newsletter_form': '1'},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+        )
+
+        response = TwentyFifthPageSingleton(title='Anniversary').serve(request)
+
+        self.assertEqual(response.status_code, 400)
+        verify_turnstile_token.assert_called_once()
+
+    def test_anniversary_templates_compile(self):
+        for template in (
+            'core/twenty_fifth_page_singleton.html',
+            'core/twenty_fifth_feature_landing_page.html',
+            'streams/anniversary_video_text_block.html',
+            'streams/founder_letter_block.html',
+        ):
+            get_template(template)
 
 
 class FundingPageTests(WagtailPageTestCase):
