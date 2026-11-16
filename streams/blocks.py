@@ -221,16 +221,17 @@ class AccordionBlock(blocks.StructBlock, ThemeableBlock):
             'bold',
             'h3',
             'h4',
+            'image',
             'italic',
             'link',
             'ol',
             'ul',
         ],
+        help_text='Accordion content; images are supported for long visual sections.',
         required=True,
     )
     # Per-item button row, below the item's body (BugHerd #186).
     buttons = blocks.ListBlock(ButtonBlock(), required=False, default=[])
-
 
     def get_template(self, value, context, *args, **kwargs):
         standard_template = super(AccordionBlock, self).get_template(value, context, *args, **kwargs)

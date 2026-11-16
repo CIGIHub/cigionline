@@ -14,6 +14,7 @@ from research.models import ProjectPage
 from wagtail import blocks
 
 from .blocks import (
+    AccordionBlock,
     AutoPlayVideoBlock,
     ButtonBlock,
     ChartBlock,
@@ -33,6 +34,11 @@ from .blocks import (
     TooltipBlock,
     TweetBlock,
 )
+
+
+class AccordionBlockTests(SimpleTestCase):
+    def test_rich_text_supports_images(self):
+        self.assertIn('image', AccordionBlock().child_blocks['text'].features)
 
 
 class LegacyBlockTemplateTests(TestCase):
