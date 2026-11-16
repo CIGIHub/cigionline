@@ -4,6 +4,7 @@ from core.models import BasicPage
 from django.core.cache import cache
 from django.test import SimpleTestCase, override_settings
 from geopy.exc import GeocoderServiceError
+from streams.blocks import ARSlideContentBlock
 from wagtail.test.utils import WagtailPageTestCase
 
 from .models import (
@@ -41,6 +42,13 @@ class AnnualReportPageTests(WagtailPageTestCase):
             {AnnualReportSPAPage},
         )
 
+
+class AnnualReportContentTypeTests(SimpleTestCase):
+    def test_report_and_submission_are_available(self):
+        choices = dict(ARSlideContentBlock().child_blocks['type'].field.choices)
+
+        self.assertEqual(choices['report'], 'Report')
+        self.assertEqual(choices['submission'], 'Submission')
 
 @override_settings(CACHES={
     'default': {
