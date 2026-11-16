@@ -196,6 +196,14 @@ class ButtonBlock(blocks.StructBlock):
     scheme = blocks.ChoiceBlock(choices=Scheme.choices, default=Scheme.AUTO, max_length=16)
     icon = blocks.ChoiceBlock(choices=Icon.choices, default=Icon.CHEVRON, required=False, max_length=16)
 
+    def clean(self, value):
+        value = super().clean(value)
+        if not any(value.get(target) for target in ('link_page', 'link_document', 'link_url')):
+            raise blocks.StructBlockValidationError({
+                'link_page': ValidationError('Choose a page or document, or enter a URL.'),
+            })
+        return value
+
     class Meta:
         icon = 'link'
         label = 'Button'
@@ -2700,6 +2708,11 @@ class HeroLinkBlock(blocks.StructBlock):
 class HeroDocumentBlock(blocks.StructBlock):
     hero_link_text = blocks.CharBlock(required=True)
     hero_link_document = DocumentChooserBlock(required=True)
+    hero_link_icon_style = blocks.CharBlock(
+        required=False,
+        default='fa-solid',
+        help_text='Use a font-awesome style such as fa-solid or fa-light',
+    )
     hero_link_icon = blocks.CharBlock(required=False, help_text='Use a font-awesome icon name such as fa-envelope')
 
     class Meta:

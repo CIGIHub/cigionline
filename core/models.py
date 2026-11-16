@@ -33,6 +33,7 @@ from streams.blocks import (
     ImageBlock,
     ImageScrollBlock,
     AutoPlayVideoBlock,
+    ButtonBlock,
     ImageFullBleedBlock,
     ChartBlock,
     PersonsListBlock,
@@ -283,6 +284,7 @@ class BasicPageAbstract(models.Model):
     # Body StreamField blocks
     body_default_blocks = [
         ('block_quote', BlockQuoteBlock()),
+        ('button', ButtonBlock()),
         ('embedded_multimedia', EmbeddedMultimediaBlock()),
         ('embedded_video', EmbeddedVideoBlock()),
         ('image', ImageBlock()),

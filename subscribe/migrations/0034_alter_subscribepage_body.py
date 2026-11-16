@@ -7,7 +7,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('subscribe', '0033_alter_subscribepage_body'),
+        ('subscribe', '0033_takt_alter_subscribepage_body'),
     ]
 
     operations = [
