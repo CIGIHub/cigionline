@@ -122,6 +122,10 @@
         {% include 'includes/disclaimer_ds.html' with additional_disclaimers=self.get_additional_disclaimers %}
       {% endif %}
 
+      {% if self.show_has_disclaimer %}
+        {% include 'includes/has_disclaimer.html' %}
+      {% endif %}
+
     {% endblock %}
 
     {% block in_the_series_opinion_series %}

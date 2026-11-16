@@ -1,3 +1,7 @@
+import datetime
+
+from django.template.loader import render_to_string
+from django.utils import timezone
 from home.models import HomePage
 from wagtail.test.utils import WagtailPageTestCase
 
@@ -54,6 +58,40 @@ class ArticlePageTests(WagtailPageTestCase):
             ArticlePage,
             {},
         )
+
+    def test_show_has_disclaimer_for_new_opinions(self):
+        article = ArticlePage(
+            article_type=ArticleTypePage(title='Opinions'),
+            publishing_date=timezone.make_aware(datetime.datetime(2026, 7, 14)),
+        )
+
+        self.assertTrue(article.show_has_disclaimer)
+
+    def test_show_has_disclaimer_excludes_ineligible_articles(self):
+        old_article = ArticlePage(
+            article_type=ArticleTypePage(title='Opinions'),
+            publishing_date=timezone.make_aware(datetime.datetime(2026, 7, 13, 23, 59)),
+        )
+        other_article = ArticlePage(
+            article_type=ArticleTypePage(title='Op-Eds'),
+            publishing_date=timezone.make_aware(datetime.datetime(2026, 7, 14)),
+        )
+        hidden_article = ArticlePage(
+            article_type=ArticleTypePage(title='Opinion'),
+            publishing_date=timezone.make_aware(datetime.datetime(2026, 7, 14)),
+            hide_has_disclaimer=True,
+        )
+
+        self.assertFalse(old_article.show_has_disclaimer)
+        self.assertFalse(other_article.show_has_disclaimer)
+        self.assertFalse(hidden_article.show_has_disclaimer)
+
+    def test_has_disclaimer_links_to_standard(self):
+        html = render_to_string('includes/has_disclaimer.html')
+
+        self.assertIn('href="/about/human-analysis-standard/"', html)
+        self.assertIn('Human Analysis Standard', html)
+        self.assertIn("This opinion's analysis", html)
 
 
 class ArticleSeriesListPageTests(WagtailPageTestCase):

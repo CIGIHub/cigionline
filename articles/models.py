@@ -310,6 +310,11 @@ class ArticlePage(
         verbose_name='Hide Disclaimer',
         help_text='When enabled, hide disclaimer at the bottom of the page',
     )
+    hide_has_disclaimer = models.BooleanField(
+        default=False,
+        verbose_name='Hide HAS Disclaimer',
+        help_text='When enabled, hide the Hub for Advanced Studies disclaimer',
+    )
     # DPH news scope (BugHerd #439): the hub's Latest News grid needs a
     # queryable marker, and the DPH news items carry no topics/projects.
     # Deliberately NOT a topic/project — those render as front-end taxonomy
@@ -476,6 +481,16 @@ class ArticlePage(
             'Opinion',
         ]
 
+    @property
+    def show_has_disclaimer(self):
+        if self.hide_has_disclaimer or not self.article_type or not self.publishing_date:
+            return False
+
+        return (
+            self.article_type.title in ['Opinion', 'Opinions']
+            and self.publishing_date.date() > datetime.date(2026, 7, 13)
+        )
+
     # Art-directed longform essays whose layout is the content. Kept as the
     # named subset of the theme forks; since the 2026-09-21 revert EVERY themed
     # article with a fork template renders it (series skins, Big Tech, DPH
@@ -544,6 +559,7 @@ class ArticlePage(
                 ),
                 FieldPanel('hide_excerpt'),
                 FieldPanel('hide_disclaimer'),
+                FieldPanel('hide_has_disclaimer'),
                 FieldPanel('publishing_date'),
                 FieldPanel('website_url'),
                 FieldPanel('website_button_text'),

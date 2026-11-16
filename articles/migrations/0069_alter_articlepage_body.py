@@ -7,7 +7,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('articles', '0068_alter_articlepage_body'),
+        ('articles', '0068_takt_alter_articlepage_body'),
     ]
 
     operations = [

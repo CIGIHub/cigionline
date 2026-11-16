@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('articles', '0066_alter_articlelandingpage_body_alter_articlepage_body_and_more'),
+        ('articles', '0069_alter_articlelandingpage_body_alter_articlepage_body_and_more'),
         ('articles', '0150_alter_articlelandingpage_body_alter_articlepage_body_and_more'),
     ]
 
