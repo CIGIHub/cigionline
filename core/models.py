@@ -35,6 +35,7 @@ from streams.blocks import (
     AutoPlayVideoBlock,
     ButtonBlock,
     ImageFullBleedBlock,
+    InteractiveChartBlock,
     ChartBlock,
     PersonsListBlock,
     PublicationsListBlock,
@@ -306,6 +307,7 @@ class BasicPageAbstract(models.Model):
         # them separately.
         ('newsletter_subscription', NewsletterSubscriptionBlock()),
         ('newsletter_signup_cta', NewsletterSignupCTABlock()),
+        ('interactive_chart', InteractiveChartBlock()),
     ]
 
     body_accordion_block = ('accordion', AccordionBlock())

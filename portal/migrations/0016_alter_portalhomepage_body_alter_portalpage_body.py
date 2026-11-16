@@ -7,7 +7,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('portal', '0015_alter_portalhomepage_body_alter_portalpage_body'),
+        ('portal', '0015_takt_alter_portalhomepage_body_alter_portalpage_body'),
     ]
 
     operations = [
