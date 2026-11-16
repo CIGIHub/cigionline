@@ -31,6 +31,10 @@ if hasattr(settings, 'MAILCHIMP_NEWSLETTER_LIST_ID'):
 logger = logging.getLogger('cigionline')
 
 
+class MailchimpSubscriptionError(Exception):
+    pass
+
+
 class SubscribePage(
     Page,
     BasicPageAbstract,
@@ -128,9 +132,12 @@ class SubscribePage(
 
         return subscriber_hash, response
 
-    def apply_tag(self, client, list_id, subscriber_hash):
-        tag = self.get_mailchimp_tag()
-        if not tag:
+    def apply_tag(self, client, list_id, subscriber_hash, extra_tags=None):
+        tags = [self.get_mailchimp_tag()]
+        tags.extend(extra_tags or [])
+        tags = [tag for tag in tags if tag]
+
+        if not tags:
             return
 
         client.lists.update_list_member_tags(
@@ -139,6 +146,7 @@ class SubscribePage(
             {
                 "tags": [
                     {"name": tag, "status": "active"}
+                    for tag in tags
                 ]
             },
         )
@@ -149,6 +157,10 @@ class SubscribePage(
             "LNAME": form.cleaned_data["last_name"],
             "ORG": self.get_organization(form),
         }
+
+        job_title = form.cleaned_data.get("job_title")
+        if job_title:
+            fields["JOBTITLE"] = job_title
 
         consent = form.cleaned_data.get("consent", False)
         consent_timestamp = timezone.now().strftime("%m/%d/%Y")
@@ -163,7 +175,7 @@ class SubscribePage(
 
         return fields
 
-    def subscribe_to_mailchimp(self, form):
+    def subscribe_to_mailchimp(self, form, extra_tags=None):
         if not form.cleaned_data.get("consent", False):
             return
 
@@ -188,7 +200,24 @@ class SubscribePage(
             client, list_id, email, member_info
         )
 
-        self.apply_tag(client, list_id, subscriber_hash)
+        response_status = response.get("status")
+        response_tags = [tag.get("name") for tag in response.get("tags", [])]
+        logger.info(
+            'Mailchimp signup response: email=%s status=%s tags=%s',
+            response.get("email_address"),
+            response_status,
+            response_tags,
+        )
+
+        if response_status != "subscribed":
+            logger.warning(
+                'Mailchimp signup did not subscribe member: email=%s status=%s',
+                response.get("email_address"),
+                response_status,
+            )
+            raise MailchimpSubscriptionError(f'Mailchimp returned status "{response_status}"')
+
+        self.apply_tag(client, list_id, subscriber_hash, extra_tags=extra_tags)
 
         logger.info(f'Successful signup: {response["email_address"]}')
 
@@ -245,6 +274,8 @@ class SubscribePage(
                         self.subscribe_to_mailchimp(form)
                     except ApiClientError as error:
                         logger.error(f"An error occurred with Mailchimp: {error.text}")
+                    except MailchimpSubscriptionError as error:
+                        logger.error(f"An error occurred with Mailchimp: {error}")
                 else:
                     logger.info("User did not consent; skipping Mailchimp subscription.")
 
@@ -263,6 +294,7 @@ class SubscribeForm(forms.Form):
     last_name = forms.CharField(max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Last Name'}))
     email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Email'}))
     organization = forms.CharField(required=True, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Organization'}))
+    job_title = forms.CharField(required=True, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Job Title'}))
     location = CountryField(blank=True).formfield(
         required=True,
         empty_label="Country",

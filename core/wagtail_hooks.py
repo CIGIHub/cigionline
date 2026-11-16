@@ -4,6 +4,7 @@ from django import forms
 from django.apps import apps
 from django.conf import settings
 from django.core.exceptions import FieldDoesNotExist
+from django.db.models import F
 from django.shortcuts import render
 from django.urls import path, reverse
 from django.templatetags.static import static
@@ -340,6 +341,24 @@ def register_purge_cloudflare_cache_menu_item():
         icon_name='rotate',
         order=10000,
     )
+
+
+@hooks.register('construct_page_chooser_queryset')
+def sort_event_page_chooser_queryset(queryset, request):
+    page_types = {
+        page_type.strip().lower()
+        for page_type in (request.GET.get('page_type') or '').split(',')
+        if page_type.strip()
+    }
+
+    if 'events.eventpage' in page_types:
+        return queryset.order_by(
+            F('contentpage__publishing_date').desc(nulls_last=True),
+            '-latest_revision_created_at',
+            '-id',
+        )
+
+    return queryset
 
 
 @hooks.register('insert_global_admin_css')

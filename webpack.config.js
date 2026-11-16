@@ -108,6 +108,8 @@ const config = {
     think7AbstractSubmissionPage:
       './cigionline/static/pages/think7/abstract_submission_page/index.js',
     topicPage: './cigionline/static/pages/topic_page/index.js',
+    twentyFifthPageSingleton:
+      './cigionline/static/pages/twenty_fifth_page_singleton/index.js',
     twentiethPage: './cigionline/static/pages/twentieth_page/index.js',
     twentiethPageSingleton: './cigionline/static/pages/twentieth_page_singleton/index.js',
   },

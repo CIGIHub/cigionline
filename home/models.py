@@ -326,6 +326,7 @@ class HomePage(Page):
         'contact.ContactPage',
         'core.BasicPage',
         'core.PrivacyNoticePage',
+        'core.TwentyFifthPageSingleton',
         'events.EventListPage',
         'features.FeaturesListPage',
         'multimedia.MultimediaListPage',
