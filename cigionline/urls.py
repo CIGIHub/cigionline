@@ -2,6 +2,7 @@ from django.conf import settings
 from django.conf.urls import include
 from django.urls import path, re_path
 from django.views.decorators.cache import cache_control
+from core.feeds import LatestContentFeed
 from core import views as core_views
 from uploads.views import DocumentZipAPIView
 from events.feeds import EventFeed
@@ -77,6 +78,7 @@ urlpatterns = urlpatterns + [
         name='subscribe_second_century_commission_no_slash',
     ),
     re_path(r'^events/feed.ics$', EventFeed()),
+    path('feed/', LatestContentFeed(), name='latest_content_feed'),
     re_path(r'^favicon\.ico$', favicon_view),
     re_path(r'^robots\.txt$', robots_views.RobotsView.as_view(), name='robots'),
     re_path(r'^sitemap\.xml$', sitemap),
