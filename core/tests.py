@@ -164,6 +164,42 @@ class BasicPageTests(WagtailPageTestCase):
 
         self.assertIn('interactive_chart', body.stream_block.child_blocks)
 
+    def test_dph_page_uses_design_system_application_notice(self):
+        home = HomePage.objects.get()
+        dph_theme, _ = Theme.objects.get_or_create(name='DPH')
+        page = home.add_child(instance=BasicPage(
+            title='Digital Policy Hub',
+            slug='digital-policy-hub',
+            theme=dph_theme,
+        ))
+
+        self.assertEqual(page.get_template(RequestFactory().get(page.url)), 'core/basic_page.html')
+        response = self.client.get(page.url)
+        self.assertContains(response, 'Applications for the Digital Policy Hub are now being accepted')
+        self.assertContains(response, 'href="/careers/dph-call-for-applications-2027/"')
+        self.assertContains(response, '>Apply Now<')
+
+    def test_dph_application_notice_follows_authored_hero(self):
+        home = HomePage.objects.get()
+        page = home.add_child(instance=BasicPage(
+            title='Digital Policy Hub',
+            slug='digital-policy-hub',
+            body=[{
+                'type': 'primary_hero',
+                'value': {
+                    'surface': 'charcoal',
+                    'accent': 'green',
+                    'heading': 'DPH Hero',
+                    'description': '',
+                },
+            }],
+        ))
+
+        response = self.client.get(page.url)
+        content = response.content.decode()
+        self.assertContains(response, 'dph-application-heading', count=2)
+        self.assertLess(content.index('DPH Hero'), content.index('dph-application-heading'))
+
     def test_basicpage_parent_page_types(self):
         """
         Verify allowed parent page types.

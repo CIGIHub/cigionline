@@ -129,13 +129,14 @@ class SubscribeDphTemplateTests(TestCase):
         self.assertIn("Keep an eye on your inbox. We'll let you know", html)
         self.assertIn('digital-policy-hub-cigi', html)
 
-    def test_dph_footer_and_sidebar_link_to_full_signup(self):
+    def test_dph_footer_links_to_signup_and_legacy_sidebar_links_to_application(self):
         footer = render_to_string('themes/dph/includes/footer.html')
         sidebar = render_to_string('themes/dph/includes/sidebar.html')
 
         self.assertIn('method="get"', footer)
         self.assertIn('name="email"', footer)
-        self.assertIn('href="/subscribe_dph"', sidebar)
+        self.assertIn('href="/careers/dph-call-for-applications-2027/"', sidebar)
+        self.assertIn('Apply Now', sidebar)
         self.assertNotIn('id="mailing-list-button"', sidebar)
 
 
