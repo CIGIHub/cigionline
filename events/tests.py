@@ -706,6 +706,69 @@ class RegistrationAttendanceReportTests(TestCase):
         self.assertIn(",Yes,General,", content)
 
 
+class WaitlistPromotionEmailTests(TestCase):
+    def setUp(self):
+        from events.models import Registrant, RegistrationType
+        from wagtail.models import Site
+
+        self.user = get_user_model().objects.create_superuser(
+            username="waitlist-admin",
+            email="waitlist-admin@example.com",
+            password="password",
+        )
+        self.client.force_login(self.user)
+        self.event = EventPage(
+            title="Waitlist Event",
+            publishing_date=timezone.now(),
+            owner=self.user,
+        )
+        Site.objects.get(is_default_site=True).root_page.add_child(instance=self.event)
+        self.registration_type = RegistrationType.objects.create(
+            event=self.event,
+            name="General",
+            slug="general",
+            capacity=1,
+            sort_order=0,
+        )
+        self.confirmed = Registrant.objects.create(
+            event=self.event,
+            registration_type=self.registration_type,
+            email="confirmed@example.com",
+            status=Registrant.Status.CONFIRMED,
+        )
+        self.waitlisted = Registrant.objects.create(
+            event=self.event,
+            registration_type=self.registration_type,
+            email="waitlisted@example.com",
+            status=Registrant.Status.WAITLISTED,
+        )
+        self.url = reverse(
+            "registration_reports:unregister",
+            args=[self.event.pk, self.confirmed.pk],
+        )
+
+    @patch("events.emailing.send_registration_cancelled_email")
+    @patch("events.emailing.send_confirmation_email")
+    def test_promoting_waitlisted_registrant_sends_confirmation_email(
+        self, send_confirmation_email, _send_cancelled_email
+    ):
+        self.client.post(self.url)
+
+        self.waitlisted.refresh_from_db()
+        self.assertEqual(self.waitlisted.status, "confirmed")
+        send_confirmation_email.assert_called_once_with(self.waitlisted, confirmed=True)
+
+    @patch("events.emailing.send_registration_cancelled_email")
+    @patch("events.emailing.send_confirmation_email", side_effect=RuntimeError("Send failed"))
+    def test_email_failure_does_not_undo_promotion(
+        self, _send_confirmation_email, _send_cancelled_email
+    ):
+        self.client.post(self.url)
+
+        self.waitlisted.refresh_from_db()
+        self.assertEqual(self.waitlisted.status, "confirmed")
+
+
 class GuestRegistrationQuestionExclusionTests(TestCase):
     def test_exclude_from_guest_forms_omits_field_for_guests(self):
         from wagtail.models import Site

@@ -579,6 +579,17 @@ class RegistrationReportViewSet(ViewSet):
                     next_up.status = Registrant.Status.CONFIRMED
                     next_up.save(update_fields=["status"])
                     messages.success(request, f"Promoted ID: {next_up.pk} - {next_up.first_name} {next_up.last_name} ({next_up.email}) from waitlist.")
+                    try:
+                        from .emailing import send_confirmation_email
+
+                        send_confirmation_email(next_up, confirmed=True)
+                    except Exception:
+                        logger.exception(
+                            "Failed to send confirmation email registrant_id=%s event_id=%s",
+                            next_up.pk,
+                            event.pk,
+                        )
+                        messages.warning(request, f"Could not send confirmation email to {next_up.email}.")
         else:
             messages.info(request, f"{registrant.email} is already cancelled.")
 
