@@ -240,6 +240,9 @@ class BasicPageTests(WagtailPageTestCase):
             ('report.pdf', 'fa-file-pdf'),
             ('report.doc', 'fa-file-word'),
             ('report.DOCX', 'fa-file-word'),
+            ('slides.ppt', 'fa-file-powerpoint'),
+            ('slides.PPTX', 'fa-file-powerpoint'),
+            ('files.ZIP', 'fa-file-zipper'),
         ):
             with self.subTest(filename=filename):
                 document = SimpleNamespace(url=filename, title='Report', file_size=1)
