@@ -204,6 +204,13 @@ MEDIAVALET_ALLOWED_HOSTNAMES = [
     '.mediavaletcdn.com',
 ]
 
+# Policy Prompt stays on its legacy theme by default. Set this environment
+# variable to true to route its series and episode pages through the retained
+# design-system templates instead.
+_policy_prompt_theme = os.environ.get(
+    'POLICY_PROMPT_USE_DESIGN_SYSTEM', '').lower()
+POLICY_PROMPT_USE_DESIGN_SYSTEM = _policy_prompt_theme in ('1', 'true', 'yes')
+
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
