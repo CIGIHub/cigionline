@@ -33,6 +33,22 @@ const themeClasses = {
   'Global Cooperation and Governance': 'theme-cooperation',
 };
 
+const countryAliases = {
+  usa: 'United States of America',
+  us: 'United States of America',
+  'united states': 'United States of America',
+  uk: 'United Kingdom',
+  england: 'United Kingdom',
+  scotland: 'United Kingdom',
+  wales: 'United Kingdom',
+  'northern ireland': 'United Kingdom',
+};
+
+const normalizeCountry = (country) => {
+  const name = String(country || '').trim();
+  return countryAliases[name.toLowerCase()] || name;
+};
+
 const contentIcons = {
   publication: faFileLines,
   opinion: faMessageLines,
@@ -130,6 +146,8 @@ const storyMatches = (story, query, selectedTheme) => {
 function AnnualReportMap({ slide }) {
   const mapContainerRef = useRef(null);
   const cardRef = useRef(null);
+  const descriptionRef = useRef(null);
+  const [hasMoreDescription, setHasMoreDescription] = useState(false);
   const oceanMarkersRef = useRef([]);
   const [activeStory, setActiveStory] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -157,6 +175,36 @@ function AnnualReportMap({ slide }) {
     if (activeStory && cardRef.current) {
       cardRef.current.scrollTop = 0;
     }
+  }, [activeStory]);
+
+  useLayoutEffect(() => {
+    const description = descriptionRef.current;
+
+    if (!activeStory || !description) {
+      setHasMoreDescription(false);
+      return undefined;
+    }
+
+    const updateScrollState = () => {
+      const remaining = description.scrollHeight
+        - description.clientHeight
+        - description.scrollTop;
+
+      setHasMoreDescription(remaining > 2);
+    };
+
+    description.scrollTop = 0;
+    updateScrollState();
+
+    const observer = new ResizeObserver(updateScrollState);
+    observer.observe(description);
+
+    description.addEventListener('scroll', updateScrollState);
+
+    return () => {
+      observer.disconnect();
+      description.removeEventListener('scroll', updateScrollState);
+    };
   }, [activeStory]);
 
   useEffect(() => {
@@ -321,6 +369,7 @@ function AnnualReportMap({ slide }) {
         const marker = new maplibregl.Marker({
           element,
           anchor: 'center',
+          subpixelPositioning: true,
         })
           .setLngLat(coordinates)
           .addTo(map);
@@ -379,7 +428,7 @@ function AnnualReportMap({ slide }) {
 
           element.addEventListener('mouseenter', () => {
             tooltip.setLngLat(marker.getLngLat()).addTo(map);
-            setHighlightedCountry(story.country);
+            setHighlightedCountry(normalizeCountry(story.country));
           });
 
           element.addEventListener('mouseleave', () => {
@@ -408,7 +457,7 @@ function AnnualReportMap({ slide }) {
         const isInsideCountry = (point) => map.queryRenderedFeatures(
           point,
           { layers: ['countries-fill'] },
-        ).some((feature) => feature.properties.ADMIN === country);
+        ).some((feature) => feature.properties.ADMIN === normalizeCountry(country));
 
         if (!isInsideCountry(candidate)) return false;
 
@@ -543,7 +592,6 @@ function AnnualReportMap({ slide }) {
     };
 
       map.once('idle', updateStoryPositions);
-      map.on('zoomend', updateStoryPositions);
     });
 
     return () => {
@@ -570,13 +618,14 @@ function AnnualReportMap({ slide }) {
   }, []);
 
   useEffect(() => {
-    const hasActiveSearch = Boolean(searchQuery.trim() || selectedTheme);
+    highlightMarkersRef.current.forEach(({ story, element, tooltip }) => {
+      const matches = storyMatches(story, searchQuery, selectedTheme);
 
-    highlightMarkersRef.current.forEach(({ story, element }) => {
-      element.classList.toggle(
-        'map-story-node-highlight',
-        hasActiveSearch && storyMatches(story, searchQuery, selectedTheme)
-      );
+      element.style.display = matches ? '' : 'none';
+
+      if (!matches) {
+        tooltip.remove();
+      }
     });
   }, [searchQuery, selectedTheme]);
 
@@ -730,43 +779,51 @@ function AnnualReportMap({ slide }) {
             </div>
 
             <div
-              className="map-card-description"
-              dangerouslySetInnerHTML={{
-                __html: activeStory.short_description || '',
-              }}
-            />
+              ref={descriptionRef}
+              className={`map-card-content${hasMoreDescription ? ' has-more-content' : ''}`}
+              tabIndex={0}
+              role="region"
+              aria-label="Story description and related content"
+            >
+              <div
+                className="map-card-description"
+                dangerouslySetInnerHTML={{
+                  __html: activeStory.short_description || '',
+                }}
+              />
 
-            {(activeStory.related_pages || []).length > 0 && (
-              <div className="map-card-related">
-                {activeStory.related_pages.map((related, index) => (
-                  <a
-                    key={`${related.url}-${index}`}
-                    href={related.url}
-                    className="content-link"
-                  >
-                    <div className="content-link-icon">
-                      {contentIcons[related.content_type] ? (
-                        <FontAwesomeIcon icon={contentIcons[related.content_type]} />
-                      ) : (
-                        customIcons[related.content_type] || null
-                      )}
-                    </div>
+              {(activeStory.related_pages || []).length > 0 && (
+                <div className="map-card-related">
+                  {activeStory.related_pages.map((related, index) => (
+                    <a
+                      key={`${related.url}-${index}`}
+                      href={related.url}
+                      className="content-link"
+                    >
+                      <div className="content-link-icon">
+                        {contentIcons[related.content_type] ? (
+                          <FontAwesomeIcon icon={contentIcons[related.content_type]} />
+                        ) : (
+                          customIcons[related.content_type] || null
+                        )}
+                      </div>
 
-                    <div className="content-copy">
-                      <h4>{related.type_override || related.content_type}</h4>
-                      <p>
-                        <span
-                          className="underline"
-                          dangerouslySetInnerHTML={{
-                            __html: related.title || '',
-                          }}
-                        />
-                      </p>
-                    </div>
-                  </a>
-                ))}
-              </div>
-            )}
+                      <div className="content-copy">
+                        <h4>{related.type_override || related.content_type}</h4>
+                        <p>
+                          <span
+                            className="underline"
+                            dangerouslySetInnerHTML={{
+                              __html: related.title || '',
+                            }}
+                          />
+                        </p>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
 
             <div className="map-card-meta">
               {activeStory.publishing_date && (
