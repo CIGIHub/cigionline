@@ -116,10 +116,9 @@ class PersonPageTests(WagtailPageTestCase):
         )
 
 
-class PersonPageDownloadsTests(WagtailPageTestCase):
-    """The rail's High Resolution Photo download follows the Media photo field
-    alone, whatever the person's type (BugHerd #526). Builds its own pages —
-    no people.json fixture."""
+class PersonPageProfileRailTests(WagtailPageTestCase):
+    """The profile rail follows its authorable fields, whatever the person's
+    type. Builds its own pages — no people.json fixture."""
 
     @classmethod
     def setUpClass(cls):
@@ -136,11 +135,12 @@ class PersonPageDownloadsTests(WagtailPageTestCase):
         cls.image = get_image_model().objects.create(
             title='Media photo', file=get_test_image_file(filename='media.png'))
 
-    def make_person(self, slug, types, image_media=None, bio=True):
+    def make_person(self, slug, types, image_media=None, bio=True, **kwargs):
         person = PersonPage(
             title=slug.replace('-', ' ').title(), slug=slug,
             image_media=image_media,
             body=[('paragraph', RichText('<p>A short biography.</p>'))] if bio else [],
+            **kwargs,
         )
         self.people.add_child(instance=person)
         person.person_types.set(
@@ -178,6 +178,20 @@ class PersonPageDownloadsTests(WagtailPageTestCase):
         response = self.get(person)
         self.assertContains(response, 'High Resolution Photo')
         self.assertContains(response, 'ds-reading__aside')
+        # No empty prose column, Bio heading or divider beside the rail.
+        self.assertNotContains(response, '<h2>Bio</h2>', html=False)
+        self.assertNotContains(response, 'ds-reading__main')
+        self.assertNotContains(response, 'ds-reading__divider')
+
+    def test_orcid_profile_shows_connect_rail(self):
+        person = self.make_person(
+            'orcid-person', ['Expert'], bio=False,
+            orcid_id='0000-0002-1825-0097')
+
+        response = self.get(person)
+
+        self.assertContains(response, 'href="https://orcid.org/0000-0002-1825-0097"')
+        self.assertContains(response, 'fa-brands fa-orcid')
         # No empty prose column, Bio heading or divider beside the rail.
         self.assertNotContains(response, '<h2>Bio</h2>', html=False)
         self.assertNotContains(response, 'ds-reading__main')
