@@ -2,22 +2,43 @@
 {% load wagtailcore_tags heroes %}
 {% comment %}
   Subscribe landing (post sign-up) — DS shell, styled to match the inquiry
-  thank-you page (BugHerd #265): content hero + reading measure. The heading
-  overrides the page title via page_hero's title kwarg. DPH error states keep
-  their status copy.
+  thank-you page (BugHerd #265): content hero + reading measure. DPH uses its
+  own status heading and copy because this endpoint is not backed by a page.
 {% endcomment %}
 
-{# Landing-type chrome: the dark site header, like the other landings (Tia, BugHerd #265). #}
-{% block header %}{% include "includes/header.html" with header_surface='dark' %}{% endblock %}
+{% block header %}
+  {% if subscription_type == 'dph' %}
+    {% include "includes/header.html" with header_surface='charcoal' header_accent_scheme='green' %}
+  {% else %}
+    {% include "includes/header.html" with header_surface='dark' %}
+  {% endif %}
+{% endblock %}
 
 {% block content %}
-  {% if subscription_type == 'dph' and status != 'subscribed_success' %}
-    {% page_hero self title="There was an error with the subscription." %}
+  {% if subscription_type == 'dph' %}
+    <header class="ds-hero ds-hero--content ds-hero--simple ds-surface ds-surface--charcoal ds-surface--accent-green">
+      <div class="ds-hero__inner ds-container">
+        <div class="ds-hero__body">
+          <div class="ds-hero__main">
+            <p class="ds-hero__kicker">Digital Policy Hub</p>
+            <h1 class="ds-hero__title">
+              {% if status == 'subscribed_success' %}Thank You for Subscribing
+              {% elif status == 'pending' %}Please Confirm Your Subscription
+              {% elif status == 'subscribed' %}You're Already Subscribed
+              {% else %}There Was an Error with the Subscription{% endif %}
+            </h1>
+          </div>
+        </div>
+      </div>
+    </header>
+
     <div class="ds-surface ds-surface--light">
       <div class="ds-reading ds-reading--section ds-container">
         <div class="ds-reading__main">
           <div class="ds-prose">
-            {% if status == 'pending' %}
+            {% if status == 'subscribed_success' %}
+              <p>Keep an eye on your inbox. We'll let you know about upcoming working papers, events and cohort announcements.</p>
+            {% elif status == 'pending' %}
               <p>In order to complete your subscription, please check your inbox for a confirmation email. If it does not appear in your inbox, please check your spam or junk folder. If you did not receive a confirmation email please <a href="/contact/">contact us</a>.</p>
             {% elif status == 'subscribed' %}
               <p>Your email is already subscribed. Please check your inbox for any updates.</p>
@@ -50,11 +71,16 @@
       <div class="ds-reading__main">
         <div class="ds-prose">
           <h2>Follow Us</h2>
-          <p>Stay connected with us on LinkedIn and X for daily news, events and updates.</p>
-          <p>
-            <a href="https://www.linkedin.com/company/cigionline/" target="_blank" rel="noopener noreferrer" aria-label="CIGI on LinkedIn"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>
-            <a href="https://x.com/cigionline" target="_blank" rel="noopener noreferrer" aria-label="CIGI on X"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
-          </p>
+          {% if subscription_type == 'dph' %}
+            <p>Stay connected on LinkedIn for more frequent updates.</p>
+            <p><a href="https://www.linkedin.com/showcase/digital-policy-hub-cigi/?utm_source=cigionline.org&amp;utm_medium=referral&amp;utm_campaign=dph_subscribe_success" target="_blank" rel="noopener noreferrer" aria-label="Digital Policy Hub on LinkedIn"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a></p>
+          {% else %}
+            <p>Stay connected with us on LinkedIn and X for daily news, events and updates.</p>
+            <p>
+              <a href="https://www.linkedin.com/company/cigionline/" target="_blank" rel="noopener noreferrer" aria-label="CIGI on LinkedIn"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>
+              <a href="https://x.com/cigionline" target="_blank" rel="noopener noreferrer" aria-label="CIGI on X"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+            </p>
+          {% endif %}
         </div>
       </div>
     </div>

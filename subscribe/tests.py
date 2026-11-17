@@ -1,8 +1,142 @@
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from django.test import RequestFactory, SimpleTestCase, TestCase
+from mailchimp_marketing.api_client import ApiClientError
 from wagtail.test.utils import WagtailPageTestCase
+
 from subscribe.models import SubscribePage
+from subscribe.views import DphSubscribeForm, subscribe_dph
 from home.models import HomePage
+
+
+class SubscribeDphTests(SimpleTestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.valid_post_data = {
+            'email': 'reader@example.com',
+            'first_name': 'Ada',
+            'last_name': 'Lovelace',
+            'job_title': 'Researcher',
+            'company': 'Analytical Engines Inc.',
+            'country': 'CA',
+            'consent': 'on',
+        }
+
+    @patch('subscribe.views.render', return_value=HttpResponse())
+    def test_get_renders_signup_page_with_email_prefilled(self, mock_render):
+        response = subscribe_dph(self.factory.get('/subscribe_dph?email=reader@example.com'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(mock_render.call_args.args[1], 'themes/dph/subscribe_page.html')
+        self.assertEqual(mock_render.call_args.args[2]['form'].initial['email'], 'reader@example.com')
+
+    @patch('subscribe.views.render', return_value=HttpResponse())
+    @patch('subscribe.views.MailchimpMarketing.Client')
+    def test_requires_consent(self, mock_client, mock_render):
+        post_data = self.valid_post_data.copy()
+        post_data.pop('consent')
+
+        response = subscribe_dph(self.factory.post('/subscribe_dph', post_data))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('consent', mock_render.call_args.args[2]['form'].errors)
+        mock_client.assert_not_called()
+
+    @patch('subscribe.views.render', return_value=HttpResponse())
+    @patch('subscribe.views.MailchimpMarketing.Client')
+    def test_sends_profile_and_consent_to_mailchimp(self, mock_client, mock_render):
+        mailchimp = mock_client.return_value
+        mailchimp.lists.get_list_member.side_effect = ApiClientError('404', 404)
+        mailchimp.lists.set_list_member.return_value = {'status': 'subscribed'}
+
+        with (
+            patch('subscribe.views.api_key', 'key'),
+            patch('subscribe.views.server', 'us1'),
+            patch('subscribe.views.list_id', 'list-id'),
+        ):
+            response = subscribe_dph(self.factory.post('/subscribe_dph', self.valid_post_data))
+
+        self.assertEqual(response.status_code, 200)
+        mailchimp.lists.set_list_member.assert_called_once_with(
+            'list-id',
+            'baa0f4114eafbdd39ce828d01b849ae6',
+            {
+                'email_address': 'reader@example.com',
+                'status_if_new': 'subscribed',
+                'merge_fields': {
+                    'FNAME': 'Ada',
+                    'LNAME': 'Lovelace',
+                    'JOBTITLE': 'Researcher',
+                    'COMPANY': 'Analytical Engines Inc.',
+                    'COUNTRY': 'Canada',
+                    'CONSENT': 'true',
+                },
+            },
+        )
+        self.assertEqual(mock_render.call_args.args[2]['status'], 'subscribed_success')
+
+    @patch('subscribe.views.render', return_value=HttpResponse())
+    @patch('subscribe.views.MailchimpMarketing.Client')
+    def test_existing_subscriber_is_not_updated(self, mock_client, mock_render):
+        mailchimp = mock_client.return_value
+        mailchimp.lists.get_list_member.return_value = {'status': 'subscribed'}
+
+        with (
+            patch('subscribe.views.api_key', 'key'),
+            patch('subscribe.views.server', 'us1'),
+            patch('subscribe.views.list_id', 'list-id'),
+        ):
+            subscribe_dph(self.factory.post('/subscribe_dph', self.valid_post_data))
+
+        mailchimp.lists.set_list_member.assert_not_called()
+        self.assertEqual(mock_render.call_args.args[2]['status'], 'subscribed')
+
+    @patch('subscribe.views.render', return_value=HttpResponse())
+    @patch('subscribe.views.MailchimpMarketing.Client')
+    def test_mailchimp_error_renders_error_status(self, mock_client, mock_render):
+        mailchimp = mock_client.return_value
+        mailchimp.lists.get_list_member.side_effect = ApiClientError('404', 404)
+        mailchimp.lists.set_list_member.side_effect = ApiClientError('Invalid Resource', 400)
+
+        with (
+            patch('subscribe.views.api_key', 'key'),
+            patch('subscribe.views.server', 'us1'),
+            patch('subscribe.views.list_id', 'list-id'),
+        ):
+            subscribe_dph(self.factory.post('/subscribe_dph', self.valid_post_data))
+
+        self.assertEqual(mock_render.call_args.args[2]['status'], 'error')
+
+
+class SubscribeDphTemplateTests(TestCase):
+    def test_signup_page_uses_design_system_form(self):
+        html = render_to_string('themes/dph/subscribe_page.html', {'form': DphSubscribeForm()})
+
+        self.assertIn('ds-form', html)
+        for name in ('email', 'first_name', 'last_name', 'job_title', 'company', 'country', 'consent'):
+            self.assertIn(f'name="{name}"', html)
+
+    def test_status_page_uses_dph_copy_and_social_link(self):
+        html = render_to_string(
+            'subscribe/subscribe_page_landing.html',
+            {'status': 'subscribed_success', 'subscription_type': 'dph'},
+        )
+
+        self.assertIn('Digital Policy Hub', html)
+        self.assertIn('Thank You for Subscribing', html)
+        self.assertIn("Keep an eye on your inbox. We'll let you know", html)
+        self.assertIn('digital-policy-hub-cigi', html)
+
+    def test_dph_footer_and_sidebar_link_to_full_signup(self):
+        footer = render_to_string('themes/dph/includes/footer.html')
+        sidebar = render_to_string('themes/dph/includes/sidebar.html')
+
+        self.assertIn('method="get"', footer)
+        self.assertIn('name="email"', footer)
+        self.assertIn('href="/subscribe_dph"', sidebar)
+        self.assertNotIn('id="mailing-list-button"', sidebar)
 
 
 class SubscribePageTests(WagtailPageTestCase):

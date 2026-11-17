@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load icons %}
+
+{% block title %}Digital Policy Hub Sign Up{% endblock %}
+{% block header %}{% include "includes/header.html" with header_surface='charcoal' header_accent_scheme='green' %}{% endblock %}
+
+{% block content %}
+  <header class="ds-hero ds-hero--content ds-hero--simple ds-surface ds-surface--charcoal ds-surface--accent-green">
+    <div class="ds-hero__inner ds-container">
+      <div class="ds-hero__body">
+        <div class="ds-hero__main">
+          <p class="ds-hero__kicker">Digital Policy Hub</p>
+          <h1 class="ds-hero__title">Sign Up</h1>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="ds-surface ds-surface--light">
+    <div class="ds-reading ds-reading--section ds-container">
+      <div class="ds-reading__main">
+        <div class="ds-form">
+          <form action="{% url 'subscribe_dph' %}" method="post" novalidate>
+            {% csrf_token %}
+
+            <div class="ds-form__row">
+              {% include "includes/ds_form_field.html" with field=form.first_name in_row=True %}
+              {% include "includes/ds_form_field.html" with field=form.last_name in_row=True %}
+            </div>
+            {% include "includes/ds_form_field.html" with field=form.email %}
+            <div class="ds-form__row">
+              {% include "includes/ds_form_field.html" with field=form.job_title in_row=True %}
+              {% include "includes/ds_form_field.html" with field=form.company in_row=True %}
+            </div>
+            {% include "includes/ds_form_field.html" with field=form.country %}
+            {% include "includes/ds_form_field.html" with field=form.consent %}
+
+            <div class="ds-form__actions">
+              <button class="ds-button ds-button--solid ds-button--on-light" type="submit">
+                <span class="ds-button__label">Sign Up</span>
+                {% ds_icon 'chevron-right' css_class='ds-button__icon' %}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

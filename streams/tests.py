@@ -1,6 +1,8 @@
+from types import SimpleNamespace
 from unittest import mock
 
 from django.core.exceptions import ValidationError
+from django.template.loader import render_to_string
 
 from articles.models import ArticlePage, ArticleTypePage
 from core.models import Theme
@@ -34,6 +36,36 @@ from .blocks import (
     TooltipBlock,
     TweetBlock,
 )
+
+
+class AutoPlayVideoBlockTests(SimpleTestCase):
+    def test_uses_dph_page_template(self):
+        page = SimpleNamespace(
+            _meta=SimpleNamespace(verbose_name='Page'),
+            theme=SimpleNamespace(name='DPH'),
+        )
+
+        self.assertEqual(
+            AutoPlayVideoBlock().get_template({}, {'page': page}),
+            'themes/dph/streams/page_autoplay_video_block.html',
+        )
+
+    def test_autoplay_can_be_disabled(self):
+        value = SimpleNamespace(
+            video=SimpleNamespace(url='/media/video.mp4'),
+            caption='Video caption',
+            disable_autoplay=True,
+        )
+
+        for template in (
+            'streams/autoplay_video_block.html',
+            'streams/legacy/autoplay_video_block.html',
+            'themes/dph/streams/page_autoplay_video_block.html',
+        ):
+            with self.subTest(template=template):
+                html = render_to_string(template, {'self': value})
+                self.assertIn('<video playsinline muted controls', html)
+                self.assertNotIn(' autoplay', html)
 
 
 class AccordionBlockTests(SimpleTestCase):
