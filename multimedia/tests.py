@@ -1,3 +1,6 @@
+from core.models import Theme
+from django.template.loader import render_to_string
+from django.test import RequestFactory, TestCase, override_settings
 from home.models import HomePage
 from wagtail.test.utils import WagtailPageTestCase
 
@@ -63,6 +66,60 @@ class MultimediaSeriesPageTests(WagtailPageTestCase):
             MultimediaSeriesPage,
             {MultimediaPage},
         )
+
+
+class PolicyPromptThemeTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.theme = Theme.objects.create(name='Policy Prompt')
+        cls.series = MultimediaSeriesPage(
+            title='Policy Prompt', theme=cls.theme)
+        cls.episode = MultimediaPage(title='Episode', theme=cls.theme)
+        cls.big_tech_episode = MultimediaPage(
+            title='Big Tech Episode',
+            theme=Theme.objects.create(name='Big Tech'),
+        )
+        cls.request = RequestFactory().get('/')
+
+    def test_legacy_theme_is_the_default(self):
+        self.assertEqual(
+            self.series.get_template(self.request),
+            'themes/policy_prompt/multimedia_series_page.html',
+        )
+        self.assertEqual(
+            self.episode.get_template(self.request),
+            'themes/policy_prompt/multimedia_page.html',
+        )
+        self.assertTrue(self.episode.renders_legacy_fork)
+
+    @override_settings(POLICY_PROMPT_USE_DESIGN_SYSTEM=True)
+    def test_design_system_theme_can_be_enabled(self):
+        self.assertEqual(
+            self.series.get_template(self.request),
+            'multimedia/multimedia_series_page.html',
+        )
+        self.assertEqual(
+            self.episode.get_template(self.request),
+            'multimedia/multimedia_page.html',
+        )
+        self.assertFalse(self.episode.renders_legacy_fork)
+        self.assertEqual(
+            self.big_tech_episode.get_template(self.request),
+            'themes/big_tech/multimedia_page.html',
+        )
+
+    def test_legacy_footer_downloads_the_episode_source(self):
+        html = render_to_string('themes/policy_prompt/includes/footer.html', {
+            'episode_download_url': 'https://example.com/policy-prompt.mp3',
+            'live': True,
+            'podcast_subscribe_buttons': [],
+        })
+
+        self.assertIn(
+            'href="https://example.com/policy-prompt.mp3" download',
+            html,
+        )
+        self.assertIn('Download Episode', html)
 
 
 # class MultimediaPageViewSetTests(WagtailPageTestCase):

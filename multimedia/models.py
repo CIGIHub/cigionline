@@ -10,6 +10,7 @@ from core.models import (
     ShareablePageAbstract,
     ThemeablePageAbstract,
 )
+from django.conf import settings
 from django.db.models.fields import CharField
 from django.db import models
 from mediavalet.panels import MediaValetImageChooserPanel
@@ -39,6 +40,11 @@ from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from wagtail.search import index
 import re
+
+
+def _use_policy_prompt_design_system(page):
+    enabled = getattr(settings, 'POLICY_PROMPT_USE_DESIGN_SYSTEM', False)
+    return enabled and page.get_theme_dir() == 'policy_prompt'
 
 
 class MultimediaListPage(BasicPageAbstract, SearchablePageAbstract, Page):
@@ -327,12 +333,19 @@ class MultimediaPage(
 
     legacy_fork_template = 'multimedia_page.html'
 
+    def theme_fork_template(self):
+        if _use_policy_prompt_design_system(self):
+            return None
+        return super().theme_fork_template()
+
     def get_template(self, request, *args, **kwargs):
         # A themed episode (Policy Prompt, Big Tech, series skins) keeps its
         # pre-redesign design (CIGI, sync 2026-09-21). Unthemed audio/video
         # renders the DS podcast single; series identity there comes from
         # multimedia_series data, with the Policy Prompt logo as hero fallback.
         standard_template = super(MultimediaPage, self).get_template(request, *args, **kwargs)
+        if _use_policy_prompt_design_system(self):
+            return standard_template
         return self.themed_template(self.legacy_fork_template, standard_template)
 
     def podcast_episode_minutes(self):
@@ -727,6 +740,8 @@ class MultimediaSeriesPage(
         # A themed series home keeps its pre-redesign design (CIGI, sync
         # 2026-09-21: /pp/ and Big Tech revert to their legacy pages).
         standard_template = super(MultimediaSeriesPage, self).get_template(request, *args, **kwargs)
+        if _use_policy_prompt_design_system(self):
+            return standard_template
         return self.themed_template('multimedia_series_page.html', standard_template)
 
     def _episodes_listing_value(self):
