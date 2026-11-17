@@ -152,6 +152,21 @@ class SubscribePageTests(WagtailPageTestCase):
             {},
         )
 
+    @patch('utils.security.verify_turnstile_token', return_value=False)
+    def test_result_and_footer_include_current_social_destinations(self, _verify_turnstile):
+        page = HomePage.objects.get().add_child(instance=SubscribePage(
+            title='Subscribe', slug='subscribe-social-links'))
+        page.save_revision().publish()
+
+        response = self.client.post(page.url, {})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'class="ds-share-buttons__link"', count=6)
+        for label in ('X', 'LinkedIn', 'YouTube', 'Instagram', 'Substack', 'Medium'):
+            self.assertContains(response, f'aria-label="CIGI on {label}"')
+        self.assertContains(response, 'aria-label="CIGI on Apple Podcasts"')
+        self.assertContains(response, 'aria-label="CIGI on Spotify"')
+
     def test_apply_tag_includes_anniversary_tag(self):
         client = Mock()
 

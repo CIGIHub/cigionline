@@ -50,6 +50,12 @@
       background: var(--accent);
       color: var(--accent-on);
     }
+
+    svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
   }
 
   // Platform without a brand glyph — plain text link at the same row height.

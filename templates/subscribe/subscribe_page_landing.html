@@ -76,10 +76,18 @@
             <p><a href="https://www.linkedin.com/showcase/digital-policy-hub-cigi/?utm_source=cigionline.org&amp;utm_medium=referral&amp;utm_campaign=dph_subscribe_success" target="_blank" rel="noopener noreferrer" aria-label="Digital Policy Hub on LinkedIn"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a></p>
           {% else %}
             <p>Stay connected with us on LinkedIn and X for daily news, events and updates.</p>
-            <p>
-              <a href="https://www.linkedin.com/company/cigionline/" target="_blank" rel="noopener noreferrer" aria-label="CIGI on LinkedIn"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>
-              <a href="https://x.com/cigionline" target="_blank" rel="noopener noreferrer" aria-label="CIGI on X"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
-            </p>
+            {% with fs=settings.core.FooterSettings %}
+              <div class="ds-prose__module">
+                <ul class="ds-share-buttons__list" aria-label="CIGI social profiles">
+                  {% if fs.twitter_url %}<li><a class="ds-share-buttons__link" href="{{ fs.twitter_url }}" target="_blank" rel="noopener noreferrer" aria-label="CIGI on X"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a></li>{% endif %}
+                  {% if fs.linkedin_url %}<li><a class="ds-share-buttons__link" href="{{ fs.linkedin_url }}" target="_blank" rel="noopener noreferrer" aria-label="CIGI on LinkedIn"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a></li>{% endif %}
+                  {% if fs.youtube_url %}<li><a class="ds-share-buttons__link" href="{{ fs.youtube_url }}" target="_blank" rel="noopener noreferrer" aria-label="CIGI on YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a></li>{% endif %}
+                  {% if fs.instagram_url %}<li><a class="ds-share-buttons__link" href="{{ fs.instagram_url }}" target="_blank" rel="noopener noreferrer" aria-label="CIGI on Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a></li>{% endif %}
+                  {% if fs.substack_url %}<li><a class="ds-share-buttons__link" href="{{ fs.substack_url }}" target="_blank" rel="noopener noreferrer" aria-label="CIGI on Substack">{% include "includes/substack-logo.svg" %}</a></li>{% endif %}
+                  {% if fs.medium_url %}<li><a class="ds-share-buttons__link" href="{{ fs.medium_url }}" target="_blank" rel="noopener noreferrer" aria-label="CIGI on Medium">{% include "includes/medium-logo.svg" %}</a></li>{% endif %}
+                </ul>
+              </div>
+            {% endwith %}
           {% endif %}
         </div>
       </div>

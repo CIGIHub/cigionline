@@ -95,6 +95,8 @@
         {% if fs.instagram_url %}<li><a href="{{ fs.instagram_url }}" target="_blank" rel="noopener noreferrer" aria-label="CIGI on Instagram"><i class="fa-brands fa-instagram"></i></a></li>{% endif %}
         {% if fs.substack_url %}<li><a href="{{ fs.substack_url }}" target="_blank" rel="noopener noreferrer" aria-label="CIGI on Substack">{% include "includes/substack-logo.svg" %}</a></li>{% endif %}
         {% if fs.medium_url %}<li><a href="{{ fs.medium_url }}" target="_blank" rel="noopener noreferrer" aria-label="CIGI on Medium">{% include "includes/medium-logo.svg" %}</a></li>{% endif %}
+        {% if fs.apple_podcasts_url %}<li><a href="{{ fs.apple_podcasts_url }}" target="_blank" rel="noopener noreferrer" aria-label="CIGI on Apple Podcasts"><i class="fa-solid fa-podcast" aria-hidden="true"></i></a></li>{% endif %}
+        {% if fs.spotify_url %}<li><a href="{{ fs.spotify_url }}" target="_blank" rel="noopener noreferrer" aria-label="CIGI on Spotify"><i class="fa-brands fa-spotify" aria-hidden="true"></i></a></li>{% endif %}
         {% endwith %}
       </ul>
     </div>
