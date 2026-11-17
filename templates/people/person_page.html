@@ -61,7 +61,7 @@
       {# collapsible | Connect + Downloads rail. #}
       {# A media photo alone opens the band too, so its download shows on a #}
       {# person with no bio (BugHerd #526); that band is the rail on its own. #}
-      {% if self.body or self.education or self.is_external_profile or self.image_media %}
+      {% if self.body or self.education or self.is_external_profile or self.image_media or page.orcid_id %}
         {# DPH brand: dark green replaces the white band (BugHerd #232). #}
         <div class="ds-surface ds-surface--{% if main_accent_scheme == 'green' %}green{% else %}light{% endif %}">
           <div class="ds-reading ds-reading--person ds-container">
@@ -97,13 +97,13 @@
             </div>
             {% endif %}
 
-            {% if page.email or page.phone_number_clean or page.website or page.twitter_username or page.linkedin_url or page.curriculum_vitae or page.image_media %}
+            {% if page.email or page.phone_number_clean or page.website or page.twitter_username or page.linkedin_url or page.orcid_id or page.curriculum_vitae or page.image_media %}
               {% if self.body or self.education or self.is_external_profile %}
                 <span class="ds-reading__divider" aria-hidden="true"></span>
               {% endif %}
 
               <aside class="ds-reading__aside">
-                {% if page.email or page.phone_number_clean or page.website or page.twitter_username or page.linkedin_url %}
+                {% if page.email or page.phone_number_clean or page.website or page.twitter_username or page.linkedin_url or page.orcid_id %}
                   <div class="ds-reading__aside-group">
                     <h2 class="ds-reading__aside-heading">Connect</h2>
                     <ul class="ds-person-links">
@@ -113,6 +113,7 @@
                       {# X and LinkedIn are brand glyphs — Brands family, not Light (BugHerd #189). #}
                       {% if page.twitter_username %}<li><a href="https://x.com/{{ page.twitter_username }}" target="_blank" rel="noopener noreferrer">{% include "includes/icon_label.html" with icon="fa-x-twitter" icon_style="fa-brands" label=page.twitter_username %}</a></li>{% endif %}
                       {% if page.linkedin_url %}<li><a href="{{ page.linkedin_url }}" target="_blank" rel="noopener noreferrer">{% include "includes/icon_label.html" with icon="fa-linkedin-in" icon_style="fa-brands" label=page.linkedin_url|no_protocol %}</a></li>{% endif %}
+                      {% if page.orcid_id %}<li><a href="https://orcid.org/{{ page.orcid_id }}" target="_blank" rel="noopener noreferrer">{% include "includes/icon_label.html" with icon="fa-orcid" icon_style="fa-brands" label=page.orcid_id %}</a></li>{% endif %}
                     </ul>
                   </div>
                 {% endif %}
