@@ -1337,7 +1337,7 @@ class BasicPage(
 
     # Theme dirs that still keep a legacy basic-page fork (retiring per
     # legacy-page-conversion-plan §7a). Any other theme renders the DS template.
-    THEMED_FORK_DIRS = {'brandless', 'dph', 'igc'}
+    THEMED_FORK_DIRS = {'brandless', 'igc'}
 
     def get_template(self, request, *args, **kwargs):
         standard_template = super(BasicPage, self).get_template(request, *args, **kwargs)
@@ -1362,6 +1362,7 @@ class BasicPage(
         # approximation below was built to; the live hub was still on green.
         from core.heroes import is_dph_subtree
         if is_dph_subtree(self):
+            context['show_dph_application_notice'] = True
             context['header_surface'] = 'charcoal'
             # Header accents (nav underline, panel-label hover) go green too —
             # nothing on the hub hovers red (BugHerd #200).

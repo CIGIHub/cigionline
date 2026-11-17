@@ -12,7 +12,8 @@
 {% endcomment %}
 
 {% block content %}
-  {% if not self.body|starts_with_hero %}
+  {% with has_authored_hero=self.body|starts_with_hero %}
+  {% if not has_authored_hero %}
     {% if self.image_banner %}
       {% include "includes/alt_hero.html" with image=self.image_banner heading=self.title heading_tag="h1" crumbs=hero_crumbs description=self.subtitle %}
     {% else %}
@@ -26,7 +27,7 @@
     DPH hub the figure otherwise dropped a white band between the header and the
     charcoal split hero (BugHerd #167).
   {% endcomment %}
-  {% if self.image_hero and not self.image_banner and not self.body|starts_with_hero %}
+  {% if self.image_hero and not self.image_banner and not has_authored_hero %}
     {# Follows the page surface — hardcoded light drew a white band inside the charcoal DPH hub (BugHerd #167). #}
     <div class="ds-surface ds-surface--{{ main_surface|default:'light' }}">
       <div class="ds-reading ds-reading--section ds-container">
@@ -44,6 +45,10 @@
     </div>
   {% endif %}
 
+  {% if show_dph_application_notice and not has_authored_hero %}
+    {% include "includes/dph_application_notice.html" %}
+  {% endif %}
+
   {% for section in self.body|body_sections %}
     {% if section.kind == 'module' %}
       {% include_block section.block %}
@@ -58,6 +63,9 @@
         </div>
       </div>
     {% endif %}
+    {% if show_dph_application_notice and has_authored_hero and forloop.first %}
+      {% include "includes/dph_application_notice.html" %}
+    {% endif %}
   {% endfor %}
 
   {% if self.related_files %}
@@ -71,4 +79,5 @@
       </div>
     </div>
   {% endif %}
+  {% endwith %}
 {% endblock content %}
