@@ -442,7 +442,7 @@ function AnnualReportMap({ slide }) {
             setActiveStory(story);
 
             map.easeTo({
-              center: [coordinates.longitude, coordinates.latitude],
+              center: marker.getLngLat().toArray(),
               duration: 800,
             });
           });
