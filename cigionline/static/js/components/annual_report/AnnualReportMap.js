@@ -1,16 +1,9 @@
-
-import React, {
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import * as maplibregl from 'maplibre-gl';
 maplibregl.setWorkerUrl(
-  new URL('maplibre-gl/dist/maplibre-gl-worker.mjs', import.meta.url).toString()
+  new URL('maplibre-gl/dist/maplibre-gl-worker.mjs', import.meta.url).toString(),
 );
 import 'maplibre-gl/dist/maplibre-gl.css';
 import '../../../css/components/annual_reports/AnnualReportMap.scss';
@@ -37,6 +30,22 @@ const themeClasses = {
   'Data, Economy, Society': 'theme-data',
   'Digitalization, Security and Democracy': 'theme-security',
   'Global Cooperation and Governance': 'theme-cooperation',
+};
+
+const countryAliases = {
+  usa: 'United States of America',
+  us: 'United States of America',
+  'united states': 'United States of America',
+  uk: 'United Kingdom',
+  england: 'United Kingdom',
+  scotland: 'United Kingdom',
+  wales: 'United Kingdom',
+  'northern ireland': 'United Kingdom',
+};
+
+const normalizeCountry = (country) => {
+  const name = String(country || '').trim();
+  return countryAliases[name.toLowerCase()] || name;
 };
 
 const contentIcons = {
@@ -118,64 +127,75 @@ const customIcons = {
 const storyMatches = (story, query, selectedTheme) => {
   const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
 
-  const matchesSearch = !words.length || [
-    story.title,
-    story.location,
-    story.country,
-    story.research_theme,
-  ].some((value) => {
-    const text = String(value || '').toLowerCase();
-    return words.every((word) => text.includes(word));
-  });
+  const matchesSearch =
+    !words.length ||
+    [story.title, story.location, story.country, story.research_theme].some((value) => {
+      const text = String(value || '').toLowerCase();
+      return words.every((word) => text.includes(word));
+    });
 
-  return matchesSearch && (
-    !selectedTheme || story.research_theme === selectedTheme
-  );
+  return matchesSearch && (!selectedTheme || story.research_theme === selectedTheme);
 };
 
 function AnnualReportMap({ slide }) {
   const mapContainerRef = useRef(null);
-  const cardRef = useRef(null);
+  const descriptionRef = useRef(null);
   const oceanMarkersRef = useRef([]);
   const [activeStory, setActiveStory] = useState(null);
+  const [hasMoreDescription, setHasMoreDescription] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTheme, setSelectedTheme] = useState('');
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(
-    window.innerWidth <= 768
-  );
-  const [isLargeScreen, setIsLargeScreen] = useState(
-    window.innerWidth >= 992
-  );
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 992);
 
   const themeDropdownRef = useRef(null);
   const highlightMarkersRef = useRef([]);
 
-  const { stories, countries } = useMemo(() => ({
-    stories: slide.slide_content?.map_stories || [],
-    countries: slide.slide_content?.countries || {},
-  }), [slide.slide_content]);
+  const { stories, countries } = useMemo(
+    () => ({
+      stories: slide.slide_content?.map_stories || [],
+      countries: slide.slide_content?.countries || {},
+    }),
+    [slide.slide_content],
+  );
 
-  const researchThemes = [...new Set(
-    stories
-      .map((story) => story.research_theme)
-      .filter(Boolean)
-  )].sort();
+  const researchThemes = [
+    ...new Set(stories.map((story) => story.research_theme).filter(Boolean)),
+  ].sort();
 
   useLayoutEffect(() => {
-    if (activeStory && cardRef.current) {
-      cardRef.current.scrollTop = 0;
+    const description = descriptionRef.current;
+
+    if (!activeStory || !description) {
+      setHasMoreDescription(false);
+      return undefined;
     }
+
+    const updateScrollState = () => {
+      const remaining = description.scrollHeight - description.clientHeight - description.scrollTop;
+
+      setHasMoreDescription(remaining > 2);
+    };
+
+    description.scrollTop = 0;
+    updateScrollState();
+
+    const observer = new ResizeObserver(updateScrollState);
+    observer.observe(description);
+    description.addEventListener('scroll', updateScrollState);
+
+    return () => {
+      observer.disconnect();
+      description.removeEventListener('scroll', updateScrollState);
+    };
   }, [activeStory]);
 
   useEffect(() => {
     if (!activeStory) return undefined;
 
     const handleOutsideClick = (event) => {
-      if (
-        event.target.closest('.map-story-panel') ||
-        event.target.closest('.map-story-node')
-      ) {
+      if (event.target.closest('.map-story-panel') || event.target.closest('.map-story-node')) {
         return;
       }
 
@@ -230,7 +250,7 @@ function AnnualReportMap({ slide }) {
         showCompass: false,
         showZoom: true,
       }),
-      'top-right'
+      'top-right',
     );
 
     map.on('load', () => {
@@ -280,16 +300,10 @@ function AnnualReportMap({ slide }) {
           const progress = Math.min((now - startTime) / duration, 1);
           const eased = progress * progress * (3 - 2 * progress);
 
-          currentOpacity = startOpacity +
-            (targetOpacity - startOpacity) * eased;
+          currentOpacity = startOpacity + (targetOpacity - startOpacity) * eased;
 
           const opacity = highlightedCountry
-            ? [
-                'case',
-                ['==', ['get', 'ADMIN'], highlightedCountry],
-                1,
-                currentOpacity,
-              ]
+            ? ['case', ['==', ['get', 'ADMIN'], highlightedCountry], 1, currentOpacity]
             : currentOpacity;
 
           map.setPaintProperty('countries-fill', 'fill-opacity', opacity);
@@ -358,16 +372,16 @@ function AnnualReportMap({ slide }) {
           const element = document.createElement('button');
           element.type = 'button';
           element.setAttribute('aria-label', story.title);
-          element.className = [
-            'map-story-node',
-            themeClasses[story.research_theme] || '',
-          ].filter(Boolean).join(' ');
+          element.className = ['map-story-node', themeClasses[story.research_theme] || '']
+            .filter(Boolean)
+            .join(' ');
 
           element.innerHTML = '<div class="map-story-node-circle"></div>';
 
           const marker = new maplibregl.Marker({
             element,
             anchor: 'center',
+            subpixelPositioning: true,
           })
             .setLngLat([coordinates.longitude, coordinates.latitude])
             .addTo(map);
@@ -382,12 +396,11 @@ function AnnualReportMap({ slide }) {
             anchor: 'bottom',
             offset: 18,
             className: 'map-story-tooltip',
-          })
-            .setDOMContent(tooltipContent);
+          }).setDOMContent(tooltipContent);
 
           element.addEventListener('mouseenter', () => {
             tooltip.setLngLat(marker.getLngLat()).addTo(map);
-            setHighlightedCountry(story.country);
+            setHighlightedCountry(normalizeCountry(story.country));
           });
 
           element.addEventListener('mouseleave', () => {
@@ -413,17 +426,14 @@ function AnnualReportMap({ slide }) {
       const markerPlacements = new Map();
 
       const isValidLandPosition = (center, candidate, country) => {
-        const isInsideCountry = (point) => map.queryRenderedFeatures(
-          point,
-          { layers: ['countries-fill'] },
-        ).some((feature) => feature.properties.ADMIN === country);
+        const isInsideCountry = (point) =>
+          map
+            .queryRenderedFeatures(point, { layers: ['countries-fill'] })
+            .some((feature) => feature.properties.ADMIN === normalizeCountry(country));
 
         if (!isInsideCountry(candidate)) return false;
 
-        const distance = Math.hypot(
-          candidate[0] - center.x,
-          candidate[1] - center.y,
-        );
+        const distance = Math.hypot(candidate[0] - center.x, candidate[1] - center.y);
         const steps = Math.ceil(distance / 4);
 
         for (let step = 1; step < steps; step += 1) {
@@ -444,32 +454,19 @@ function AnnualReportMap({ slide }) {
         const minimumDistance = 20;
         const minimumFallbackDistance = 8;
 
-        markers.forEach(({
-          marker,
-          coordinates,
-          index,
-          story,
-        }, markerIndex) => {
-          const center = map.project([
-            coordinates.longitude,
-            coordinates.latitude,
-          ]);
+        markers.forEach(({ marker, coordinates, index, story }, markerIndex) => {
+          const center = map.project([coordinates.longitude, coordinates.latitude]);
 
           const nearestOtherLocation = Math.min(
             ...markers
-              .filter(({ story: otherStory }) => (
-                otherStory.location !== story.location
-              ))
+              .filter(({ story: otherStory }) => otherStory.location !== story.location)
               .map(({ coordinates: otherCoordinates }) => {
                 const otherCenter = map.project([
                   otherCoordinates.longitude,
                   otherCoordinates.latitude,
                 ]);
 
-                return Math.hypot(
-                  center.x - otherCenter.x,
-                  center.y - otherCenter.y,
-                );
+                return Math.hypot(center.x - otherCenter.x, center.y - otherCenter.y);
               }),
           );
 
@@ -484,9 +481,7 @@ function AnnualReportMap({ slide }) {
           let bestClearance = -1;
 
           for (let attempt = 0; attempt < 200; attempt += 1) {
-            const angle = existingPlacement
-              ? existingPlacement.angle
-              : (index + attempt) * 2.39996;
+            const angle = existingPlacement ? existingPlacement.angle : (index + attempt) * 2.39996;
             const radius = attempt * 0.4;
 
             if (radius > fallbackLimit) break;
@@ -494,16 +489,14 @@ function AnnualReportMap({ slide }) {
             const candidateX = center.x + radius * Math.cos(angle);
             const candidateY = center.y + radius * Math.sin(angle);
 
-            if (!isValidLandPosition(
-              center,
-              [candidateX, candidateY],
-              story.country,
-            )) continue;
+            if (!isValidLandPosition(center, [candidateX, candidateY], story.country)) continue;
 
             const clearance = placedPositions.length
-              ? Math.min(...placedPositions.map(([px, py]) => (
-                Math.hypot(candidateX - px, candidateY - py)
-              )))
+              ? Math.min(
+                  ...placedPositions.map(([px, py]) =>
+                    Math.hypot(candidateX - px, candidateY - py),
+                  ),
+                )
               : Infinity;
 
             if (clearance > bestClearance) {
@@ -511,36 +504,27 @@ function AnnualReportMap({ slide }) {
               bestCandidate = [candidateX, candidateY];
             }
 
-            if (
-              radius <= maxDisplacement &&
-              clearance >= minimumDistance
-            ) {
+            if (radius <= maxDisplacement && clearance >= minimumDistance) {
               preferredCandidate = [candidateX, candidateY];
               break;
             }
 
-            if (
-              clearance >= minimumFallbackDistance &&
-              clearance > fallbackClearance
-            ) {
+            if (clearance >= minimumFallbackDistance && clearance > fallbackClearance) {
               fallbackCandidate = [candidateX, candidateY];
               fallbackClearance = clearance;
             }
           }
 
-          const [x, y] = preferredCandidate
-            || fallbackCandidate
-            || bestCandidate
-            || [center.x, center.y];
+          const [x, y] = preferredCandidate ||
+            fallbackCandidate ||
+            bestCandidate || [center.x, center.y];
 
           if (!existingPlacement) {
             const dx = x - center.x;
             const dy = y - center.y;
 
             markerPlacements.set(marker, {
-              angle: Math.hypot(dx, dy) > 0.01
-                ? Math.atan2(dy, dx)
-                : markerIndex * 2.39996,
+              angle: Math.hypot(dx, dy) > 0.01 ? Math.atan2(dy, dx) : markerIndex * 2.39996,
             });
           }
 
@@ -577,13 +561,14 @@ function AnnualReportMap({ slide }) {
   }, [countries, stories]);
 
   useEffect(() => {
-    const hasActiveSearch = Boolean(searchQuery.trim() || selectedTheme);
+    highlightMarkersRef.current.forEach(({ story, element, tooltip }) => {
+      const matches = storyMatches(story, searchQuery, selectedTheme);
 
-    highlightMarkersRef.current.forEach(({ story, element }) => {
-      element.classList.toggle(
-        'map-story-node-highlight',
-        hasActiveSearch && storyMatches(story, searchQuery, selectedTheme)
-      );
+      element.style.display = matches ? '' : 'none';
+
+      if (!matches) {
+        tooltip.remove();
+      }
     });
   }, [searchQuery, selectedTheme]);
 
@@ -615,9 +600,7 @@ function AnnualReportMap({ slide }) {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
         setThemeDropdownOpen(false);
-        themeDropdownRef.current
-          ?.querySelector('.map-theme-trigger')
-          ?.focus();
+        themeDropdownRef.current?.querySelector('.map-theme-trigger')?.focus();
       }
     };
 
@@ -634,11 +617,15 @@ function AnnualReportMap({ slide }) {
     <motion.div
       className="annual-report-map"
       initial={isLargeScreen ? { opacity: 0, y: 20 } : false}
-      animate={isLargeScreen ? {
-        opacity: 1,
-        y: 0,
-        transition: { duration: 0.5, ease: 'easeInOut' },
-      } : false}
+      animate={
+        isLargeScreen
+          ? {
+              opacity: 1,
+              y: 0,
+              transition: { duration: 0.5, ease: 'easeInOut' },
+            }
+          : false
+      }
     >
       <div className="annual-report-map-controls">
         <div className="map-search-input">
@@ -659,9 +646,7 @@ function AnnualReportMap({ slide }) {
             aria-expanded={themeDropdownOpen}
             onClick={() => setThemeDropdownOpen(!themeDropdownOpen)}
           >
-            <span>
-              {selectedTheme || (isMobile ? 'All' : 'All research themes')}
-            </span>
+            <span>{selectedTheme || (isMobile ? 'All' : 'All research themes')}</span>
             <i className="fa-solid fa-chevron-down" aria-hidden="true" />
           </button>
 
@@ -709,10 +694,7 @@ function AnnualReportMap({ slide }) {
           </button>
         )}
       </div>
-      <div
-        ref={mapContainerRef}
-        className="annual-report-map-container"
-      />
+      <div ref={mapContainerRef} className="annual-report-map-container" />
 
       {activeStory && (
         <div className="map-story-panel">
@@ -725,60 +707,60 @@ function AnnualReportMap({ slide }) {
             &times;
           </button>
 
-          <div className="map-card" ref={cardRef}>
+          <div className="map-card">
             {activeStory.research_theme && (
               <div className={`map-card-theme ${themeClasses[activeStory.research_theme] || ''}`}>
                 {activeStory.research_theme}
               </div>
             )}
 
-            <div className="map-card-title">
-              {activeStory.title}
-            </div>
+            <div className="map-card-title">{activeStory.title}</div>
 
             <div
-              className="map-card-description"
-              dangerouslySetInnerHTML={{
-                __html: activeStory.short_description || '',
-              }}
-            />
+              ref={descriptionRef}
+              className={`map-card-content${hasMoreDescription ? ' has-more-content' : ''}`}
+              tabIndex={0}
+              role="region"
+              aria-label="Story description and related content"
+            >
+              <div
+                className="map-card-description"
+                dangerouslySetInnerHTML={{
+                  __html: activeStory.short_description || '',
+                }}
+              />
 
-            {(activeStory.related_pages || []).length > 0 && (
-              <div className="map-card-related">
-                {activeStory.related_pages.map((related, index) => (
-                  <a
-                    key={`${related.url}-${index}`}
-                    href={related.url}
-                    className="content-link"
-                  >
-                    <div className="content-link-icon">
-                      {contentIcons[related.content_type] ? (
-                        <FontAwesomeIcon icon={contentIcons[related.content_type]} />
-                      ) : (
-                        customIcons[related.content_type] || null
-                      )}
-                    </div>
+              {(activeStory.related_pages || []).length > 0 && (
+                <div className="map-card-related">
+                  {activeStory.related_pages.map((related, index) => (
+                    <a key={`${related.url}-${index}`} href={related.url} className="content-link">
+                      <div className="content-link-icon">
+                        {contentIcons[related.content_type] ? (
+                          <FontAwesomeIcon icon={contentIcons[related.content_type]} />
+                        ) : (
+                          customIcons[related.content_type] || null
+                        )}
+                      </div>
 
-                    <div className="content-copy">
-                      <h4>{related.type_override || related.content_type}</h4>
-                      <p>
-                        <span
-                          className="underline"
-                          dangerouslySetInnerHTML={{
-                            __html: related.title || '',
-                          }}
-                        />
-                      </p>
-                    </div>
-                  </a>
-                ))}
-              </div>
-            )}
+                      <div className="content-copy">
+                        <h4>{related.type_override || related.content_type}</h4>
+                        <p>
+                          <span
+                            className="underline"
+                            dangerouslySetInnerHTML={{
+                              __html: related.title || '',
+                            }}
+                          />
+                        </p>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
 
             <div className="map-card-meta">
-              {activeStory.publishing_date && (
-                <span>{activeStory.publishing_date}</span>
-              )}
+              {activeStory.publishing_date && <span>{activeStory.publishing_date}</span>}
               <span>{activeStory.location}</span>
             </div>
           </div>
