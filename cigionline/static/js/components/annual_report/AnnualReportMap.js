@@ -1,5 +1,11 @@
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import * as maplibregl from 'maplibre-gl';
@@ -129,6 +135,7 @@ const storyMatches = (story, query, selectedTheme) => {
 
 function AnnualReportMap({ slide }) {
   const mapContainerRef = useRef(null);
+  const cardRef = useRef(null);
   const oceanMarkersRef = useRef([]);
   const [activeStory, setActiveStory] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -154,6 +161,12 @@ function AnnualReportMap({ slide }) {
       .map((story) => story.research_theme)
       .filter(Boolean)
   )].sort();
+
+  useLayoutEffect(() => {
+    if (activeStory && cardRef.current) {
+      cardRef.current.scrollTop = 0;
+    }
+  }, [activeStory]);
 
   useEffect(() => {
     if (!activeStory) return undefined;
@@ -397,26 +410,146 @@ function AnnualReportMap({ slide }) {
         });
       });
 
+      const markerPlacements = new Map();
+
+      const isValidLandPosition = (center, candidate, country) => {
+        const isInsideCountry = (point) => map.queryRenderedFeatures(
+          point,
+          { layers: ['countries-fill'] },
+        ).some((feature) => feature.properties.ADMIN === country);
+
+        if (!isInsideCountry(candidate)) return false;
+
+        const distance = Math.hypot(
+          candidate[0] - center.x,
+          candidate[1] - center.y,
+        );
+        const steps = Math.ceil(distance / 4);
+
+        for (let step = 1; step < steps; step += 1) {
+          const progress = step / steps;
+          const point = [
+            center.x + (candidate[0] - center.x) * progress,
+            center.y + (candidate[1] - center.y) * progress,
+          ];
+
+          if (!isInsideCountry(point)) return false;
+        }
+
+        return true;
+      };
+
       const updateStoryPositions = () => {
-        markers.forEach(({ marker, coordinates, index }) => {
+        const placedPositions = [];
+        const minimumDistance = 20;
+        const minimumFallbackDistance = 8;
+
+        markers.forEach(({
+          marker,
+          coordinates,
+          index,
+          story,
+        }, markerIndex) => {
           const center = map.project([
             coordinates.longitude,
             coordinates.latitude,
           ]);
 
-          const angle = index * 2.39996;
-          const radius = 22 * Math.sqrt(index);
+          const nearestOtherLocation = Math.min(
+            ...markers
+              .filter(({ story: otherStory }) => (
+                otherStory.location !== story.location
+              ))
+              .map(({ coordinates: otherCoordinates }) => {
+                const otherCenter = map.project([
+                  otherCoordinates.longitude,
+                  otherCoordinates.latitude,
+                ]);
 
-          const position = map.unproject([
-            center.x + radius * Math.cos(angle),
-            center.y + radius * Math.sin(angle),
-          ]);
+                return Math.hypot(
+                  center.x - otherCenter.x,
+                  center.y - otherCenter.y,
+                );
+              }),
+          );
 
-          marker.setLngLat(position);
+          const maxDisplacement = Math.min(60, nearestOtherLocation * 0.65);
+          const fallbackLimit = Math.max(maxDisplacement, 12);
+          const existingPlacement = markerPlacements.get(marker);
+
+          let preferredCandidate = null;
+          let fallbackCandidate = null;
+          let fallbackClearance = -1;
+          let bestCandidate = null;
+          let bestClearance = -1;
+
+          for (let attempt = 0; attempt < 200; attempt += 1) {
+            const angle = existingPlacement
+              ? existingPlacement.angle
+              : (index + attempt) * 2.39996;
+            const radius = attempt * 0.4;
+
+            if (radius > fallbackLimit) break;
+
+            const candidateX = center.x + radius * Math.cos(angle);
+            const candidateY = center.y + radius * Math.sin(angle);
+
+            if (!isValidLandPosition(
+              center,
+              [candidateX, candidateY],
+              story.country,
+            )) continue;
+
+            const clearance = placedPositions.length
+              ? Math.min(...placedPositions.map(([px, py]) => (
+                Math.hypot(candidateX - px, candidateY - py)
+              )))
+              : Infinity;
+
+            if (clearance > bestClearance) {
+              bestClearance = clearance;
+              bestCandidate = [candidateX, candidateY];
+            }
+
+            if (
+              radius <= maxDisplacement &&
+              clearance >= minimumDistance
+            ) {
+              preferredCandidate = [candidateX, candidateY];
+              break;
+            }
+
+            if (
+              clearance >= minimumFallbackDistance &&
+              clearance > fallbackClearance
+            ) {
+              fallbackCandidate = [candidateX, candidateY];
+              fallbackClearance = clearance;
+            }
+          }
+
+          const [x, y] = preferredCandidate
+            || fallbackCandidate
+            || bestCandidate
+            || [center.x, center.y];
+
+          if (!existingPlacement) {
+            const dx = x - center.x;
+            const dy = y - center.y;
+
+            markerPlacements.set(marker, {
+              angle: Math.hypot(dx, dy) > 0.01
+                ? Math.atan2(dy, dx)
+                : markerIndex * 2.39996,
+            });
+          }
+
+          placedPositions.push([x, y]);
+          marker.setLngLat(map.unproject([x, y]));
         });
       };
 
-      updateStoryPositions();
+      map.once('idle', updateStoryPositions);
       map.on('zoomend', updateStoryPositions);
     });
 
@@ -592,7 +725,7 @@ function AnnualReportMap({ slide }) {
             &times;
           </button>
 
-          <div className="map-card">
+          <div className="map-card" ref={cardRef}>
             {activeStory.research_theme && (
               <div className={`map-card-theme ${themeClasses[activeStory.research_theme] || ''}`}>
                 {activeStory.research_theme}
