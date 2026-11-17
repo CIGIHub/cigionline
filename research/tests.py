@@ -2,7 +2,10 @@ from core.models import BasicPage
 from wagtail.models import Page
 from articles.models import ArticlePage, ArticleTypePage
 from django.contrib.auth.models import User
+from django.core.management import call_command
+from django.utils import timezone
 from home.models import HomePage, Think7HomePage
+from publications.models import PublicationListPage, PublicationPage, PublicationTypePage
 from django.template import Context, Template
 from wagtail.test.utils import WagtailPageTestCase
 from wagtail.test.utils.form_data import nested_form_data
@@ -136,6 +139,40 @@ class TopicPageTests(WagtailPageTestCase):
             TopicPage,
             {},
         )
+
+
+class ConsolidateTopicsTests(WagtailPageTestCase):
+    def test_program_topic_backfill_is_dry_run_then_idempotent(self):
+        home = HomePage.objects.get()
+        projects = home.add_child(instance=ProjectListPage(
+            title='Programs', slug='programs'))
+        program = projects.add_child(instance=ProjectPage(
+            title='Next-Generation Economies: Middle Powers in a Changing World',
+            slug='next-generation-economies',
+            publishing_date=timezone.now(),
+        ))
+        topics = home.add_child(instance=TopicListPage(title='Topics', slug='topics'))
+        topic = topics.add_child(instance=TopicPage(
+            title='India, China and Africa', slug='india-china-and-africa'))
+        publications = home.add_child(instance=PublicationListPage(
+            title='Publications', slug='publications'))
+        publication_type = publications.add_child(instance=PublicationTypePage(
+            title='Policy Brief', slug='policy-brief'))
+        publication = publications.add_child(instance=PublicationPage(
+            title='A Current Brief',
+            slug='current-brief',
+            publishing_date=timezone.now(),
+            publication_type=publication_type,
+        ))
+        publication.projects.add(program)
+        publication.save()
+
+        call_command('consolidate_topics')
+        self.assertFalse(publication.topics.filter(pk=topic.pk).exists())
+
+        call_command('consolidate_topics', '--apply')
+        call_command('consolidate_topics', '--apply')
+        self.assertEqual(publication.topics.filter(pk=topic.pk).count(), 1)
 
 
 class HighlightedTopicsTests(WagtailPageTestCase):

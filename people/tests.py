@@ -1,10 +1,13 @@
+import csv
+import io
 import shutil
 import tempfile
 
-from core.models import BasicPage
+from core.models import BasicPage, ContentPageAuthor
 from django.contrib.auth.models import User
 from django.test import override_settings
 from home.models import HomePage, Think7HomePage
+from publications.models import PublicationListPage, PublicationPage, PublicationTypePage
 from wagtail.images import get_image_model
 from wagtail.images.tests.utils import get_test_image_file
 from wagtail.rich_text import RichText
@@ -210,3 +213,31 @@ class PersonPageProfileRailTests(WagtailPageTestCase):
         self.assertEqual(self.get(person).context['experts_cfg']['surface'], 'dark')
         bare = self.make_person('no-bio-bare', ['Staff'], bio=False)
         self.assertEqual(self.get(bare).context['experts_cfg']['surface'], 'light')
+
+
+class FellowsLatestOutputTests(WagtailPageTestCase):
+    def test_csv_lists_fellows_and_their_latest_output(self):
+        home = HomePage.objects.get()
+        people = home.add_child(instance=PeoplePage(title='People', slug='people'))
+        fellow = people.add_child(instance=PersonPage(
+            title='Ada Fellow', slug='ada-fellow', position='Senior Fellow'))
+
+        publications = home.add_child(instance=PublicationListPage(
+            title='Publications', slug='publications'))
+        publication_type = publications.add_child(instance=PublicationTypePage(
+            title='Policy Brief', slug='policy-brief'))
+        publication = publications.add_child(instance=PublicationPage(
+            title='A Current Brief',
+            slug='current-brief',
+            publishing_date='2026-10-01T12:00:00Z',
+            publication_type=publication_type,
+        ))
+        ContentPageAuthor.objects.create(content_page=publication, author=fellow)
+
+        response = self.client.get('/api/fellows-latest-output')
+        rows = list(csv.reader(io.StringIO(response.content.decode('utf-8-sig'))))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Disposition'], 'attachment; filename="fellows_latest.csv"')
+        self.assertEqual(rows[1], [
+            'Ada Fellow', '1', '2026-10-01', 'Publication', 'Policy Brief', 'Senior Fellow'])

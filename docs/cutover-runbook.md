@@ -68,7 +68,7 @@ without it. Run the dry run first and read the output.
 | 2 | `seed_homepage --apply` | Default homepage layout. Skips a homepage that already has a body. |
 | 3 | `seed_listing_pages --apply` | Default layouts for Events, Experts, Annual Reports, Opinions. |
 | 4 | `seed_net_new_programs` | Creates the 4 new program pages as drafts and links them to themes. No dry run. |
-| 5 | `consolidate_topics --apply` | 26 topics to 17: 4 renames, 9 merges, redirects. Cannot be undone without the backup. |
+| 5 | `consolidate_topics --apply` | 26 topics to 17: 4 renames, 9 merges, redirects, and the production “India, China and Africa” program-topic backfill. Cannot be undone without the backup. |
 | 6 | `update_expert_topics` | Fills expertise topics on people. No dry run. Schedule it weekly (Heroku Scheduler). |
 | 7 | `clear_dph_publication_themes --apply` | Required: DPH working papers use the new design. |
 | 8 | `backfill_programs --pages research/data/program-backfill-pages.csv --apply` | Only after CIGI approves the program mapping. Save the reversal CSV it writes: Heroku deletes it when the command ends. |

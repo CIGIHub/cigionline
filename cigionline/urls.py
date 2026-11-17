@@ -14,6 +14,7 @@ from search import views as search_views
 from events import views as events_views
 from articles import views as article_views
 from annual_reports import views as annual_report_views
+from publications import views as publications_views
 from subscribe.views import (
     subscribe_digital_finance,
     subscribe_dph,
@@ -48,6 +49,8 @@ urlpatterns = urlpatterns + [
     re_path(r'^api/experts/$', people_views.all_experts),
     re_path(r'^api/expertise/$', people_views.all_expertise),
     re_path(r'^api/all_experts_search/$', people_views.all_experts_search),
+    path('api/fellows-latest-output', people_views.fellows_latest_output, name='fellows_latest_output'),
+    path('api/publications-by-type', publications_views.publications_by_type, name='publications_by_type'),
     re_path(r'^api/search/$', search_views.search_api),
     re_path(r'^api/staff/$', people_views.all_staff),
     re_path(r'^api/topics/$', research_views.all_topics),
