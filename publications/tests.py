@@ -1,4 +1,6 @@
+import csv
 import importlib
+import io
 import shutil
 import tempfile
 
@@ -53,6 +55,31 @@ class PublicationPageTests(WagtailPageTestCase):
             PublicationPage,
             {},
         )
+
+
+class PublicationsByTypeTests(WagtailPageTestCase):
+    def test_csv_lists_live_publications(self):
+        home = HomePage.objects.get()
+        publications = home.add_child(instance=PublicationListPage(
+            title='Publications', slug='publications'))
+        publication_type = publications.add_child(instance=PublicationTypePage(
+            title='Policy Brief', slug='policy-brief'))
+        publication = publications.add_child(instance=PublicationPage(
+            title='A Current Brief',
+            slug='current-brief',
+            publishing_date='2026-10-01T12:00:00Z',
+            publication_type=publication_type,
+        ))
+
+        response = self.client.get('/api/publications-by-type')
+        rows = list(csv.reader(io.StringIO(response.content.decode('utf-8-sig'))))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Disposition'], 'attachment; filename="publications.csv"')
+        self.assertEqual(rows[0], [
+            'title', 'publishing_date', 'url', 'publication_type', 'pdf_downloads'])
+        self.assertEqual(rows[1][0], 'A Current Brief')
+        self.assertEqual(rows[1][3:], ['Policy Brief', ''])
 
 
 class PublicationSeriesListPageTests(WagtailPageTestCase):

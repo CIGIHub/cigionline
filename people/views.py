@@ -1,14 +1,72 @@
-from core.models import ArchiveablePageAbstract
+import csv
+from datetime import date
+
+from core.models import ArchiveablePageAbstract, ContentPage
 from django.contrib.postgres.lookups import Unaccent
+from django.db.models import Q
 from django.db.models.functions import Lower
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.core.cache import cache
+from django.views.decorators.http import require_GET
 
 from .models import PersonPage
 from .search import experts_search
 from .search_expert import expert_latest_activity_search
 
 EXPERTS_API_CACHE_TIMEOUT = 86400
+
+
+@require_GET
+def fellows_latest_output(request):
+    fellows = PersonPage.objects.live().filter(
+        archive=ArchiveablePageAbstract.ArchiveStatus.UNARCHIVED,
+        position__icontains='Fellow',
+    ).order_by('title')
+
+    response = HttpResponse(content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = 'attachment; filename="fellows_latest.csv"'
+    response.write('\ufeff')
+    writer = csv.writer(response)
+    writer.writerow([
+        'Fellow',
+        'Total Published Last Fiscal',
+        'Latest Publishing Date',
+        'Content Type',
+        'Content Subtype',
+        'Position',
+    ])
+
+    for fellow in fellows:
+        published_content = (
+            ContentPage.objects.live()
+            .filter(
+                Q(authors__author=fellow)
+                | Q(articlepage__cigi_people_mentioned__person=fellow)
+            )
+            .exclude(publishing_date__isnull=True)
+            .distinct()
+            .order_by('-publishing_date')
+        )
+        most_recent = published_content.first()
+
+        if most_recent:
+            try:
+                content_subtype = most_recent.contentsubtype
+            except AttributeError:
+                content_subtype = ''
+
+            writer.writerow([
+                fellow.title,
+                published_content.filter(publishing_date__date__gte=date(2025, 8, 1)).count(),
+                most_recent.publishing_date.date().isoformat(),
+                most_recent.contenttype,
+                content_subtype,
+                fellow.position,
+            ])
+        else:
+            writer.writerow([fellow.title, 0, '', '', '', ''])
+
+    return response
 
 
 def all_experts(request):

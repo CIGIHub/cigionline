@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
 from wagtail.contrib.redirects.models import Redirect
+from wagtail.models import Page
 
 from core.models import ContentPage
 from people.models import PersonPage
@@ -32,6 +33,11 @@ MERGES = [
     ('Surveillance', 'Privacy'),
 ]
 
+PROGRAM_TOPIC_BACKFILL = (
+    'Next-Generation Economies: Middle Powers in a Changing World',
+    'India, China and Africa',
+)
+
 
 class Command(BaseCommand):
     help = (
@@ -47,6 +53,7 @@ class Command(BaseCommand):
         self.stdout.write(f"== Topic consolidation ({'APPLY' if self.apply else 'DRY RUN'}) ==")
         self.do_renames()
         self.do_merges()
+        self.backfill_program_topic()
         if self.apply:
             self.stdout.write('Done. Run `manage.py update_index` to refresh search.')
         else:
@@ -127,3 +134,30 @@ class Command(BaseCommand):
                 loser.archive = 1
                 loser.save()
                 loser.unpublish()
+
+    def backfill_program_topic(self):
+        program_title, topic_title = PROGRAM_TOPIC_BACKFILL
+        program_pk = (
+            Page.objects.filter(
+                title=program_title,
+                content_type__app_label='research',
+                content_type__model='projectpage',
+            )
+            .values_list('pk', flat=True)
+            .first()
+        )
+        topic = TopicPage.objects.filter(title=topic_title).first()
+        if not program_pk or not topic:
+            self.stderr.write(
+                f'program topic: skip ({program_title if not program_pk else topic_title} NOT FOUND)'
+            )
+            return
+
+        pages = ContentPage.objects.filter(projects__pk=program_pk).exclude(topics=topic)
+        self.stdout.write(
+            f'program topic: {program_title} -> {topic_title}: {pages.count()} content pages'
+        )
+        if self.apply:
+            for page in pages:
+                page.topics.add(topic)
+                page.save()
