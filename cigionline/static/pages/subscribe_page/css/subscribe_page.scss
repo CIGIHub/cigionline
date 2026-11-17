@@ -85,6 +85,32 @@ hr {
 .social-links {
   @include link($color: $black, $hover-color: $cigi-primary-colour);
   margin-bottom: 6em;
+
+  a {
+    margin-right: 0.5rem;
+
+    &:hover {
+      svg {
+        fill: $cigi-primary-colour;
+      }
+
+      i {
+        color: $cigi-primary-colour;
+      }
+    }
+
+    i {
+      transition: color 0.2s ease;
+    }
+
+    svg {
+      width: 1.15rem;
+      height: 1.15rem;
+      fill: $black;
+      margin-bottom: 0.3rem;
+      transition: fill 0.2s ease;
+    }
+  }
 }
 
 h2 {

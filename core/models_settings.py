@@ -159,6 +159,16 @@ class FooterSettings(BaseSiteSetting):
     instagram_url = models.URLField(blank=True, default='https://www.instagram.com/cigionline/', verbose_name='Instagram URL')
     substack_url = models.URLField(blank=True, default='https://cigionlineorg.substack.com/', verbose_name='Substack URL')
     medium_url = models.URLField(blank=True, default='https://medium.com/centre-for-international-governance-innovation', verbose_name='Medium URL')
+    apple_podcasts_url = models.URLField(
+        blank=True,
+        default='https://podcasts.apple.com/ca/podcast/policy-prompt/id1766773261',
+        verbose_name='Apple Podcasts URL',
+    )
+    spotify_url = models.URLField(
+        blank=True,
+        default='https://open.spotify.com/show/2ta9ZymSqzJpoHdy59kLSd',
+        verbose_name='Spotify URL',
+    )
 
     panels = [
         FieldPanel('logo'),
@@ -180,6 +190,8 @@ class FooterSettings(BaseSiteSetting):
                 FieldPanel('instagram_url'),
                 FieldPanel('substack_url'),
                 FieldPanel('medium_url'),
+                FieldPanel('apple_podcasts_url'),
+                FieldPanel('spotify_url'),
             ],
             heading='Social links',
         ),
