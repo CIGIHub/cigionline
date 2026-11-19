@@ -290,7 +290,7 @@ function AnnualReportMap({ slide }) {
           },
         ],
       },
-      center: [0, 20],
+      center: [-80, 20],
       zoom: initialZoom,
       minZoom: initialZoom,
       maxZoom: 5,
