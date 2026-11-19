@@ -245,6 +245,26 @@ function AnnualReportMap({ slide }) {
   }, [activeStory]);
 
   useEffect(() => {
+    const handleOutsideHubClick = (event) => {
+      if (event.target.closest('.map-city-hub')) return;
+
+      cityHubMarkersRef.current.forEach(({ element }) => {
+        element.classList.remove('is-expanded');
+      });
+
+      highlightMarkersRef.current.forEach(({ element }) => {
+        element.classList.remove('is-dimmed');
+      });
+    };
+
+    document.addEventListener('click', handleOutsideHubClick);
+
+    return () => {
+      document.removeEventListener('click', handleOutsideHubClick);
+    };
+  }, []);
+
+  useEffect(() => {
     if (!mapContainerRef.current) return undefined;
 
     let highlightAnimation = null;
@@ -467,6 +487,15 @@ function AnnualReportMap({ slide }) {
           element.addEventListener('click', (event) => {
             event.stopPropagation();
             tooltip.remove();
+
+            cityHubMarkersRef.current.forEach(({ element: hubElement }) => {
+              hubElement.classList.remove('is-expanded');
+            });
+
+            markers.forEach(({ element: storyElement }) => {
+              storyElement.classList.remove('is-dimmed');
+            });
+
             setActiveStory(story);
 
             map.easeTo({
@@ -628,8 +657,6 @@ function AnnualReportMap({ slide }) {
         });
       });
 
-      const markerPlacements = new Map();
-
       const isValidLandPosition = (center, candidate, country) => {
         const isInsideCountry = (point) => map.queryRenderedFeatures(
           point,
@@ -661,8 +688,7 @@ function AnnualReportMap({ slide }) {
 
       const updateStoryPositions = () => {
         const placedPositions = [];
-        const minimumDistance = 20;
-        const minimumFallbackDistance = 8;
+        const minimumDistance = 15;
 
         const hubs = cityHubMarkersRef.current.map(({ hub, element, group }) => {
           const coordinates = group[0].coordinates || countries[group[0].country];
@@ -743,8 +769,7 @@ function AnnualReportMap({ slide }) {
               }),
           );
 
-          const maxDisplacement = Math.min(60, nearestOtherLocation * 0.65);
-          const fallbackLimit = Math.max(maxDisplacement, 12);
+          const maxDisplacement = Math.min(40, nearestOtherLocation * 0.65);
           const searchRadius = Math.max(35, maxDisplacement);
 
           const futurePositions = markers
