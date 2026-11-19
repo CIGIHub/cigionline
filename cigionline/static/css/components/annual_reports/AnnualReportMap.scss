@@ -380,10 +380,15 @@ body:has(.annual-report-map) {
   background-color: $cigi-primary-colour;
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
 
-  &:hover {
+    &:hover {
     background-color: $cigi-light-pink;
     box-shadow: 0 0 8px rgba($cigi-primary-colour, 0.8);
   }
+}
+
+.map-story-node:not(.map-city-hub-story) .map-story-node-circle {
+  width: 14px;
+  height: 14px;
 }
 
 .map-story-panel {
@@ -775,7 +780,7 @@ body:has(.annual-report-map) {
   font-size: 0.6rem;
   font-weight: 600;
   box-sizing: border-box;
-  transition: background-color 200ms ease;
+  transition: filter 200ms ease;
   position: relative;
 
   .map-city-hub-info {
@@ -801,7 +806,7 @@ body:has(.annual-report-map) {
   }
 
   &:hover {
-    background-color: $cigi-dark-pink;
+    filter: brightness(2);
 
     .map-city-hub-info {
       opacity: 1;

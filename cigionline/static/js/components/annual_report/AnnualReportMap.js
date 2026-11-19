@@ -688,7 +688,7 @@ function AnnualReportMap({ slide }) {
 
       const updateStoryPositions = () => {
         const placedPositions = [];
-        const minimumDistance = 15;
+        const minimumDistance = 12;
 
         const hubs = cityHubMarkersRef.current.map(({ hub, element, group }) => {
           const coordinates = group[0].coordinates || countries[group[0].country];
@@ -718,7 +718,7 @@ function AnnualReportMap({ slide }) {
             const dx = b.x - a.x;
             const dy = b.y - a.y;
             const distance = Math.hypot(dx, dy);
-            const requiredDistance = a.radius + b.radius + 10;
+            const requiredDistance = a.radius + b.radius;
 
             if (distance >= requiredDistance) continue;
 
@@ -754,7 +754,10 @@ function AnnualReportMap({ slide }) {
           const nearestOtherLocation = Math.min(
             ...markers
               .filter(({ story: otherStory }) => (
-                otherStory.location !== story.location
+                otherStory.location !== story.location &&
+                !cityHubLocations.has(
+                  otherStory.location.split(',')[0].trim().toLowerCase()
+                )
               ))
               .map(({ coordinates: otherCoordinates }) => {
                 const otherCenter = map.project([
@@ -769,8 +772,8 @@ function AnnualReportMap({ slide }) {
               }),
           );
 
-          const maxDisplacement = Math.min(40, nearestOtherLocation * 0.65);
-          const searchRadius = Math.max(35, maxDisplacement);
+          const maxDisplacement = Math.min(25, nearestOtherLocation * 0.4);
+          const searchRadius = Math.max(12, maxDisplacement);
 
           const futurePositions = markers
             .slice(markerIndex + 1)
@@ -845,9 +848,9 @@ function AnnualReportMap({ slide }) {
               // Hub overlap carries the highest penalty.
               // Story overlap is softer; displacement is the final consideration.
               const score =
-                Math.max(0, hubOverlap) * 1000
-                + placedOverlap * 10
-                + futureOverlap * 3
+                Math.max(0, hubOverlap) * 15
+                + placedOverlap * 6
+                + futureOverlap * 2
                 + radius * 0.5;
 
               if (score < bestScore) {
@@ -860,6 +863,107 @@ function AnnualReportMap({ slide }) {
           placedPositions.push(bestCandidate);
           marker.setLngLat(map.unproject(bestCandidate));
         });
+
+        // Refine placements using the actual positions of all story nodes.
+        // Multiple passes allow earlier nodes to adjust around later ones.
+        for (let pass = 0; pass < 3; pass += 1) {
+          markers.forEach(({ marker, coordinates, story }) => {
+            const center = map.project([
+              coordinates.longitude,
+              coordinates.latitude,
+            ]);
+
+            const current = map.project(marker.getLngLat());
+
+            const otherPositions = markers
+              .filter(({ marker: otherMarker }) => otherMarker !== marker)
+              .map(({ marker: otherMarker, story: otherStory }) => ({
+                position: map.project(otherMarker.getLngLat()),
+                sameLocation: otherStory.location === story.location,
+              }));
+
+            const nearestOtherLocation = Math.min(
+              ...markers
+                .filter(({ story: otherStory }) => (
+                  otherStory.location !== story.location
+                ))
+                .map(({ coordinates: otherCoordinates }) => {
+                  const otherCenter = map.project([
+                    otherCoordinates.longitude,
+                    otherCoordinates.latitude,
+                  ]);
+
+                  return Math.hypot(
+                    center.x - otherCenter.x,
+                    center.y - otherCenter.y
+                  );
+                })
+            );
+
+            const maxDisplacement = Math.min(25, nearestOtherLocation * 0.4);
+            const searchRadius = Math.max(12, maxDisplacement);
+
+            let bestCandidate = [current.x, current.y];
+            let bestScore = Infinity;
+
+            for (let radius = 0; radius <= searchRadius; radius += 3) {
+              const angleCount = radius === 0 ? 1 : 24;
+
+              for (let step = 0; step < angleCount; step += 1) {
+                const angle = (step / angleCount) * Math.PI * 2;
+                const candidate = [
+                  center.x + radius * Math.cos(angle),
+                  center.y + radius * Math.sin(angle),
+                ];
+
+                if (
+                  !story.location.toLowerCase().includes('waterloo') &&
+                  !isValidLandPosition(center, candidate, story.country)
+                ) continue;
+
+                const hubOverlap = hubObstacles.reduce(
+                  (maximum, { center: hubCenter, radius: hubRadius }) => {
+                    const distance = Math.hypot(
+                      candidate[0] - hubCenter.x,
+                      candidate[1] - hubCenter.y
+                    );
+
+                    return Math.max(maximum, hubRadius + 10 - distance);
+                  },
+                  0
+                );
+
+                const nodeOverlap = otherPositions.reduce(
+                  (total, { position, sameLocation }) => {
+                    const distance = Math.hypot(
+                      candidate[0] - position.x,
+                      candidate[1] - position.y
+                    );
+
+                    const overlap = Math.max(0, minimumDistance - distance);
+
+                    return total + overlap * (sameLocation ? 0.2 : 1);
+                  },
+                  0
+                );
+
+                const score =
+                  Math.max(0, hubOverlap) * (
+                    story.location.toLowerCase().includes('waterloo') ? 8 : 15
+                  )
+                  + nodeOverlap * 6
+                  + radius * 0.5;
+
+                if (score < bestScore) {
+                  bestScore = score;
+                  bestCandidate = candidate;
+                }
+              }
+            }
+
+            marker.setLngLat(map.unproject(bestCandidate));
+          });
+        }
       };
 
       map.once('idle', () => {
