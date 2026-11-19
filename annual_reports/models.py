@@ -12,6 +12,7 @@ from django.db import models
 from django.shortcuts import render, redirect
 from django.utils.text import slugify
 from geopy.geocoders import Nominatim
+from geopy.exc import GeopyError
 from mediavalet.panels import MediaValetImageChooserPanel
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
@@ -847,35 +848,9 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                     ],
                 })
 
-            countries = {}
-
-            geolocator = Nominatim(user_agent='cigi-ar-map')
-
-            for story in map_stories:
-                country = story['country']
-
-                if country not in countries:
-                    cache_key = f'geocode:country:{country.lower()}'
-                    coordinates = cache.get(cache_key)
-
-                    if coordinates is None:
-                        location = geolocator.geocode(country, featuretype='country')
-
-                        if not location:
-                            continue
-
-                        coordinates = {
-                            'latitude': location.latitude,
-                            'longitude': location.longitude,
-                        }
-
-                        cache.set(cache_key, coordinates, 60 * 60 * 24 * 30)
-
-                    countries[country] = coordinates
-
             content = {
                 'map_stories': map_stories,
-                'countries': countries,
+                'countries': {},
             }
         return content
 
@@ -1181,6 +1156,10 @@ class MapStory(ClusterableModel):
         verbose_name='Story Date',
     )
     location = models.CharField(max_length=255)
+
+    latitude = models.FloatField(null=True, blank=True, editable=False)
+    longitude = models.FloatField(null=True, blank=True, editable=False)
+
     research_theme = models.ForeignKey(
         'research.ThemePage',
         null=True,
@@ -1196,39 +1175,58 @@ class MapStory(ClusterableModel):
         use_json_field=True,
     )
 
+    def save(self, *args, **kwargs):
+        location_text = self.location.strip() if self.location else ''
+
+        if self.pk:
+            previous_location = (
+                type(self).objects
+                .filter(pk=self.pk)
+                .values_list('location', flat=True)
+                .first()
+            )
+            location_changed = previous_location != self.location
+        else:
+            location_changed = True
+
+        if location_changed or self.latitude is None or self.longitude is None:
+            if location_changed:
+                self.latitude = None
+                self.longitude = None
+
+            if location_text:
+                request_allowed = cache.add(
+                    'geocode:nominatim:request-slot',
+                    True,
+                    timeout=2,
+                )
+
+                if request_allowed:
+                    try:
+                        geolocator = Nominatim(
+                            user_agent='cigi-ar-map',
+                            timeout=10,
+                        )
+                        result = geolocator.geocode(location_text)
+
+                        if result:
+                            self.latitude = result.latitude
+                            self.longitude = result.longitude
+
+                    except GeopyError:
+                        pass
+
+        super().save(*args, **kwargs)
+
     @property
     def coordinates(self):
-        if not self.location:
+        if self.latitude is None or self.longitude is None:
             return None
 
-        location_text = self.location.strip()
-        cache_key = f'geocode:{location_text.lower()}'
-
-        sentinel = object()
-        cached = cache.get(cache_key, sentinel)
-
-        if cached is not sentinel:
-            return cached
-
-        geolocator = Nominatim(user_agent='your-site-name')
-        location = geolocator.geocode(location_text)
-
-        if not location:
-            cache.set(cache_key, None, 60 * 60 * 24)
-            return None
-
-        coordinates = {
-            'latitude': location.latitude,
-            'longitude': location.longitude,
+        return {
+            'latitude': self.latitude,
+            'longitude': self.longitude,
         }
-
-        cache.set(
-            cache_key,
-            coordinates,
-            60 * 60 * 24 * 30,
-        )
-
-        return coordinates
 
     panels = [
         FieldPanel('title'),
