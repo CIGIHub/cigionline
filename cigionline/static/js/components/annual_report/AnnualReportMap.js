@@ -564,6 +564,13 @@ function AnnualReportMap({ slide }) {
 
         element.addEventListener('mouseenter', () => {
           clearTimeout(collapseTimer);
+
+          cityHubMarkersRef.current.forEach(({ element: otherElement }) => {
+            if (otherElement !== element) {
+              otherElement.classList.remove('is-expanded');
+            }
+          });
+
           element.classList.add('is-expanded');
 
           markers.forEach(({ element: storyElement }) => {
@@ -588,7 +595,12 @@ function AnnualReportMap({ slide }) {
                 storyElement.classList.remove('is-dimmed');
               });
             }
-          }, 500);
+          }, Math.min(1400, Math.max(
+            650,
+            500 + (
+              cityHubNodes.filter(({ node }) => node.style.display !== 'none').length - 7
+            ) * 112.5
+          )));
         });
 
         element.addEventListener('click', (event) => {
