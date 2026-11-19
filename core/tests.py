@@ -1,10 +1,12 @@
 import datetime
+from types import SimpleNamespace
 from xml.etree import ElementTree
 
 from django import forms
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
+from django.template.loader import render_to_string
 from django.utils import timezone
 from articles.models import ArticleListPage, ArticlePage, ArticleTypePage
 from annual_reports.models import AnnualReportListPage
@@ -233,6 +235,24 @@ class LatestContentFeedTests(WagtailPageTestCase):
 
 
 class BasicPageTests(WagtailPageTestCase):
+    def test_related_file_icons_match_document_type(self):
+        for filename, icon in (
+            ('report.pdf', 'fa-file-pdf'),
+            ('report.doc', 'fa-file-word'),
+            ('report.DOCX', 'fa-file-word'),
+            ('slides.ppt', 'fa-file-powerpoint'),
+            ('slides.PPTX', 'fa-file-powerpoint'),
+            ('files.ZIP', 'fa-file-zipper'),
+        ):
+            with self.subTest(filename=filename):
+                document = SimpleNamespace(url=filename, title='Report', file_size=1)
+                html = render_to_string(
+                    'includes/core_related_files_table.html',
+                    {'file_blocks': [SimpleNamespace(value=document)]},
+                )
+
+                self.assertIn(icon, html)
+
     def test_body_includes_interactive_chart(self):
         body = BasicPage._meta.get_field('body')
 
