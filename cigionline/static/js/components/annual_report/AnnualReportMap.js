@@ -966,6 +966,15 @@ function AnnualReportMap({ slide }) {
         }
       };
 
+      map.on('zoom', () => {
+        const zoomDifference = Math.max(0, map.getZoom() - initialZoom);
+        const scale = Math.min(1.8, 1 + zoomDifference * 0.2);
+
+        markers.forEach(({ element }) => {
+          element.style.setProperty('--story-zoom-scale', scale);
+        });
+      });
+
       map.once('idle', () => {
         updateStoryPositions();
 

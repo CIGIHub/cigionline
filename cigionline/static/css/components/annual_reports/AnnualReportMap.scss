@@ -387,6 +387,14 @@ body:has(.annual-report-map) {
 }
 
 .map-story-node:not(.map-city-hub-story) .map-story-node-circle {
+  transform: scale(var(--story-zoom-scale, 1));
+  transition:
+    transform 200ms ease,
+    background-color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.map-story-node:not(.map-city-hub-story) .map-story-node-circle {
   width: 14px;
   height: 14px;
 }
