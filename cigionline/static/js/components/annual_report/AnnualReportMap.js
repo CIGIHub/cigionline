@@ -157,6 +157,7 @@ function AnnualReportMap({ slide }) {
   const [hasMoreDescription, setHasMoreDescription] = useState(false);
   const oceanMarkersRef = useRef([]);
   const [activeStory, setActiveStory] = useState(null);
+  const [hasInteractedWithMap, setHasInteractedWithMap] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTheme, setSelectedTheme] = useState('');
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
@@ -182,6 +183,41 @@ function AnnualReportMap({ slide }) {
   useLayoutEffect(() => {
     if (activeStory && cardRef.current) {
       cardRef.current.scrollTop = 0;
+    }
+  }, [activeStory]);
+
+  useEffect(() => {
+    cityHubMarkersRef.current.forEach(({ element, group }) => {
+      const hasActiveStory = activeStory && group.includes(activeStory);
+
+      if (!hasActiveStory) {
+        element.classList.remove('is-pinned');
+
+        if (!element.matches(':hover')) {
+          element.classList.remove('is-expanded');
+        }
+      }
+    });
+
+    const pinnedHub = cityHubMarkersRef.current.find(
+      ({ element }) => element.classList.contains('is-pinned')
+    );
+
+    cityHubMarkersRef.current.forEach(({ element }) => {
+      element.classList.toggle(
+        'is-blocked',
+        Boolean(pinnedHub && pinnedHub.element !== element)
+      );
+    });
+
+    const anyHubExpanded = cityHubMarkersRef.current.some(
+      ({ element }) => element.classList.contains('is-expanded')
+    );
+
+    if (!anyHubExpanded) {
+      mapContainerRef.current
+        ?.querySelectorAll('.map-story-node.is-dimmed')
+        .forEach((element) => element.classList.remove('is-dimmed'));
     }
   }, [activeStory]);
 
@@ -305,6 +341,20 @@ function AnnualReportMap({ slide }) {
       }),
       'top-right'
     );
+
+    const hideMapTitle = () => {
+      setHasInteractedWithMap(true);
+    };
+
+    const hideMapTitleOnGesture = (event) => {
+      if (event.originalEvent) {
+        hideMapTitle();
+      }
+    };
+
+    map.on('zoomstart', hideMapTitleOnGesture);
+    map.on('dragstart', hideMapTitleOnGesture);
+    map.on('click', hideMapTitle);
 
     map.on('load', () => {
       map.addSource('countries', {
@@ -487,6 +537,7 @@ function AnnualReportMap({ slide }) {
           element.addEventListener('click', (event) => {
             event.stopPropagation();
             tooltip.remove();
+            setHasInteractedWithMap(true);
 
             cityHubMarkersRef.current.forEach(({ element: hubElement }) => {
               hubElement.classList.remove('is-expanded');
@@ -577,6 +628,8 @@ function AnnualReportMap({ slide }) {
 
           node.addEventListener('click', (event) => {
             event.stopPropagation();
+            setHasInteractedWithMap(true);
+            element.classList.add('is-pinned');
             setActiveStory(story);
 
             map.easeTo({
@@ -593,6 +646,16 @@ function AnnualReportMap({ slide }) {
 
         element.addEventListener('mouseenter', () => {
           clearTimeout(collapseTimer);
+
+          const anotherHubPinned = cityHubMarkersRef.current.some(
+            ({ element: otherElement }) => (
+              otherElement !== element && otherElement.classList.contains('is-pinned')
+            )
+          );
+
+          element.classList.toggle('is-blocked', anotherHubPinned);
+
+          if (anotherHubPinned) return;
 
           cityHubMarkersRef.current.forEach(({ element: otherElement }) => {
             if (otherElement !== element) {
@@ -611,7 +674,7 @@ function AnnualReportMap({ slide }) {
           clearTimeout(collapseTimer);
 
           collapseTimer = setTimeout(() => {
-            if (element.matches(':hover')) return;
+            if (element.matches(':hover') || element.classList.contains('is-pinned')) return;
 
             element.classList.remove('is-expanded');
 
@@ -1113,6 +1176,19 @@ function AnnualReportMap({ slide }) {
         transition: { duration: 0.5, ease: 'easeInOut' },
       } : false}
     >
+      <div className={`annual-report-slide map-title-overlay${hasInteractedWithMap ? ' is-hidden' : ''}`}>
+        <div className="ar-slide-content regular-slide standard">
+          <div className="container">
+            <div className="row">
+              <div className="col">
+                <div className="slide-title">
+                  <h1>{slide.title}</h1>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="annual-report-map-controls">
         <div className="map-search-input">
           <input
