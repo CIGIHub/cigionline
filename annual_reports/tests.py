@@ -80,3 +80,25 @@ class AnnualReportSlidesAPITests(SimpleTestCase):
         disabled_slide = json.loads(disabled_response.content)["slides"][0]
         self.assertEqual(default_slide["background_gradient_position"], "right")
         self.assertEqual(disabled_slide["background_gradient_position"], "none")
+
+    def test_fund_balances_include_donations(self):
+        slide = AnnualReportSlidePage(
+            id=3,
+            slide_type="financials",
+            ar_slide_content=[
+                (
+                    "fund_balances",
+                    {
+                        "amounts": {
+                            "year_current": {"donations": "1,000"},
+                            "year_previous": {"donations": "500"},
+                        },
+                    },
+                ),
+            ],
+        )
+
+        fund_balances = slide.get_annual_report_slide_content()["tabs"][0]
+
+        self.assertEqual(fund_balances["year_current"]["donations"], "1,000")
+        self.assertEqual(fund_balances["year_previous"]["donations"], "500")

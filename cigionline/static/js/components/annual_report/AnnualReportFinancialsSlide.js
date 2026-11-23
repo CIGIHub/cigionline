@@ -96,6 +96,7 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
         lang === 'fr'
           ? 'Subventions (gouvernementales et autres)'
           : 'Government and other grants',
+      donations: lang === 'fr' ? 'Dons' : 'Donations',
       expenses: lang === 'fr' ? 'Charges' : 'Expenses',
       researchAndConferences:
         lang === 'fr' ? 'Recherche et conférences' : 'Research and conferences',
@@ -725,6 +726,23 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                         />
                         <td className="num-col">
                           {renderNumber(totalsPrevious.government_and_other_grants)}
+                        </td>
+                      </tr>
+                      <tr className="table-line-entry">
+                        <td className="text-col">{t('donations')}</td>
+                        <td
+                          className="num-col dollar-sign"
+                          aria-label="blank cell"
+                        />
+                        <td className="num-col">
+                          {renderNumber(totalsCurrent.donations)}
+                        </td>
+                        <td
+                          className="num-col dollar-sign"
+                          aria-label="blank cell"
+                        />
+                        <td className="num-col">
+                          {renderNumber(totalsPrevious.donations)}
                         </td>
                       </tr>
                       <tr className="table-line-entry">
