@@ -392,6 +392,10 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
         blank=True,
         help_text="Position of the quote",
     )
+    show_background_quote_gradient = models.BooleanField(
+        default=True,
+        help_text="Show a gradient behind the background quote",
+    )
 
     parent_page_types = ['AnnualReportSPAPage']
     subpage_types = []
@@ -427,6 +431,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                 FieldPanel("background_quote_fr"),
                 FieldPanel("background_quote_font_size_fr"),
                 FieldPanel("background_quote_position"),
+                FieldPanel("show_background_quote_gradient"),
             ],
             heading="Background",
             classname="collapsible collapsed",

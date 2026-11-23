@@ -81,7 +81,7 @@ def get_ordered_slides_annual_report(request, page_id):
             "background_quote_fr": slide.background_quote_fr,
             "background_quote_font_size_fr": slide.background_quote_font_size_fr,
             "background_quote_position": slide.background_quote_position,
-            "background_gradient_position": gradient_positions.get(slide.background_quote_position, 'left') if slide.background_quote_position else 'left',
+            "background_gradient_position": gradient_positions.get(slide.background_quote_position, 'left') if slide.show_background_quote_gradient else 'none',
             "background_colour": slide.background_colour.replace("_", "-"),
             "include_on_toc": slide.include_on_toc,
             "french_slide": slide.french_slide,
