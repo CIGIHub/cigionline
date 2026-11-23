@@ -5,6 +5,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../../css/components/annual_reports/AnnualReportsFinancialsSlide.scss';
 import { faDownload } from '@fortawesome/pro-light-svg-icons';
 
+const revenueRows = [
+  ['realizedInvestmentIncome', 'realized_investment_income'],
+  ['other', 'other'],
+  ['governmentAndOtherGrants', 'government_and_other_grants'],
+  ['donations', 'donations'],
+  ['unrealizedInvestmentGains', 'unrealized_investment_gains'],
+];
+
+const parseAmount = (value) => {
+  const amount = Number(value?.replace(/,/g, ''));
+  return value?.trim() && Number.isFinite(amount) ? amount : Number.NEGATIVE_INFINITY;
+};
+
 function AnnualReportsFinancialsSlide({ slide, lang }) {
   const navigate = useNavigate();
   const { subSlug } = useParams();
@@ -96,7 +109,7 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
         lang === 'fr'
           ? 'Subventions (gouvernementales et autres)'
           : 'Government and other grants',
-      donations: lang === 'fr' ? 'Dons' : 'Donations',
+      donations: lang === 'fr' ? 'Don' : 'Donation',
       expenses: lang === 'fr' ? 'Charges' : 'Expenses',
       researchAndConferences:
         lang === 'fr' ? 'Recherche et conférences' : 'Research and conferences',
@@ -125,6 +138,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
 
   const totalsCurrent = activeTab?.year_current || {};
   const totalsPrevious = activeTab?.year_previous || {};
+  const sortedRevenueRows = revenueRows
+    .filter(
+      ([, key]) => totalsCurrent[key]?.trim() && totalsPrevious[key]?.trim(),
+    )
+    .sort(
+      ([, keyA], [, keyB]) =>
+        parseAmount(totalsCurrent[keyB]) - parseAmount(totalsCurrent[keyA]),
+    );
 
   return (
     <div className="annual-report-slide">
@@ -683,87 +704,29 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                         />
                         <td className="num-col" aria-label="blank cell" />
                       </tr>
-                      <tr className="table-line-entry">
-                        <td className="text-col">
-                          {t('realizedInvestmentIncome')}
-                        </td>
-                        <td className="num-col dollar-sign">$</td>
-                        <td className="num-col">
-                          {renderNumber(totalsCurrent.realized_investment_income)}
-                        </td>
-                        <td className="num-col dollar-sign">$</td>
-                        <td className="num-col">
-                          {renderNumber(totalsPrevious.realized_investment_income)}
-                        </td>
-                      </tr>
-                      <tr className="table-line-entry">
-                        <td className="text-col">{t('other')}</td>
-                        <td
-                          className="num-col dollar-sign"
-                          aria-label="blank cell"
-                        />
-                        <td className="num-col">{renderNumber(totalsCurrent.other)}</td>
-                        <td
-                          className="num-col dollar-sign"
-                          aria-label="blank cell"
-                        />
-                        <td className="num-col">{renderNumber(totalsPrevious.other)}</td>
-                      </tr>
-                      <tr className="table-line-entry">
-                        <td className="text-col">
-                          {t('governmentAndOtherGrants')}
-                        </td>
-                        <td
-                          className="num-col dollar-sign"
-                          aria-label="blank cell"
-                        />
-                        <td className="num-col">
-                          {renderNumber(totalsCurrent.government_and_other_grants)}
-                        </td>
-                        <td
-                          className="num-col dollar-sign"
-                          aria-label="blank cell"
-                        />
-                        <td className="num-col">
-                          {renderNumber(totalsPrevious.government_and_other_grants)}
-                        </td>
-                      </tr>
-                      <tr className="table-line-entry">
-                        <td className="text-col">{t('donations')}</td>
-                        <td
-                          className="num-col dollar-sign"
-                          aria-label="blank cell"
-                        />
-                        <td className="num-col">
-                          {renderNumber(totalsCurrent.donations)}
-                        </td>
-                        <td
-                          className="num-col dollar-sign"
-                          aria-label="blank cell"
-                        />
-                        <td className="num-col">
-                          {renderNumber(totalsPrevious.donations)}
-                        </td>
-                      </tr>
-                      <tr className="table-line-entry">
-                        <td className="text-col">
-                          {t('unrealizedInvestmentGains')}
-                        </td>
-                        <td
-                          className="num-col dollar-sign"
-                          aria-label="blank cell"
-                        />
-                        <td className="num-col">
-                          {renderNumber(totalsCurrent.unrealized_investment_gains)}
-                        </td>
-                        <td
-                          className="num-col dollar-sign"
-                          aria-label="blank cell"
-                        />
-                        <td className="num-col">
-                          {renderNumber(totalsPrevious.unrealized_investment_gains)}
-                        </td>
-                      </tr>
+                      {sortedRevenueRows.map(([label, key], index) => (
+                        <tr className="table-line-entry" key={key}>
+                          <td className="text-col">{t(label)}</td>
+                          <td
+                            className="num-col dollar-sign"
+                            aria-label={index === 0 ? null : 'blank cell'}
+                          >
+                            {index === 0 ? '$' : ''}
+                          </td>
+                          <td className="num-col">
+                            {renderNumber(totalsCurrent[key])}
+                          </td>
+                          <td
+                            className="num-col dollar-sign"
+                            aria-label={index === 0 ? null : 'blank cell'}
+                          >
+                            {index === 0 ? '$' : ''}
+                          </td>
+                          <td className="num-col">
+                            {renderNumber(totalsPrevious[key])}
+                          </td>
+                        </tr>
+                      ))}
                       <tr className="table-subtotal">
                         <td className="text-col" aria-label="blank cell" />
                         <td
