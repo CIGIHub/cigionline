@@ -56,11 +56,11 @@ heroku git:clone -a cigionline-staging-takt
 
 ## Preserve Takt-authored content
 
-A production database refresh would erase the homepage and project-page work
-that editors have completed on Takt staging. Before cutover, add a narrow pair
-of management commands to export and import that work as a **content overlay**.
-The exporter and importer do not exist yet; cutover is blocked until they and
-their tests are merged.
+A production database refresh would erase content that editors completed on
+Takt staging. `export_recent_pages` and `import_content_overlay` implement the
+narrow **content overlay** used in the local rehearsal below. Cutover remains
+blocked until the commands and tests are merged and the open rehearsal gaps are
+closed.
 
 ### Requirements
 
@@ -68,21 +68,24 @@ their tests are merged.
   permissions, event registrations, form submissions, email campaigns,
   redirects, scheduled jobs, or other operational records.
 - Maintain a reviewed manifest of every page in scope and the exact fields
-  staging is allowed to replace. Initial scope is the homepage's authored
-  redesign fields and all approved project pages; add theme, listing, settings,
-  or snippet content only when a content owner names it in the manifest.
+  staging is allowed to replace. The approved rehearsal scope is recorded
+  below; add further models, settings, or snippets only when a content owner
+  names them explicitly.
 - Identify an existing target by site, concrete page model, and a stable content
   key: use `ProjectPage.drupal_node_id` when present, otherwise the canonical
   parent path plus slug. Never use a database primary key as cross-environment
-  identity. Fail on missing or ambiguous targets.
+  identity. Fail on ambiguous targets. Create a missing `BasicPage` only with
+  the explicit flag; move a conflicting old page type to a unique `-legacy`
+  path and never delete it.
 - Export page chooser, image, document, media, snippet, taxonomy, and ordered
   child relations by stable keys, then resolve them against production during
   import. Report every unresolved reference and make the import fail before it
   publishes anything.
 - Run `rename_project_pages --apply` to reuse the five approved legacy project
-  pages, then use `wire_program_pages` to populate the theme menus from existing
-  pages. These commands must not create project pages; every expected page must
-  resolve uniquely before any relationship is written.
+  pages. Run `seed_global_cooperation_programs --apply` to create the two
+  approved net-new drafts. After the theme overlay, use `wire_program_pages` to
+  enforce the two theme-menu positions. Each command must resolve and validate
+  all of its targets before writing.
 - Write through Wagtail revisions and publishing APIs so revisions, search
   indexing hooks, page paths, and audit history remain valid. Preserve all
   production fields not granted to the overlay.
@@ -105,7 +108,7 @@ one-way, allow-listed cutover operation for known editorial content.
 ### Project-page reuse decision (November 24, 2026)
 
 The redesign must reuse production's existing project pages rather than create
-replacement project shells. This preserves page identity, existing content,
+replacement shells for them. This preserves page identity, existing content,
 incoming links, and content-to-program relationships. The approved title-only
 renames are:
 
@@ -132,12 +135,18 @@ Thought`; National Security occupies position 3. Follow-up migration `0067`
 recognizes both the old and final Freedom of Thought titles and does not create
 pages.
 
-The former `seed_net_new_programs` command was removed. No cutover command may
-create project pages. `wire_program_pages` only connects the three existing
-Global Cooperation pages to that theme. The other theme relationships come
-from `0066` and survive title changes because `ThemeProgram` stores foreign
-keys, not titles. Program backfill accepts the slugified final title as an alias
-while preserving each reused page's existing URL slug.
+The former broad `seed_net_new_programs` command was removed. The narrow
+`seed_global_cooperation_programs` command creates only the two approved
+net-new drafts under `/programs/`: Multilateral and Institutional Reform, and
+Canada-U.S. Relations in the Second Century. It is dry-run by default,
+validates both destinations before writing, and is idempotent. It does not
+publish or wire the pages; the overlay importer publishes their Takt-authored
+content and `wire_program_pages` connects only these two pages at positions 1
+and 2. The unpublished India and China in a Multipolar World staging draft is
+not seeded or wired. The other theme relationships come from `0066` and
+survive title changes because `ThemeProgram` stores foreign keys, not titles.
+Program backfill accepts the slugified final title as an alias while preserving
+each reused page's existing URL slug.
 
 The long-lived Takt database applied the earlier form of `0066`; changing the
 migration file does not replay it there. Before using Takt as acceptance
@@ -166,12 +175,76 @@ sequence below.
    page or dependency and review its field-level change report. A production
    edit outside the allow-list must remain unchanged; a changed allow-listed
    field requires an explicit content-owner decision.
-5. Copy and verify required media, apply the overlay, and apply it a second time
-   to prove it is idempotent. Then run `load_cutover_redirects`, rebuild the
-   search index, clear caches, and complete the checks below.
+5. Copy and verify required media, apply the overlay, and—after content-hash
+   no-op detection is implemented—apply it a second time to prove idempotency.
+   Then run `load_cutover_redirects`, rebuild the search index, clear caches,
+   and complete the checks below.
 6. Record the final artifact checksum, command output, duration, page counts,
    file counts, approver, operator, and rehearsal backup identifier here before
    scheduling production cutover.
+
+### Local overlay rehearsal (November 24, 2026)
+
+The source was the PostgreSQL 17 Takt staging restore on local port 5434; the
+target was the production-copy database `cigionlinetakt` on local port 5433.
+The temporary artifact was
+`/private/tmp/cigionline-takt-recent-pages-2026-11-24/manifest.json`, SHA-256
+`2bbfd207aba26a7efc12d1db47511be664e2d8c5711fa18661bf490e54af612f`.
+Move the approved final artifact to durable secure storage before cutover.
+
+The content owner approved these page models: `home.HomePage`,
+`core.BasicPage`, `research.ProjectPage`, `research.ThemePage`,
+`multimedia.MultimediaPage`, and `subscribe.SubscribePage`. All people pages
+(including the listing), publications, articles (including landings), events
+(including the listing), and topics are excluded. The artifact contained 102
+recent live pages; this allow-list selected 32 and skipped the superseded
+Digital Assets project shell.
+
+The successful local apply used:
+
+```bash
+python manage.py import_content_overlay \
+  --artifact /private/tmp/cigionline-takt-recent-pages-2026-11-24/manifest.json \
+  --create-missing-assets \
+  --create-missing-pages \
+  --user jxu \
+  --apply
+```
+
+It published 32 overlays, created 11 missing `BasicPage` records, and created
+70 missing asset metadata records. `--user` is required on apply so Wagtail
+revisions and publish hooks have an audit user. The first attempted apply hit
+that missing-user guard in the notification hook; the transaction rollback was
+verified before the successful retry.
+
+Conflicting legacy records were preserved rather than deleted:
+
+- `CIGI Privacy Notice` moved to `/home/privacy-policy-legacy/`; the imported
+  `Privacy Policy` BasicPage now owns `/home/privacy-policy/`.
+- The removed-model Human Analysis record moved to
+  `/home/about/human-analysis-standard-legacy/`; the imported BasicPage now
+  owns `/home/about/human-analysis-standard/`.
+
+Importing `ThemePage` child relations compresses order values, so run
+`wire_program_pages` **after** the overlay. It must enforce Multilateral and
+Institutional Reform at position 1 and Canada-U.S. Relations in the Second
+Century at position 2, including on existing rows. The dependency-only CIGI in
+The News BasicPage was created as an unpublished draft and still needs an
+editorial decision before cutover.
+
+Open cutover blockers from this rehearsal:
+
+- The 70 asset records contain storage paths only; original files were not
+  copied or verified and may not exist in production storage. Local dev images
+  can still appear because `core.dev_storage.StagingPullThroughStorage` fetches
+  missing originals and renditions from the staging S3 bucket on first request
+  and caches them under `MEDIA_ROOT`; this is not evidence that production has
+  the files.
+- Applying an unchanged overlay still creates new revisions. Add content-hash
+  no-op detection and the required machine-readable before/after report before
+  using the documented second-apply idempotency check.
+- Run browser/editor review, the final search rebuild, and cache clearing after
+  the production-copy rehearsal.
 
 ### Production content window and rollback
 
@@ -211,14 +284,15 @@ without it. Run the dry run first and read the output.
 | 2 | `seed_homepage --apply` | Fallback only for a homepage not included in the approved overlay. It skips a homepage that already has a body. Do not use `--force` at cutover. |
 | 3 | `seed_listing_pages --apply` | Fallback only for listing pages not included in the approved overlay. It skips populated bodies. Do not use `--force` at cutover. |
 | 4 | `rename_project_pages --apply` | Reuses five existing project pages under their approved program titles. Dry-run first. Slugs remain unchanged. |
-| 5 | `wire_program_pages` | Populates the Global Cooperation theme menu from its three existing project pages. Fails without writing if any expected page is missing or ambiguous; never creates pages. |
+| 5 | `seed_global_cooperation_programs --apply` | Creates the two approved net-new project drafts under `/programs/`. Dry-run first; it validates both pages before writing and never publishes them. |
 | 6 | `update_expert_topics` | Fills expertise topics on people. No dry run. Schedule it weekly (Heroku Scheduler). |
 | 7 | `clear_dph_publication_themes --apply` | Required: DPH working papers use the new design. |
 | 8 | `backfill_programs --pages research/data/program-backfill-pages.csv --apply` | Only after CIGI approves the program mapping. Save the reversal CSV it writes: Heroku deletes it when the command ends. |
 | 9 | `normalize_program_research_tabs --apply` | Sets the Research tab listing on program pages. |
-| 10 | `<content-overlay-import> --artifact <approved-artifact>` | Run the required dry run and review its report; then repeat with `--apply`. Replace this placeholder with the implemented command and exact options before cutover. |
-| 11 | `load_cutover_redirects --apply` | 7 redirects for retired listing pages. |
-| 12 | `update_index` | Run again. Steps 4, 5, 8, 10 and the migrations write without reliably reindexing every affected object. |
+| 10 | `import_content_overlay --artifact <approved-manifest> --create-missing-assets --create-missing-pages --user <operator> --apply` | Omit `--apply` for the required dry run. Do not apply twice until content-hash no-op detection is implemented. |
+| 11 | `wire_program_pages` | Run after the theme overlay to enforce the two approved Global Cooperation positions. Fails before writing if either page is missing or ambiguous; never creates pages. |
+| 12 | `load_cutover_redirects --apply` | 7 redirects for retired listing pages. |
+| 13 | `update_index` | Run again. Steps 4, 5, 8, 10, 11 and the migrations write without reliably reindexing every affected object. |
 
 Then clear the template cache:
 

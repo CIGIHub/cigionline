@@ -284,9 +284,8 @@ class WireProgramPagesTests(WagtailPageTestCase):
         ))
         self.programs = []
         for index, title in enumerate([
-            'India and China in a Multipolar World',
             'Multilateral and Institutional Reform',
-            'Canada-US Relations in the Second Century',
+            'Canada-U.S. Relations in the Second Century',
         ]):
             self.programs.append(home.add_child(instance=ProjectPage(
                 title=title,
@@ -303,7 +302,12 @@ class WireProgramPagesTests(WagtailPageTestCase):
         self.assertEqual(set(ProjectPage.objects.values_list('pk', flat=True)), page_ids)
         self.assertEqual(ThemeProgram.objects.filter(
             program__in=self.programs,
-        ).count(), 3)
+        ).count(), 2)
+        self.assertEqual(
+            list(ThemeProgram.objects.filter(program__in=self.programs)
+                 .order_by('sort_order').values_list('sort_order', flat=True)),
+            [1, 2],
+        )
 
     def test_command_fails_before_writing_when_a_page_is_missing(self):
         Page.objects.filter(pk=self.programs[-1].pk).update(
@@ -315,6 +319,56 @@ class WireProgramPagesTests(WagtailPageTestCase):
             call_command('wire_program_pages')
 
         self.assertFalse(ThemeProgram.objects.filter(program__in=self.programs[:-1]).exists())
+
+
+class SeedGlobalCooperationProgramsTests(WagtailPageTestCase):
+    def setUp(self):
+        self.parent = HomePage.objects.get().add_child(instance=BasicPage(
+            title='Programs',
+            slug='programs',
+        ))
+
+    def test_command_is_dry_run_then_creates_two_drafts_idempotently(self):
+        call_command('seed_global_cooperation_programs')
+        self.assertFalse(ProjectPage.objects.exists())
+
+        call_command('seed_global_cooperation_programs', '--apply')
+        call_command('seed_global_cooperation_programs', '--apply')
+
+        pages = ProjectPage.objects.order_by('slug')
+        self.assertEqual(pages.count(), 2)
+        self.assertEqual(
+            set(pages.values_list('title', 'slug')),
+            {
+                (
+                    'Canada-U.S. Relations in the Second Century',
+                    'canada-us-relations-in-the-second-century',
+                ),
+                (
+                    'Multilateral and Institutional Reform',
+                    'multilateral-and-institutional-reform',
+                ),
+            },
+        )
+        self.assertFalse(pages.filter(live=True).exists())
+        self.assertEqual(
+            set(page.get_parent().pk for page in pages),
+            {self.parent.pk},
+        )
+
+    def test_command_fails_before_writing_on_slug_conflict(self):
+        self.parent.add_child(instance=ProjectPage(
+            title='Conflicting page',
+            slug='canada-us-relations-in-the-second-century',
+            publishing_date=timezone.now(),
+        ))
+
+        with self.assertRaisesMessage(CommandError, 'sibling slug'):
+            call_command('seed_global_cooperation_programs', '--apply')
+
+        self.assertFalse(ProjectPage.objects.filter(
+            title='Multilateral and Institutional Reform',
+        ).exists())
 
 
 class HighlightedTopicsTests(WagtailPageTestCase):

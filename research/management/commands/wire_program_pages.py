@@ -6,9 +6,11 @@ from research.models import ProjectPage, ThemePage, ThemeProgram
 
 PROGRAMS = [
     ('Global Cooperation and Governance', [
-        (('India and China in a Multipolar World',), 0),
         (('Multilateral and Institutional Reform',), 1),
-        (('Canada-US Relations in the Second Century',), 2),
+        ((
+            'Canada-U.S. Relations in the Second Century',
+            'Canada-US Relations in the Second Century',
+        ), 2),
     ]),
 ]
 
@@ -50,7 +52,11 @@ class Command(BaseCommand):
                     program=program,
                     defaults={'sort_order': sort_order, 'label': ''},
                 )
+                if not created and edge.sort_order != sort_order:
+                    edge.sort_order = sort_order
+                    edge.save(update_fields=['sort_order'])
                 self.stdout.write(
-                    f'{"wired" if created else "ok"}: {theme.title} -> {program.title}'
+                    f'{"wired" if created else "ok"}: {theme.title} -> {program.title} '
+                    f'(position {sort_order})'
                 )
 

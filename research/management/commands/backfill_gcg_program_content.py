@@ -16,7 +16,7 @@ from research.models import ProjectPage, TopicPage
 MAPPING = [
     ('Multilateral Institutions', 'Multilateral and Institutional Reform'),
     ('Geopolitics', 'India and China in a Multipolar World'),
-    ('Trade', 'Canada-US Relations in the Second Century'),
+    ('Trade', 'Canada-U.S. Relations in the Second Century'),
 ]
 
 
