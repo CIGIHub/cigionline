@@ -39,10 +39,15 @@ def seed(apps, schema_editor):
     ThemeProgram = apps.get_model('research', 'ThemeProgram')
 
     # DSD: Freedom of Thought slots in at order 2, so push National Security to 3.
+    # The reused legacy page is already in that slot when 0066 finds it.
     dsd = get_by_title(ThemePage, 'Digitalization, Security and Democracy')
     if dsd is not None:
         ns = ThemeProgram.objects.filter(theme=dsd, sort_order=2).select_related('program').first()
-        if ns is not None and 'Freedom of Thought' not in ns.program.title:
+        freedom_titles = {
+            'Freedom of Thought',
+            'Legitimate Influence or Unlawful Manipulation?',
+        }
+        if ns is not None and ns.program.title not in freedom_titles:
             ns.sort_order = 3
             ns.save(update_fields=['sort_order'])
 

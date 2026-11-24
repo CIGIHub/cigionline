@@ -1,8 +1,10 @@
+import importlib
+
 from core.models import BasicPage
 from wagtail.models import Page
 from articles.models import ArticlePage, ArticleTypePage
 from django.contrib.auth.models import User
-from django.core.management import call_command
+from django.core.management import call_command, CommandError
 from django.utils import timezone
 from home.models import HomePage, Think7HomePage
 from publications.models import PublicationListPage, PublicationPage, PublicationTypePage
@@ -16,6 +18,8 @@ from .models import (
     ProjectListPage,
     ProjectPage,
     ResearchLandingPage,
+    ThemePage,
+    ThemeProgram,
     TopicListPage,
     TopicPage,
 )
@@ -173,6 +177,144 @@ class ConsolidateTopicsTests(WagtailPageTestCase):
         call_command('consolidate_topics', '--apply')
         call_command('consolidate_topics', '--apply')
         self.assertEqual(publication.topics.filter(pk=topic.pk).count(), 1)
+
+
+class RenameProjectPagesTests(WagtailPageTestCase):
+    RENAMES = [
+        ('Space Governance 4.0', 'Space Governance'),
+        (
+            'Strengthening Canada’s National Security in a Complex World',
+            'National Security and Cybersecurity',
+        ),
+        ('Legitimate Influence or Unlawful Manipulation?', 'Freedom of Thought'),
+        ('Digital Assets in a Deglobalized World', 'Governance of Digital Money and Assets'),
+        (
+            'Next-Generation Economies: Middle Powers in a Changing World',
+            'Next-Generation Economies',
+        ),
+    ]
+
+    def setUp(self):
+        home = HomePage.objects.get()
+        self.pages = []
+        for index, (old_title, _) in enumerate(self.RENAMES):
+            self.pages.append(home.add_child(instance=ProjectPage(
+                title=old_title,
+                slug=f'legacy-program-{index}',
+                publishing_date=timezone.now(),
+            )))
+
+    def test_command_is_dry_run_then_idempotent(self):
+        call_command('rename_project_pages')
+        self.assertEqual(
+            set(ProjectPage.objects.filter(pk__in=[page.pk for page in self.pages])
+                .values_list('title', flat=True)),
+            {old_title for old_title, _ in self.RENAMES},
+        )
+
+        call_command('rename_project_pages', '--apply')
+        revision_counts = {}
+        for index, (page, (_, new_title)) in enumerate(zip(self.pages, self.RENAMES)):
+            page.refresh_from_db()
+            self.assertEqual(page.title, new_title)
+            self.assertEqual(page.slug, f'legacy-program-{index}')
+            revision_counts[page.pk] = page.revisions.count()
+
+        call_command('rename_project_pages', '--apply')
+        for page in self.pages:
+            self.assertEqual(page.revisions.count(), revision_counts[page.pk])
+
+    def test_command_refuses_a_destination_collision_before_writing(self):
+        home = HomePage.objects.get()
+        home.add_child(instance=ProjectPage(
+            title='Space Governance',
+            slug='space-governance',
+            publishing_date=timezone.now(),
+        ))
+
+        with self.assertRaisesMessage(CommandError, 'destination page already exists'):
+            call_command('rename_project_pages', '--apply')
+
+        self.assertEqual(
+            set(ProjectPage.objects.filter(pk__in=[page.pk for page in self.pages])
+                .values_list('title', flat=True)),
+            {old_title for old_title, _ in self.RENAMES},
+        )
+
+
+class SeedThemeProgramsMigrationTests(WagtailPageTestCase):
+    def test_reuses_legacy_page_as_freedom_of_thought(self):
+        from django.apps import apps
+
+        home = HomePage.objects.get()
+        theme = home.add_child(instance=ThemePage(
+            title='Digitalization, Security and Democracy',
+            slug='digitalization-security-democracy',
+        ))
+        titles = [
+            'Supporting Safer Digital Spaces',
+            'Space Governance 4.0',
+            'Legitimate Influence or Unlawful Manipulation?',
+            'Strengthening Canada’s National Security in a Complex World',
+        ]
+        pages = [
+            home.add_child(instance=ProjectPage(
+                title=title,
+                slug=f'migration-program-{index}',
+                publishing_date=timezone.now(),
+            ))
+            for index, title in enumerate(titles)
+        ]
+
+        importlib.import_module('research.migrations.0066_seed_theme_programs').seed(apps, None)
+        importlib.import_module('research.migrations.0067_seed_net_new_programs').seed(apps, None)
+
+        rows = list(theme.theme_programs.order_by('sort_order'))
+        self.assertEqual([row.program_id for row in rows], [page.pk for page in pages])
+        self.assertEqual([row.sort_order for row in rows], [0, 1, 2, 3])
+        self.assertEqual(rows[2].label, 'Freedom of Thought')
+
+
+class WireProgramPagesTests(WagtailPageTestCase):
+    def setUp(self):
+        home = HomePage.objects.get()
+        self.cooperation = home.add_child(instance=ThemePage(
+            title='Global Cooperation and Governance',
+            slug='global-cooperation-governance',
+        ))
+        self.programs = []
+        for index, title in enumerate([
+            'India and China in a Multipolar World',
+            'Multilateral and Institutional Reform',
+            'Canada-US Relations in the Second Century',
+        ]):
+            self.programs.append(home.add_child(instance=ProjectPage(
+                title=title,
+                slug=f'existing-program-{index}',
+                publishing_date=timezone.now(),
+            )))
+
+    def test_command_only_wires_existing_pages_and_is_idempotent(self):
+        page_ids = set(ProjectPage.objects.values_list('pk', flat=True))
+
+        call_command('wire_program_pages')
+        call_command('wire_program_pages')
+
+        self.assertEqual(set(ProjectPage.objects.values_list('pk', flat=True)), page_ids)
+        self.assertEqual(ThemeProgram.objects.filter(
+            program__in=self.programs,
+        ).count(), 3)
+
+    def test_command_fails_before_writing_when_a_page_is_missing(self):
+        Page.objects.filter(pk=self.programs[-1].pk).update(
+            title='Not the expected program',
+            draft_title='Not the expected program',
+        )
+
+        with self.assertRaisesMessage(CommandError, 'expected one ProjectPage, found 0'):
+            call_command('wire_program_pages')
+
+        self.assertFalse(ThemeProgram.objects.filter(program__in=self.programs[:-1]).exists())
 
 
 class HighlightedTopicsTests(WagtailPageTestCase):

@@ -3,7 +3,7 @@
 How to put the redesign onto production data. Required scripts must be in the
 redesign code before cutover. This page gives the order to run them in.
 
-Last reviewed: November 17, 2026.
+Last reviewed: November 24, 2026.
 
 ## The code
 
@@ -79,9 +79,10 @@ their tests are merged.
   child relations by stable keys, then resolve them against production during
   import. Report every unresolved reference and make the import fail before it
   publishes anything.
-- Create net-new project shells with `seed_net_new_programs` before import. The
-  overlay fills and publishes the approved shells; it must not create a second
-  page when the stable key already exists.
+- Run `rename_project_pages --apply` to reuse the five approved legacy project
+  pages, then use `wire_program_pages` to populate the theme menus from existing
+  pages. These commands must not create project pages; every expected page must
+  resolve uniquely before any relationship is written.
 - Write through Wagtail revisions and publishing APIs so revisions, search
   indexing hooks, page paths, and audit history remain valid. Preserve all
   production fields not granted to the overlay.
@@ -100,6 +101,53 @@ their tests are merged.
 
 Do not broaden this into a general-purpose environment synchronizer. It is a
 one-way, allow-listed cutover operation for known editorial content.
+
+### Project-page reuse decision (November 24, 2026)
+
+The redesign must reuse production's existing project pages rather than create
+replacement project shells. This preserves page identity, existing content,
+incoming links, and content-to-program relationships. The approved title-only
+renames are:
+
+| Existing title | Final title |
+|---|---|
+| Space Governance 4.0 | Space Governance |
+| Strengthening Canada’s National Security in a Complex World | National Security and Cybersecurity |
+| Legitimate Influence or Unlawful Manipulation? | Freedom of Thought |
+| Digital Assets in a Deglobalized World | Governance of Digital Money and Assets |
+| Next-Generation Economies: Middle Powers in a Changing World | Next-Generation Economies |
+
+`rename_project_pages` publishes these changes through Wagtail revisions. It
+does not change slugs, create pages, or choose between duplicate source or
+destination pages. It is dry-run by default, validates all five pages before
+writing, and is idempotent.
+
+Production `master` does not contain `research.0066_seed_theme_programs`, so a
+database restored from production has not recorded that migration and will run
+it during the redesign migration sequence. The migration was therefore updated
+before production cutover to connect the existing
+`Legitimate Influence or Unlawful Manipulation?` page to Digitalization,
+Security and Democracy at position 2 with the display label `Freedom of
+Thought`; National Security occupies position 3. Follow-up migration `0067`
+recognizes both the old and final Freedom of Thought titles and does not create
+pages.
+
+The former `seed_net_new_programs` command was removed. No cutover command may
+create project pages. `wire_program_pages` only connects the three existing
+Global Cooperation pages to that theme. The other theme relationships come
+from `0066` and survive title changes because `ThemeProgram` stores foreign
+keys, not titles. Program backfill accepts the slugified final title as an alias
+while preserving each reused page's existing URL slug.
+
+The long-lived Takt database applied the earlier form of `0066`; changing the
+migration file does not replay it there. Before using Takt as acceptance
+evidence, verify that Digitalization, Security and Democracy points to the
+reused Freedom of Thought page and remove or resolve any replacement shell.
+Fresh production restores receive the corrected relationship from `0066`.
+
+Production already contains the completed topic consolidation. Do not run
+`consolidate_topics` during cutover; it is intentionally absent from the command
+sequence below.
 
 ### Build and rehearsal plan
 
@@ -162,15 +210,15 @@ without it. Run the dry run first and read the output.
 | 1 | `update_index` | Run first. The seed commands fail if the search index is missing. |
 | 2 | `seed_homepage --apply` | Fallback only for a homepage not included in the approved overlay. It skips a homepage that already has a body. Do not use `--force` at cutover. |
 | 3 | `seed_listing_pages --apply` | Fallback only for listing pages not included in the approved overlay. It skips populated bodies. Do not use `--force` at cutover. |
-| 4 | `seed_net_new_programs` | Creates the 4 new program pages as drafts and links them to themes. No dry run. |
-| 5 | `consolidate_topics --apply` | 26 topics to 17: 4 renames, 9 merges, redirects, and the production “India, China and Africa” program-topic backfill. Cannot be undone without the backup. |
+| 4 | `rename_project_pages --apply` | Reuses five existing project pages under their approved program titles. Dry-run first. Slugs remain unchanged. |
+| 5 | `wire_program_pages` | Populates the Global Cooperation theme menu from its three existing project pages. Fails without writing if any expected page is missing or ambiguous; never creates pages. |
 | 6 | `update_expert_topics` | Fills expertise topics on people. No dry run. Schedule it weekly (Heroku Scheduler). |
 | 7 | `clear_dph_publication_themes --apply` | Required: DPH working papers use the new design. |
 | 8 | `backfill_programs --pages research/data/program-backfill-pages.csv --apply` | Only after CIGI approves the program mapping. Save the reversal CSV it writes: Heroku deletes it when the command ends. |
 | 9 | `normalize_program_research_tabs --apply` | Sets the Research tab listing on program pages. |
 | 10 | `<content-overlay-import> --artifact <approved-artifact>` | Run the required dry run and review its report; then repeat with `--apply`. Replace this placeholder with the implemented command and exact options before cutover. |
 | 11 | `load_cutover_redirects --apply` | 7 redirects for retired listing pages. |
-| 12 | `update_index` | Run again. Steps 4, 8, 10 and the migrations write without reliably reindexing every affected object. |
+| 12 | `update_index` | Run again. Steps 4, 5, 8, 10 and the migrations write without reliably reindexing every affected object. |
 
 Then clear the template cache:
 

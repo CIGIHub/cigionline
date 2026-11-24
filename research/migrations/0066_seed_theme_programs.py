@@ -25,7 +25,7 @@ THEMES = {
         'programs': [
             ('Supporting Safer Digital Spaces', ''),
             ('Space Governance 4.0', ''),
-            # 'Freedom of Thought' — net-new page, added by editors
+            ('Legitimate Influence or Unlawful Manipulation?', 'Freedom of Thought'),
             ('Strengthening Canada’s National Security in a Complex World', 'National Security and Cybersecurity'),
         ],
     },

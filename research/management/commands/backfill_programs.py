@@ -3,6 +3,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from django.core.management.base import BaseCommand, CommandError
+from django.utils.text import slugify
 
 from core.models import ContentPage
 from research.models import ProjectPage, ThemePage, ThemeProgram, TopicPage
@@ -44,6 +45,7 @@ class Command(BaseCommand):
         programs = {}
         for edge in ThemeProgram.objects.select_related('program', 'theme'):
             programs[edge.program.slug] = edge.program
+            programs.setdefault(slugify(edge.program.title), edge.program)
         mapped_ids = {p.pk for p in programs.values()}
 
         rules = self.load_rules(options['rules'], programs)
