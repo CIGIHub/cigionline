@@ -105,9 +105,6 @@ body {
           justify-content: space-between;
 
           .feature-content-title {
-            @include media-breakpoint-up(lg) {
-              font-size: 2.1em;
-            }
             font-size: 1.7em;
           }
         }
@@ -151,6 +148,10 @@ body {
         .feature-content-medium {
           width: 100%;
         }
+      }
+
+      .stream-block-title {
+        font-size: 1.25em;
       }
     }
 
