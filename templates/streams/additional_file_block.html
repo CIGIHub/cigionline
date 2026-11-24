@@ -12,7 +12,7 @@
       ">
         {% if self.page %}
           <a href="{{ self.page.url }}">
-        {% else %}
+        {% elif self.file %}
           <a href="{{ self.file.file.url }}">
         {% endif %}
           <figure>
@@ -40,12 +40,12 @@
         {% endif %}
         <h3 class="stream-block-title">
           {% if self.page %}
-            <a href="{{ self.page.url }}">
+            <a href="{{ self.page.url }}">{{ self.title }}</a>
+          {% elif self.file %}
+            <a href="{{ self.file.file.url }}">{{ self.title }}</a>
           {% else %}
-            <a href="{{ self.file.file.url }}">
-          {% endif %}
             {{ self.title }}
-          </a>
+          {% endif %}
         </h3>
         {% if self.description %}
           <div class="stream-block-description">
