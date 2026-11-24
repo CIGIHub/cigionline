@@ -4,7 +4,7 @@ This is the working agreement for reconciling production `master` with the
 Takt redesign. Read it before changing `staging-takt`, porting a production
 feature, resolving migrations, or preparing cutover.
 
-Last reviewed: November 16, 2026.
+Last reviewed: November 23, 2026.
 
 ## Current state
 
@@ -12,7 +12,7 @@ Last reviewed: November 16, 2026.
   `b94f39a5` from May 20, 2026.
 - `staging-takt-heroku-history` preserves the vendor's real history: 442
   commits after the common ancestor at the time of review.
-- `master` had 76 commits after the common ancestor at the time of review.
+- `master` had 97 commits after the common ancestor at the time of review.
 - `staging-takt` is **not** a normal merge. Commit `66c2a2e3` imported the
   vendor tree as a snapshot directly on top of production commit `e614fe35`.
   Its tree matched the vendor history, but its parentage makes Git believe all
@@ -188,6 +188,10 @@ notes as work is completed.
 | RSS feed | `b7482ee4` | Ported | The public `/feed/` endpoint retains the newest 50 live, public, routable articles, publications, and multimedia items for the requested Wagtail site, excluding future content and CIGI in the News. Stable GUIDs, plain-text summaries, authors, topics, TTL, and CIGI-only RSS discovery metadata are preserved. The feed avoids request state on its shared view instance. Both focused tests, Django checks, and migration drift pass. |
 | DPH sidebar updates | `8584374a`, `6b791bad`, `8ad8bca1`, `07ea26e6` | Adapted | The final approved application deadline, supporting copy, and Apply Now destination are retained in a charcoal/green design-system announcement on the DPH subtree. DPH BasicPages now use the redesigned shared template instead of the legacy fork; the legacy sidebar carries the same current copy as a dormant fallback. The cutover runbook now records the existing DPH publication-theme clear as required for the new design. All 31 focused BasicPage, subscription, and DPH listing tests, Django checks, and migration drift pass. |
 | Legacy hero icon alignment | `4a283bdc` | Ported | The shared legacy hero icon keeps intrinsic width so its circular border remains aligned on retained legacy and themed pages. No migration is required. |
+| Related-file icons | `28374f12`, `1958e4ac` | Ported | Word, PowerPoint, and ZIP attachments render their matching icons in the shared related-files table; PDF remains the fallback. The focused render test passes, including uppercase extensions. No migration is required. |
+| Annual-report map city hubs and clustering | `cf099bb0`, `4821558e`, `2773eb3e`, `19c6581d`, `4a7ade36`, `1b5021be`, `0c18fc16` | Pending | Review and adapt persisted map coordinates, the coordinate backfill command, city hubs, zoom-aware clustering and marker sizing, Toronto initial centering, slide-title treatment, and interaction/style refinements. Exact production migration `annual_reports.0070_mapstory_latitude_mapstory_longitude` must be preserved and joined to the redesign lineage. |
+| Anniversary “Hear Our Story” link | `ad586c60` | Ported | The retained anniversary subscribe block includes the third action to `/about/history/`, and its action container wraps when needed. The focused template check and production frontend build pass with existing warnings. No migration is required. |
+| Annual-report slide controls and financial rows | `b199a4b2`, `7dabe76f`, `7806b00a`, `5e4d6da6` | Pending | Retain the background-quote gradient toggle, donations field, and data-driven revenue and expense rows. Exact production migrations `annual_reports.0071_annualreportslidepage_show_background_quote_gradient` and `annual_reports.0072_alter_annualreportslidepage_ar_slide_content` depend on the pending production `0070` map migration and must be reconciled with the redesign lineage. |
 
 ## Definition of done
 

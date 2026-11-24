@@ -159,6 +159,25 @@ class PurgeCloudflareCacheTests(WagtailPageTestCase):
 
 
 class BasicPageTests(WagtailPageTestCase):
+    def test_related_file_icons_match_document_type(self):
+        template = get_template('includes/core_related_files_table.html')
+
+        for filename, icon in (
+            ('report.pdf', 'fa-file-pdf'),
+            ('report.doc', 'fa-file-word'),
+            ('report.DOCX', 'fa-file-word'),
+            ('slides.ppt', 'fa-file-powerpoint'),
+            ('slides.PPTX', 'fa-file-powerpoint'),
+            ('files.ZIP', 'fa-file-zipper'),
+        ):
+            with self.subTest(filename=filename):
+                document = SimpleNamespace(url=filename, title='Report', file_size=1)
+                html = template.render({
+                    'file_blocks': [SimpleNamespace(value=document)],
+                })
+
+                self.assertIn(icon, html)
+
     def test_body_includes_interactive_chart(self):
         body = BasicPage._meta.get_field('body')
 

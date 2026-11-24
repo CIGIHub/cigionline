@@ -11,7 +11,17 @@
       <tr>
         <td class="table-wide-lg">
           <a href="{{file_block.value.url}}">
-            <i class="far fa-file-pdf"></i>
+            {% with extension=file_block.value.url|file_extension|lower %}
+              {% if extension == '.doc' or extension == '.docx' %}
+                <i class="far fa-file-word"></i>
+              {% elif extension == '.ppt' or extension == '.pptx' %}
+                <i class="far fa-file-powerpoint"></i>
+              {% elif extension == '.zip' %}
+                <i class="far fa-file-zipper"></i>
+              {% else %}
+                <i class="far fa-file-pdf"></i>
+              {% endif %}
+            {% endwith %}
             {{file_block.value.title}}
           </a>
         </td>
