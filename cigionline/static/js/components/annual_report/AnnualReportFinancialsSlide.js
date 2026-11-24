@@ -13,6 +13,14 @@ const revenueRows = [
   ['unrealizedInvestmentGains', 'unrealized_investment_gains'],
 ];
 
+const expenseRows = [
+  ['researchAndConferences', 'research_and_conferences'],
+  ['amortization', 'amortization'],
+  ['administration', 'administration'],
+  ['facilities', 'facilities'],
+  ['technicalSupport', 'technical_support'],
+];
+
 const parseAmount = (value) => {
   const amount = Number(value?.replace(/,/g, ''));
   return value?.trim() && Number.isFinite(amount) ? amount : Number.NEGATIVE_INFINITY;
@@ -139,6 +147,14 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
   const totalsCurrent = activeTab?.year_current || {};
   const totalsPrevious = activeTab?.year_previous || {};
   const sortedRevenueRows = revenueRows
+    .filter(
+      ([, key]) => totalsCurrent[key]?.trim() && totalsPrevious[key]?.trim(),
+    )
+    .sort(
+      ([, keyA], [, keyB]) =>
+        parseAmount(totalsCurrent[keyB]) - parseAmount(totalsCurrent[keyA]),
+    );
+  const sortedExpenseRows = expenseRows
     .filter(
       ([, key]) => totalsCurrent[key]?.trim() && totalsPrevious[key]?.trim(),
     )
@@ -757,89 +773,25 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
                         />
                         <td className="num-col" aria-label="blank cell" />
                       </tr>
-                      <tr className="table-line-entry">
-                        <td className="text-col">
-                          {t('researchAndConferences')}
-                        </td>
-                        <td
-                          className="num-col dollar-sign"
-                          aria-label="blank cell"
-                        />
-                        <td className="num-col">
-                          {renderNumber(totalsCurrent.research_and_conferences)}
-                        </td>
-                        <td
-                          className="num-col dollar-sign"
-                          aria-label="blank cell"
-                        />
-                        <td className="num-col">
-                          {renderNumber(totalsPrevious.research_and_conferences)}
-                        </td>
-                      </tr>
-                      <tr className="table-line-entry">
-                        <td className="text-col">{t('amortization')}</td>
-                        <td
-                          className="num-col dollar-sign"
-                          aria-label="blank cell"
-                        />
-                        <td className="num-col">
-                          {renderNumber(totalsCurrent.amortization)}
-                        </td>
-                        <td
-                          className="num-col dollar-sign"
-                          aria-label="blank cell"
-                        />
-                        <td className="num-col">
-                          {renderNumber(totalsPrevious.amortization)}
-                        </td>
-                      </tr>
-                      <tr className="table-line-entry">
-                        <td className="text-col">{t('administration')}</td>
-                        <td
-                          className="num-col dollar-sign"
-                          aria-label="blank cell"
-                        />
-                        <td className="num-col">
-                          {renderNumber(totalsCurrent.administration)}
-                        </td>
-                        <td
-                          className="num-col dollar-sign"
-                          aria-label="blank cell"
-                        />
-                        <td className="num-col">
-                          {renderNumber(totalsPrevious.administration)}
-                        </td>
-                      </tr>
-                      <tr className="table-line-entry">
-                        <td className="text-col">{t('facilities')}</td>
-                        <td
-                          className="num-col dollar-sign"
-                          aria-label="blank cell"
-                        />
-                        <td className="num-col">{renderNumber(totalsCurrent.facilities)}</td>
-                        <td
-                          className="num-col dollar-sign"
-                          aria-label="blank cell"
-                        />
-                        <td className="num-col">{renderNumber(totalsPrevious.facilities)}</td>
-                      </tr>
-                      <tr className="table-line-entry">
-                        <td className="text-col">{t('technicalSupport')}</td>
-                        <td
-                          className="num-col dollar-sign"
-                          aria-label="blank cell"
-                        />
-                        <td className="num-col">
-                          {renderNumber(totalsCurrent.technical_support)}
-                        </td>
-                        <td
-                          className="num-col dollar-sign"
-                          aria-label="blank cell"
-                        />
-                        <td className="num-col">
-                          {renderNumber(totalsPrevious.technical_support)}
-                        </td>
-                      </tr>
+                      {sortedExpenseRows.map(([label, key]) => (
+                        <tr className="table-line-entry" key={key}>
+                          <td className="text-col">{t(label)}</td>
+                          <td
+                            className="num-col dollar-sign"
+                            aria-label="blank cell"
+                          />
+                          <td className="num-col">
+                            {renderNumber(totalsCurrent[key])}
+                          </td>
+                          <td
+                            className="num-col dollar-sign"
+                            aria-label="blank cell"
+                          />
+                          <td className="num-col">
+                            {renderNumber(totalsPrevious[key])}
+                          </td>
+                        </tr>
+                      ))}
                       <tr className="table-subtotal">
                         <td className="text-col" aria-label="blank cell" />
                         <td
