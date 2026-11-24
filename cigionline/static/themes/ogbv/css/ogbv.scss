@@ -102,9 +102,10 @@ body {
         .feature-content-text {
           display: flex;
           flex-direction: column;
+          justify-content: space-between;
 
           .feature-content-title {
-            font-size: 1.7em;
+            font-size: 1.5em;
           }
         }
       }
