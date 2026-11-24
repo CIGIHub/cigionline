@@ -48,6 +48,13 @@ const normalizeCountry = (country) => {
   return countryAliases[name.toLowerCase()] || name;
 };
 
+const cityHubAbbreviations = {
+  toronto: 'TOR',
+  ottawa: 'OTT',
+};
+
+const cityHubLocations = new Set(Object.keys(cityHubAbbreviations));
+
 const contentIcons = {
   publication: faFileLines,
   opinion: faMessageLines,
@@ -139,10 +146,12 @@ const storyMatches = (story, query, selectedTheme) => {
 
 function AnnualReportMap({ slide }) {
   const mapContainerRef = useRef(null);
+  const cardRef = useRef(null);
   const descriptionRef = useRef(null);
+  const [hasMoreDescription, setHasMoreDescription] = useState(false);
   const oceanMarkersRef = useRef([]);
   const [activeStory, setActiveStory] = useState(null);
-  const [hasMoreDescription, setHasMoreDescription] = useState(false);
+  const [hasInteractedWithMap, setHasInteractedWithMap] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTheme, setSelectedTheme] = useState('');
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
@@ -151,6 +160,7 @@ function AnnualReportMap({ slide }) {
 
   const themeDropdownRef = useRef(null);
   const highlightMarkersRef = useRef([]);
+  const cityHubMarkersRef = useRef([]);
 
   const { stories, countries } = useMemo(
     () => ({
@@ -163,6 +173,44 @@ function AnnualReportMap({ slide }) {
   const researchThemes = [
     ...new Set(stories.map((story) => story.research_theme).filter(Boolean)),
   ].sort();
+
+  useLayoutEffect(() => {
+    if (activeStory && cardRef.current) {
+      cardRef.current.scrollTop = 0;
+    }
+  }, [activeStory]);
+
+  useEffect(() => {
+    cityHubMarkersRef.current.forEach(({ element, group }) => {
+      const hasActiveStory = activeStory && group.includes(activeStory);
+
+      if (!hasActiveStory) {
+        element.classList.remove('is-pinned');
+
+        if (!element.matches(':hover')) {
+          element.classList.remove('is-expanded');
+        }
+      }
+    });
+
+    const pinnedHub = cityHubMarkersRef.current.find(({ element }) =>
+      element.classList.contains('is-pinned'),
+    );
+
+    cityHubMarkersRef.current.forEach(({ element }) => {
+      element.classList.toggle('is-blocked', Boolean(pinnedHub && pinnedHub.element !== element));
+    });
+
+    const anyHubExpanded = cityHubMarkersRef.current.some(({ element }) =>
+      element.classList.contains('is-expanded'),
+    );
+
+    if (!anyHubExpanded) {
+      mapContainerRef.current
+        ?.querySelectorAll('.map-story-node.is-dimmed')
+        .forEach((element) => element.classList.remove('is-dimmed'));
+    }
+  }, [activeStory]);
 
   useLayoutEffect(() => {
     const description = descriptionRef.current;
@@ -183,6 +231,7 @@ function AnnualReportMap({ slide }) {
 
     const observer = new ResizeObserver(updateScrollState);
     observer.observe(description);
+
     description.addEventListener('scroll', updateScrollState);
 
     return () => {
@@ -218,9 +267,32 @@ function AnnualReportMap({ slide }) {
   }, [activeStory]);
 
   useEffect(() => {
+    const handleOutsideHubClick = (event) => {
+      if (event.target.closest('.map-city-hub')) return;
+
+      cityHubMarkersRef.current.forEach(({ element }) => {
+        element.classList.remove('is-expanded');
+      });
+
+      highlightMarkersRef.current.forEach(({ element }) => {
+        element.classList.remove('is-dimmed');
+      });
+    };
+
+    document.addEventListener('click', handleOutsideHubClick);
+
+    return () => {
+      document.removeEventListener('click', handleOutsideHubClick);
+    };
+  }, []);
+
+  useEffect(() => {
     if (!mapContainerRef.current) return undefined;
 
     let highlightAnimation = null;
+
+    const mapWidth = mapContainerRef.current.clientWidth;
+    const initialZoom = Math.max(1, Math.min(5, Math.log2(mapWidth / (512 * 0.95))));
 
     const map = new maplibregl.Map({
       container: mapContainerRef.current,
@@ -237,9 +309,9 @@ function AnnualReportMap({ slide }) {
           },
         ],
       },
-      center: [0, 20],
-      zoom: 1.5,
-      minZoom: 1,
+      center: [-80, 20],
+      zoom: initialZoom,
+      minZoom: initialZoom,
       maxZoom: 5,
       attributionControl: false,
       trackResize: true,
@@ -252,6 +324,20 @@ function AnnualReportMap({ slide }) {
       }),
       'top-right',
     );
+
+    const hideMapTitle = () => {
+      setHasInteractedWithMap(true);
+    };
+
+    const hideMapTitleOnGesture = (event) => {
+      if (event.originalEvent) {
+        hideMapTitle();
+      }
+    };
+
+    map.on('zoomstart', hideMapTitleOnGesture);
+    map.on('dragstart', hideMapTitleOnGesture);
+    map.on('click', hideMapTitle);
 
     map.on('load', () => {
       map.addSource('countries', {
@@ -341,6 +427,7 @@ function AnnualReportMap({ slide }) {
         const marker = new maplibregl.Marker({
           element,
           anchor: 'center',
+          subpixelPositioning: true,
         })
           .setLngLat(coordinates)
           .addTo(map);
@@ -349,9 +436,19 @@ function AnnualReportMap({ slide }) {
       });
 
       const locationGroups = {};
+      const cityHubGroups = {};
 
       stories.forEach((story) => {
         const location = story.location.trim();
+        const city = location.split(',')[0].trim().toLowerCase();
+
+        if (cityHubLocations.has(city)) {
+          if (!cityHubGroups[city]) {
+            cityHubGroups[city] = [];
+          }
+
+          cityHubGroups[city].push(story);
+        }
 
         if (!locationGroups[location]) {
           locationGroups[location] = [];
@@ -363,7 +460,11 @@ function AnnualReportMap({ slide }) {
       const markers = [];
       highlightMarkersRef.current = markers;
 
-      Object.entries(locationGroups).forEach(([, group]) => {
+      Object.entries(locationGroups).forEach(([location, group]) => {
+        const city = location.split(',')[0].trim().toLowerCase();
+
+        if (cityHubLocations.has(city)) return;
+
         const coordinates = group[0].coordinates || countries[group[0].country];
 
         if (!coordinates) return;
@@ -411,10 +512,20 @@ function AnnualReportMap({ slide }) {
           element.addEventListener('click', (event) => {
             event.stopPropagation();
             tooltip.remove();
+            setHasInteractedWithMap(true);
+
+            cityHubMarkersRef.current.forEach(({ element: hubElement }) => {
+              hubElement.classList.remove('is-expanded');
+            });
+
+            markers.forEach(({ element: storyElement }) => {
+              storyElement.classList.remove('is-dimmed');
+            });
+
             setActiveStory(story);
 
             map.easeTo({
-              center: [coordinates.longitude, coordinates.latitude],
+              center: marker.getLngLat().toArray(),
               duration: 800,
             });
           });
@@ -423,7 +534,168 @@ function AnnualReportMap({ slide }) {
         });
       });
 
-      const markerPlacements = new Map();
+      Object.entries(cityHubGroups).forEach(([city, group]) => {
+        const coordinates = group[0].coordinates || countries[group[0].country];
+
+        if (!coordinates) return;
+
+        const hubSize = Math.min(65, 28 + Math.sqrt(group.length) * 5) / 1.5;
+
+        const element = document.createElement('div');
+        element.className = 'map-city-hub';
+        element.style.setProperty('--hub-size', `${hubSize}px`);
+        element.innerHTML = `
+          <div class="map-city-hub-circle">
+            <span>${cityHubAbbreviations[city]}</span>
+          </div>
+        `;
+
+        element.setAttribute('aria-label', `${city}: ${group.length} stories`);
+
+        const hubTooltip = document.createElement('div');
+        hubTooltip.className = 'map-city-hub-info';
+
+        hubTooltip.innerHTML = `
+          <div class="map-city-hub-info-title">
+            ${city.charAt(0).toUpperCase() + city.slice(1)}
+          </div>
+          <div class="map-city-hub-info-count">
+            ${group.length} ${group.length === 1 ? 'story' : 'stories'}
+          </div>
+        `;
+
+        element.querySelector('.map-city-hub-circle').appendChild(hubTooltip);
+
+        const radius = Math.max(70, group.length * 12);
+        const cityHubNodes = [];
+
+        group.forEach((story, index) => {
+          const angleStep = group.length <= 7 ? Math.PI / 6 : Math.PI / (group.length - 1);
+
+          const angle = Math.PI / 2 + index * angleStep;
+
+          const node = document.createElement('button');
+          node.type = 'button';
+
+          node.className = [
+            'map-city-hub-story',
+            'map-story-node',
+            themeClasses[story.research_theme] || '',
+          ]
+            .filter(Boolean)
+            .join(' ');
+
+          node.style.setProperty('--node-x', `${Math.cos(angle) * radius}px`);
+          node.style.setProperty('--node-y', `${Math.sin(angle) * radius}px`);
+
+          node.innerHTML = '<span class="map-story-node-circle"></span>';
+          node.setAttribute('aria-label', story.title);
+
+          const tooltip = document.createElement('span');
+          tooltip.className = 'map-city-hub-tooltip';
+          tooltip.textContent = story.title;
+          tooltip.setAttribute('aria-hidden', 'true');
+
+          node.appendChild(tooltip);
+
+          node.addEventListener('click', (event) => {
+            event.stopPropagation();
+            setHasInteractedWithMap(true);
+            element.classList.add('is-pinned');
+            setActiveStory(story);
+
+            map.easeTo({
+              center: hub.getLngLat().toArray(),
+              duration: 800,
+            });
+          });
+
+          element.appendChild(node);
+          cityHubNodes.push({ story, node });
+        });
+
+        let collapseTimer;
+
+        element.addEventListener('mouseenter', () => {
+          clearTimeout(collapseTimer);
+
+          const anotherHubPinned = cityHubMarkersRef.current.some(
+            ({ element: otherElement }) =>
+              otherElement !== element && otherElement.classList.contains('is-pinned'),
+          );
+
+          element.classList.toggle('is-blocked', anotherHubPinned);
+
+          if (anotherHubPinned) return;
+
+          cityHubMarkersRef.current.forEach(({ element: otherElement }) => {
+            if (otherElement !== element) {
+              otherElement.classList.remove('is-expanded');
+            }
+          });
+
+          element.classList.add('is-expanded');
+
+          markers.forEach(({ element: storyElement }) => {
+            storyElement.classList.add('is-dimmed');
+          });
+        });
+
+        element.addEventListener('mouseleave', () => {
+          clearTimeout(collapseTimer);
+
+          collapseTimer = setTimeout(
+            () => {
+              if (element.matches(':hover') || element.classList.contains('is-pinned')) return;
+
+              element.classList.remove('is-expanded');
+
+              const anyHubExpanded = cityHubMarkersRef.current.some(({ element: hubElement }) =>
+                hubElement.classList.contains('is-expanded'),
+              );
+
+              if (!anyHubExpanded) {
+                markers.forEach(({ element: storyElement }) => {
+                  storyElement.classList.remove('is-dimmed');
+                });
+              }
+            },
+            Math.min(
+              1400,
+              Math.max(
+                650,
+                500 +
+                  (cityHubNodes.filter(({ node }) => node.style.display !== 'none').length - 7) *
+                    112.5,
+              ),
+            ),
+          );
+        });
+
+        element.addEventListener('click', (event) => {
+          if (!window.matchMedia('(hover: none)').matches) return;
+
+          if (event.target.closest('.map-city-hub-story')) return;
+
+          element.classList.toggle('is-expanded');
+        });
+
+        const hub = new maplibregl.Marker({
+          element,
+          anchor: 'center',
+          subpixelPositioning: true,
+        })
+          .setLngLat([coordinates.longitude, coordinates.latitude])
+          .addTo(map);
+
+        oceanMarkersRef.current.push(hub);
+        cityHubMarkersRef.current.push({
+          hub,
+          element,
+          group,
+          nodes: cityHubNodes,
+        });
+      });
 
       const isValidLandPosition = (center, candidate, country) => {
         const isInsideCountry = (point) =>
@@ -434,10 +706,12 @@ function AnnualReportMap({ slide }) {
         if (!isInsideCountry(candidate)) return false;
 
         const distance = Math.hypot(candidate[0] - center.x, candidate[1] - center.y);
+
         const steps = Math.ceil(distance / 4);
 
         for (let step = 1; step < steps; step += 1) {
           const progress = step / steps;
+
           const point = [
             center.x + (candidate[0] - center.x) * progress,
             center.y + (candidate[1] - center.y) * progress,
@@ -451,15 +725,70 @@ function AnnualReportMap({ slide }) {
 
       const updateStoryPositions = () => {
         const placedPositions = [];
-        const minimumDistance = 20;
-        const minimumFallbackDistance = 8;
+        const minimumDistance = 12;
+
+        const hubs = cityHubMarkersRef.current
+          .map(({ hub, element, group }) => {
+            const coordinates = group[0].coordinates || countries[group[0].country];
+
+            if (!coordinates) return null;
+
+            const center = map.project([coordinates.longitude, coordinates.latitude]);
+
+            return {
+              hub,
+              center,
+              radius: parseFloat(element.style.getPropertyValue('--hub-size')) / 2,
+              x: center.x,
+              y: center.y,
+            };
+          })
+          .filter(Boolean);
+
+        // Separate hubs only when their circles are too close.
+        for (let i = 0; i < hubs.length; i += 1) {
+          for (let j = i + 1; j < hubs.length; j += 1) {
+            const a = hubs[i];
+            const b = hubs[j];
+
+            const dx = b.x - a.x;
+            const dy = b.y - a.y;
+            const distance = Math.hypot(dx, dy);
+            const requiredDistance = a.radius + b.radius;
+
+            if (distance >= requiredDistance) continue;
+
+            const angle = distance > 0 ? Math.atan2(dy, dx) : 0;
+
+            const displacement = (requiredDistance - distance) / 2;
+
+            a.x -= Math.cos(angle) * displacement;
+            a.y -= Math.sin(angle) * displacement;
+
+            b.x += Math.cos(angle) * displacement;
+            b.y += Math.sin(angle) * displacement;
+          }
+        }
+
+        hubs.forEach(({ hub, x, y }) => {
+          hub.setLngLat(map.unproject([x, y]));
+        });
+
+        const hubObstacles = cityHubMarkersRef.current.map(({ hub, element }) => ({
+          center: map.project(hub.getLngLat()),
+          radius: parseFloat(element.style.getPropertyValue('--hub-size')) / 2,
+        }));
 
         markers.forEach(({ marker, coordinates, index, story }, markerIndex) => {
           const center = map.project([coordinates.longitude, coordinates.latitude]);
 
           const nearestOtherLocation = Math.min(
             ...markers
-              .filter(({ story: otherStory }) => otherStory.location !== story.location)
+              .filter(
+                ({ story: otherStory }) =>
+                  otherStory.location !== story.location &&
+                  !cityHubLocations.has(otherStory.location.split(',')[0].trim().toLowerCase()),
+              )
               .map(({ coordinates: otherCoordinates }) => {
                 const otherCenter = map.project([
                   otherCoordinates.longitude,
@@ -470,71 +799,178 @@ function AnnualReportMap({ slide }) {
               }),
           );
 
-          const maxDisplacement = Math.min(60, nearestOtherLocation * 0.65);
-          const fallbackLimit = Math.max(maxDisplacement, 12);
-          const existingPlacement = markerPlacements.get(marker);
+          const maxDisplacement = Math.min(25, nearestOtherLocation * 0.4);
+          const searchRadius = Math.max(12, maxDisplacement);
 
-          let preferredCandidate = null;
-          let fallbackCandidate = null;
-          let fallbackClearance = -1;
-          let bestCandidate = null;
-          let bestClearance = -1;
+          const futurePositions = markers
+            .slice(markerIndex + 1)
+            .map(({ coordinates: otherCoordinates }) => {
+              const point = map.project([otherCoordinates.longitude, otherCoordinates.latitude]);
 
-          for (let attempt = 0; attempt < 200; attempt += 1) {
-            const angle = existingPlacement ? existingPlacement.angle : (index + attempt) * 2.39996;
-            const radius = attempt * 0.4;
-
-            if (radius > fallbackLimit) break;
-
-            const candidateX = center.x + radius * Math.cos(angle);
-            const candidateY = center.y + radius * Math.sin(angle);
-
-            if (!isValidLandPosition(center, [candidateX, candidateY], story.country)) continue;
-
-            const clearance = placedPositions.length
-              ? Math.min(
-                  ...placedPositions.map(([px, py]) =>
-                    Math.hypot(candidateX - px, candidateY - py),
-                  ),
-                )
-              : Infinity;
-
-            if (clearance > bestClearance) {
-              bestClearance = clearance;
-              bestCandidate = [candidateX, candidateY];
-            }
-
-            if (radius <= maxDisplacement && clearance >= minimumDistance) {
-              preferredCandidate = [candidateX, candidateY];
-              break;
-            }
-
-            if (clearance >= minimumFallbackDistance && clearance > fallbackClearance) {
-              fallbackCandidate = [candidateX, candidateY];
-              fallbackClearance = clearance;
-            }
-          }
-
-          const [x, y] = preferredCandidate ||
-            fallbackCandidate ||
-            bestCandidate || [center.x, center.y];
-
-          if (!existingPlacement) {
-            const dx = x - center.x;
-            const dy = y - center.y;
-
-            markerPlacements.set(marker, {
-              angle: Math.hypot(dx, dy) > 0.01 ? Math.atan2(dy, dx) : markerIndex * 2.39996,
+              return [point.x, point.y];
             });
+
+          let bestCandidate = [center.x, center.y];
+          let bestScore = Infinity;
+
+          // Search outward in rings, checking multiple directions at each distance.
+          for (let radius = 0; radius <= searchRadius; radius += 4) {
+            const angleCount = radius === 0 ? 1 : 24;
+
+            for (let step = 0; step < angleCount; step += 1) {
+              const angle = (step / angleCount) * Math.PI * 2 + index * 0.25;
+
+              const candidateX = center.x + radius * Math.cos(angle);
+              const candidateY = center.y + radius * Math.sin(angle);
+
+              if (!isValidLandPosition(center, [candidateX, candidateY], story.country)) continue;
+
+              // Priority 1: avoid fixed hubs.
+              const hubOverlap = hubObstacles.reduce(
+                (maximum, { center: hubCenter, radius: hubRadius }) => {
+                  const distance = Math.hypot(candidateX - hubCenter.x, candidateY - hubCenter.y);
+
+                  return Math.max(maximum, hubRadius + 10 - distance);
+                },
+                0,
+              );
+
+              // Priority 2: avoid already-positioned story nodes.
+              const placedOverlap = placedPositions.reduce((total, [px, py]) => {
+                const distance = Math.hypot(candidateX - px, candidateY - py);
+
+                return total + Math.max(0, minimumDistance - distance);
+              }, 0);
+
+              // Account for story nodes that have not yet been positioned.
+              const futureOverlap = futurePositions.reduce((total, [px, py]) => {
+                const distance = Math.hypot(candidateX - px, candidateY - py);
+
+                return total + Math.max(0, minimumDistance - distance);
+              }, 0);
+
+              // Hub overlap carries the highest penalty.
+              // Story overlap is softer; displacement is the final consideration.
+              const score =
+                Math.max(0, hubOverlap) * 15 + placedOverlap * 6 + futureOverlap * 2 + radius * 0.5;
+
+              if (score < bestScore) {
+                bestScore = score;
+                bestCandidate = [candidateX, candidateY];
+              }
+            }
           }
 
-          placedPositions.push([x, y]);
-          marker.setLngLat(map.unproject([x, y]));
+          placedPositions.push(bestCandidate);
+          marker.setLngLat(map.unproject(bestCandidate));
         });
+
+        // Refine placements using the actual positions of all story nodes.
+        // Multiple passes allow earlier nodes to adjust around later ones.
+        for (let pass = 0; pass < 3; pass += 1) {
+          markers.forEach(({ marker, coordinates, story }) => {
+            const center = map.project([coordinates.longitude, coordinates.latitude]);
+
+            const current = map.project(marker.getLngLat());
+
+            const otherPositions = markers
+              .filter(({ marker: otherMarker }) => otherMarker !== marker)
+              .map(({ marker: otherMarker, story: otherStory }) => ({
+                position: map.project(otherMarker.getLngLat()),
+                sameLocation: otherStory.location === story.location,
+              }));
+
+            const nearestOtherLocation = Math.min(
+              ...markers
+                .filter(({ story: otherStory }) => otherStory.location !== story.location)
+                .map(({ coordinates: otherCoordinates }) => {
+                  const otherCenter = map.project([
+                    otherCoordinates.longitude,
+                    otherCoordinates.latitude,
+                  ]);
+
+                  return Math.hypot(center.x - otherCenter.x, center.y - otherCenter.y);
+                }),
+            );
+
+            const maxDisplacement = Math.min(25, nearestOtherLocation * 0.4);
+            const searchRadius = Math.max(12, maxDisplacement);
+
+            let bestCandidate = [current.x, current.y];
+            let bestScore = Infinity;
+
+            for (let radius = 0; radius <= searchRadius; radius += 3) {
+              const angleCount = radius === 0 ? 1 : 24;
+
+              for (let step = 0; step < angleCount; step += 1) {
+                const angle = (step / angleCount) * Math.PI * 2;
+                const candidate = [
+                  center.x + radius * Math.cos(angle),
+                  center.y + radius * Math.sin(angle),
+                ];
+
+                if (
+                  !story.location.toLowerCase().includes('waterloo') &&
+                  !isValidLandPosition(center, candidate, story.country)
+                )
+                  continue;
+
+                const hubOverlap = hubObstacles.reduce(
+                  (maximum, { center: hubCenter, radius: hubRadius }) => {
+                    const distance = Math.hypot(
+                      candidate[0] - hubCenter.x,
+                      candidate[1] - hubCenter.y,
+                    );
+
+                    return Math.max(maximum, hubRadius + 10 - distance);
+                  },
+                  0,
+                );
+
+                const nodeOverlap = otherPositions.reduce((total, { position, sameLocation }) => {
+                  const distance = Math.hypot(candidate[0] - position.x, candidate[1] - position.y);
+
+                  const overlap = Math.max(0, minimumDistance - distance);
+
+                  return total + overlap * (sameLocation ? 0.2 : 1);
+                }, 0);
+
+                const score =
+                  Math.max(0, hubOverlap) *
+                    (story.location.toLowerCase().includes('waterloo') ? 8 : 15) +
+                  nodeOverlap * 6 +
+                  radius * 0.5;
+
+                if (score < bestScore) {
+                  bestScore = score;
+                  bestCandidate = candidate;
+                }
+              }
+            }
+
+            marker.setLngLat(map.unproject(bestCandidate));
+          });
+        }
       };
 
-      map.once('idle', updateStoryPositions);
-      map.on('zoomend', updateStoryPositions);
+      map.on('zoom', () => {
+        const zoomDifference = Math.max(0, map.getZoom() - initialZoom);
+        const scale = Math.min(1.8, 1 + zoomDifference * 0.2);
+
+        markers.forEach(({ element }) => {
+          element.style.setProperty('--story-zoom-scale', scale);
+        });
+      });
+
+      map.once('idle', () => {
+        updateStoryPositions();
+
+        requestAnimationFrame(() => {
+          mapContainerRef.current
+            ?.closest('.annual-report-map')
+            ?.classList.remove('map-initializing');
+        });
+      });
     });
 
     return () => {
@@ -568,6 +1004,41 @@ function AnnualReportMap({ slide }) {
 
       if (!matches) {
         tooltip.remove();
+      }
+    });
+
+    cityHubMarkersRef.current.forEach(({ element, nodes }) => {
+      const matchingNodes = nodes.filter(({ story }) =>
+        storyMatches(story, searchQuery, selectedTheme),
+      );
+
+      const matchingCount = matchingNodes.length;
+      const radius = Math.max(70, matchingCount * 12);
+
+      nodes.forEach(({ node }) => {
+        node.style.display = 'none';
+      });
+
+      matchingNodes.forEach(({ node }, index) => {
+        const angleStep = matchingCount <= 7 ? Math.PI / 6 : Math.PI / (matchingCount - 1);
+
+        const angle = Math.PI / 2 + index * angleStep;
+
+        node.style.setProperty('--node-x', `${Math.cos(angle) * radius}px`);
+        node.style.setProperty('--node-y', `${Math.sin(angle) * radius}px`);
+
+        node.style.display = '';
+      });
+
+      element.style.display = matchingCount > 0 ? '' : 'none';
+
+      const hubSize = Math.min(65, 28 + Math.sqrt(matchingCount) * 5) / 1.5;
+      element.style.setProperty('--hub-size', `${hubSize}px`);
+
+      const tooltipCount = element.querySelector('.map-city-hub-info-count');
+
+      if (tooltipCount) {
+        tooltipCount.textContent = `${matchingCount} ${matchingCount === 1 ? 'story' : 'stories'}`;
       }
     });
   }, [searchQuery, selectedTheme]);
@@ -615,7 +1086,7 @@ function AnnualReportMap({ slide }) {
 
   return (
     <motion.div
-      className="annual-report-map"
+      className="annual-report-map map-initializing"
       initial={isLargeScreen ? { opacity: 0, y: 20 } : false}
       animate={
         isLargeScreen
@@ -627,6 +1098,21 @@ function AnnualReportMap({ slide }) {
           : false
       }
     >
+      <div
+        className={`annual-report-slide map-title-overlay${hasInteractedWithMap ? ' is-hidden' : ''}`}
+      >
+        <div className="ar-slide-content regular-slide standard">
+          <div className="container">
+            <div className="row">
+              <div className="col">
+                <div className="slide-title">
+                  <h1>{slide.title}</h1>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="annual-report-map-controls">
         <div className="map-search-input">
           <input
@@ -707,7 +1193,7 @@ function AnnualReportMap({ slide }) {
             &times;
           </button>
 
-          <div className="map-card">
+          <div className="map-card" ref={cardRef}>
             {activeStory.research_theme && (
               <div className={`map-card-theme ${themeClasses[activeStory.research_theme] || ''}`}>
                 {activeStory.research_theme}

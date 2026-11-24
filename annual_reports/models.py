@@ -15,7 +15,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.shortcuts import render, redirect
 from django.utils.text import slugify
-from geopy.exc import GeocoderServiceError
+from geopy.exc import GeopyError
 from geopy.geocoders import Nominatim
 from mediavalet.panels import MediaValetImageChooserPanel
 from modelcluster.fields import ParentalKey
@@ -416,6 +416,10 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
         blank=True,
         help_text="Position of the quote",
     )
+    show_background_quote_gradient = models.BooleanField(
+        default=True,
+        help_text="Show a gradient behind the background quote",
+    )
 
     parent_page_types = ['AnnualReportSPAPage']
     subpage_types = []
@@ -451,6 +455,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                 FieldPanel("background_quote_fr"),
                 FieldPanel("background_quote_font_size_fr"),
                 FieldPanel("background_quote_position"),
+                FieldPanel("show_background_quote_gradient"),
             ],
             heading="Background",
             classname="collapsible collapsed",
@@ -718,6 +723,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                         "unrealized_investment_gains": current_year.get("unrealized_investment_gains") or "",
                         "other": current_year.get("other") or "",
                         "government_and_other_grants": current_year.get("government_and_other_grants") or "",
+                        "donations": current_year.get("donations") or "",
                         "total_revenue": current_year.get("total_revenue") or "",
                         "research_and_conferences": current_year.get("research_and_conferences") or "",
                         "amortization": current_year.get("amortization") or "",
@@ -735,6 +741,7 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                         "unrealized_investment_gains": previous_year.get("unrealized_investment_gains") or "",
                         "other": previous_year.get("other") or "",
                         "government_and_other_grants": previous_year.get("government_and_other_grants") or "",
+                        "donations": previous_year.get("donations") or "",
                         "total_revenue": previous_year.get("total_revenue") or "",
                         "research_and_conferences": previous_year.get("research_and_conferences") or "",
                         "amortization": previous_year.get("amortization") or "",
@@ -872,38 +879,9 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                     ],
                 })
 
-            countries = {}
-
-            geolocator = Nominatim(user_agent='cigionline-annual-report-map', timeout=5)
-
-            for story in map_stories:
-                country = story['country']
-
-                if country not in countries:
-                    cache_key = _geocode_cache_key('country', country)
-                    coordinates = cache.get(cache_key)
-
-                    if coordinates is None:
-                        try:
-                            location = geolocator.geocode(country, featuretype='country')
-                        except GeocoderServiceError:
-                            location = None
-
-                        if not location:
-                            continue
-
-                        coordinates = {
-                            'latitude': location.latitude,
-                            'longitude': location.longitude,
-                        }
-
-                        cache.set(cache_key, coordinates, 60 * 60 * 24 * 30)
-
-                    countries[country] = coordinates
-
             content = {
                 'map_stories': map_stories,
-                'countries': countries,
+                'countries': {},
             }
         return content
 
@@ -1209,6 +1187,8 @@ class MapStory(ClusterableModel):
         verbose_name='Story Date',
     )
     location = models.CharField(max_length=255)
+    latitude = models.FloatField(null=True, blank=True, editable=False)
+    longitude = models.FloatField(null=True, blank=True, editable=False)
     research_theme = models.ForeignKey(
         'research.ThemePage',
         null=True,
@@ -1224,42 +1204,57 @@ class MapStory(ClusterableModel):
         use_json_field=True,
     )
 
+    def save(self, *args, **kwargs):
+        location_text = self.location.strip() if self.location else ''
+        previous_location = (
+            type(self).objects
+            .filter(pk=self.pk)
+            .values_list('location', flat=True)
+            .first()
+            if self.pk
+            else None
+        )
+        location_changed = previous_location != self.location
+
+        if location_changed:
+            self.latitude = None
+            self.longitude = None
+
+        if location_text and (self.latitude is None or self.longitude is None):
+            coordinates = cache.get(_geocode_cache_key('location', location_text))
+
+            if coordinates:
+                self.latitude = coordinates['latitude']
+                self.longitude = coordinates['longitude']
+            elif cache.add('geocode:nominatim:request-slot', True, timeout=2):
+                try:
+                    result = Nominatim(user_agent='cigi-ar-map', timeout=10).geocode(location_text)
+                except GeopyError:
+                    result = None
+
+                if result:
+                    self.latitude = result.latitude
+                    self.longitude = result.longitude
+                    cache.set(
+                        _geocode_cache_key('location', location_text),
+                        {
+                            'latitude': result.latitude,
+                            'longitude': result.longitude,
+                        },
+                        60 * 60 * 24 * 30,
+                    )
+
+        super().save(*args, **kwargs)
+
     @property
     def coordinates(self):
-        if not self.location:
+        if self.latitude is None or self.longitude is None:
             return None
 
-        location_text = self.location.strip()
-        cache_key = _geocode_cache_key('location', location_text)
-
-        sentinel = object()
-        cached = cache.get(cache_key, sentinel)
-
-        if cached is not sentinel:
-            return cached
-
-        geolocator = Nominatim(user_agent='cigionline-annual-report-map', timeout=5)
-        try:
-            location = geolocator.geocode(location_text)
-        except GeocoderServiceError:
-            location = None
-
-        if not location:
-            cache.set(cache_key, None, 60 * 60 * 24)
-            return None
-
-        coordinates = {
-            'latitude': location.latitude,
-            'longitude': location.longitude,
+        return {
+            'latitude': self.latitude,
+            'longitude': self.longitude,
         }
-
-        cache.set(
-            cache_key,
-            coordinates,
-            60 * 60 * 24 * 30,
-        )
-
-        return coordinates
 
     panels = [
         FieldPanel('title'),
