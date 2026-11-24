@@ -83,7 +83,7 @@
           <hr class="separator-large">
           <div class="col-12 col-md-6 featured-medium">
             {% if featured_pages|length > 1 %}
-              {% include "includes/features/feature_content_large.html" with content=featured_pages.1 additional_classes="poster" poster=True cta=True cta_pdf=featured_pages.1.pdf_download %}
+              {% include "includes/features/feature_content_large.html" with content=featured_pages.1 additional_classes="poster" poster=True cta=True cta_pdf=featured_pages.1.pdf_download hide_short_description=True %}
             {% endif %}
           </div>
         </div>
