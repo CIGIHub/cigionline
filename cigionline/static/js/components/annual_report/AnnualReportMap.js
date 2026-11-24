@@ -979,10 +979,7 @@ function AnnualReportMap({ slide }) {
                   center.y + radius * Math.sin(angle),
                 ];
 
-                if (
-                  !story.location.toLowerCase().includes('waterloo') &&
-                  !isValidLandPosition(center, candidate, story.country)
-                ) continue;
+                if (!isValidLandPosition(center, candidate, story.country)) continue;
 
                 const hubOverlap = hubObstacles.reduce(
                   (maximum, { center: hubCenter, radius: hubRadius }) => {
