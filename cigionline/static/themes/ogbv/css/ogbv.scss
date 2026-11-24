@@ -86,6 +86,15 @@ body {
           .feature-content-image {
             .img-wrapper {
               margin: 0;
+              aspect-ratio: 3 / 4;
+              overflow: hidden;
+
+              img {
+                display: block;
+                height: 100%;
+                object-fit: cover;
+                width: 100%;
+              }
             }
           }
         }

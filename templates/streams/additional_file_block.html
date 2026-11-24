@@ -22,7 +22,9 @@
               {% image self.image width-800 %}
             {% endif %}
           </figure>
-        </a>
+        {% if self.page or self.file %}
+          </a>
+        {% endif %}
       </div>
     {% endif %}
     <div class="stream-block-text
