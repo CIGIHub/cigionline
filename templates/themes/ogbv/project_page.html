@@ -53,17 +53,19 @@
         <div class="hero-main col-8">
           <h1>{{self.title}}</h1>
           <h2>{{self.subtitle|safe}}</h2>
-          {% if self.subscribe_page %}
-            <div class="subscribe-text">
-              {{ self.subscribe_help_text }}
-            </div>
-            <div>
-              <a href="{% pageurl self.subscribe_page %}" class="button-action">
-                <i class="fal fa-envelope"></i>
-                {{ self.subscribe_button_text }}
-              </a>
-            </div>
-          {% endif %}
+          {% for block in self.hero_link %}
+            {% if block.block_type == 'hero_document' %}
+              <div class="subscribe-text">
+                {{ block.value.hero_link_text }}
+              </div>
+              <div>
+                <a href="{{ block.value.hero_link_document.url }}" class="button-action">
+                  <i class="{{ block.value.hero_link_icon_style }} {{ block.value.hero_link_icon }}"></i>
+                  Download the Report
+                </a>
+              </div>
+            {% endif %}
+          {% endfor %}
         </div>
       </div>
     </div>
@@ -73,51 +75,15 @@
     <section class="featured">
       <div class="container">
         <div class="row align-items-stretch">
-          <div class="col-12 col-md-8 feature-border-right">
+          <div class="col-12 col-md-6 feature-border-right">
             {% if featured_pages|length > 0 %}
               {% include "includes/features/feature_content_large.html" with content=featured_pages.0 additional_classes="poster" poster=True cta=True cta_pdf=featured_pages.0.pdf_download %}
             {% endif %}
           </div>
           <hr class="separator-large">
-          <div class="col-12 col-md-4 featured-medium">
+          <div class="col-12 col-md-6 featured-medium">
             {% if featured_pages|length > 1 %}
-            {% with content=featured_pages.1 %}
-              <article class="feature-content feature-content-medium{% if dark_mode %} dark-mode{% endif %}">
-                <a href="{% if content.feature_url %}{{ content.feature_url }}{% else %}{% pageurl content %}{% endif %}" class="feature-content-image">
-                  <div class="img-wrapper">
-                    {% if content.image_feature and not content.expired_image %}
-                      {% define content.image_feature as feature_image %}
-                    {% elif content.image_hero and not content.expired_image %}
-                      {% define content.image_hero as feature_image %}
-                    {% else %}
-                      <img src="{% static 'assets/CIGI-default-recommended-thumb.png' %}" alt="CIGI Logo">
-                    {% endif %}
-                    {% if feature_image.file.url|file_extension == '.gif' %}
-                      <img src="{{feature_image.file.url}}" alt="{{feature_image.caption}}" />
-                    {% else %}
-                      {% image feature_image fill-520x390 %}
-                    {% endif %}
-                  </div>
-                </a>
-                <div class="feature-content-text center-text">
-                  <div>
-                    {% include 'includes/topics.html' with topics=content.topics_sorted %}
-                    {% include 'includes/features/feature_content_title.html' %}
-                  </div>
-                  <div>
-                    {% include 'includes/features/feature_content_people.html' with authors=content.authors.all %}
-                    <div class="feature-content-date meta">{{ content.publishing_date|date:"F j, Y" }}</div>
-                    {% if content.specific.pdf_downloads %}
-                      <a href="{{ content.specific.pdf_downloads.0.value.file.url }}" aria-label="Download PDF">
-                        <button class="button-action button-square">
-                          <i class="fa fas fa-download track-cta" data-cta="publication-pdf"></i>
-                        </button>
-                      </a>
-                    {% endif %}
-                  </div>
-                </div>
-              </article>
-            {% endwith %}
+              {% include "includes/features/feature_content_large.html" with content=featured_pages.1 additional_classes="poster" poster=True cta=True cta_pdf=featured_pages.1.pdf_download %}
             {% endif %}
           </div>
         </div>
@@ -127,21 +93,11 @@
           </div>
         </div>
         <div class="row highlights">
-          <div class="col-12 col-md-8 feature-border-right">
-            {% for block in additional_files %}
+          {% for block in additional_files|slice:":2" %}
+            <div class="col-12 col-md-6{% if forloop.first %} feature-border-right{% endif %}">
               {% include_block block with half_split=True %}
-            {% endfor %}
-          </div>
-          <div class="col-12 col-md-4 featured-small">
-            {% with featured_pages|slice:"2:4" as featured_small %}
-              {% for item in featured_small %}
-                {% if forloop.counter > 1 %}
-                  <hr>
-                {% endif %}
-                {% include "includes/features/feature_content_small.html" with content=item cta=True %}
-              {% endfor %}
-            {% endwith %}
-          </div>
+            </div>
+          {% endfor %}
         </div>
       </div>
     </section>
@@ -175,8 +131,8 @@
         <summary class="dropdown-toggle">
           <div class="container">
             <div class="row justify-content-center">
-              <div class="col-12 col-md-10 col-lg-8">
-                <h2 class="paragraph-heading"><span>About</span></h2>
+              <div class="col-12 col-md-6 col-lg-4">
+                <h2 class="paragraph-heading"><span>About the Program</span></h2>
               </div>
             </div>
           </div>
@@ -194,58 +150,19 @@
     </div>
   </section>
 
-  <section class="ogbv-resources">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-12 col-md-10 col-lg-8">
-          <h2 class="paragraph-heading">Resources</h2>
-        </div>
-        {% for file in self.related_files %}
-          <div class="col-12 col-md-10 col-lg-8">
-            <article class="ogbv-resource">
-              <h3>{{ file.value.title }}</h2>
-              <a href="{{ file.value.file.url }}" class="button-action track-cta" data-cta="ogbv-resource" target="_blank" rel="noopener noreferrer">
-                <i class="fas fa-download"></i>
-                Download
-              </a>
-            </article>
-            {% if not forloop.last %}
-              <hr class="separator-large">
-            {% endif %}
-          </div>
-        {% endfor %}
-      </div>
-    </div> 
-    {% for block in self.body %}
-      {% with type=block.block_type %}
-        {% if type == 'embedded_video' or type == 'image' %}
+  {% if self.members.all %}
+    <div class="dropdown custom-dropdown collapsible-section">
+      <details>
+        <summary class="dropdown-toggle">
           <div class="container">
             <div class="row justify-content-center">
-              <div class="col-12 col-md-10 col-lg-8">
-                <hr>
+              <div class="col-12 col-md-6 col-lg-4">
+                <h2 class="paragraph-heading">Team Members</h2>
               </div>
             </div>
           </div>
-          {% include_block block %}
-        {% endif %}
-      {% endwith %}
-    {% endfor %}
-  </section>
-
-  {% if self.members.all or self.additional_members %}
-  <div class="dropdown custom-dropdown collapsible-section">
-    <details>
-      <summary class="dropdown-toggle">
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="col-12 col-md-10 col-lg-8">
-              <h2 class="paragraph-heading">Team Members</h2>
-            </div>
-          </div>
-        </div>
-      </summary>
-      <div class="collapsible-content">
-        {% if self.members.all %}
+        </summary>
+        <div class="collapsible-content">
           <section class="persons-list-block">
             <div class="container">
               <div class="row d-block">
@@ -261,7 +178,7 @@
                               {% endif %}
                             </div>
                           </a>
-                  
+
                           <div>
                             <a href="{{ member.member.url }}" class="person-name">{{ member.member.title }}</a>
                             <div class="person-function">
@@ -279,14 +196,29 @@
               </div>
             </div>
           </section>
-        {% endif %}
-        {% if self.additional_members %}
+        </div>
+      </details>
+    </div>
+  {% endif %}
+
+  {% if self.additional_members %}
+    <div class="dropdown custom-dropdown collapsible-section">
+      <details>
+        <summary class="dropdown-toggle">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-12 col-md-6 col-lg-4">
+                <h2 class="paragraph-heading">Contributing Experts</h2>
+              </div>
+            </div>
+          </div>
+        </summary>
+        <div class="collapsible-content">
           {% for block in self.additional_members %}
             <section class="persons-list-block">
               <div class="container">
                 <div class="row d-block">
                   <div class="col col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-                    <h2 class="paragraph-heading">{{ block.value.title }}</h2>
                     <ul class="persons-list">
                       {% for member in block.value.persons %}
                         <li>
@@ -298,7 +230,6 @@
                                 {% endif %}
                               </div>
                             </a>
-                    
                             <div>
                               <a href="{{ member.value.url }}" class="person-name">{{ member.value.title }}</a>
                               <div class="person-function">
@@ -323,17 +254,32 @@
               </div>
             </section>
           {% endfor %}
-        {% endif %}
+        </div>
+      </details>
+    </div>
+  {% endif %}
+
+  {% if self.subscribe_page %}
+    <section class="ogbv-newsletter">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-10 col-lg-8">
+            <p>More insights and resources are on the way. Subscribe for the latest updates.</p>
+            <form class="cigi-newsletter-subscription-form" title="Newsletter Sign Up" action="{% pageurl self.subscribe_page %}" method="GET">
+              <input type="email" name="email" value="" size="60" maxlength="128" placeholder="Your email"
+                class="form-email required" required="required" aria-required="true">
+              <button type="submit" class="button-submit"><i class="fal fa-envelope"></i>SIGN UP</button>
+            </form>
+          </div>
+        </div>
       </div>
-    </details>
-  </div>
+    </section>
   {% endif %}
 
   <section class="ogbv-acknowledgements">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-12 col-md-10 col-lg-8">
-          <hr>
           <p>
             <em>
               The Supporting a Safer Internet project is funded by a grant from the International Development Research Centre, Ottawa, Canada.
