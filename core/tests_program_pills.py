@@ -202,6 +202,7 @@ class ProgramModulePillTests(TestCase):
     def test_spotlight_panel_has_no_pill_and_cards_show_topics(self):
         html = render(ProgramSpotlightBlock(), {}, self.home)
         soup = BeautifulSoup(html, 'html.parser')
+        self.assertIsNotNone(soup.select_one('#research-themes'))
         bodies = soup.select('.ds-program-spotlight__panel-body')
         self.assertEqual(len(bodies), 2)  # one panel per live program
         for body in bodies:

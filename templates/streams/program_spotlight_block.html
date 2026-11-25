@@ -21,7 +21,7 @@
       {% include "includes/section_header.html" with heading=self.heading intro=self.intro %}
     {% endif %}
 
-    <div class="ds-program-spotlight__band">
+    <div id="research-themes" class="ds-program-spotlight__band">
       {% include "includes/section_header.html" with eyebrow=self.themes_eyebrow|default:"Research Themes" %}
       {# Desktop themes grid (hidden on mobile — the carousel below takes over). #}
       <ul class="ds-program-spotlight__themes" data-ds-reveal data-ds-reveal-stagger="80">
