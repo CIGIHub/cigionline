@@ -1400,20 +1400,31 @@ def host_program(parent_context):
     """The ProjectPage a module is rendering on, else None. Lets a program page
     scope its own dynamic modules without an author setting (BugHerd #133)."""
     page = (parent_context or {}).get('page')
+    page = page.specific if page else None
     from research.models import ProjectPage
     return page if isinstance(page, ProjectPage) else None
 
 
-def resolve_experts(mode, manual_value, count, program=None):
+def host_theme(parent_context):
+    """The ThemePage a module is rendering on, else None."""
+    page = (parent_context or {}).get('page')
+    page = page.specific if page else None
+    from research.models import ThemePage
+    return page if isinstance(page, ThemePage) else None
+
+
+def resolve_experts(mode, manual_value, count, program=None, theme=None):
     """Resolve an expert-list module's people from its source control. ``manual`` →
     the hand-picked PersonPages (live + specific, in order); ``auto`` → all live
     experts (``person_types=4``) A–Z, capped at ``count`` with expertise prefetched.
     Shared by the Experts Grid + Experts Carousel.
 
-    ``program`` scopes auto mode to the experts tied to that program, and orders
-    them by seniority instead of A–Z (BugHerd #133). Tied means either an author
-    credit on live content linked to the program, or a direct program link on the
-    person. A–Z still breaks ties inside each seniority tier.
+    ``program`` scopes auto/program mode to experts tied to that program, and
+    orders them by seniority instead of A–Z (BugHerd #133). Tied means either an
+    author credit on live content linked to the program, or a direct program link
+    on the person. ``theme`` scopes theme mode through the same derived-topic
+    relationship as the experts listing's Theme facet and shuffles the matches.
+    A–Z still breaks ties inside each program seniority tier.
     """
     if mode == 'manual':
         return [p.specific for p in (manual_value or []) if p and getattr(p, 'live', False)]
@@ -1452,6 +1463,14 @@ def resolve_experts(mode, manual_value, count, program=None):
                 PERSON_TYPE_IDS['distinguished_fellow'],
             ]).distinct().order_by('?')[:count or 12]
         )
+
+    if mode == 'theme':
+        return (list(qs.filter(derived_topics__program_theme=theme)
+                     .distinct().order_by('?')[:count or 12])
+                if theme else [])
+
+    if mode == 'program' and program is None:
+        return []
 
     if program is None:
         return list(qs[:count or 24])
@@ -1492,6 +1511,8 @@ class ExpertsCarouselBlock(ConditionalFieldsMixin, SurfaceMixin, ThemeableBlock)
             # Random per visit, Research Directors + Distinguished Fellows only
             # (Tim, BugHerd #251 — the A–Z rail always led with the same faces).
             ('random', 'Random — Research Directors & Distinguished Fellows, shuffled per visit'),
+            ('theme', 'Theme — experts associated with this theme'),
+            ('program', 'Program — experts associated with this program'),
             ('manual', 'Manual — hand-picked experts'),
         ],
         default='auto',
@@ -1518,9 +1539,11 @@ class ExpertsCarouselBlock(ConditionalFieldsMixin, SurfaceMixin, ThemeableBlock)
 
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context)
+        mode = value.get('mode')
         context['experts'] = resolve_experts(
-            value.get('mode'), value.get('experts'), value.get('count'),
-            program=host_program(parent_context))
+            mode, value.get('experts'), value.get('count'),
+            program=host_program(parent_context) if mode in ('auto', 'program') else None,
+            theme=host_theme(parent_context) if mode == 'theme' else None)
         context['cta_url'] = value['cta_page'].get_url(context.get('request')) if value.get('cta_page') else None
         context['cta_scheme'] = 'on-light' if value.get('surface') == 'light' else 'on-dark'
         return context
@@ -4981,12 +5004,16 @@ class ComposableTabsBlock(blocks.StructBlock, ThemeableBlock):
 
 _POPULATE_ITEMS = {'mode': {'auto': ['count'], 'manual': ['items']}}
 _POPULATE_EXPERTS = {'mode': {'auto': ['count'], 'manual': ['experts']}}
+_POPULATE_EXPERTS_CAROUSEL = {'mode': {
+    'auto': ['count'], 'random': ['count'], 'theme': ['count'],
+    'program': ['count'], 'manual': ['experts'],
+}}
 _PROGRAM_SOURCE = {'program_source': {'manual': ['program', 'programs'], 'auto': [], 'none': []}}
 
 ProgramGridBlock.CONDITIONAL_FIELDS = {**_PROGRAM_SOURCE, **_POPULATE_ITEMS}
 ProgramsCarouselBlock.CONDITIONAL_FIELDS = {**_PROGRAM_SOURCE, **_POPULATE_ITEMS}
 ExpertsGridBlock.CONDITIONAL_FIELDS = _POPULATE_EXPERTS
-ExpertsCarouselBlock.CONDITIONAL_FIELDS = _POPULATE_EXPERTS
+ExpertsCarouselBlock.CONDITIONAL_FIELDS = _POPULATE_EXPERTS_CAROUSEL
 ResourceCarouselBlock.CONDITIONAL_FIELDS = _POPULATE_ITEMS
 ResourceBentoBlock.CONDITIONAL_FIELDS = _POPULATE_ITEMS
 EventsCarouselBlock.CONDITIONAL_FIELDS = _POPULATE_ITEMS

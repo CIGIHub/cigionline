@@ -11,8 +11,9 @@ from django.utils import timezone
 from events.models import EventPage
 from home.models import HomePage
 from multimedia.models import MultimediaPage
+from people.models import PeoplePage, PersonPage, PersonType
 from publications.models import PublicationPage, PublicationTypePage
-from research.models import ProjectPage
+from research.models import ProjectPage, ThemePage, TopicPage
 from wagtail import blocks
 
 from .blocks import (
@@ -26,6 +27,7 @@ from .blocks import (
     ExternalQuoteBlock,
     ExternalVideoBlock,
     ExtractBlock,
+    ExpertsCarouselBlock,
     FilesBlock,
     HighlightTitleBlock,
     InlineVideoBlock,
@@ -71,6 +73,57 @@ class AutoPlayVideoBlockTests(SimpleTestCase):
 class AccordionBlockTests(SimpleTestCase):
     def test_rich_text_supports_images(self):
         self.assertIn('image', AccordionBlock().child_blocks['text'].features)
+
+
+class ExpertsCarouselBlockTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        home = HomePage.objects.get()
+        cls.theme = home.add_child(instance=ThemePage(
+            title='AI and Technology', slug='ai-and-technology'))
+        cls.topic = home.add_child(instance=TopicPage(
+            title='Artificial Intelligence', slug='artificial-intelligence',
+            program_theme=cls.theme))
+        cls.program = home.add_child(instance=ProjectPage(
+            title='AI Program', slug='ai-program', publishing_date=timezone.now()))
+        people = home.add_child(instance=PeoplePage(title='People', slug='people'))
+        expert_type = PersonType.objects.get(name='Expert')
+
+        def expert(name):
+            person = people.add_child(instance=PersonPage(
+                title=name, slug=name.lower().replace(' ', '-'), last_name=name))
+            person.person_types.set([expert_type])
+            person.save()
+            return person
+
+        cls.theme_expert = expert('Theme Expert')
+        cls.theme_expert.derived_topics.set([cls.topic])
+        cls.program_expert = expert('Program Expert')
+        cls.program_expert.projects.set([cls.program])
+        cls.program_expert.save()
+        cls.other_expert = expert('Other Expert')
+
+    @staticmethod
+    def experts(mode, page):
+        block = ExpertsCarouselBlock()
+        value = block.to_python({'mode': mode, 'count': 12})
+        return block.get_context(value, {'page': page})['experts']
+
+    def test_offers_theme_and_program_population_modes(self):
+        choices = dict(ExpertsCarouselBlock().child_blocks['mode'].field.choices)
+
+        self.assertIn('theme', choices)
+        self.assertIn('program', choices)
+
+    def test_theme_mode_only_returns_experts_associated_with_current_theme(self):
+        self.assertEqual(self.experts('theme', self.theme), [self.theme_expert])
+
+    def test_program_mode_only_returns_experts_associated_with_current_program(self):
+        self.assertEqual(self.experts('program', self.program), [self.program_expert])
+
+    def test_scoped_modes_return_nothing_on_the_wrong_page_type(self):
+        self.assertEqual(self.experts('theme', self.program), [])
+        self.assertEqual(self.experts('program', self.theme), [])
 
 
 class LegacyBlockTemplateTests(TestCase):
