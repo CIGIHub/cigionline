@@ -43,6 +43,8 @@
             <a href="{{ self.page.url }}">{{ self.title }}</a>
           {% elif self.file %}
             <a href="{{ self.file.file.url }}">{{ self.title }}</a>
+          {% elif self.image %}
+            <a href="{{ self.image.file.url }}" target="_blank" rel="noopener noreferrer">{{ self.title }}</a>
           {% else %}
             {{ self.title }}
           {% endif %}
