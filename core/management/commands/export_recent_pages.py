@@ -10,10 +10,13 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.management.base import BaseCommand, CommandError
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import connection
+from django.db.models import Q
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 from modelcluster.models import get_all_child_relations
 from wagtail.models import Page, ReferenceIndex, Site
+
+from menus.models import Menu
 
 
 SCHEMA = "cigionline.content-overlay/v1"
@@ -212,6 +215,42 @@ def many_to_many_rows(model, source_pk):
     return relations
 
 
+def export_menus(dependencies):
+    menus = []
+    for menu in Menu.objects.select_related("bottom_link_page").order_by("pk"):
+        items = []
+        for item in menu.menu_items.select_related("link_page", "submenu").order_by(
+            "sort_order", "pk"
+        ):
+            items.append(
+                {
+                    "title": item.title,
+                    "description": item.description,
+                    "link_url": item.link_url,
+                    "link_page": (
+                        add_dependency(Page, item.link_page_id, dependencies)
+                        if item.link_page_id else None
+                    ),
+                    "submenu": item.submenu.slug if item.submenu_id else None,
+                    "sort_order": item.sort_order,
+                }
+            )
+        menus.append(
+            {
+                "name": menu.name,
+                "slug": menu.slug,
+                "bottom_link_label": menu.bottom_link_label,
+                "bottom_link_url": menu.bottom_link_url,
+                "bottom_link_page": (
+                    add_dependency(Page, menu.bottom_link_page_id, dependencies)
+                    if menu.bottom_link_page_id else None
+                ),
+                "items": items,
+            }
+        )
+    return menus
+
+
 def copy_files(dependencies, output_dir):
     files = []
     for dependency_id, dependency in sorted(dependencies.items()):
@@ -258,6 +297,12 @@ class Command(BaseCommand):
             action="store_true",
             help="Copy referenced image, document, and media originals beside the manifest.",
         )
+        parser.add_argument(
+            "--include-url-path",
+            action="append",
+            default=[],
+            help="Also export this live Wagtail url_path; repeatable.",
+        )
 
     def handle(self, *args, **options):
         if options["months"] < 1:
@@ -269,7 +314,23 @@ class Command(BaseCommand):
         if timezone.is_naive(cutoff):
             cutoff = timezone.make_aware(cutoff)
 
-        pages = list(Page.objects.live().filter(last_published_at__gte=cutoff).order_by("last_published_at", "pk"))
+        included_paths = set(options["include_url_path"])
+        found_paths = set(
+            Page.objects.live()
+            .filter(url_path__in=included_paths)
+            .values_list("url_path", flat=True)
+        )
+        missing_paths = sorted(included_paths - found_paths)
+        if missing_paths:
+            raise CommandError(
+                "--include-url-path did not resolve to live pages: " + ", ".join(missing_paths)
+            )
+        pages = list(
+            Page.objects.live()
+            .filter(Q(last_published_at__gte=cutoff) | Q(url_path__in=included_paths))
+            .order_by("last_published_at", "pk")
+            .distinct()
+        )
         sites = [
             {"hostname": site.hostname, "port": site.port, "root_url_path": site.root_page.url_path}
             for site in Site.objects.select_related("root_page").order_by("hostname", "port")
@@ -287,7 +348,9 @@ class Command(BaseCommand):
                     "url_path": page.url_path,
                     "full_url": page.full_url,
                     "locale": page.locale.language_code,
-                    "published_at": page.last_published_at.isoformat(),
+                    "published_at": (
+                        page.last_published_at.isoformat() if page.last_published_at else None
+                    ),
                     "model_rows": rows,
                     "child_relations": child_rows(model, page.pk),
                     "many_to_many": many_to_many_rows(model, page.pk),
@@ -295,20 +358,29 @@ class Command(BaseCommand):
                 }
             )
 
+        menus = export_menus(dependencies)
+
         output = Path(options["output"]).expanduser().resolve()
         output.parent.mkdir(parents=True, exist_ok=True)
         files = copy_files(dependencies, output.parent) if options["include_files"] else []
         artifact = {
             "schema": SCHEMA,
             "generated_at": now.isoformat(),
-            "selection": {"live": True, "last_published_at_gte": cutoff.isoformat()},
+            "selection": {
+                "live": True,
+                "last_published_at_gte": cutoff.isoformat(),
+                "included_url_paths": sorted(included_paths),
+            },
             "sites": sites,
             "counts": {
                 "pages": len(exported_pages),
                 "dependencies": len(dependencies),
                 "files": len(files),
+                "menus": len(menus),
+                "menu_items": sum(len(menu["items"]) for menu in menus),
             },
             "pages": exported_pages,
+            "menus": menus,
             "dependencies": dependencies,
             "files": files,
         }
@@ -318,9 +390,11 @@ class Command(BaseCommand):
         checked = json.loads(output.read_text())
         if checked["counts"]["pages"] != len(pages):
             raise CommandError("Export verification failed: page count changed")
+        if checked["counts"]["menus"] != len(menus):
+            raise CommandError("Export verification failed: menu count changed")
         self.stdout.write(
             self.style.SUCCESS(
                 f"Exported {len(exported_pages)} pages, {len(dependencies)} dependencies, "
-                f"and {len(files)} files to {output}"
+                f"{len(menus)} menus, and {len(files)} files to {output}"
             )
         )

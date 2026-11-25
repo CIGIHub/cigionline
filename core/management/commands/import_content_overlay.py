@@ -16,6 +16,8 @@ from wagtail.fields import StreamField
 from wagtail.models import Page
 from wagtail.models import Collection
 
+from menus.models import Menu, MenuItem
+
 from .export_recent_pages import SCHEMA
 
 
@@ -45,6 +47,10 @@ PROJECT_TARGET_TITLES = {
         "Next-Generation Economies",
         "Next-Generation Economies: Middle Powers in a Changing World",
     ),
+    "Multilateral and Institutional Reform": (
+        "Multilateral and Institutional Reform",
+        "Global Economic Scenarios",
+    ),
     "Canada-U.S. Relations in the Second Century": (
         "Canada-U.S. Relations in the Second Century",
         "Canada-US Relations in the Second Century",
@@ -57,10 +63,26 @@ SUPERSEDED_PROJECT_TITLES = {
     if title != source_title
 }
 PRESERVED_MANY_TO_MANY = {"research.projectpage": {"topics"}}
+PAGE_TITLE_ALIASES = {
+    ("people.personlistpage", "Leadership, Partners and Team"): (
+        "Leadership, Partners and Team",
+        "Leadership",
+    ),
+}
 
 
 def page_title(entry):
-    return entry["model_rows"]["wagtailcore_page"]["title"]
+    return entry.get("model_rows", {}).get("wagtailcore_page", {}).get(
+        "title", entry["title"]
+    )
+
+
+def target_title_variants(model_label, title):
+    if model_label == "research.projectpage":
+        for variants in PROJECT_TARGET_TITLES.values():
+            if title in variants:
+                return variants
+    return PAGE_TITLE_ALIASES.get((model_label, title), (title,))
 
 
 def resolve_page(entry):
@@ -71,9 +93,10 @@ def resolve_page(entry):
     else:
         matches = model.objects.filter(url_path=entry["url_path"])
 
-    if not matches.exists() and key["model"] == "research.projectpage":
-        titles = PROJECT_TARGET_TITLES.get(page_title(entry), (page_title(entry),))
-        matches = model.objects.filter(title__in=titles)
+    if not matches.exists():
+        matches = model.objects.filter(
+            title__in=target_title_variants(key["model"], page_title(entry))
+        )
 
     found = list(matches.order_by("pk")[:2])
     if len(found) > 1:
@@ -115,7 +138,11 @@ def resolve_dependency(
         try:
             return resolve_page(entry)
         except CommandError:
-            title_matches = list(model.objects.filter(title=entry["title"]).order_by("pk")[:2])
+            title_matches = list(
+                model.objects.filter(
+                    title__in=target_title_variants(key["model"], entry["title"])
+                ).order_by("pk")[:2]
+            )
             if len(title_matches) == 1:
                 return title_matches[0]
             if create_missing_pages and key["model"] == "core.basicpage":
@@ -420,12 +447,99 @@ def replace_many_to_many(target, entry, source_to_target):
         getattr(target, field.name).set(target_ids)
 
 
+def menu_identity(entry):
+    return ("slug", entry["slug"]) if entry.get("slug") else ("name", entry["name"])
+
+
+def prepare_menu_import(menu_entries):
+    identities = [menu_identity(entry) for entry in menu_entries]
+    duplicates = sorted({identity for identity in identities if identities.count(identity) > 1})
+    if duplicates:
+        labels = ", ".join(f"{kind}={value!r}" for kind, value in duplicates)
+        raise CommandError(f"Duplicate menu identities in artifact: {labels}")
+
+    source_slugs = {entry["slug"] for entry in menu_entries if entry.get("slug")}
+    missing_submenus = sorted(
+        {
+            item["submenu"]
+            for entry in menu_entries
+            for item in entry.get("items", [])
+            if item.get("submenu") and item["submenu"] not in source_slugs
+        }
+    )
+    if missing_submenus:
+        raise CommandError(
+            f"Menu artifact references unexported submenus: {', '.join(missing_submenus)}"
+        )
+
+    targets = {}
+    for entry, identity in zip(menu_entries, identities):
+        lookup = {identity[0]: identity[1]}
+        if identity[0] == "name":
+            lookup["slug"] = ""
+        matches = list(Menu.objects.filter(**lookup).order_by("pk")[:2])
+        if len(matches) > 1:
+            raise CommandError(
+                f"Menu {identity[0]} {identity[1]!r}: expected at most one target, "
+                f"found {len(matches)}"
+            )
+        targets[identity] = matches[0] if matches else None
+    return targets
+
+
+def import_menus(menu_entries, targets, resolved_dependencies):
+    for entry in menu_entries:
+        identity = menu_identity(entry)
+        menu = targets[identity] or Menu(slug=entry["slug"])
+        menu.name = entry["name"]
+        menu.bottom_link_label = entry.get("bottom_link_label", "")
+        menu.bottom_link_url = entry.get("bottom_link_url", "")
+        dependency_id = entry.get("bottom_link_page")
+        menu.bottom_link_page = resolved_dependencies.get(dependency_id) if dependency_id else None
+        menu.save()
+        targets[identity] = menu
+
+    targets_by_slug = {
+        entry["slug"]: targets[menu_identity(entry)]
+        for entry in menu_entries
+        if entry.get("slug")
+    }
+
+    for entry in menu_entries:
+        menu = targets[menu_identity(entry)]
+        menu.menu_items.all().delete()
+        MenuItem.objects.bulk_create(
+            [
+                MenuItem(
+                    menu=menu,
+                    title=item["title"],
+                    description=item.get("description", ""),
+                    link_url=item.get("link_url", ""),
+                    link_page=(
+                        resolved_dependencies[item["link_page"]]
+                        if item.get("link_page")
+                        else None
+                    ),
+                    submenu=targets_by_slug.get(item.get("submenu")),
+                    sort_order=item.get("sort_order"),
+                )
+                for item in entry.get("items", [])
+            ]
+        )
+
+
 class Command(BaseCommand):
     help = "Import an allow-listed content overlay (dry-run by default)."
 
     def add_arguments(self, parser):
         parser.add_argument("--artifact", required=True)
         parser.add_argument("--model", action="append", dest="models", help="Page model to import; repeatable.")
+        parser.add_argument(
+            "--page-url-path",
+            action="append",
+            default=[],
+            help="Import only this page url_path; repeatable. Menus are unaffected.",
+        )
         parser.add_argument(
             "--create-missing-assets",
             action="store_true",
@@ -437,6 +551,11 @@ class Command(BaseCommand):
             help="Create missing BasicPages and move conflicting legacy page types aside.",
         )
         parser.add_argument("--user", help="Username recorded on imported Wagtail revisions.")
+        parser.add_argument(
+            "--import-menus",
+            action="store_true",
+            help="Replace exported menus by slug; target-only menus are preserved.",
+        )
         parser.add_argument("--apply", action="store_true", help="Publish changes (default: dry-run).")
 
     def handle(self, *args, **options):
@@ -462,13 +581,27 @@ class Command(BaseCommand):
 
         selected = []
         skipped = []
+        requested_paths = set(options["page_url_path"])
+        artifact_paths = {source["url_path"] for source in artifact["pages"]}
+        missing_paths = sorted(requested_paths - artifact_paths)
+        if missing_paths:
+            raise CommandError(
+                "--page-url-path is absent from the artifact: " + ", ".join(missing_paths)
+            )
         for source in artifact["pages"]:
+            if requested_paths and source["url_path"] not in requested_paths:
+                continue
             if source["stable_key"]["model"] not in allowed_models:
                 continue
             if source["stable_key"]["model"] == "research.projectpage" and page_title(source) in SUPERSEDED_PROJECT_TITLES:
                 skipped.append(source["title"])
                 continue
             selected.append(copy.deepcopy(source))
+
+        menu_entries = copy.deepcopy(artifact.get("menus", [])) if options["import_menus"] else []
+        if options["import_menus"] and "menus" not in artifact:
+            raise CommandError("Artifact does not contain menus")
+        menu_targets = prepare_menu_import(menu_entries) if menu_entries else {}
 
         errors = []
         page_targets = {}
@@ -502,6 +635,15 @@ class Command(BaseCommand):
             if reference["model_path"]
             not in PRESERVED_MANY_TO_MANY.get(source["stable_key"]["model"], set())
         }
+        needed.update(
+            dependency_id
+            for menu in menu_entries
+            for dependency_id in [
+                menu.get("bottom_link_page"),
+                *(item.get("link_page") for item in menu.get("items", [])),
+            ]
+            if dependency_id
+        )
         resolved_dependencies = {}
         source_to_target = {}
         for dependency_id in sorted(needed):
@@ -544,6 +686,16 @@ class Command(BaseCommand):
             f"{sum(isinstance(target, PendingAsset) for target in resolved_dependencies.values())}"
         )
         self.stdout.write(f"missing BasicPages to create: {len(pending_pages)}")
+        for pending in sorted(pending_pages.values(), key=lambda page: page.url_path):
+            self.stdout.write(
+                f"create missing BasicPage {pending.title} ({pending.url_path})"
+            )
+        if menu_entries:
+            self.stdout.write(
+                f"menus to import: {len(menu_entries)}; menu items: "
+                f"{sum(len(menu.get('items', [])) for menu in menu_entries)}; "
+                f"menus to create: {sum(target is None for target in menu_targets.values())}"
+            )
         for source in selected:
             target = page_targets[source["source_pk"]]
             self.stdout.write(
@@ -594,5 +746,9 @@ class Command(BaseCommand):
                 replace_child_relations(target, source)
                 replace_many_to_many(target, source, source_to_target)
                 target.save_revision(user=revision_user, log_action=True).publish()
+            if menu_entries:
+                import_menus(menu_entries, menu_targets, resolved_dependencies)
 
         self.stdout.write(self.style.SUCCESS(f"Published {len(selected)} page overlays."))
+        if menu_entries:
+            self.stdout.write(self.style.SUCCESS(f"Imported {len(menu_entries)} menus."))

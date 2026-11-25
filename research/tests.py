@@ -192,6 +192,7 @@ class RenameProjectPagesTests(WagtailPageTestCase):
             'Next-Generation Economies: Middle Powers in a Changing World',
             'Next-Generation Economies',
         ),
+        ('Global Economic Scenarios', 'Multilateral and Institutional Reform'),
     ]
 
     def setUp(self):
@@ -240,6 +241,30 @@ class RenameProjectPagesTests(WagtailPageTestCase):
                 .values_list('title', flat=True)),
             {old_title for old_title, _ in self.RENAMES},
         )
+
+    def test_command_preserves_the_superseded_multilateral_seed(self):
+        home = HomePage.objects.get()
+        seeded = home.add_child(instance=ProjectPage(
+            title='Multilateral and Institutional Reform',
+            slug='multilateral-and-institutional-reform',
+            publishing_date=timezone.now(),
+        ))
+
+        call_command('rename_project_pages', '--apply')
+
+        source = ProjectPage.objects.get(pk=self.pages[-1].pk)
+        seeded.refresh_from_db()
+        self.assertEqual(source.title, 'Multilateral and Institutional Reform')
+        self.assertEqual(source.slug, 'legacy-program-5')
+        self.assertEqual(
+            seeded.title,
+            'Multilateral and Institutional Reform (superseded seed)',
+        )
+        self.assertEqual(seeded.slug, 'multilateral-and-institutional-reform-superseded')
+        self.assertTrue(seeded.url_path.endswith(
+            '/multilateral-and-institutional-reform-superseded/'
+        ))
+        self.assertFalse(seeded.live)
 
 
 class SeedThemeProgramsMigrationTests(WagtailPageTestCase):
@@ -328,7 +353,7 @@ class SeedGlobalCooperationProgramsTests(WagtailPageTestCase):
             slug='programs',
         ))
 
-    def test_command_is_dry_run_then_creates_two_drafts_idempotently(self):
+    def test_command_is_dry_run_then_creates_one_draft_idempotently(self):
         call_command('seed_global_cooperation_programs')
         self.assertFalse(ProjectPage.objects.exists())
 
@@ -336,17 +361,13 @@ class SeedGlobalCooperationProgramsTests(WagtailPageTestCase):
         call_command('seed_global_cooperation_programs', '--apply')
 
         pages = ProjectPage.objects.order_by('slug')
-        self.assertEqual(pages.count(), 2)
+        self.assertEqual(pages.count(), 1)
         self.assertEqual(
             set(pages.values_list('title', 'slug')),
             {
                 (
                     'Canada-U.S. Relations in the Second Century',
                     'canada-us-relations-in-the-second-century',
-                ),
-                (
-                    'Multilateral and Institutional Reform',
-                    'multilateral-and-institutional-reform',
                 ),
             },
         )

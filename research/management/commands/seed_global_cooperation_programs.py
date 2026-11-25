@@ -8,13 +8,12 @@ from research.models import ProjectPage
 
 
 PROGRAMS = [
-    ('Multilateral and Institutional Reform', 'multilateral-and-institutional-reform'),
     ('Canada-U.S. Relations in the Second Century', 'canada-us-relations-in-the-second-century'),
 ]
 
 
 class Command(BaseCommand):
-    help = 'Create the two approved Global Cooperation project-page drafts.'
+    help = 'Create the approved net-new Canada-U.S. Relations project-page draft.'
 
     def add_arguments(self, parser):
         parser.add_argument(

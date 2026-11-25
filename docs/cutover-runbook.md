@@ -81,9 +81,14 @@ closed.
   child relations by stable keys, then resolve them against production during
   import. Report every unresolved reference and make the import fail before it
   publishes anything.
-- Run `rename_project_pages --apply` to reuse the five approved legacy project
-  pages. Run `seed_global_cooperation_programs --apply` to create the two
-  approved net-new drafts. After the theme overlay, use `wire_program_pages` to
+- Export all Wagtail menus and their ordered items. Match menus by slug (or by
+  name for the one legacy blank-slug menu), replace only the exported menus'
+  items, preserve their database identities, and leave target-only menus
+  untouched. Resolve menu page links through the same stable page keys as the
+  page overlay.
+- Run `rename_project_pages --apply` to reuse the six approved legacy project
+  pages. Run `seed_global_cooperation_programs --apply` to create the one
+  approved net-new draft. After the theme overlay, use `wire_program_pages` to
   enforce the two theme-menu positions. Each command must resolve and validate
   all of its targets before writing.
 - Write through Wagtail revisions and publishing APIs so revisions, search
@@ -119,11 +124,15 @@ renames are:
 | Legitimate Influence or Unlawful Manipulation? | Freedom of Thought |
 | Digital Assets in a Deglobalized World | Governance of Digital Money and Assets |
 | Next-Generation Economies: Middle Powers in a Changing World | Next-Generation Economies |
+| Global Economic Scenarios | Multilateral and Institutional Reform |
 
 `rename_project_pages` publishes these changes through Wagtail revisions. It
-does not change slugs, create pages, or choose between duplicate source or
-destination pages. It is dry-run by default, validates all five pages before
-writing, and is idempotent.
+does not change the reused pages' slugs or create pages. It is dry-run by
+default, validates all six pages before writing, and is idempotent. If an
+earlier rehearsal created the now-superseded Multilateral seed, the command
+preserves it as an unpublished page at the
+`multilateral-and-institutional-reform-superseded` slug before renaming the
+production page.
 
 Production `master` does not contain `research.0066_seed_theme_programs`, so a
 database restored from production has not recorded that migration and will run
@@ -136,17 +145,17 @@ recognizes both the old and final Freedom of Thought titles and does not create
 pages.
 
 The former broad `seed_net_new_programs` command was removed. The narrow
-`seed_global_cooperation_programs` command creates only the two approved
-net-new drafts under `/programs/`: Multilateral and Institutional Reform, and
-Canada-U.S. Relations in the Second Century. It is dry-run by default,
-validates both destinations before writing, and is idempotent. It does not
-publish or wire the pages; the overlay importer publishes their Takt-authored
-content and `wire_program_pages` connects only these two pages at positions 1
-and 2. The unpublished India and China in a Multipolar World staging draft is
-not seeded or wired. The other theme relationships come from `0066` and
-survive title changes because `ThemeProgram` stores foreign keys, not titles.
-Program backfill accepts the slugified final title as an alias while preserving
-each reused page's existing URL slug.
+`seed_global_cooperation_programs` command creates only the approved net-new
+Canada-U.S. Relations in the Second Century draft under `/programs/`. It is
+dry-run by default, validates the destination before writing, and is
+idempotent. It does not publish or wire the page. The overlay importer
+publishes the Takt-authored content for both Global Cooperation programs and
+`wire_program_pages` connects them at positions 1 and 2. The unpublished India
+and China in a Multipolar World staging draft is not seeded or wired. The other
+theme relationships come from `0066` and survive title changes because
+`ThemeProgram` stores foreign keys, not titles. Program backfill accepts the
+slugified final title as an alias while preserving each reused page's existing
+URL slug.
 
 The long-lived Takt database applied the earlier form of `0066`; changing the
 migration file does not replay it there. Before using Takt as acceptance
@@ -187,35 +196,50 @@ sequence below.
 
 The source was the PostgreSQL 17 Takt staging restore on local port 5434; the
 target was the production-copy database `cigionlinetakt` on local port 5433.
-The temporary artifact was
-`/private/tmp/cigionline-takt-recent-pages-2026-11-24/manifest.json`, SHA-256
-`2bbfd207aba26a7efc12d1db47511be664e2d8c5711fa18661bf490e54af612f`.
+The temporary final rehearsal artifact was
+`/private/tmp/cigionline-takt-recent-pages-2026-11-24/manifest-since-2026-08-15.json`,
+SHA-256
+`6421d57cd7df1a27f4eeb026f88bfebb792fe0d6b1eaafa09d35e7e5c3301fc6`.
 Move the approved final artifact to durable secure storage before cutover.
 
 The content owner approved these page models: `home.HomePage`,
 `core.BasicPage`, `research.ProjectPage`, `research.ThemePage`,
 `multimedia.MultimediaPage`, and `subscribe.SubscribePage`. All people pages
 (including the listing), publications, articles (including landings), events
-(including the listing), and topics are excluded. The artifact contained 102
-recent live pages; this allow-list selected 32 and skipped the superseded
-Digital Assets project shell.
+(including the listing), and topics are excluded. The artifact contains 104
+live pages published since August 15, 2026, plus the older live Cookies and
+Terms of Service BasicPages needed by exported menu links. This allow-list
+selects 35 pages and skips the superseded Digital Assets project shell. The
+additional publication found by the wider cutoff remains excluded. It also
+contains all 44 Takt menus and their 139 ordered items.
 
 The successful local apply used:
 
 ```bash
 python manage.py import_content_overlay \
-  --artifact /private/tmp/cigionline-takt-recent-pages-2026-11-24/manifest.json \
+  --artifact /private/tmp/cigionline-takt-recent-pages-2026-11-24/manifest-since-2026-08-15.json \
   --create-missing-assets \
   --create-missing-pages \
+  --import-menus \
   --user jxu \
   --apply
 ```
 
-It published 32 overlays, created 11 missing `BasicPage` records, and created
-70 missing asset metadata records. `--user` is required on apply so Wagtail
-revisions and publish hooks have an audit user. The first attempted apply hit
-that missing-user guard in the notification hook; the transaction rollback was
-verified before the successful retry.
+The final apply published 35 overlays and imported 44 menus with 139 items.
+Earlier phased rehearsals created 13 missing `BasicPage` records, 70 missing
+asset metadata records, and 6 menus missing from the production copy. Existing
+menu records were updated in place and target-only menus were preserved.
+`--user` is required on apply so Wagtail revisions and publish hooks have an
+audit user. The first attempted page apply hit that missing-user guard in the
+notification hook; the transaction rollback was verified before the successful
+retry.
+
+The final target check resolved every exported menu exactly once with no item
+count differences. The imported `primary-nav` begins with `Research`, points to
+`nav-topics-standard`, and has no item descriptions; Cookies and Terms of
+Service are live `BasicPage` records with their Takt bodies. The wider cutoff
+also imported the full Takt body for CIGI in The News and published it,
+replacing the dependency-only draft created during the earlier rehearsal.
 
 Conflicting legacy records were preserved rather than deleted:
 
@@ -224,13 +248,17 @@ Conflicting legacy records were preserved rather than deleted:
 - The removed-model Human Analysis record moved to
   `/home/about/human-analysis-standard-legacy/`; the imported BasicPage now
   owns `/home/about/human-analysis-standard/`.
+- The earlier Multilateral project seed was preserved unpublished at
+  `/home/programs/multilateral-and-institutional-reform-superseded/`.
+  Production page `21644`, formerly Global Economic Scenarios, is the live
+  Multilateral page at its existing `/programs/global-economic-scenarios/`
+  URL and contains the Takt Multilateral overlay. Theme and menu links resolve
+  to that reused page.
 
 Importing `ThemePage` child relations compresses order values, so run
 `wire_program_pages` **after** the overlay. It must enforce Multilateral and
 Institutional Reform at position 1 and Canada-U.S. Relations in the Second
-Century at position 2, including on existing rows. The dependency-only CIGI in
-The News BasicPage was created as an unpublished draft and still needs an
-editorial decision before cutover.
+Century at position 2, including on existing rows.
 
 Open cutover blockers from this rehearsal:
 
@@ -283,13 +311,13 @@ without it. Run the dry run first and read the output.
 | 1 | `update_index` | Run first. The seed commands fail if the search index is missing. |
 | 2 | `seed_homepage --apply` | Fallback only for a homepage not included in the approved overlay. It skips a homepage that already has a body. Do not use `--force` at cutover. |
 | 3 | `seed_listing_pages --apply` | Fallback only for listing pages not included in the approved overlay. It skips populated bodies. Do not use `--force` at cutover. |
-| 4 | `rename_project_pages --apply` | Reuses five existing project pages under their approved program titles. Dry-run first. Slugs remain unchanged. |
-| 5 | `seed_global_cooperation_programs --apply` | Creates the two approved net-new project drafts under `/programs/`. Dry-run first; it validates both pages before writing and never publishes them. |
+| 4 | `rename_project_pages --apply` | Reuses six existing project pages under their approved program titles. Dry-run first. Reused-page slugs remain unchanged; an obsolete rehearsal seed is preserved unpublished. |
+| 5 | `seed_global_cooperation_programs --apply` | Creates the one approved net-new Canada-U.S. Relations project draft under `/programs/`. Dry-run first; it validates the page before writing and never publishes it. |
 | 6 | `update_expert_topics` | Fills expertise topics on people. No dry run. Schedule it weekly (Heroku Scheduler). |
 | 7 | `clear_dph_publication_themes --apply` | Required: DPH working papers use the new design. |
 | 8 | `backfill_programs --pages research/data/program-backfill-pages.csv --apply` | Only after CIGI approves the program mapping. Save the reversal CSV it writes: Heroku deletes it when the command ends. |
 | 9 | `normalize_program_research_tabs --apply` | Sets the Research tab listing on program pages. |
-| 10 | `import_content_overlay --artifact <approved-manifest> --create-missing-assets --create-missing-pages --user <operator> --apply` | Omit `--apply` for the required dry run. Do not apply twice until content-hash no-op detection is implemented. |
+| 10 | `import_content_overlay --artifact <approved-manifest> --create-missing-assets --create-missing-pages --import-menus --user <operator> --apply` | Omit `--apply` for the required dry run. It replaces the exported menus' items and preserves target-only menus. Do not apply twice until content-hash no-op detection is implemented. |
 | 11 | `wire_program_pages` | Run after the theme overlay to enforce the two approved Global Cooperation positions. Fails before writing if either page is missing or ambiguous; never creates pages. |
 | 12 | `load_cutover_redirects --apply` | 7 redirects for retired listing pages. |
 | 13 | `update_index` | Run again. Steps 4, 5, 8, 10, 11 and the migrations write without reliably reindexing every affected object. |
@@ -307,13 +335,16 @@ heroku run -a <app> "python manage.py shell -c \"from django.core.cache import c
   hand unless the overlay rollback plan has been invoked.
 - Rename the people listing page "CIGI Experts" to "Experts".
 - Set the thank-you pages in the email form settings.
-- Check the header, footer and email form settings on the site that serves
-  the pages. These settings are per site.
+- Check the imported header/footer menus and the email form settings on the
+  site that serves the pages. Settings remain per site.
 
 ## Content verification
 
 - The imported page count and set of stable keys exactly match the approved
   manifest; no unlisted production page changed.
+- All 44 exported menus resolve once and contain the expected 139 ordered
+  items, submenu links, page links, external URLs, descriptions, and bottom
+  links. Target-only menus remain present.
 - The homepage and every project page have the expected published revision,
   parent, URL, locale, body modules, hero, contacts, members, featured content,
   topics, theme memberships, files, and subscription link as applicable.
