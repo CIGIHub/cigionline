@@ -14,6 +14,8 @@
           <a href="{{ self.page.url }}">
         {% elif self.file %}
           <a href="{{ self.file.file.url }}">
+        {% else %}
+          <a href="{{ self.image.file.url }}" target="_blank" rel="noopener noreferrer">
         {% endif %}
           <figure>
             {% if self.image.file.url|file_extension == '.gif' %}
@@ -22,9 +24,7 @@
               {% image self.image width-800 %}
             {% endif %}
           </figure>
-        {% if self.page or self.file %}
-          </a>
-        {% endif %}
+        </a>
       </div>
     {% endif %}
     <div class="stream-block-text
