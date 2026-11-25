@@ -13,7 +13,9 @@ from wagtail.test.utils import WagtailPageTestCase
 
 from core.management.commands.export_recent_pages import SCHEMA
 from core.management.commands.import_content_overlay import (
+    DEFAULT_MODELS,
     PendingPage,
+    is_approved_default_page,
     remap_references,
     resolve_dependency,
     set_json_reference,
@@ -25,6 +27,27 @@ from menus.models import Menu, MenuItem
 
 
 class ContentOverlayReferenceTests(SimpleTestCase):
+    def test_landing_pages_are_approved_but_detail_pages_are_not(self):
+        self.assertIn("articles.articlelandingpage", DEFAULT_MODELS)
+        self.assertNotIn("articles.articlepage", DEFAULT_MODELS)
+        self.assertIn("events.eventlistpage", DEFAULT_MODELS)
+        self.assertNotIn("events.eventpage", DEFAULT_MODELS)
+        self.assertIn("people.personlistpage", DEFAULT_MODELS)
+        self.assertNotIn("people.personpage", DEFAULT_MODELS)
+
+    def test_only_the_experts_person_list_is_approved_by_default(self):
+        def entry(page_type):
+            return {
+                "stable_key": {"model": "people.personlistpage"},
+                "model_rows": {
+                    "people_personlistpage": {"person_list_page_type": page_type}
+                },
+            }
+
+        self.assertTrue(is_approved_default_page(entry(1)))
+        self.assertFalse(is_approved_default_page(entry(2)))
+        self.assertFalse(is_approved_default_page(entry(3)))
+
     def test_resolves_renamed_page_titles_in_both_directions(self):
         self.assertIn(
             "Freedom of Thought",

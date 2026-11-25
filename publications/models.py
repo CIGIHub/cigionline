@@ -8,6 +8,7 @@ from core.models import (
     ShareablePageAbstract,
     ThemeablePageAbstract,
 )
+from core.routers import RouterServeMixin
 from django.apps import apps
 from django.db import models
 from django.http import Http404
@@ -37,7 +38,8 @@ from wagtail.search import index
 from wagtail.documents.models import Document
 
 
-class PublicationListPage(RoutablePageMixin, BasicPageAbstract, SearchablePageAbstract, Page):
+class PublicationListPage(RouterServeMixin, RoutablePageMixin, BasicPageAbstract,
+                          SearchablePageAbstract, ThemeablePageAbstract, Page):
     """Publication list page"""
 
     t7_communiques = StreamField(
@@ -81,7 +83,10 @@ class PublicationListPage(RoutablePageMixin, BasicPageAbstract, SearchablePageAb
         return standard_template
 
     def get_context(self, request):
+        from core.heroes import _breadcrumb
+
         context = super().get_context(request)
+        context['hero_crumbs'] = _breadcrumb(self)
 
         site = self.get_site()
         if site.site_name == 'Think 7 Canada':
@@ -138,6 +143,7 @@ class PublicationListPage(RoutablePageMixin, BasicPageAbstract, SearchablePageAb
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
+        ThemeablePageAbstract.surface_panel,
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields

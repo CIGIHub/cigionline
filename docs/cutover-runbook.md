@@ -203,13 +203,15 @@ SHA-256
 Move the approved final artifact to durable secure storage before cutover.
 
 The content owner approved these page models: `home.HomePage`,
-`core.BasicPage`, `research.ProjectPage`, `research.ThemePage`,
-`multimedia.MultimediaPage`, and `subscribe.SubscribePage`. All people pages
-(including the listing), publications, articles (including landings), events
-(including the listing), and topics are excluded. The artifact contains 104
-live pages published since August 15, 2026, plus the older live Cookies and
-Terms of Service BasicPages needed by exported menu links. This allow-list
-selects 35 pages and skips the superseded Digital Assets project shell. The
+`core.BasicPage`, `articles.ArticleLandingPage`, `research.ProjectPage`,
+`research.ThemePage`, `events.EventListPage`, `multimedia.MultimediaPage`, and
+`subscribe.SubscribePage`; the Experts-type `people.PersonListPage` is also
+approved. Individual people, other people listings, publications, individual
+articles, individual events, and topics are excluded.
+The artifact contains 104 live pages published since August 15, 2026, plus the
+older live Cookies and Terms of Service BasicPages needed by exported menu
+links. This allow-list
+selects 38 pages and skips the superseded Digital Assets project shell. The
 additional publication found by the wider cutoff remains excluded. It also
 contains all 44 Takt menus and their 139 ordered items.
 
@@ -225,8 +227,11 @@ python manage.py import_content_overlay \
   --apply
 ```
 
-The final apply published 35 overlays and imported 44 menus with 139 items.
-Earlier phased rehearsals created 13 missing `BasicPage` records, 70 missing
+The final full apply published 35 overlays and imported 44 menus with 139 items;
+the Opinions and Events landing pages were then imported as the thirty-sixth
+and thirty-seventh approved pages, followed by the Experts listing as the
+thirty-eighth.
+Earlier phased rehearsals created 13 missing `BasicPage` records, 77 missing
 asset metadata records, and 6 menus missing from the production copy. Existing
 menu records were updated in place and target-only menus were preserved.
 `--user` is required on apply so Wagtail revisions and publish hooks have an
@@ -262,7 +267,7 @@ Century at position 2, including on existing rows.
 
 Open cutover blockers from this rehearsal:
 
-- The 70 asset records contain storage paths only; original files were not
+- The 77 asset records contain storage paths only; original files were not
   copied or verified and may not exist in production storage. Local dev images
   can still appear because `core.dev_storage.StagingPullThroughStorage` fetches
   missing originals and renditions from the staging S3 bucket on first request

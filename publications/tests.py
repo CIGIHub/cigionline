@@ -42,6 +42,26 @@ class PublicationListPageTests(WagtailPageTestCase):
             {PublicationPage, PublicationTypePage, PublicationSeriesListPage, ArticleSeriesListPage, ArticleTypePage, T7PublicationPage},
         )
 
+    def test_standard_page_uses_takt_layout(self):
+        page = HomePage.objects.get().add_child(instance=PublicationListPage(
+            title='Publications', slug='publications'))
+
+        response = self.client.get(page.url)
+
+        self.assertTemplateUsed(response, 'publications/publication_list_page.html')
+        self.assertContains(response, 'ds-hero')
+        self.assertNotContains(response, 'publications-search-table')
+
+    def test_essays_route_still_serves_essay_archive(self):
+        page = HomePage.objects.get().add_child(instance=PublicationListPage(
+            title='Publications', slug='publications'))
+        page.add_child(instance=ArticleTypePage(title='Essays', slug='essay-archive'))
+
+        response = self.client.get(f'{page.url}essays/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'articles/article_type_page.html')
+
 
 class PublicationPageTests(WagtailPageTestCase):
     def test_publicationpage_parent_page_types(self):

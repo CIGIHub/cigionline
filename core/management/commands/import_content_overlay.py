@@ -22,9 +22,12 @@ from .export_recent_pages import SCHEMA
 
 
 DEFAULT_MODELS = {
+    "articles.articlelandingpage",
     "core.basicpage",
+    "events.eventlistpage",
     "home.homepage",
     "multimedia.multimediapage",
+    "people.personlistpage",
     "research.projectpage",
     "research.themepage",
     "subscribe.subscribepage",
@@ -75,6 +78,17 @@ def page_title(entry):
     return entry.get("model_rows", {}).get("wagtailcore_page", {}).get(
         "title", entry["title"]
     )
+
+
+def is_approved_default_page(entry):
+    if entry["stable_key"]["model"] == "people.personlistpage":
+        return (
+            entry.get("model_rows", {})
+            .get("people_personlistpage", {})
+            .get("person_list_page_type")
+            == 1
+        )
+    return True
 
 
 def target_title_variants(model_label, title):
@@ -564,6 +578,7 @@ class Command(BaseCommand):
         if artifact.get("schema") != SCHEMA:
             raise CommandError(f"Unsupported artifact schema: {artifact.get('schema')!r}")
         expected_hash = hashlib.sha256(artifact_path.read_bytes()).hexdigest()
+        use_default_models = not options["models"]
         allowed_models = set(options["models"] or DEFAULT_MODELS)
         revision_user = None
         if options["apply"]:
@@ -592,6 +607,8 @@ class Command(BaseCommand):
             if requested_paths and source["url_path"] not in requested_paths:
                 continue
             if source["stable_key"]["model"] not in allowed_models:
+                continue
+            if use_default_models and not is_approved_default_page(source):
                 continue
             if source["stable_key"]["model"] == "research.projectpage" and page_title(source) in SUPERSEDED_PROJECT_TITLES:
                 skipped.append(source["title"])
