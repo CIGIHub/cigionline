@@ -68,6 +68,14 @@
               </button>
             </a>
           </div>
+        {% elif not self.page and self.image %}
+          <div class="stream-block-cta">
+            <a href="{{ self.image.file.url }}" target="_blank" rel="noopener noreferrer">
+              <button class="button-action button-square track-cta" data-cta="publication-image">
+                <i class="fa fas fa-download"></i>
+              </button>
+            </a>
+          </div>
         {% endif %}
       </div>
     </div>
