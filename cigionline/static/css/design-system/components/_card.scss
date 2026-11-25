@@ -13,6 +13,9 @@
   gap: var(--space-16);
 
   &__pills {
+    position: relative;
+    z-index: 2; // above the stretched title link so topic links receive clicks
+    pointer-events: none; // gaps and plain pills still click through to the card
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-8);
@@ -21,6 +24,8 @@
     // so the pill's own max-width/ellipsis can bite.
     max-width: 100%;
   }
+
+  &__pills .ds-tag--link { pointer-events: auto; }
 
   &__title {
     @include header-5;

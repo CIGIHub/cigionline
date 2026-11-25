@@ -695,7 +695,7 @@ class ThemePage(
             # Top-level Faceted Listing (sync 2026-09-21): a topic pill lands on
             # the theme page's resource listing with the topic pre-selected
             # (core.router_links). The block already auto-scopes to the theme's
-            # programs; before this it was placeable only inside Tabs.
+            # topics; before this it was placeable only inside Tabs.
             ('faceted_listing', FacetedListingBlock()),
         ],
         blank=True,

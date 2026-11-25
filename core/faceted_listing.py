@@ -197,10 +197,9 @@ def _apply_search(qs, index_qs, q, fallback):
 def _resource_handler(P, PL, scope, enabled):
     """Program- or theme-scoped resource listing (Resource Hub tab). Scopes to a
     ``research.ProjectPage``'s content — or, on a theme page, to the content of
-    the theme's programs (QA regroup 22:26). The instance's content-type toggles
+    the theme's topics. The instance's content-type toggles
     restrict the catalogue and drive the TYPE facet (QA regroup 17:46/18:08)."""
     from core.models import ContentPage
-    from research.models import TopicPage
 
     program = scope.get('program')
     theme = scope.get('theme')
@@ -208,9 +207,7 @@ def _resource_handler(P, PL, scope, enabled):
     if program:
         base = program.content_pages.live().public()
     elif theme:
-        program_ids = list(theme.theme_programs.values_list('program_id', flat=True))
-        base = (ContentPage.objects.live().public().filter(projects__in=program_ids)
-                if program_ids else ContentPage.objects.none())
+        base = ContentPage.objects.live().public().filter(topics__program_theme=theme)
     elif author is not None:
         # Person-scoped listing (the expert single's "From This Expert").
         # ``author_extra_ids`` = the profile's hand-curated
@@ -976,8 +973,8 @@ def resolve_scope(value, page):
         if value.get('program_source') == 'none':
             scope['program'] = None
             scope['no_program'] = True
-        # Theme auto-scope (QA regroup 22:26): an auto resource listing on a
-        # theme page surfaces the content of the theme's programs.
+        # An auto resource listing on a theme page follows the authored
+        # content -> topic -> theme relationship.
         if scope['program'] is None and (value.get('program_source') or 'auto') == 'auto':
             from research.models import ThemePage
             specific = page.specific if page else None

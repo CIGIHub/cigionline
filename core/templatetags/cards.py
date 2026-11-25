@@ -33,8 +33,7 @@ def card_excerpt(page):
 def topic_pills(topics, page=None):
     """``{{ item.topics.all|topic_pills:item }}`` — pills with the site-wide
     topic→theme accents for router item templates that render pills directly
-    (card/_pills.html shape: [{'label', 'accent', 'url'}]). Pass the item so the
-    pills link into its content type's router (Evan, 2026-09-10)."""
+    (card/_pills.html shape: [{'label', 'accent', 'url'}])."""
     return _topic_pills(topics, page=page)
 
 
