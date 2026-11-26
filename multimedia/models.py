@@ -10,6 +10,7 @@ from core.models import (
     ShareablePageAbstract,
     ThemeablePageAbstract,
 )
+from core.routers import RouterServeMixin
 from django.conf import settings
 from django.db.models.fields import CharField
 from django.db import models
@@ -47,7 +48,7 @@ def _use_policy_prompt_design_system(page):
     return enabled and page.get_theme_dir() == 'policy_prompt'
 
 
-class MultimediaListPage(BasicPageAbstract, SearchablePageAbstract, Page):
+class MultimediaListPage(RouterServeMixin, BasicPageAbstract, SearchablePageAbstract, Page):
     max_count = 1
     parent_page_types = ['home.HomePage']
     subpage_types = ['multimedia.MultimediaPage']
@@ -103,9 +104,10 @@ class MultimediaListPage(BasicPageAbstract, SearchablePageAbstract, Page):
         ).all()[:1]
 
     def get_context(self, request):
+        from core.heroes import _breadcrumb
+
         context = super().get_context(request)
-        context['featured_multimedia'] = self.get_featured_multimedia()
-        context['promotion_blocks'] = self.get_promotion_blocks()
+        context['hero_crumbs'] = _breadcrumb(self)
         return context
 
     class Meta:

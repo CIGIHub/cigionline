@@ -1,4 +1,4 @@
-{% load wagtailcore_tags wagtailimages_tags icons %}
+{% load static wagtailcore_tags wagtailimages_tags icons %}
 {% comment %}
   Shared content card (.ds-card) — rendered via {% card page variant=... %}
   (core.cards.card_data). The card representing a page across dynamic modules.
@@ -11,8 +11,8 @@
 {% endcomment %}
 <div class="ds-card ds-card--{{ variant }}">
   {% if variant == "media-vertical" %}
-    {% if image %}
-      <div class="ds-accent-media ds-card__media ds-card__media--wide">{% image image fill-740x416 %}</div>
+    {% if show_media %}
+      <div class="ds-accent-media ds-card__media ds-card__media--wide">{% if image %}{% image image fill-740x416 %}{% else %}<img src="{% static 'assets/CIGI-default-recommended-thumb-1440x990.png' %}" alt="">{% endif %}</div>
     {% endif %}
     <div class="ds-card__body">
       {% include "includes/card/_pills.html" %}
@@ -34,10 +34,10 @@
       {% include "includes/type_of_content.html" with label=type_label icon=type_icon %}
       {% include "includes/card/_byline.html" %}
     </div>
-    {% if image %}<div class="ds-card__thumb">{% image image fill-350x350 %}</div>{% endif %}
+    {% if show_media %}<div class="ds-card__thumb">{% if image %}{% image image fill-350x350 %}{% else %}<img src="{% static 'assets/CIGI-default-recommended-thumb.png' %}" alt="">{% endif %}</div>{% endif %}
   {% elif variant == "media-stacked" %}
     {# Image on top, then taxonomy pill(s), title, type-of-content (BugHerd #7 — bento left column). #}
-    {% if image %}<div class="ds-accent-media ds-card__media ds-card__media--wide">{% image image fill-740x416 %}</div>{% endif %}
+    {% if show_media %}<div class="ds-accent-media ds-card__media ds-card__media--wide">{% if image %}{% image image fill-740x416 %}{% else %}<img src="{% static 'assets/CIGI-default-recommended-thumb-1440x990.png' %}" alt="">{% endif %}</div>{% endif %}
     <div class="ds-card__body">
       {% include "includes/card/_pills.html" %}
       {% if date and show_date %}<p class="ds-card__date">{{ date|date:"F j, Y" }}</p>{% endif %}
@@ -47,9 +47,9 @@
       {% include "includes/card/_byline.html" %}
     </div>
   {% elif variant == "resource-feature" or variant == "resource-compact" %}
-    {% if variant == "resource-feature" and image %}
+    {% if variant == "resource-feature" and show_media %}
       {# tall_media: duo-bento features crop square — 1:1 per BugHerd #108 (supersedes #31's 740x800). #}
-      <div class="ds-accent-media ds-card__media ds-card__media--{% if tall_media %}square{% else %}wide{% endif %}">{% if tall_media %}{% image image fill-740x740 %}{% else %}{% image image fill-740x416 %}{% endif %}</div>
+      <div class="ds-accent-media ds-card__media ds-card__media--{% if tall_media %}square{% else %}wide{% endif %}">{% if image %}{% if tall_media %}{% image image fill-740x740 %}{% else %}{% image image fill-740x416 %}{% endif %}{% else %}<img src="{% static 'assets/CIGI-default-recommended-thumb-1440x990.png' %}" alt="">{% endif %}</div>
     {% endif %}
     <div class="ds-card__body">
       {% include "includes/card/_pills.html" %}

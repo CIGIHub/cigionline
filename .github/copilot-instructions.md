@@ -27,7 +27,7 @@ A Wagtail (Django) CMS-based website for the Centre for International Governance
 
 - **Virtual env**: `source venv/bin/activate`
 - **Run locally**: `python manage.py runserver`
-- **Run tests**: `python manage.py test` (narrow to an app, class, or method when possible)
+- **Run tests**: `python manage.py test` (narrow to an app, class, or method when possible). Local tests use the separate `test_cigionline_fast` database and skip migration replay; add `TEST_MIGRATIONS=1` when the migration graph or migration data is under test. GitHub Actions does not use this shortcut.
 - **Migrations**: `python manage.py makemigrations && python manage.py migrate`
 - **Frontend**: `npm start` (webpack watch) or `npm run build`
 

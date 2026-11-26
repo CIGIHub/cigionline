@@ -359,6 +359,46 @@ class VideoTextBlockRenderTests(SimpleTestCase):
         self.assertNotIn('ds-video--static', html)
 
 
+class CardPlaceholderTests(SimpleTestCase):
+    PLACEHOLDER = 'assets/CIGI-default-recommended-thumb'
+
+    def render(self, variant, show_media):
+        return render_to_string('includes/card.html', {
+            'variant': variant,
+            'show_media': show_media,
+            'image': None,
+            'pills': [],
+            'title': 'Card title',
+            'url': '/card/',
+            'excerpt': '',
+        })
+
+    def test_image_card_variants_use_placeholder_without_an_authored_image(self):
+        for variant in ('media-vertical', 'media-compact', 'media-stacked',
+                        'resource-feature'):
+            with self.subTest(variant=variant):
+                self.assertIn(self.PLACEHOLDER, self.render(variant, show_media=True))
+
+    def test_text_only_card_variants_do_not_use_placeholder(self):
+        for variant in ('article-list-row', 'event', 'resource-compact'):
+            with self.subTest(variant=variant):
+                self.assertNotIn(self.PLACEHOLDER, self.render(variant, show_media=False))
+
+    def test_compact_opinion_remains_deliberately_text_only(self):
+        from core.cards import card_data
+
+        page = SimpleNamespace(
+            title='Opinion', feature_title='', feature_subtitle='', subtitle='',
+            short_description='', image_feature=None, image_hero=None,
+            article_type=SimpleNamespace(slug='opinion'), contenttype='Opinion',
+            contentsubtype='Opinion', publishing_date=None,
+        )
+        page.specific = page
+        page.get_url = lambda request=None: '/opinion/'
+
+        self.assertFalse(card_data(page, variant='media-compact', pills=[])['show_media'])
+
+
 class PersonRoleCrumbTests(TestCase):
     """A person's trail names their role listing (BugHerd #361/#516). Board
     members and senior management land on the Leadership page's Senior

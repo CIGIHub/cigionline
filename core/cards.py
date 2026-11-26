@@ -363,6 +363,7 @@ def card_data(page, variant='media-vertical', pills=None, cta_label='Read More',
     }
     if variant in MEDIA_VARIANTS:
         data['image'] = _card_image(page)
+        data['show_media'] = variant != 'event'
         data['excerpt'] = _card_excerpt(page)
         # Opinion-family articles render text-only in the bento side column
         # (BugHerd #120) — no thumb, title/type stack does the work.
@@ -372,6 +373,7 @@ def card_data(page, variant='media-vertical', pills=None, cta_label='Read More',
                 from core.faceted_listing import OPINION_TYPE_SLUGS
                 if article_type.slug in OPINION_TYPE_SLUGS:
                     data['image'] = None
+                    data['show_media'] = False
         # cta_scheme picks the outline button colour scheme (on-light / on-dark)
         # — the button isn't surface-aware, so the consuming module sets it.
         data['cta'] = {'label': cta_label, 'url': data['url'], 'scheme': cta_scheme}
@@ -415,6 +417,7 @@ def card_data(page, variant='media-vertical', pills=None, cta_label='Read More',
         data['date'] = getattr(page, 'publishing_date', None)
         if variant == 'resource-feature':
             data['image'] = _card_image(page)
+            data['show_media'] = True
     # Byline options (Resource Bento AX, BugHerd #12): an author-set toggle
     # governs the date; author names (linked to their bio) show when the module
     # opts in. Date defaults on for the resource feature/compact and off for

@@ -1,64 +1,23 @@
 {% extends "base.html" %}
+{% load cards heroes wagtailcore_tags %}
+{% comment %}
+  Multimedia landing — the same design-system hero and authored body-module
+  pattern as the publications and opinions landings. RouterServeMixin serves
+  AJAX swaps for authored faceted-listing blocks.
+{% endcomment %}
 
-{% load static webpack_loader %}
-
-{% block extra_css %}
-  {% render_bundle 'multimediaListPage' 'css' %}
-{% endblock %}
-{% block extra_js %}
-  {% render_bundle 'multimediaListPage' 'js' attrs='defer' %}
+{% block meta_description %}
+  {% if self.subtitle %}<meta name="description" content="{{ self.subtitle|striptags|truncatewords:40 }}" />{% endif %}
 {% endblock %}
 
 {% block content %}
-  {% include "includes/heroes/hero_standard.html" with title=self.title subtitle=self.subtitle submenu=self.submenu %}
-  <section class="featured">
-    <div class="container">
-      <div class="row">
-        <div class="col-12 mb-3">
-          <h2 class="paragraph-heading">Featured</h2>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12 col-md-8">
-          {% if featured_multimedia|length > 0 %}
-            {% include "includes/features/feature_content_large.html" with content=featured_multimedia.0 %}
-          {% endif %}
-        </div>
-        <hr>
-        <div class="col-12 col-md-4 featured-small">
-          {% with featured_multimedia|slice:"1:" as featured_small %}
-            {% for item in featured_small %}
-              {% if forloop.counter > 1 %}
-                <hr>
-              {% endif %}
-              {% include "includes/features/feature_content_small.html" with content=item %}
-            {% endfor %}
-          {% endwith %}
-        </div>
-      </div>
-    </div>
-  </section>
-  {% if promotion_blocks %}
-    <section class="multimedia-promotion-blocks">
-      <div class="container">
-        <div class="row">
-          {% for promotion_block in promotion_blocks %}
-            <div class="col">
-              {% include "includes/promotion_block.html" with promotion_block=promotion_block.promotion_block %}
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-    </section>
+  {% if self.image_hero and not self.body|starts_with_hero %}
+    {% include "includes/alt_hero.html" with image=self.image_hero heading=self.title heading_tag="h1" crumbs=hero_crumbs description=self.subtitle %}
+  {% elif not self.body|starts_with_hero %}
+    {% page_hero self %}
   {% endif %}
-  <section>
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <div class="multimedia-list-section" id="multimedia-search-table">
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+
+  {% for block in self.body %}
+    {% include_block block %}
+  {% endfor %}
 {% endblock content %}

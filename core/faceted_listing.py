@@ -246,12 +246,20 @@ def _resource_handler(P, PL, scope, enabled):
     allowed = [t for t in (scope.get('content_types') or []) if t in RESOURCE_TYPE_MODELS]
     if allowed:
         base = base.filter(content_type__model__in=[RESOURCE_TYPE_MODELS[t] for t in allowed])
+    multimedia_only = allowed == ['multimedia']
     base = base.order_by(F('publishing_date').desc(nulls_last=True))
 
     q = P('q')
     sel_topics = [t for t in PL('topic') if t.isdigit()]
-    sel_types = [t for t in PL('type')
-                 if t in RESOURCE_TYPE_MODELS and (not allowed or t in allowed)]
+    if multimedia_only:
+        from multimedia.models import MultimediaPage
+        type_choices = MultimediaPage.MultimediaTypes.choices
+        sel_types = [t for t in PL('type') if t in MultimediaPage.MultimediaTypes.values]
+    else:
+        type_choices = [(value, label) for value, label, _ in RESOURCE_TYPES
+                        if not allowed or value in allowed]
+        sel_types = [t for t in PL('type')
+                     if t in RESOURCE_TYPE_MODELS and (not allowed or t in allowed)]
     sel_years = [y for y in PL('year') if y.isdigit() and 1000 <= int(y) <= 9999]
 
     qs = base
@@ -259,7 +267,10 @@ def _resource_handler(P, PL, scope, enabled):
     if sel_topics:
         qs = qs.filter(topics__id__in=sel_topics)
     if sel_types:
-        qs = qs.filter(content_type__model__in=[RESOURCE_TYPE_MODELS[t] for t in sel_types])
+        if multimedia_only:
+            qs = qs.filter(multimediapage__multimedia_type__in=sel_types)
+        else:
+            qs = qs.filter(content_type__model__in=[RESOURCE_TYPE_MODELS[t] for t in sel_types])
     if sel_years:
         qs = qs.filter(publishing_date__year__in=[int(y) for y in sel_years])
     # .specific() for the card's type_of_content; prefetch the per-card topic
@@ -280,8 +291,7 @@ def _resource_handler(P, PL, scope, enabled):
         facets.append({
             'key': 'type', 'label': 'Type', 'open': False,
             'options': [{'value': v, 'label': label, 'checked': v in sel_types}
-                        for v, label, _ in RESOURCE_TYPES
-                        if not allowed or v in allowed],
+                        for v, label in type_choices],
         })
     if 'year' in enabled:
         years = [d.year for d in base.dates('publishing_date', 'year', order='DESC')]
@@ -1143,9 +1153,11 @@ def build_listing_context(request, value, page=None, lazy=False, tab_slug=None):
     if card_type in ('resource', 'resource-visual'):
         # Resource listings auto-build their filters from the enabled content
         # types (QA regroup 18:08) — the authored facet list is ignored. One
-        # enabled type drops the TYPE facet (a one-option facet is noise).
+        # enabled content type usually drops TYPE; multimedia keeps it for its
+        # Audio / Video formats.
         allowed = [t for t in (value.get('content_types') or []) if t in RESOURCE_TYPE_MODELS]
-        enabled = ['topic', 'year'] if len(allowed) == 1 else ['topic', 'type', 'year']
+        enabled = (['topic', 'type', 'year'] if allowed == ['multimedia'] or len(allowed) != 1
+                   else ['topic', 'year'])
     show_search = value.get('show_search', True)
     per_page = value.get('per_page') or PER_PAGE
 

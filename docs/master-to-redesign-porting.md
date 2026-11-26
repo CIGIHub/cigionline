@@ -124,6 +124,13 @@ npm run format:check
 npm run build
 ```
 
+Local tests use a separate `test_cigionline_fast` database and create the
+current model schema without replaying migrations. Run
+`TEST_MIGRATIONS=1 python manage.py test <affected_app>` when the migration
+graph or migration data is part of the change. GitHub Actions keeps normal
+migration settings, and migration-bearing ports still require the migration
+checks and production database rehearsal below.
+
 For migration-bearing work, also migrate a restored production database. For
 shared or high-risk work, run the full Django suite. For event registration,
 verify forms, stored answers, guest registration, reports, admin, public

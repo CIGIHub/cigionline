@@ -1,3 +1,5 @@
+import os
+
 from .base import *  # noqa: F401,F403
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -76,4 +78,13 @@ try:
     from .local import *  # noqa: F401,F403
 except ImportError:
     pass
+
+# Local tests build the current model schema directly; CI and explicit
+# migration checks still replay the real migration graph.
+if not os.environ.get('GITHUB_WORKFLOW') and not os.environ.get('TEST_MIGRATIONS'):
+    DATABASES['default']['TEST'] = {  # noqa: F405
+        'NAME': 'test_cigionline_fast',
+        'MIGRATE': False,
+    }
+
 WAGTAIL_2FA_REQUIRED = False
