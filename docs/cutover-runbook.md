@@ -269,9 +269,10 @@ Open cutover blockers from this rehearsal:
 
 - The 77 asset records contain storage paths only; original files were not
   copied or verified and may not exist in production storage. Local dev images
-  appeared during this rehearsal because a local pull-through storage fetched
-  missing originals and renditions from staging. This is not evidence that
-  production has the files.
+  can still appear because `core.dev_storage.StagingPullThroughStorage` fetches
+  missing originals and renditions from the staging S3 bucket on first request
+  and caches them under `MEDIA_ROOT`; this is not evidence that production has
+  the files.
 - Applying an unchanged overlay still creates new revisions. Add content-hash
   no-op detection and the required machine-readable before/after report before
   using the documented second-apply idempotency check.

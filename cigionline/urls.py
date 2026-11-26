@@ -92,8 +92,14 @@ if settings.DEBUG:  # pragma: no cover
     from django.conf.urls.static import static
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-    # Serve static and media files from the development server.
+    # Serve static and media files from development server. Media is served
+    # pull-through: files missing locally are fetched from the staging bucket
+    # on first request (core/dev_storage.py).
+    from core.dev_storage import serve_media_pull_through
     urlpatterns += staticfiles_urlpatterns()
+    urlpatterns += [
+        re_path(r'^staticmedia/(?P<path>.+)$', serve_media_pull_through),
+    ]
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
     import debug_toolbar

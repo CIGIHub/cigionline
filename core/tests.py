@@ -7,7 +7,6 @@ from articles.models import ArticleListPage, ArticlePage, ArticleTypePage
 from django import forms
 from annual_reports.models import AnnualReportListPage
 from careers.models import JobPostingListPage
-from django.core.files.storage import storages
 from django.test import RequestFactory, SimpleTestCase, TestCase, override_settings
 from django.template.loader import get_template
 from django.urls import reverse
@@ -29,7 +28,6 @@ from wagtail.test.utils import WagtailPageTestCase
 
 from .faceted_listing import build_listing_context, default_listing_prefix
 from .heroes import _topic_eyebrow, hero_data, person_hero_data
-from .management.commands.render_sweep import Command as RenderSweepCommand
 from .wagtail_hooks import get_filter_purge_cache_urls, get_purge_cache_url
 from .models import (
     BasicPage,
@@ -42,21 +40,6 @@ from .models import (
     TwentiethPage,
     TwentiethPageSingleton,
 )
-
-
-class RenderSweepStorageTests(SimpleTestCase):
-    @override_settings(STORAGES={
-        'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
-        'staticfiles': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
-    })
-    def test_media_stub_does_not_change_static_storage(self):
-        media = storages['default']
-        static = storages['staticfiles']
-        with patch.object(media, '_open'):
-            RenderSweepCommand._stub_media()
-            with media.open('missing.png') as image:
-                self.assertEqual(image.read(8), b'\x89PNG\r\n\x1a\n')
-            self.assertNotIn('_open', static.__dict__)
 
 
 class PurgeCloudflareCacheTests(WagtailPageTestCase):

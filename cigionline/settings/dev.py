@@ -11,6 +11,14 @@ SECRET_KEY = 'a%86$z=ubc$(fh7@eqli92u!0t03#q-bq3=_trv1nn2+a=_5$n'
 # SECURITY WARNING: define the correct hosts in production!
 ALLOWED_HOSTS = ['*']
 
+# Media files missing locally are pulled from the staging bucket on first
+# open (see core/dev_storage.py) — keeps the 20 GB library out of the repo
+# while letting any page render with its real images.
+STORAGES = {
+    **STORAGES,  # noqa: F405
+    'default': {'BACKEND': 'core.dev_storage.StagingPullThroughStorage'},
+}
+
 # Uncomment this to enable Django debug toolbar
 # INSTALLED_APPS = INSTALLED_APPS + [
 #     'debug_toolbar',
@@ -68,5 +76,4 @@ try:
     from .local import *  # noqa: F401,F403
 except ImportError:
     pass
-
 WAGTAIL_2FA_REQUIRED = False
