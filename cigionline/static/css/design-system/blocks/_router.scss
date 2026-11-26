@@ -598,10 +598,14 @@
   }
 }
 
+.ds-leadership-tabs > [role='tablist'] {
+  border-bottom: var(--border-divider) solid var(--surface-border);
+}
+
 .ds-leadership-tabs .ds-tabs__tab {
   @include header-7b;
   color: var(--surface-text);
-  flex: 0 1 auto;
+  flex: 1 1 0;
   min-width: 0;
   padding: var(--space-12) var(--space-4);
 
