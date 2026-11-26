@@ -8,6 +8,16 @@ from wagtail.search.backends.elasticsearch7 import (
 import shlex
 
 
+def expand_program_filters(projects):
+    """Expand primary program filters without changing indexed content tags."""
+    if not projects:
+        return projects
+    projects = list(projects)
+    from research.models import ProjectPage
+    invalid_ids = [pk for pk in projects if not str(pk).isdigit()]
+    return [*ProjectPage.expand_program_ids(projects), *invalid_ids]
+
+
 class CIGIOnlineElasticsearchResults(Elasticsearch7SearchResults):
     def _get_es_body(self, for_count=False):
         body = super()._get_es_body(for_count)
@@ -508,7 +518,7 @@ def cigi_search(content_type=None,
                                       contenttypes,
                                       contentsubtypes,
                                       authors,
-                                      projects,
+                                      expand_program_filters(projects),
                                       topics,
                                       searchtext,
                                       articletypeid,
@@ -801,7 +811,7 @@ def cigi_search_promoted(content_type=None,
                                               contenttypes,
                                               contentsubtypes,
                                               authors,
-                                              projects,
+                                              expand_program_filters(projects),
                                               topics,
                                               searchtext,
                                               articletypeid,

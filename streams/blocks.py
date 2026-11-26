@@ -874,14 +874,14 @@ class ProgramSpotlightBlock(blocks.StructBlock, ThemeableBlock):
         Cards show each item's own topic pills, like every other content card — the
         panel already names the program, so a program pill would only repeat it
         (BugHerd #519). When the author hand-picks `content_pages` we honour that
-        order (live only, capped at 2); otherwise we query program.content_pages
-        (the reverse of ContentPage.projects) for the 2 latest. .specific()
+        order (live only, capped at 2); otherwise we query the program's expanded
+        content scope for the 2 latest. .specific()
         bulk-fetches concrete types so the card presenter's page.specific is a no-op.
         """
         if content_pages:
             cards = [p.specific for p in content_pages if p and p.live][:2]
         else:
-            cards = (program.content_pages.live().public()
+            cards = (program.scoped_content_pages().live().public()
                      .order_by('-publishing_date').specific()[:2])
         return {
             'theme': theme,
@@ -999,10 +999,11 @@ def scope_content_qs(qs, page):
         qs = qs.exclude(projectpage__isnull=False)
     specific = page.specific if page else None
     if isinstance(specific, ProjectPage):
-        return qs.filter(projects=specific)
+        return qs.filter(projects__in=specific.program_scope_ids()).distinct()
     if isinstance(specific, ThemePage):
         program_ids = list(specific.theme_programs.values_list('program_id', flat=True))
-        return qs.filter(projects__in=program_ids).distinct() if program_ids else qs.none()
+        return (qs.filter(projects__in=ProjectPage.expand_program_ids(program_ids)).distinct()
+                if program_ids else qs.none())
     return qs
 
 
@@ -1084,7 +1085,7 @@ def program_module_context(value, page):
     accent = theme.accent_colour if theme else 'red'
 
     auto_qs = (
-        program.content_pages.live().public()
+        program.scoped_content_pages().live().public()
         .order_by('-publishing_date').specific()
     ) if program else []
     pages = populated_pages(
@@ -1477,10 +1478,11 @@ def resolve_experts(mode, manual_value, count, program=None, theme=None):
 
     # Tied to the program: an author credit on live content linked to it, or a
     # direct program link on the person.
+    program_ids = program.program_scope_ids()
     author_ids = ContentPageAuthor.objects.filter(
-        content_page__projects=program, content_page__live=True,
+        content_page__projects__in=program_ids, content_page__live=True,
     ).values_list('author_id', flat=True)
-    people = list(qs.filter(Q(id__in=author_ids) | Q(projects=program)).distinct())
+    people = list(qs.filter(Q(id__in=author_ids) | Q(projects__in=program_ids)).distinct())
     # CIGI's president belongs to the team pages, not a program's experts tab
     # (Juode, BugHerd #133).
     people = [p for p in people if not is_cigi_president(p)]
@@ -3912,7 +3914,10 @@ class GESEventsBlock(blocks.StructBlock):
     def get_context(self, value, parent_context=None):
         from events.models import EventPage
         context = super().get_context(value, parent_context)
-        events = EventPage.objects.live().filter(projects=value.get('project')).order_by('publishing_date')
+        program = value.get('project')
+        events = (EventPage.objects.live().filter(
+            projects__in=program.specific.program_scope_ids()
+        ).distinct().order_by('publishing_date') if program else EventPage.objects.none())
         context['events'] = events
 
         return context

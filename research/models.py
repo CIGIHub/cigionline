@@ -7,8 +7,10 @@ from core.models import (
     ShareablePageAbstract,
     ThemeablePageAbstract,
     Auth0ProtectedPageAbstract,
+    ContentPageForm,
 )
 from core.routers import RouterServeMixin
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import F
 from mediavalet.panels import MediaValetImageChooserPanel
@@ -93,6 +95,13 @@ class ProjectListPage(Page):
 
     class Meta:
         verbose_name = 'Activity List Page'
+
+
+class ProjectPageForm(ContentPageForm):
+    def clean_merged_programs(self):
+        programs = self.cleaned_data.get('merged_programs')
+        self.instance.validate_merged_programs(programs)
+        return programs
 
 
 class ProjectPage(
@@ -182,6 +191,14 @@ class ProjectPage(
         blank=True,
     )
     project_types = ParentalManyToManyField('research.ProjectType', blank=True)
+    merged_programs = ParentalManyToManyField(
+        'self',
+        blank=True,
+        symmetrical=False,
+        related_name='primary_programs',
+        verbose_name='Included legacy programs',
+        help_text='Content tagged to these programs also appears in this program’s automatic listings.',
+    )
     related_files = StreamField(
         [
             ('file', DocumentChooserBlock()),
@@ -256,6 +273,7 @@ class ProjectPage(
         MultiFieldPanel(
             [
                 FieldPanel('topics'),
+                FieldPanel('merged_programs'),
                 FieldPanel('related_files'),
                 FieldPanel('subscribe_page'),
             ],
@@ -306,10 +324,41 @@ class ProjectPage(
     parent_page_types = ['core.BasicPage', 'research.ProjectListPage']
     subpage_types = ['subscribe.TFGBVSubscribePage']
     templates = 'research/project_page.html'
+    base_form_class = ProjectPageForm
+
+    @classmethod
+    def expand_program_ids(cls, program_ids):
+        """Add each selected primary program's included legacy program IDs."""
+        ids = list(dict.fromkeys(int(pk) for pk in program_ids if str(pk).isdigit()))
+        included_ids = cls.objects.filter(pk__in=ids).values_list(
+            'merged_programs__pk', flat=True)
+        return list(dict.fromkeys([*ids, *(pk for pk in included_ids if pk)]))
+
+    def program_scope_ids(self):
+        """This program plus the legacy programs whose content it includes."""
+        return self.expand_program_ids([self.pk])
+
+    def validate_merged_programs(self, programs):
+        if not programs:
+            return
+        program_ids = set(programs.values_list('pk', flat=True))
+        if self.pk in program_ids:
+            raise ValidationError('A program cannot include itself.')
+        if ProjectPage.objects.filter(
+                pk__in=program_ids, merged_programs__isnull=False).exists():
+            raise ValidationError('An included program cannot itself include other programs.')
+        if self.pk and self.primary_programs.exists():
+            raise ValidationError('A program included by another program cannot include programs of its own.')
+        if ProjectPage.objects.filter(
+                merged_programs__in=program_ids).exclude(pk=self.pk).exists():
+            raise ValidationError('An included program can belong to only one primary program.')
+
+    def scoped_content_pages(self):
+        return ContentPage.objects.filter(projects__in=self.program_scope_ids()).distinct()
 
     @property
     def has_tagged_pages(self):
-        return ContentPage.objects.live().filter(projects=self).exists()
+        return self.scoped_content_pages().live().exists()
 
     @property
     def subscribe_button_text(self):

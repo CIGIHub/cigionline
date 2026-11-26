@@ -6,6 +6,7 @@ from articles.models import ArticlePage, ArticleTypePage
 from django.contrib.auth.models import User
 from django.core.management import call_command, CommandError
 from django.utils import timezone
+from django.utils.text import slugify
 from home.models import HomePage, Think7HomePage
 from publications.models import PublicationListPage, PublicationPage, PublicationTypePage
 from django.template import Context, Template
@@ -192,8 +193,20 @@ class RenameProjectPagesTests(WagtailPageTestCase):
             'Next-Generation Economies: Middle Powers in a Changing World',
             'Next-Generation Economies',
         ),
+        ('Global AI Risks Initiative', 'Global AI Risks'),
+        ('AI for Governance', 'AI Governance'),
         ('Global Economic Scenarios', 'Multilateral and Institutional Reform'),
     ]
+
+    MERGES = {
+        'National Security and Cybersecurity': [
+            'Waterloo Security Dialogue',
+            'Canada at Economic War',
+        ],
+        'Responsible Technology': [
+            'The Impact of Artificial Intelligence on Military Defence and Security',
+        ],
+    }
 
     def setUp(self):
         home = HomePage.objects.get()
@@ -204,6 +217,18 @@ class RenameProjectPagesTests(WagtailPageTestCase):
                 slug=f'legacy-program-{index}',
                 publishing_date=timezone.now(),
             )))
+        self.merge_pages = {}
+        for title in [
+            'Supporting Safer Digital Spaces',
+            'Responsible Technology',
+            'Africa’s Digital Transformation',
+            *[title for titles in self.MERGES.values() for title in titles],
+        ]:
+            self.merge_pages[title] = home.add_child(instance=ProjectPage(
+                title=title,
+                slug=slugify(title),
+                publishing_date=timezone.now(),
+            ))
 
     def test_command_is_dry_run_then_idempotent(self):
         call_command('rename_project_pages')
@@ -212,6 +237,10 @@ class RenameProjectPagesTests(WagtailPageTestCase):
                 .values_list('title', flat=True)),
             {old_title for old_title, _ in self.RENAMES},
         )
+        self.assertFalse(any(
+            page.merged_programs.exists()
+            for page in [self.pages[1], self.merge_pages['Responsible Technology']]
+        ))
 
         call_command('rename_project_pages', '--apply')
         revision_counts = {}
@@ -220,10 +249,25 @@ class RenameProjectPagesTests(WagtailPageTestCase):
             self.assertEqual(page.title, new_title)
             self.assertEqual(page.slug, f'legacy-program-{index}')
             revision_counts[page.pk] = page.revisions.count()
+        national_security = self.pages[1]
+        responsible_technology = self.merge_pages['Responsible Technology']
+        self.assertSetEqual(
+            set(national_security.merged_programs.values_list('title', flat=True)),
+            set(self.MERGES['National Security and Cybersecurity']),
+        )
+        self.assertSetEqual(
+            set(responsible_technology.merged_programs.values_list('title', flat=True)),
+            {'The Impact of Artificial Intelligence on Military Defence and Security'},
+        )
+        revision_counts[responsible_technology.pk] = responsible_technology.revisions.count()
 
         call_command('rename_project_pages', '--apply')
         for page in self.pages:
             self.assertEqual(page.revisions.count(), revision_counts[page.pk])
+        self.assertEqual(
+            responsible_technology.revisions.count(),
+            revision_counts[responsible_technology.pk],
+        )
 
     def test_command_refuses_a_destination_collision_before_writing(self):
         home = HomePage.objects.get()
@@ -255,7 +299,7 @@ class RenameProjectPagesTests(WagtailPageTestCase):
         source = ProjectPage.objects.get(pk=self.pages[-1].pk)
         seeded.refresh_from_db()
         self.assertEqual(source.title, 'Multilateral and Institutional Reform')
-        self.assertEqual(source.slug, 'legacy-program-5')
+        self.assertEqual(source.slug, 'legacy-program-7')
         self.assertEqual(
             seeded.title,
             'Multilateral and Institutional Reform (superseded seed)',

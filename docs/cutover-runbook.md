@@ -86,8 +86,9 @@ closed.
   items, preserve their database identities, and leave target-only menus
   untouched. Resolve menu page links through the same stable page keys as the
   page overlay.
-- Run `rename_project_pages --apply` to reuse the six approved legacy project
-  pages. Run `seed_global_cooperation_programs --apply` to create the one
+- Run `rename_project_pages --apply` to reuse the eight approved legacy project
+  pages and configure the three approved legacy-program merge relationships. Run
+  `seed_global_cooperation_programs --apply` to create the one
   approved net-new draft. After the theme overlay, use `wire_program_pages` to
   enforce the two theme-menu positions. Each command must resolve and validate
   all of its targets before writing.
@@ -110,7 +111,7 @@ closed.
 Do not broaden this into a general-purpose environment synchronizer. It is a
 one-way, allow-listed cutover operation for known editorial content.
 
-### Project-page reuse decision (November 24, 2026)
+### Project-page reuse decision (updated November 26, 2026)
 
 The redesign must reuse production's existing project pages rather than create
 replacement shells for them. This preserves page identity, existing content,
@@ -124,15 +125,29 @@ renames are:
 | Legitimate Influence or Unlawful Manipulation? | Freedom of Thought |
 | Digital Assets in a Deglobalized World | Governance of Digital Money and Assets |
 | Next-Generation Economies: Middle Powers in a Changing World | Next-Generation Economies |
+| Global AI Risks Initiative | Global AI Risks |
+| AI for Governance | AI Governance |
 | Global Economic Scenarios | Multilateral and Institutional Reform |
 
 `rename_project_pages` publishes these changes through Wagtail revisions. It
 does not change the reused pages' slugs or create pages. It is dry-run by
-default, validates all six pages before writing, and is idempotent. If an
+default, validates all eight pages before writing, and is idempotent. If an
 earlier rehearsal created the now-superseded Multilateral seed, the command
 preserves it as an unpublished page at the
 `multilateral-and-institutional-reform-superseded` slug before renaming the
 production page.
+
+The same command configures these approved many-to-one program relationships:
+
+| Included legacy program | Primary program |
+|---|---|
+| Waterloo Security Dialogue | National Security and Cybersecurity |
+| Canada at Economic War | National Security and Cybersecurity |
+| The Impact of Artificial Intelligence on Military Defence and Security | Responsible Technology |
+
+Supporting Safer Digital Spaces, Responsible Technology, and Africa’s Digital
+Transformation keep their existing titles. The command validates those primary
+pages and all three included pages before writing any rename or merge assignment.
 
 Production `master` does not contain `research.0066_seed_theme_programs`, so a
 database restored from production has not recorded that migration and will run
@@ -162,6 +177,18 @@ migration file does not replay it there. Before using Takt as acceptance
 evidence, verify that Digitalization, Security and Democracy points to the
 reused Freedom of Thought page and remove or resolve any replacement shell.
 Fresh production restores receive the corrected relationship from `0066`.
+
+For remaining many-to-one program consolidations, keep production content's
+existing `projects` relationships and set **Included legacy programs** on the
+surviving `ProjectPage`. Its automatic resource listings, program modules, and
+program expert modules then include content and people related to those legacy
+programs. Program-filtered search, legacy program exports, and theme-hosted
+dynamic modules expand the same scope. The legacy relation remains visible
+wherever existing program pills are shown. Do not configure chains or assign
+one legacy program to multiple primary programs; the editor validation rejects
+both. This consolidation does not unpublish legacy pages or create redirects;
+those are separate retirement decisions because existing pills still link to
+the legacy pages.
 
 Production already contains the completed topic consolidation. Do not run
 `consolidate_topics` during cutover; it is intentionally absent from the command
@@ -316,7 +343,7 @@ without it. Run the dry run first and read the output.
 | 1 | `update_index` | Run first. The seed commands fail if the search index is missing. |
 | 2 | `seed_homepage --apply` | Fallback only for a homepage not included in the approved overlay. It skips a homepage that already has a body. Do not use `--force` at cutover. |
 | 3 | `seed_listing_pages --apply` | Fallback only for listing pages not included in the approved overlay. It skips populated bodies. Do not use `--force` at cutover. |
-| 4 | `rename_project_pages --apply` | Reuses six existing project pages under their approved program titles. Dry-run first. Reused-page slugs remain unchanged; an obsolete rehearsal seed is preserved unpublished. |
+| 4 | `rename_project_pages --apply` | Applies eight approved title changes and three legacy-program merge assignments. Dry-run first. Reused-page slugs and content relations remain unchanged; an obsolete rehearsal seed is preserved unpublished. |
 | 5 | `seed_global_cooperation_programs --apply` | Creates the one approved net-new Canada-U.S. Relations project draft under `/programs/`. Dry-run first; it validates the page before writing and never publishes it. |
 | 6 | `update_expert_topics` | Fills expertise topics on people. No dry run. Schedule it weekly (Heroku Scheduler). |
 | 7 | `clear_dph_publication_themes --apply` | Required: DPH working papers use the new design. |
@@ -358,6 +385,13 @@ heroku run -a <app> "python manage.py shell -c \"from django.core.cache import c
   storage; required alt text and access restrictions are preserved.
 - There are no duplicate project slugs, broken internal links, orphan pages,
   unpublished pages that should be live, or unintentionally published drafts.
+- The eight renamed programs have their approved titles and unchanged slugs.
+  National Security and Cybersecurity includes exactly its two approved legacy
+  programs, and Responsible Technology includes The Impact of Artificial
+  Intelligence on Military Defence and Security.
+- For one content page and one expert from each included legacy program, verify
+  that the item appears on the primary program page and in program-filtered
+  search. The content page must still show its original legacy-program pill.
 - Anonymous and editor smoke tests pass on desktop and mobile for the homepage,
   all project pages, header/footer navigation, search, forms, redirects, and a
   representative page for each imported module type.

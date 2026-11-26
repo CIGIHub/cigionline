@@ -215,7 +215,7 @@ def _resource_handler(P, PL, scope, enabled):
     theme = scope.get('theme')
     author = scope.get('author')
     if program:
-        base = program.content_pages.live().public()
+        base = program.scoped_content_pages().live().public()
     elif theme:
         base = theme_resource_queryset(theme)
     elif author is not None:
@@ -231,9 +231,10 @@ def _resource_handler(P, PL, scope, enabled):
         # The Archive page: live content tagged to NO current-IA program
         # (Evan, 2026-09-10). News types stay in — they belong to no program
         # either, and this is the one listing meant to reach everything.
-        from research.models import ThemeProgram
+        from research.models import ProjectPage, ThemeProgram
         current_ids = list(ThemeProgram.objects.values_list('program_id', flat=True))
-        base = ContentPage.objects.live().public().exclude(projects__in=current_ids)
+        base = ContentPage.objects.live().public().exclude(
+            projects__in=ProjectPage.expand_program_ids(current_ids))
     else:
         base = ContentPage.objects.live().public()
     if not scope.get('no_program') and (program or not theme):

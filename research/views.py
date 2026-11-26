@@ -135,7 +135,7 @@ def programs(request):
             for program in program_pages:
                 program_results.append({
                     "name": program.title,
-                    "value": program.content_pages.count(),
+                    "value": program.scoped_content_pages().count(),
                 })
 
             topic_results.append({
@@ -212,7 +212,7 @@ def program_affiliates(request):
         })
 
         # pull content pages
-        content_pages = project.content_pages.live().all()
+        content_pages = project.scoped_content_pages().live()
         authors = []
 
         for page in content_pages:
