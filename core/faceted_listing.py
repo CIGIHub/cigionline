@@ -194,6 +194,16 @@ def _apply_search(qs, index_qs, q, fallback):
 # the template renders generically:
 #   {'key','label','open','options':[{'value','label','checked'}]}
 
+def theme_resource_queryset(theme):
+    """Live public resources associated with a theme through their topics."""
+    from core.models import ContentPage
+
+    return (ContentPage.objects.live().public()
+            .filter(topics__program_theme=theme)
+            .exclude(articlepage__article_type__slug__in=NEWS_TYPE_SLUGS)
+            .distinct())
+
+
 def _resource_handler(P, PL, scope, enabled):
     """Program- or theme-scoped resource listing (Resource Hub tab). Scopes to a
     ``research.ProjectPage``'s content — or, on a theme page, to the content of
@@ -207,7 +217,7 @@ def _resource_handler(P, PL, scope, enabled):
     if program:
         base = program.content_pages.live().public()
     elif theme:
-        base = ContentPage.objects.live().public().filter(topics__program_theme=theme)
+        base = theme_resource_queryset(theme)
     elif author is not None:
         # Person-scoped listing (the expert single's "From This Expert").
         # ``author_extra_ids`` = the profile's hand-curated
@@ -226,7 +236,7 @@ def _resource_handler(P, PL, scope, enabled):
         base = ContentPage.objects.live().public().exclude(projects__in=current_ids)
     else:
         base = ContentPage.objects.live().public()
-    if not scope.get('no_program'):
+    if not scope.get('no_program') and (program or not theme):
         # News types (CIGI News / In the News / Op-Eds) live only on their own
         # archives — exclude them from the program resource hub.
         base = base.exclude(articlepage__article_type__slug__in=NEWS_TYPE_SLUGS)

@@ -1,3 +1,6 @@
+import io
+import os
+import tempfile
 import uuid
 from datetime import date
 from types import SimpleNamespace
@@ -7,6 +10,8 @@ from articles.models import ArticleListPage, ArticlePage, ArticleTypePage
 from django import forms
 from annual_reports.models import AnnualReportListPage
 from careers.models import JobPostingListPage
+from django.contrib.staticfiles.views import serve as serve_static
+from django.core.files.base import ContentFile
 from django.test import RequestFactory, SimpleTestCase, TestCase, override_settings
 from django.template.loader import get_template
 from django.urls import reverse
@@ -26,6 +31,7 @@ from wagtail.blocks import StructValue
 from wagtail.models import PageViewRestriction, Site
 from wagtail.test.utils import WagtailPageTestCase
 
+from .dev_storage import StagingPullThroughStorage
 from .faceted_listing import build_listing_context, default_listing_prefix
 from .heroes import _topic_eyebrow, hero_data, person_hero_data
 from .wagtail_hooks import get_filter_purge_cache_urls, get_purge_cache_url
@@ -40,6 +46,83 @@ from .models import (
     TwentiethPage,
     TwentiethPageSingleton,
 )
+
+
+class StagingPullThroughTests(SimpleTestCase):
+    def setUp(self):
+        self.directory = tempfile.TemporaryDirectory()
+        self.addCleanup(self.directory.cleanup)
+        self.media_root = os.path.join(self.directory.name, 'media')
+        self.static_root = os.path.join(self.directory.name, 'static')
+        os.makedirs(self.static_root)
+        self.settings_override = override_settings(
+            MEDIA_ROOT=self.media_root,
+            STATICFILES_DIRS=[self.static_root],
+            STATICFILES_FINDERS=[
+                'django.contrib.staticfiles.finders.FileSystemFinder',
+                'core.dev_storage.StagingStaticFinder',
+            ],
+        )
+        self.settings_override.enable()
+        self.addCleanup(self.settings_override.disable)
+
+    @patch('core.dev_storage.urllib.request.urlopen')
+    def test_media_downloads_once_and_local_writes_remain_local(self, urlopen):
+        urlopen.return_value.__enter__.return_value = io.BytesIO(b'staging')
+        storage = StagingPullThroughStorage()
+
+        with storage.open('images/test image.jpg') as image:
+            self.assertEqual(image.read(), b'staging')
+        with storage.open('images/test image.jpg') as image:
+            self.assertEqual(image.read(), b'staging')
+        urlopen.assert_called_once_with(
+            'https://cigionline-static-staging-2025.s3.amazonaws.com/static/images/test%20image.jpg',
+            timeout=30,
+        )
+
+        storage.save('images/local.jpg', ContentFile(b'local'))
+        with storage.open('images/local.jpg') as image:
+            self.assertEqual(image.read(), b'local')
+        self.assertEqual(urlopen.call_count, 1)
+
+    @patch('core.dev_storage.urllib.request.urlopen')
+    def test_static_files_prefer_local_then_fetch_and_cache_staging(self, urlopen):
+        with open(os.path.join(self.static_root, 'local.css'), 'wb') as file:
+            file.write(b'local')
+        urlopen.return_value.__enter__.return_value = io.BytesIO(b'staging')
+        request = RequestFactory().get('/')
+
+        response = serve_static(request, 'local.css', insecure=True)
+        self.assertEqual(b''.join(response.streaming_content), b'local')
+        urlopen.assert_not_called()
+
+        for _ in range(2):
+            response = serve_static(request, 'missing.css', insecure=True)
+            self.assertEqual(b''.join(response.streaming_content), b'staging')
+        urlopen.assert_called_once_with(
+            'https://cigionline-static-staging-2025.s3.amazonaws.com/static/missing.css',
+            timeout=30,
+        )
+
+    @patch('core.dev_storage.urllib.request.urlopen')
+    def test_download_does_not_replace_a_concurrent_local_write(self, urlopen):
+        storage = StagingPullThroughStorage()
+
+        def download(*args, **kwargs):
+            storage.save('image.jpg', ContentFile(b'local'))
+            return io.BytesIO(b'staging')
+
+        urlopen.side_effect = download
+        with storage.open('image.jpg') as image:
+            self.assertEqual(image.read(), b'local')
+
+    @patch('core.dev_storage.urllib.request.urlopen', side_effect=OSError('unavailable'))
+    def test_failed_download_is_logged_and_file_remains_missing(self, urlopen):
+        storage = StagingPullThroughStorage()
+        with self.assertLogs('core.dev_storage', level='WARNING'):
+            with self.assertRaises(FileNotFoundError):
+                storage.open('missing.jpg')
+        self.assertFalse(os.path.exists(storage.path('missing.jpg')))
 
 
 class PurgeCloudflareCacheTests(WagtailPageTestCase):

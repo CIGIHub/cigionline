@@ -1793,13 +1793,20 @@ class ResourceBentoBlock(ConditionalFieldsMixin, SurfaceMixin, ThemeableBlock):
     )
 
     def get_context(self, value, parent_context=None):
+        from core.faceted_listing import (
+            NEWS_TYPE_SLUGS, RESOURCE_TYPE_MODELS, theme_resource_queryset,
+        )
         from core.models import ContentPage
         from core.queries import live_dated
+        from research.models import ThemePage
         context = super().get_context(value, parent_context)
-        # Auto content scopes to the program/theme page this module sits on
-        # (QA regroup decision 23:32).
-        base = scope_content_qs(
-            live_dated(ContentPage.objects), (parent_context or {}).get('page'))
+        page = (parent_context or {}).get('page')
+        specific = page.specific if page else None
+        if isinstance(specific, ThemePage):
+            base = theme_resource_queryset(specific).order_by(
+                models.F('publishing_date').desc(nulls_last=True))
+        else:
+            base = scope_content_qs(live_dated(ContentPage.objects), page)
         # Auto mode pulls events ONLY when the author ticks the Events type
         # (BugHerd #433, relaxing #123's blanket exclusion — the /events/
         # "Featured Events" bento needs them). Untouched configs keep the #123
@@ -1808,7 +1815,6 @@ class ResourceBentoBlock(ConditionalFieldsMixin, SurfaceMixin, ThemeableBlock):
         # Author-set content-type toggles (BugHerd #120): empty = all resource
         # types. Filters through the same model mapping the faceted listing
         # uses, so 'opinion' means ArticlePage etc.
-        from core.faceted_listing import RESOURCE_TYPE_MODELS, NEWS_TYPE_SLUGS
         allowed = [t for t in (value.get('content_types') or []) if t in RESOURCE_TYPE_MODELS]
         if 'event' not in allowed:
             base = base.exclude(eventpage__isnull=False)
