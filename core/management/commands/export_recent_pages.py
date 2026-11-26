@@ -63,6 +63,8 @@ def fetch_rows(table, column, value, order_by=()):
 
 
 def table_columns(table):
+    if table not in connection.introspection.table_names():
+        return set()
     with connection.cursor() as cursor:
         return {column.name for column in connection.introspection.get_table_description(cursor, table)}
 
@@ -188,6 +190,8 @@ def child_rows(model, source_pk):
         child_model = relation.related_model
         table = child_model._meta.db_table
         columns = table_columns(table)
+        if relation.field.column not in columns:
+            continue
         order = [name for name in ("sort_order", child_model._meta.pk.column) if name in columns]
         rows = fetch_rows(table, relation.field.column, source_pk, order)
         for row in rows:

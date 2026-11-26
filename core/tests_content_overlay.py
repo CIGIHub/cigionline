@@ -3,6 +3,7 @@ import tempfile
 from datetime import timedelta
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
@@ -11,7 +12,7 @@ from django.test import SimpleTestCase
 from django.utils import timezone
 from wagtail.test.utils import WagtailPageTestCase
 
-from core.management.commands.export_recent_pages import SCHEMA
+from core.management.commands.export_recent_pages import SCHEMA, table_columns
 from core.management.commands.import_content_overlay import (
     DEFAULT_MODELS,
     PendingPage,
@@ -27,6 +28,13 @@ from menus.models import Menu, MenuItem
 
 
 class ContentOverlayReferenceTests(SimpleTestCase):
+    @patch("core.management.commands.export_recent_pages.connection")
+    def test_missing_relation_table_has_no_columns(self, mock_connection):
+        mock_connection.introspection.table_names.return_value = []
+
+        self.assertEqual(table_columns("missing_relation"), set())
+        mock_connection.cursor.assert_not_called()
+
     def test_landing_pages_are_approved_but_detail_pages_are_not(self):
         self.assertIn("articles.articlelandingpage", DEFAULT_MODELS)
         self.assertNotIn("articles.articlepage", DEFAULT_MODELS)
