@@ -19,7 +19,9 @@ def router_partial_response(request, context):
     """Render just the results partial (grid + pager or empty state) + the meta
     the front-end needs to update the count. `context` is the page's normalized
     router context (see the `router_*` keys the templates consume)."""
-    html = render_to_string('includes/router_results_partial.html', context, request=request)
+    template = ('includes/leadership_listing.html' if context.get('leadership_listing')
+                else 'includes/router_results_partial.html')
+    html = render_to_string(template, context, request=request)
     page = context.get('router_page')
     return JsonResponse({
         'html': html,

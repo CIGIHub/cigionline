@@ -43,6 +43,9 @@ bundle, loaded site-wide by `base.html`); behaviour is in
   `templates/includes/router_*`) reused per archive, scoped by
   type/subtype/program. Program source "Archive — content with no program"
   lists everything outside the current-IA programs (the Archive page).
+  The Leadership page's Senior Management and Board of Directors listing shows
+  separate, unpaginated tabs ordered by person weight (highest first), then name.
+  Other person listings keep their usual cards and filters.
   Card pills are always the page's topics, never its program (Evan,
   2026-09-22; `core/cards.py:page_pills`). Each is a link into its theme
   page's resource listing with the topic pre-selected (`core/router_links.py`;

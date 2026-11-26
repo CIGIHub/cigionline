@@ -1,0 +1,26 @@
+<div class="ds-surface ds-surface--{{ router_surface|default:'inherit' }}{% if router_accent %} ds-surface--accent-{{ router_accent }}{% endif %}">
+  <section id="router-{{ router_prefix }}" class="ds-container py-4">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10 col-lg-8 ds-leadership-tabs" data-ds-tabs>
+        <div class="nav mb-3" role="tablist" aria-label="Leadership">
+          <button type="button" class="ds-tabs__tab ds-tabs__tab--active" id="{{ router_prefix }}-management-tab"
+                  role="tab" aria-controls="{{ router_prefix }}-management" aria-selected="true">Senior Management</button>
+          <button type="button" class="ds-tabs__tab" id="{{ router_prefix }}-board-tab"
+                  role="tab" aria-controls="{{ router_prefix }}-board" aria-selected="false" tabindex="-1">Board Members</button>
+        </div>
+        <div id="{{ router_prefix }}-management" role="tabpanel" aria-labelledby="{{ router_prefix }}-management-tab" tabindex="0">
+          <ul class="list-unstyled mb-0">
+            {% for item in senior_management %}<li>{% include "includes/router_items/leadership.html" %}</li>
+            {% empty %}<li>No senior management found.</li>{% endfor %}
+          </ul>
+        </div>
+        <div id="{{ router_prefix }}-board" role="tabpanel" aria-labelledby="{{ router_prefix }}-board-tab" tabindex="0">
+          <ul class="list-unstyled mb-0">
+            {% for item in board_members %}<li>{% include "includes/router_items/leadership.html" %}</li>
+            {% empty %}<li>No board members found.</li>{% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

@@ -11,7 +11,9 @@
   Speakers. `router_lazy` → results deferred to first tab activation (D3).
 {% endcomment %}
 {# An empty SOURCE renders nothing (BugHerd #297); a filtered-to-zero result still shows the no-results + clear state. #}
-{% if not router_empty_source %}
+{% if leadership_listing %}
+  {% include "includes/leadership_listing.html" %}
+{% elif not router_empty_source %}
 <div class="ds-surface ds-surface--{{ router_surface|default:'inherit' }}{% if router_accent %} ds-surface--accent-{{ router_accent }}{% endif %}">
 {# id = the deep-link anchor a topic pill targets (core/router_links.py builds #router-<prefix>); router.js lands here on load. #}
 <div id="router-{{ router_prefix }}" class="ds-router ds-faceted-listing{% if not router_show_filters %} ds-faceted-listing--plain{% endif %} ds-container"

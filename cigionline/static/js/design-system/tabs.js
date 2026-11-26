@@ -110,7 +110,8 @@ function initTabGroup(group) {
   if (group.dataset.dsInit) return;
   group.dataset.dsInit = '1';
 
-  const tabs = Array.from(group.querySelectorAll('[role="tab"]'));
+  const tabs = Array.from(group.querySelectorAll('[role="tab"]'))
+    .filter((tab) => tab.closest('[data-ds-tabs]') === group);
   const panels = tabs.map((tab) =>
     group.querySelector(`#${CSS.escape(tab.getAttribute('aria-controls'))}`),
   );

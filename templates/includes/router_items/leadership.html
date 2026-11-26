@@ -1,0 +1,15 @@
+{% load wagtailcore_tags wagtailimages_tags icons %}
+<article class="ds-expert-card ds-leadership-person">
+  <div class="ds-leadership-person__info">
+    {% if item.image_square %}
+      <span class="ds-expert-card__avatar ds-leadership-person__photo">{% image item.image_square fill-144x144 %}</span>
+    {% else %}
+      <span class="ds-expert-card__avatar ds-leadership-person__photo ds-leadership-person__photo--default" aria-hidden="true">{% ds_icon 'person' %}</span>
+    {% endif %}
+    <div>
+      <a class="ds-expert-card__name ds-leadership-person__name" href="{% pageurl item %}">{{ item.title }}</a>
+      {% if item.position %}<div class="ds-leadership-person__position">{{ item.position }}</div>{% endif %}
+    </div>
+  </div>
+  {% if item.short_bio %}<div class="ds-leadership-person__bio">{{ item.short_bio|richtext }}</div>{% endif %}
+</article>

@@ -1053,6 +1053,29 @@ def default_listing_prefix(value):
     return 'r' + hashlib.md5(key.encode()).hexdigest()[:6]
 
 
+def is_leadership_listing(page, value, prefix):
+    """Identify the management and board listing in the Leadership tab."""
+    if (not page or page.slug != 'leadership-partners-and-team'
+            or value.get('card_type') != 'person'
+            or value.get('person_type') != 'management_board'):
+        return False
+
+    from streams.blocks import _slugify_label
+    for block in getattr(page, 'body', ()):
+        if block.block_type != 'composable_tabs':
+            continue
+        used = set()
+        for tab in block.value.get('tabs') or []:
+            if _slugify_label(tab.get('label'), used) != 'senior-management-and-board-of-directors':
+                continue
+            for child in tab.get('content'):
+                if (child.block_type == 'faceted_listing'
+                        and child.value.get('card_type') == 'person'
+                        and child.value.get('person_type') == 'management_board'):
+                    return (child.value.get('prefix') or default_listing_prefix(child.value)) == prefix
+    return False
+
+
 def build_listing_context(request, value, page=None, lazy=False, tab_slug=None):
     """Build the shared ``router_*`` context for one faceted-listing block value.
 
@@ -1065,6 +1088,24 @@ def build_listing_context(request, value, page=None, lazy=False, tab_slug=None):
     """
     prefix = value.get('prefix') or default_listing_prefix(value)
     card_type = value.get('card_type') or 'resource'
+    if is_leadership_listing(page, value, prefix):
+        order = ('-person_weight', *_unaccent_name())
+        management = list(_people_queryset(PERSON_TYPE_IDS['management_team'])
+                          .select_related('image_square').order_by(*order))
+        board = list(_people_queryset(PERSON_TYPE_IDS['board'])
+                     .select_related('image_square').order_by(*order))
+        total = len(management) + len(board)
+        return {
+            'leadership_listing': True,
+            'router_prefix': prefix,
+            'router_surface': value.get('surface') or 'inherit',
+            'router_accent': value.get('accent') or '',
+            'senior_management': management,
+            'board_members': board,
+            'router_total': total,
+            'router_range_start': 1 if total else 0,
+            'router_range_end': total,
+        }
     show_filters = value.get('show_filters', True)
     # Drop any authored facet this card type cannot build (BugHerd #442) —
     # silently, because the picker no longer offers them and old values persist.

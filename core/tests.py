@@ -1,14 +1,16 @@
+import shutil
+import tempfile
 import uuid
 from datetime import date
 from types import SimpleNamespace
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from articles.models import ArticleListPage, ArticlePage, ArticleTypePage
 from django import forms
 from annual_reports.models import AnnualReportListPage
 from careers.models import JobPostingListPage
 from django.test import RequestFactory, SimpleTestCase, TestCase, override_settings
-from django.template.loader import get_template
+from django.template.loader import get_template, render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from home.models import HomePage, Think7HomePage
@@ -23,10 +25,12 @@ from research.models import (
 from streams.blocks import AnniversaryVideoTextBlock, FacetedListingBlock, VideoTextBlock
 from wagtail.admin.panels import MultiFieldPanel
 from wagtail.blocks import StructValue
+from wagtail.images import get_image_model
+from wagtail.images.tests.utils import get_test_image_file
 from wagtail.models import PageViewRestriction, Site
 from wagtail.test.utils import WagtailPageTestCase
 
-from .faceted_listing import build_listing_context, default_listing_prefix
+from .faceted_listing import build_listing_context, default_listing_prefix, is_leadership_listing
 from .heroes import _topic_eyebrow, hero_data, person_hero_data
 from .wagtail_hooks import get_filter_purge_cache_urls, get_purge_cache_url
 from .models import (
@@ -479,6 +483,151 @@ class PersonRoleCrumbTests(TestCase):
         self.assertTrail(
             self.make_person('manager', ['Management Team', 'Staff']), 'Senior Management',
             leadership.url)
+
+
+class LeadershipListingSelectionTests(SimpleTestCase):
+    def test_only_the_target_tab_listing_is_selected(self):
+        target = {'card_type': 'person', 'person_type': 'management_board', 'prefix': 'leaders'}
+        other = {**target, 'prefix': 'other'}
+        child = lambda value: SimpleNamespace(block_type='faceted_listing', value=value)
+        tabs = [
+            {'label': 'Other People', 'content': [child(other)]},
+            {'label': 'Senior Management and Board of Directors', 'content': [child(target)]},
+        ]
+        page = SimpleNamespace(slug='leadership-partners-and-team', body=[
+            SimpleNamespace(block_type='composable_tabs', value={'tabs': tabs})])
+        self.assertTrue(is_leadership_listing(page, target, 'leaders'))
+        self.assertFalse(is_leadership_listing(page, other, 'other'))
+        page.slug = 'different-page'
+        self.assertFalse(is_leadership_listing(page, target, 'leaders'))
+
+    def test_leadership_item_with_and_without_photo(self):
+        person = PersonPage(content_type_id=1, title='A Leader', position='Director',
+                            short_bio='<p>Full <strong>biography</strong>. '
+                                      '<a href="https://example.com">More</a></p>')
+        with patch.object(person, 'get_url', return_value='/leader/'):
+            html = render_to_string('includes/router_items/leadership.html', {'item': person})
+            self.assertIn('ds-leadership-person__photo--default', html)
+            self.assertIn('A Leader', html)
+            self.assertIn('Director', html)
+            self.assertIn('Full <strong>biography</strong>', html)
+            self.assertIn('href="https://example.com"', html)
+            self.assertEqual(html.count('href="/leader/"'), 1)
+            self.assertIn('ds-expert-card__name ds-leadership-person__name', html)
+            self.assertNotIn('<img', html)
+
+            image = get_image_model()(title='Portrait', collection_id=1)
+            person.image_square = image
+            rendition = Mock()
+            rendition.img_tag.return_value = '<img src="/portrait.jpg" alt="Portrait">'
+            with patch.object(image, 'get_rendition', return_value=rendition):
+                html = render_to_string('includes/router_items/leadership.html', {'item': person})
+            self.assertIn('src="/portrait.jpg"', html)
+            self.assertIn('ds-expert-card__avatar ds-leadership-person__photo', html)
+            self.assertEqual(html.count('href="/leader/"'), 1)
+            self.assertNotIn('ds-leadership-person__photo--default', html)
+
+
+class LeadershipListingPresentationTests(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        media_root = tempfile.mkdtemp(prefix='leadership-tests-')
+        cls.addClassCleanup(shutil.rmtree, media_root, ignore_errors=True)
+        cls.enterClassContext(override_settings(MEDIA_ROOT=media_root))
+        super().setUpClass()
+
+    @classmethod
+    def setUpTestData(cls):
+        home = HomePage.objects.get()
+        people = home.add_child(instance=PeoplePage(title='People', slug='people'))
+        image = get_image_model().objects.create(
+            title='Portrait', file=get_test_image_file(filename='portrait.png'))
+        board = PersonType.objects.get(name='Board Member')
+        management = PersonType.objects.get(name='Management Team')
+        staff = PersonType.objects.get(name='Staff')
+        expert = PersonType.objects.get(name='Expert')
+        for i in range(14):
+            person = people.add_child(instance=PersonPage(
+                title='Leader %02d' % i, slug='leader-%02d' % i,
+                first_name='Leader', last_name='%02d' % i,
+                person_weight=5 if i in (1, 2) else 0,
+                position='Director', short_bio='<p>Full <strong>biography</strong>.</p>',
+                image_square=image if i == 0 else None))
+            types = [board, staff if i < 13 else expert]
+            if i < 3:
+                types.append(management)
+            person.person_types.set(types)
+            person.save()
+        cls.staff_id = staff.pk
+        block = FacetedListingBlock()
+
+        def listing(prefix):
+            return block.get_prep_value(block.to_python({
+                'card_type': 'person', 'person_type': 'management_board',
+                'prefix': prefix, 'show_filters': True, 'show_search': True,
+                'facets': ['type'],
+            }))
+
+        def tab(label, value):
+            return {'type': 'item', 'id': str(uuid.uuid4()), 'value': {
+                'label': label, 'content': [{'type': 'faceted_listing', 'value': value}]}}
+
+        cls.page = home.add_child(instance=BasicPage(
+            title='Leadership', slug='leadership-partners-and-team',
+            body=[{'type': 'composable_tabs', 'value': {'tabs': [
+                tab('Other People', listing('other')),
+                tab('Senior Management and Board of Directors', listing('leaders')),
+            ]}}]))
+        cls.other_page = home.add_child(instance=BasicPage(
+            title='Other', slug='other-leadership',
+            body=[{'type': 'composable_tabs', 'value': {'tabs': [
+                tab('Senior Management and Board of Directors', listing('leaders')),
+            ]}}]))
+
+    def test_nested_tabs_show_all_people_in_weight_order_without_router_controls(self):
+        active = self.client.get(self.page.url, {
+            'tab': 'senior-management-and-board-of-directors',
+            'leaders-type': str(self.staff_id), 'leaders-page': '2', 'leaders-q': 'absent',
+        })
+        self.assertContains(active, 'Senior Management')
+        self.assertContains(active, 'Board Members')
+        self.assertContains(active, 'ds-leadership-person__name')
+        self.assertContains(active, 'Director')
+        self.assertContains(active, 'Full <strong>biography</strong>')
+        self.assertContains(active, 'ds-leadership-person__photo--default')
+        self.assertContains(active, 'portrait', status_code=200)
+        html = active.content.decode()
+        management = html.split('id="leaders-management" role="tabpanel"', 1)[1]
+        management, board = management.split('id="leaders-board" role="tabpanel"', 1)
+        self.assertLess(management.index('Leader 01'), management.index('Leader 02'))
+        self.assertLess(management.index('Leader 02'), management.index('Leader 00'))
+        self.assertNotIn('Leader 13', management)
+        self.assertLess(board.index('Leader 01'), board.index('Leader 02'))
+        self.assertLess(board.index('Leader 02'), board.index('Leader 00'))
+        self.assertIn('Leader 13', board)
+        self.assertNotIn('data-router-prefix="leaders"', html)
+        self.assertNotIn('name="leaders-type"', html)
+        self.assertNotIn('name="leaders-q"', html)
+
+    def test_inactive_tab_and_legacy_ajax_return_full_nested_lists(self):
+        inactive = self.client.get(self.page.url, {'tab': 'other-people'})
+        self.assertContains(inactive, 'id="leaders-management"')
+        self.assertContains(inactive, 'id="leaders-board"')
+        ajax = self.client.get(self.page.url, {'router': 'leaders', 'leaders-page': '2'},
+                               HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        data = ajax.json()
+        self.assertEqual(data['total'], 17)
+        self.assertIn('id="leaders-management"', data['html'])
+        self.assertIn('id="leaders-board"', data['html'])
+        self.assertIn('Leader 13', data['html'])
+        self.assertNotIn('ds-router__pager', data['html'])
+
+    def test_other_instances_keep_person_cards(self):
+        for page, prefix in ((self.page, 'other'), (self.other_page, 'leaders')):
+            response = self.client.get(page.url, {'router': prefix},
+                                       HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+            self.assertIn('ds-expert-card', response.json()['html'])
+            self.assertNotIn('ds-leadership-person', response.json()['html'])
 
 
 class DPHCohortListingTests(TestCase):

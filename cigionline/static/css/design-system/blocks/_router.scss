@@ -598,6 +598,55 @@
   }
 }
 
+.ds-leadership-tabs .ds-tabs__tab {
+  @include header-7b;
+  color: var(--surface-text);
+  flex: 0 1 auto;
+  min-width: 0;
+  padding: var(--space-12) var(--space-4);
+
+  &:hover,
+  &:focus-visible,
+  &.ds-tabs__tab--active {
+    color: var(--accent-ui);
+  }
+
+  &.ds-tabs__tab--active {
+    font-weight: 500;
+    border-bottom-color: var(--accent-ui);
+  }
+}
+
+// Leadership results retain the compact identity and full short bio layout.
+.ds-leadership-person {
+  gap: 0;
+  padding-block: var(--space-16);
+  border-bottom: var(--border-divider) solid var(--surface-border);
+  color: var(--surface-text);
+
+  &__info { display: flex; align-items: center; gap: var(--space-16); }
+  &__info > div { min-width: 0; overflow-wrap: anywhere; }
+  &__photo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 70px;
+    width: 70px;
+    height: 70px;
+    overflow: hidden;
+    border-radius: 50%;
+
+    img { width: 100%; height: 100%; object-fit: cover; }
+    svg { width: 50%; height: 50%; fill: currentColor; }
+    &--default { background: var(--color-brand-light-grey); color: var(--color-brand-black); }
+  }
+  &__name { @include header-6; color: inherit; }
+  &__position { @include paragraph-2; }
+  &__bio { @include paragraph-2; margin-top: var(--space-16); overflow-wrap: anywhere; }
+  &__bio a { position: relative; z-index: 2; }
+  &__bio p:last-child { margin-bottom: 0; }
+}
+
 // --- Annual report card (Annual Reports Router results) ----------------------
 // Cover image + title + a list of download/explore links (EN / FR report,
 // financial statement, interactive). Accent links with a trailing icon.
