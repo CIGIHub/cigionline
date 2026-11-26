@@ -4842,7 +4842,21 @@ class FacetedListingBlock(ConditionalFieldsMixin, blocks.StructBlock):
                   'Filters build automatically from these. Empty = all types.')
     publication_type = blocks.ChoiceBlock(
         choices=PUBLICATION_TYPES, default='working-paper', required=False,
-        help_text='Publication card type only.')
+        help_text='Publication card type only: used in Single type mode.')
+    publication_scope = blocks.ChoiceBlock(
+        choices=[
+            ('single', 'Single publication type'),
+            ('all', 'All publication types'),
+            ('include', 'Only selected publication types'),
+            ('exclude', 'All except selected publication types'),
+        ],
+        default='single', required=False,
+        help_text='Publication card type only. Existing listings use Single type.')
+    publication_types = blocks.ListBlock(
+        blocks.PageChooserBlock(page_type='publications.PublicationTypePage'),
+        required=False, default=[], label='Publication types',
+        help_text='Publication card type only: types used by the Only selected '
+                  'and All except selected modes.')
     person_type = blocks.ChoiceBlock(
         choices=PERSON_TYPES, default='dph_fellow', required=False,
         help_text='Person card type only.')
@@ -5038,7 +5052,8 @@ TrendingIssuesBlock.CONDITIONAL_FIELDS = {'mode': {'manual': ['item'], 'auto': [
 FacetedListingBlock.CONDITIONAL_FIELDS = {'card_type': {
     'resource': ['program_source', 'program', 'content_types'],
     'resource-visual': ['program_source', 'program', 'content_types'],
-    'publication': ['publication_type', 'facets'],
+    'publication': [
+        'publication_scope', 'publication_type', 'publication_types', 'facets'],
     'person': ['person_type', 'facets'],
     'staff': ['facets'],
     'expert': ['facets'],

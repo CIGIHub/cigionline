@@ -295,15 +295,19 @@ def _resource_handler(P, PL, scope, enabled):
 
 
 def _publication_handler(P, PL, scope, enabled):
-    """Publication-subtype listing (DPH Working Papers tab). Scopes to a
-    PublicationTypePage (default Working Paper); facets = year."""
+    """Publication listing, optionally scoped to included/excluded subtypes."""
     from publications.models import PublicationPage, PublicationTypePage
 
     base = PublicationPage.objects.live().public()
-    pub_type_id = scope.get('publication_type_id')
-    if pub_type_id:
-        base = base.filter(publication_type_id=pub_type_id)
-    elif 'publication_type_id' in scope:
+    mode = scope.get('publication_scope') or 'single'
+    pub_type_ids = scope.get('publication_type_ids') or []
+    if mode == 'include':
+        base = base.filter(publication_type_id__in=pub_type_ids)
+    elif mode == 'exclude':
+        base = base.exclude(publication_type_id__in=pub_type_ids)
+    elif mode == 'single' and pub_type_ids:
+        base = base.filter(publication_type_id=pub_type_ids[0])
+    elif mode == 'single':
         # A subtype was configured but its slug didn't resolve (e.g. renamed) —
         # show nothing rather than silently leaking the whole publication catalogue.
         base = base.none()
@@ -311,12 +315,15 @@ def _publication_handler(P, PL, scope, enabled):
 
     q = P('q')
     sel_topics = [t for t in PL('topic') if t.isdigit()]
+    sel_types = [t for t in PL('type') if t.isdigit()]
     sel_years = [y for y in PL('year') if y.isdigit() and 1000 <= int(y) <= 9999]
 
     qs = base
     qs = _apply_search(qs, PublicationPage.objects.live().public(), q, Q(title__icontains=q))
     if sel_topics:
         qs = qs.filter(topics__id__in=sel_topics)
+    if sel_types:
+        qs = qs.filter(publication_type_id__in=sel_types)
     if sel_years:
         qs = qs.filter(publishing_date__year__in=[int(y) for y in sel_years])
     # Prefetch the per-card topic pills + author byline (PublicationPage is already
@@ -334,6 +341,16 @@ def _publication_handler(P, PL, scope, enabled):
             'options': [{'value': t.id, 'label': t.title,
                          'checked': str(t.id) in sel_topics} for t in topics],
         })
+    if 'type' in enabled:
+        publication_types = (PublicationTypePage.objects.live()
+                             .filter(publications__in=base).distinct()
+                             .order_by('title'))
+        facets.append({
+            'key': 'type', 'label': 'Type', 'open': False,
+            'options': [{'value': t.id, 'label': t.title,
+                         'checked': str(t.id) in sel_types}
+                        for t in publication_types],
+        })
     if 'year' in enabled:
         years = [d.year for d in base.dates('publishing_date', 'year', order='DESC')]
         facets.append({
@@ -343,7 +360,7 @@ def _publication_handler(P, PL, scope, enabled):
                          'checked': str(y) in sel_years} for y in years],
         })
     selected = {'q': q}
-    return qs, facets, selected, bool(q or sel_topics or sel_years)
+    return qs, facets, selected, bool(q or sel_topics or sel_types or sel_years)
 
 
 def _people_queryset(person_type_id):
@@ -935,7 +952,7 @@ def _report_handler(P, PL, scope, enabled):
 FACETS_BY_CARD_TYPE = {
     'resource': ('topic', 'type', 'year'),
     'resource-visual': ('topic', 'type', 'year'),
-    'publication': ('topic', 'year'),
+    'publication': ('topic', 'type', 'year'),
     'person': ('type', 'topic'),
     'staff': ('topic',),  # no Role for the staff directory (BugHerd #360)
     'expert': ('type', 'topic'),
@@ -996,9 +1013,15 @@ def resolve_scope(value, page):
             t for t in (value.get('content_types') or []) if t in RESOURCE_TYPE_MODELS]
     if card_type == 'publication':
         from publications.models import PublicationTypePage
-        slug = value.get('publication_type') or 'working-paper'
-        pt = PublicationTypePage.objects.filter(slug=slug).first()
-        scope['publication_type_id'] = pt.id if pt else None
+        mode = value.get('publication_scope') or 'single'
+        scope['publication_scope'] = mode
+        if mode == 'single':
+            slug = value.get('publication_type') or 'working-paper'
+            pt = PublicationTypePage.objects.filter(slug=slug).first()
+            scope['publication_type_ids'] = [pt.id] if pt else []
+        else:
+            scope['publication_type_ids'] = [
+                page.pk for page in (value.get('publication_types') or [])]
     if card_type in ('person',):
         scope['person_type_id'] = PERSON_TYPE_IDS.get(value.get('person_type') or 'dph_fellow')
     if card_type == 'news':
@@ -1050,6 +1073,12 @@ def default_listing_prefix(value):
     key = '|'.join(str(value.get(k) or '') for k in (
         'card_type', 'person_type', 'publication_type', 'news_prefilter',
         'content_types', 'heading'))
+    publication_scope = value.get('publication_scope') or 'single'
+    if value.get('card_type') == 'publication' and publication_scope != 'single':
+        publication_type_ids = ','.join(
+            str(getattr(page, 'pk', page))
+            for page in (value.get('publication_types') or []))
+        key = '%s|%s|%s' % (key, publication_scope, publication_type_ids)
     return 'r' + hashlib.md5(key.encode()).hexdigest()[:6]
 
 
@@ -1134,7 +1163,8 @@ def build_listing_context(request, value, page=None, lazy=False, tab_slug=None):
     # Only when nothing is applied — an over-filtered result keeps its filters so
     # the reader can clear them. Counted here (a cheap COUNT) rather than off the
     # paginator, so a lazy tab panel agrees with its own results.
-    if show_filters and not has_filters and qs.count() < FILTERS_MIN_RESULTS:
+    if (show_filters and card_type != 'publication' and not has_filters
+            and qs.count() < FILTERS_MIN_RESULTS):
         show_filters = False
 
     base = {
