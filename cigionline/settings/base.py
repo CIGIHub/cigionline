@@ -218,7 +218,7 @@ POLICY_PROMPT_USE_DESIGN_SYSTEM = _policy_prompt_theme in ('1', 'true', 'yes')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'cigionlinetakt',
+        'NAME': 'cigionline',
         'USER': 'cigi',
         'PASSWORD': 'cigi',
         'CONN_MAX_AGE': 600,

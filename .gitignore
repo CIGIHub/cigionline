@@ -94,6 +94,7 @@ cigionline/static/bundles/*
 
 # Postgres
 *.dump
+/latest.dump*
 
 # block-polish audit reports (local, not committed)
 docs/redesign/.polish-reports/

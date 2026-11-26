@@ -10,7 +10,7 @@ but no content module ('chrome-only') is the actionable QA signal — the shell
 loaded but the main body rendered nothing recognisably converted.
 
 Media is stubbed by default (``--real-media`` to disable): image reads return a
-tiny in-memory PNG so rendition generation never touches the staging S3 bucket.
+tiny in-memory PNG so rendition generation does not fetch remote media.
 This is what makes a full-site sweep finish in minutes instead of hours — the
 sweep hunts template/data crashes, which don't need real image bytes.
 
@@ -24,6 +24,7 @@ from collections import Counter, defaultdict
 from urllib.parse import urlparse
 
 from django.core.files.base import ContentFile
+from django.core.files.storage import storages
 from django.contrib.contenttypes.models import ContentType
 from django.core.management.base import BaseCommand, CommandError
 from django.test import Client
@@ -79,7 +80,7 @@ class Command(BaseCommand):
         )
         parser.add_argument(
             '--real-media', action='store_true',
-            help='Disable the media stub and pull real images from staging S3 '
+            help='Disable the media stub and read real images from storage '
                  '(slow; only needed to exercise the image-file path).',
         )
 
@@ -137,16 +138,13 @@ class Command(BaseCommand):
 
     @staticmethod
     def _stub_media():
-        """Media reads return a tiny valid PNG — no S3, no disk pull. Patch only
-        the media storage class, never FileSystemStorage itself (that also backs
-        staticfiles' manifest, which must stay real text)."""
-        from core.dev_storage import StagingPullThroughStorage
+        """Stub only the media storage instance, not the staticfiles storage."""
         from PIL import Image
         buf = io.BytesIO()
         Image.new('RGB', (32, 32), '#888').save(buf, 'PNG')
         tiny = buf.getvalue()
-        StagingPullThroughStorage._open = \
-            lambda self, name, mode='rb': ContentFile(tiny, name=name)
+        storages['default']._open = \
+            lambda name, mode='rb': ContentFile(tiny, name=name)
 
     @staticmethod
     def _classify(client, page):

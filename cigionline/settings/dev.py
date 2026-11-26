@@ -69,18 +69,4 @@ try:
 except ImportError:
     pass
 
-# Local writes stay on disk; missing media and static files are read from
-# staging. The fallback finder is last so locally built assets take priority.
-STORAGES = {
-    **STORAGES,  # noqa: F405
-    'default': {'BACKEND': 'core.dev_storage.StagingPullThroughStorage'},
-    'staticfiles': {
-        'BACKEND': 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage',
-    },
-}
-STATIC_URL = '/static/'
-STATICFILES_FINDERS = [
-    *STATICFILES_FINDERS,  # noqa: F405
-    'core.dev_storage.StagingStaticFinder',
-]
 WAGTAIL_2FA_REQUIRED = False
