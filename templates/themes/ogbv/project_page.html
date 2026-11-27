@@ -47,12 +47,24 @@
 {% endblock %}
 
 {% block content %}
-  <section class="hero" style="background-image:url('{{self.image_banner.file.url}}')">
+  <div class="ogbv-page ds-surface ds-surface--light">
+  <section class="hero"{% if self.image_banner %} style="background-image:url('{{ self.image_banner.file.url }}')"{% endif %}>
     <div class="container">
       <div class="row align-items-center hero-container">
-        <div class="hero-main col-8">
+        <div class="hero-main col-12 col-md-8">
           <h1>{{self.title}}</h1>
-          <h2>{{self.subtitle|safe}}</h2>
+          <div class="hero-subtitle">{{ self.subtitle|richtext }}</div>
+          {% for block in self.hero_link %}
+            {% if block.block_type == 'hero_document' %}
+              <div class="subscribe-text">{{ block.value.hero_link_text }}</div>
+              <a href="{{ block.value.hero_link_document.url }}" class="button-action track-cta" data-cta="tfgbv-hero-download">
+                {% if block.value.hero_link_icon %}<i class="{{ block.value.hero_link_icon_style }} {{ block.value.hero_link_icon }}" aria-hidden="true"></i>{% endif %}
+                Download the Report
+              </a>
+            {% elif block.block_type == 'hero_link' %}
+              <div class="hero-link">{% include_block block %}</div>
+            {% endif %}
+          {% endfor %}
           {% if self.subscribe_page %}
             <div class="subscribe-text">
               {{ self.subscribe_help_text }}
@@ -69,13 +81,16 @@
     </div>
   </section>
 
-  {% if featured_pages|length > 0 %}
+  {% if featured_pages or additional_files %}
     <section class="featured">
       <div class="container">
+        {% if featured_pages %}
         <div class="row align-items-stretch">
           <div class="col-12 col-md-8 feature-border-right">
-            {% if featured_pages|length > 0 %}
+            {% if featured_pages.0.image_poster %}
               {% include "includes/features/feature_content_large.html" with content=featured_pages.0 additional_classes="poster" poster=True cta=True cta_pdf=featured_pages.0.pdf_download %}
+            {% else %}
+              {% include "includes/features/feature_content_large.html" with content=featured_pages.0 cta=True cta_pdf=featured_pages.0.pdf_download %}
             {% endif %}
           </div>
           <hr class="separator-large">
@@ -92,10 +107,12 @@
                     {% else %}
                       <img src="{% static 'assets/CIGI-default-recommended-thumb.png' %}" alt="CIGI Logo">
                     {% endif %}
-                    {% if feature_image.file.url|file_extension == '.gif' %}
-                      <img src="{{feature_image.file.url}}" alt="{{feature_image.caption}}" />
-                    {% else %}
-                      {% image feature_image fill-520x390 %}
+                    {% if feature_image %}
+                      {% if feature_image.file.url|file_extension == '.gif' %}
+                        <img src="{{feature_image.file.url}}" alt="{{feature_image.caption}}" />
+                      {% else %}
+                        {% image feature_image fill-520x390 %}
+                      {% endif %}
                     {% endif %}
                   </div>
                 </a>
@@ -108,10 +125,8 @@
                     {% include 'includes/features/feature_content_people.html' with authors=content.authors.all %}
                     <div class="feature-content-date meta">{{ content.publishing_date|date:"F j, Y" }}</div>
                     {% if content.specific.pdf_downloads %}
-                      <a href="{{ content.specific.pdf_downloads.0.value.file.url }}" aria-label="Download PDF">
-                        <button class="button-action button-square">
-                          <i class="fa fas fa-download track-cta" data-cta="publication-pdf"></i>
-                        </button>
+                      <a href="{{ content.specific.pdf_downloads.0.value.file.url }}" class="button-action button-square track-cta" data-cta="publication-pdf" aria-label="Download PDF">
+                        <i class="fa fas fa-download" aria-hidden="true"></i>
                       </a>
                     {% endif %}
                   </div>
@@ -126,12 +141,15 @@
             <hr>
           </div>
         </div>
+        {% endif %}
+        {% if additional_files or featured_pages|length > 2 %}
         <div class="row highlights">
           <div class="col-12 col-md-8 feature-border-right">
             {% for block in additional_files %}
               {% include_block block with half_split=True %}
             {% endfor %}
           </div>
+          {% endif %}
           <div class="col-12 col-md-4 featured-small">
             {% with featured_pages|slice:"2:4" as featured_small %}
               {% for item in featured_small %}
@@ -160,9 +178,9 @@
             {% endfor %}
           </div>
           <div class="swiper-controls">
-            <div class="swiper-button-prev"><i class="fal fa-long-arrow-left"></i></div>
+            <button type="button" class="swiper-button-prev" aria-label="Previous survey findings"><i class="fal fa-long-arrow-left" aria-hidden="true"></i></button>
             <div class="swiper-pagination"></div>
-            <div class="swiper-button-next"><i class="fal fa-long-arrow-right"></i></div>
+            <button type="button" class="swiper-button-next" aria-label="Next survey findings"><i class="fal fa-long-arrow-right" aria-hidden="true"></i></button>
           </div>
         </div>
       </div>
@@ -254,7 +272,7 @@
                     {% for member in self.members.all %}
                       <li>
                         <div class="person-info">
-                          <a href="{{ member.url }}" class="person-photo">
+                          <a href="{{ member.member.url }}" class="person-photo">
                             <div class="img-wrapper">
                               {% if member.member.image_square %}
                                 {% image member.member.image_square fill-300x300 %}
@@ -291,7 +309,7 @@
                       {% for member in block.value.persons %}
                         <li>
                           <div class="person-info">
-                            <a href="{{ member.url }}" class="person-photo">
+                            <a href="{{ member.value.url }}" class="person-photo">
                               <div class="img-wrapper">
                                 {% if member.value.image_square %}
                                   {% image member.value.image_square fill-300x300 %}
@@ -342,12 +360,12 @@
           <div class="row justify-content-center">
             <div class="col-6">
               <div class="img-container">
-                <img src="/static/assets/idrc-logo.png" alt="IDRC logo">
+                <img src="{% static 'assets/idrc-logo.png' %}" alt="IDRC logo">
               </div>
             </div>
             <div class="col-6">
               <div class="img-container">
-                <img src="/static/assets/canada-logo.png" alt="Canada logo">
+                <img src="{% static 'assets/canada-logo.png' %}" alt="Canada logo">
               </div>
             </div>
           </div>
@@ -365,4 +383,5 @@
       </div>
     </div>
   </section>
+  </div>
 {% endblock content %}

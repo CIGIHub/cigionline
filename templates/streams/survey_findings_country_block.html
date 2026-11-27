@@ -4,10 +4,8 @@
     {% image self.image width-800 %}
   </a>
   <div class="d-flex align-items-center">
-    <a href="{{ self.file.file.url }}">
-      <button class="button-action button-square track-cta" data-cta="survey-finding">
-        <i class="fa fas fa-download"></i>
-      </button>
+    <a href="{{ self.file.file.url }}" class="button-action button-square track-cta" data-cta="survey-finding" aria-label="Download {{ self.country }} survey findings">
+      <i class="fa fas fa-download" aria-hidden="true"></i>
     </a>
     <h3>
       <a href="{{ self.file.file.url }}">

@@ -1,7 +1,8 @@
 import importlib
+import tempfile
 
-from core.models import BasicPage
-from wagtail.models import Page
+from core.models import BasicPage, Theme
+from wagtail.models import Collection, Page
 from articles.models import ArticlePage, ArticleTypePage
 from django.contrib.auth.models import User
 from django.core.management import call_command, CommandError
@@ -10,14 +11,22 @@ from django.utils.text import slugify
 from home.models import HomePage, Think7HomePage
 from publications.models import PublicationListPage, PublicationPage, PublicationTypePage
 from django.template import Context, Template
+from django.template.loader import render_to_string
+from django.test import RequestFactory, override_settings
+from wagtail.documents import get_document_model
+from wagtail.images import get_image_model
+from wagtail.images.tests.utils import get_test_image_file
 from wagtail.test.utils import WagtailPageTestCase
 from wagtail.test.utils.form_data import nested_form_data
 from utils.helpers import CreatePage, CreateArticlePage
 from datetime import date
+from subscribe.models import TFGBVSubscribePage
 
 from .models import (
     ProjectListPage,
     ProjectPage,
+    ProjectPageFeaturedPage,
+    ProjectPageMember,
     ResearchLandingPage,
     ThemePage,
     ThemeProgram,
@@ -51,6 +60,124 @@ class ProjectPageTests(WagtailPageTestCase):
         self.assertAllowedSubpageTypes(
             ProjectPage,
             {},
+        )
+
+
+class OGBVProjectPageTests(WagtailPageTestCase):
+    @classmethod
+    def setUpTestData(cls):
+        from people.models import PersonPage
+
+        cls.home = HomePage.objects.get()
+        cls.theme = Theme.objects.create(name='OGBV')
+        Collection.get_first_root_node() or Collection.add_root(name='Root')
+        cls.document = get_document_model().objects.create(
+            title='Project report', file='documents/project-report.pdf')
+        cls.person = cls.home.add_child(instance=PersonPage(
+            title='Project expert', slug='project-expert'))
+        cls.project = cls.home.add_child(instance=ProjectPage(
+            title='OGBV project',
+            slug='ogbv-project',
+            theme=cls.theme,
+            surface='dark',
+            publishing_date=timezone.now(),
+            subtitle='<p>Project subtitle</p>',
+            hero_link=[('hero_document', {
+                'hero_link_text': 'Read our report',
+                'hero_link_document': cls.document,
+                'hero_link_icon_style': 'fa-solid',
+                'hero_link_icon': 'fa-download',
+            })],
+            body=[
+                ('paragraph', '<p>About the project</p>'),
+                ('additional_file', {
+                    'file': cls.document,
+                    'title': 'Additional report',
+                }),
+            ],
+            additional_members=[('additional_members', {
+                'title': 'Advisors',
+                'bio_source_field': 'short_bio',
+                'persons': [('person', cls.person)],
+            })],
+        ))
+        ProjectPageMember.objects.create(project_page=cls.project, member=cls.person)
+
+    def test_theme_routing_and_content_without_featured_pages(self):
+        request = RequestFactory().get('/')
+        self.assertEqual(self.project.get_template(request), 'themes/ogbv/project_page.html')
+        response = self.client.get(self.project.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'ogbv-page ds-surface ds-surface--light')
+        self.assertContains(response, 'Project subtitle')
+        self.assertContains(response, 'Read our report')
+        self.assertContains(response, 'Download the Report')
+        self.assertContains(response, 'About the project')
+        self.assertContains(response, 'Additional report')
+        self.assertContains(response, f'href="{self.person.url}" class="person-photo"', count=2)
+        self.assertContains(response, 'id="project-search-table"')
+        self.assertNotContains(response, 'background-image:url')
+
+    def test_featured_pages_without_images_render(self):
+        featured = self.home.add_child(instance=ProjectPage(
+            title='Featured project', slug='featured-project', publishing_date=timezone.now()))
+        second = self.home.add_child(instance=ProjectPage(
+            title='Second project', slug='second-project', publishing_date=timezone.now()))
+        ProjectPageFeaturedPage.objects.create(project_page=self.project, featured_page=featured)
+        ProjectPageFeaturedPage.objects.create(project_page=self.project, featured_page=second)
+        response = self.client.get(self.project.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Featured project')
+        self.assertContains(response, 'Second project')
+        self.assertContains(response, 'CIGI-default-recommended-thumb')
+
+    def test_survey_findings_and_composable_body(self):
+        with tempfile.TemporaryDirectory() as media_root, override_settings(
+            MEDIA_ROOT=media_root,
+            STORAGES={
+                'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
+                'staticfiles': {'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage'},
+            },
+        ):
+            image = get_image_model().objects.create(
+                title='Survey image', file=get_test_image_file())
+            self.project.survey_findings = [('country', {
+                'country': 'Canada',
+                'image': image,
+                'file': self.document,
+            })]
+            self.project.body.append(('composable_tabs', {
+                'heading': 'Project tabs',
+                'tabs': [{'label': 'Overview', 'content': []}],
+            }))
+            self.project.save()
+            response = self.client.get(self.project.url)
+            self.assertContains(response, 'SURVEY FINDINGS')
+            self.assertContains(response, 'Download Canada survey findings')
+            self.assertContains(response, 'Previous survey findings')
+            self.assertContains(response, 'ds-composable-tabs')
+            self.assertContains(response, 'Overview')
+
+    def test_subscribe_templates_use_the_specific_parent(self):
+        subscribe = self.project.add_child(instance=TFGBVSubscribePage(
+            title='Subscribe', slug='subscribe'))
+        response = self.client.get(subscribe.url)
+        self.assertContains(response, 'Project subtitle')
+        self.assertContains(response, 'ogbv-page ds-surface ds-surface--light')
+        self.assertNotContains(response, 'background-image:url')
+        html = render_to_string(
+            subscribe.landing_page_template,
+            {'self': subscribe, 'page': subscribe},
+            request=RequestFactory().get('/'),
+        )
+        self.assertIn('Project subtitle', html)
+        self.assertIn('ogbv-page ds-surface ds-surface--light', html)
+
+    def test_unthemed_project_keeps_standard_template(self):
+        self.project.theme = None
+        self.assertEqual(
+            self.project.get_template(RequestFactory().get('/')),
+            'research/project_page.html',
         )
 
 

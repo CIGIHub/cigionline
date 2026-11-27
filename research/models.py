@@ -295,6 +295,7 @@ class ProjectPage(
         ),
         MultiFieldPanel(
             [
+                FieldPanel('hero_link'),
                 FieldPanel('survey_findings'),
                 FieldPanel('task_force_label'),
             ],

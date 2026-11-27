@@ -81,6 +81,13 @@ homepage is a composed DS body on `home.HomePage.body` — seed a default with
   editors: options, editing UI, auto/manual modes, surfaces and the faceted
   listing's card types/scopes/facets.
 - Compose a page by adding modules to its body in the Wagtail admin.
+- An activity with the OGBV theme uses the retained white-background OGBV
+  layout rather than the standard program template. Its Theme Content panel
+  supplies hero links and survey findings; additional-file body blocks appear
+  in the featured area, while image and embedded-video blocks appear under
+  Resources. About and Team Members are collapsible. Check existing authored
+  blocks and media before publishing; unsupported legacy block types may need
+  a separate content migration.
 - Dynamic modules populate themselves (recent content, all experts, a program's
   pages) when left empty, or take a hand-picked list.
 - Listings query the ORM; the global search page uses Elasticsearch.

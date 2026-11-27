@@ -1,27 +1,24 @@
 @import '../../../css/global/mixins';
-@import '../../../css/includes/swiper';
 
-body {
-  @include top-bar(
-    $background-color: transparent,
-    $color: $black,
-    $background-color-scrolled: $black,
-    $color-scrolled: $white
-  );
+.ogbv-page {
+  @import '../../../css/includes/swiper';
 
-  section {
+  > section {
     margin: 3rem 0;
 
     &.hero {
+      background-color: $white;
       background-size: cover;
       background-position: 80%;
       background-repeat: no-repeat;
       margin-top: 0;
+      padding-top: 4em;
 
       .hero-container {
         .hero-main {
           h1,
-          p {
+          p,
+          h2 {
             color: $black;
           }
 
@@ -134,11 +131,17 @@ body {
         padding-top: 3em !important;
       }
 
+      .swiper-button-prev:focus-visible,
+      .swiper-button-next:focus-visible {
+        outline: 2px solid $black !important;
+        outline-offset: 3px;
+      }
+
       .survey-findings-country {
         img {
           margin-bottom: 1em;
         }
-        button {
+        .button-action {
           margin: 0 0.5em 0 0;
         }
 
@@ -209,7 +212,7 @@ body {
   }
 }
 
-.dropdown.custom-dropdown.collapsible-section {
+.ogbv-page .dropdown.custom-dropdown.collapsible-section {
   summary.dropdown-toggle {
     border-bottom: 0;
     cursor: pointer;
@@ -217,6 +220,11 @@ body {
     height: auto;
     list-style: none;
     padding-bottom: 0;
+
+    &:focus-visible {
+      outline: 2px solid $black;
+      outline-offset: 3px;
+    }
 
     &::-webkit-details-marker {
       display: none;
