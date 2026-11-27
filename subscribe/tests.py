@@ -6,7 +6,7 @@ from django.test import RequestFactory, SimpleTestCase, TestCase
 from mailchimp_marketing.api_client import ApiClientError
 from wagtail.test.utils import WagtailPageTestCase
 
-from subscribe.models import SubscribePage
+from subscribe.models import SubscribePage, TFGBVSubscribeForm, TFGBVSubscribePage
 from subscribe.views import DphSubscribeForm, subscribe_dph
 from home.models import HomePage
 
@@ -141,6 +141,19 @@ class SubscribeDphTemplateTests(TestCase):
 
 
 class SubscribePageTests(WagtailPageTestCase):
+    def test_tfgbv_form_requires_affiliation_and_country(self):
+        form = TFGBVSubscribeForm(data={
+            'first_name': 'Ada',
+            'last_name': 'Lovelace',
+            'email': 'ada@example.com',
+            'affiliation': 'CIGI',
+            'location': 'CA',
+            'consent': True,
+        })
+
+        self.assertTrue(form.is_valid(), form.errors)
+        self.assertEqual(TFGBVSubscribePage().get_country(form), 'Canada')
+
     def test_subscribepage_parent_page_types(self):
         self.assertAllowedParentPageTypes(
             SubscribePage,

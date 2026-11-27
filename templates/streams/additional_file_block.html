@@ -12,8 +12,10 @@
       ">
         {% if self.page %}
           <a href="{% pageurl self.page %}">
-        {% else %}
+        {% elif self.file %}
           <a href="{{ self.file.file.url }}">
+        {% else %}
+          <a href="{{ self.image.file.url }}" target="_blank" rel="noopener noreferrer">
         {% endif %}
           <figure>
             {% if self.image.file.url|file_extension == '.gif' %}
@@ -22,7 +24,7 @@
               {% image self.image width-800 %}
             {% endif %}
           </figure>
-        </a>
+          </a>
       </div>
     {% endif %}
     <div class="stream-block-text
@@ -38,12 +40,14 @@
         {% endif %}
         <h3 class="stream-block-title">
           {% if self.page %}
-            <a href="{% pageurl self.page %}">
+            <a href="{% pageurl self.page %}">{{ self.title }}</a>
+          {% elif self.file %}
+            <a href="{{ self.file.file.url }}">{{ self.title }}</a>
+          {% elif self.image %}
+            <a href="{{ self.image.file.url }}" target="_blank" rel="noopener noreferrer">{{ self.title }}</a>
           {% else %}
-            <a href="{{ self.file.file.url }}">
-          {% endif %}
             {{ self.title }}
-          </a>
+          {% endif %}
         </h3>
         {% if self.description %}
           <div class="stream-block-description">
@@ -62,6 +66,12 @@
               <button class="button-action button-square track-cta" data-cta="publication-pdf">
                 <i class="fa fas fa-download"></i>
               </button>
+            </a>
+          </div>
+        {% elif not self.page and self.image %}
+          <div class="stream-block-cta">
+            <a href="{{ self.image.file.url }}" class="button-action button-square track-cta" data-cta="publication-image" target="_blank" rel="noopener noreferrer" aria-label="Download image">
+              <i class="fa fas fa-download" aria-hidden="true"></i>
             </a>
           </div>
         {% endif %}

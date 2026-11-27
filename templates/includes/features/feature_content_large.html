@@ -48,7 +48,9 @@
         {% include 'includes/topics.html' with topics=content.topics_sorted %}
       {% endif %}
       {% include 'includes/features/feature_content_title.html' %}
-      {% include 'includes/features/feature_content_subtitle.html' %}
+      {% if not hide_short_description %}
+        {% include 'includes/features/feature_content_subtitle.html' %}
+      {% endif %}
     </div>
     <div>
       {% if content|page_type == 'opinion-series' %}
@@ -64,7 +66,7 @@
         <div class="feature-content-date meta">{{ content.publishing_date|date:"F j, Y" }}</div>
       {% endif %}
       {% if cta %}
-        {% include 'includes/features/feature_content_cta.html' with cta_pdf=cta_pdf %}
+        {% include 'includes/features/feature_content_cta.html' with cta_pdf=cta_pdf cta_tracking=cta_tracking %}
       {% endif %}
     </div>
   </div>

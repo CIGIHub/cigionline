@@ -319,7 +319,7 @@ class TFGBVSubscribePage(SubscribePage):
         return form.cleaned_data.get("affiliation", "")
 
     def get_country(self, form):
-        return None
+        return super().get_country(form)
 
     mailchimp_tag = 'TFGBV Updates'
     mailchimp_merge_field_suffix = 'TFGBV'
@@ -329,7 +329,7 @@ class TFGBVSubscribePage(SubscribePage):
 
 
 class TFGBVSubscribeForm(SubscribeForm):
-    affiliation = forms.CharField(required=False, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Affiliation*'}))
+    affiliation = forms.CharField(required=True, max_length=128, widget=forms.TextInput(attrs={'placeholder': 'Affiliation*'}))
 
     # help_text wording change from base
     consent = forms.BooleanField(
@@ -343,6 +343,7 @@ class TFGBVSubscribeForm(SubscribeForm):
         'last_name',
         'email',
         'affiliation',
+        'location',
         'consent',
     ]
 

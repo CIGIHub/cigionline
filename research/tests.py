@@ -2,7 +2,7 @@ import importlib
 import tempfile
 
 from core.models import BasicPage, Theme
-from wagtail.models import Collection, Page
+from wagtail.models import Collection, Page, Site
 from articles.models import ArticlePage, ArticleTypePage
 from django.contrib.auth.models import User
 from django.core.management import call_command, CommandError
@@ -69,6 +69,11 @@ class OGBVProjectPageTests(WagtailPageTestCase):
         from people.models import PersonPage
 
         cls.home = HomePage.objects.get()
+        Site.objects.update_or_create(
+            hostname='localhost',
+            port=80,
+            defaults={'root_page': cls.home, 'is_default_site': True},
+        )
         cls.theme = Theme.objects.create(name='OGBV')
         Collection.get_first_root_node() or Collection.add_root(name='Root')
         cls.document = get_document_model().objects.create(
@@ -157,6 +162,27 @@ class OGBVProjectPageTests(WagtailPageTestCase):
             self.assertContains(response, 'Previous survey findings')
             self.assertContains(response, 'ds-composable-tabs')
             self.assertContains(response, 'Overview')
+
+    def test_image_only_additional_file_links_to_the_image(self):
+        with tempfile.TemporaryDirectory() as media_root, override_settings(
+            MEDIA_ROOT=media_root,
+            STORAGES={
+                'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
+                'staticfiles': {'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage'},
+            },
+        ):
+            image = get_image_model().objects.create(
+                title='Feature image', file=get_test_image_file())
+            self.project.body = [('additional_file', {
+                'title': 'Download the image',
+                'image': image,
+            })]
+            self.project.save()
+
+            response = self.client.get(self.project.url)
+
+            self.assertContains(response, f'href="{image.file.url}"', count=3)
+            self.assertContains(response, 'aria-label="Download image"')
 
     def test_subscribe_templates_use_the_specific_parent(self):
         subscribe = self.project.add_child(instance=TFGBVSubscribePage(
