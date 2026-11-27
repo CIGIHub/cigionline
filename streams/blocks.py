@@ -4760,6 +4760,7 @@ class FacetedListingBlock(ConditionalFieldsMixin, blocks.StructBlock):
 
     CARD_TYPES = [
         ('resource', 'Resource (program-scoped)'),
+        ('multimedia', 'Multimedia'),
         ('publication', 'Publication (e.g. Working Papers)'),
         ('person', 'Person (Cohort / Speakers)'),
         ('staff', 'Staff directory'),
@@ -5052,6 +5053,7 @@ TrendingIssuesBlock.CONDITIONAL_FIELDS = {'mode': {'manual': ['item'], 'auto': [
 FacetedListingBlock.CONDITIONAL_FIELDS = {'card_type': {
     'resource': ['program_source', 'program', 'content_types'],
     'resource-visual': ['program_source', 'program', 'content_types'],
+    'multimedia': ['facets'],
     'publication': [
         'publication_scope', 'publication_type', 'publication_types', 'facets'],
     'person': ['person_type', 'facets'],

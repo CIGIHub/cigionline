@@ -1,0 +1,22 @@
+{% load cards wagtailcore_tags wagtailimages_tags %}{% comment %}
+  Multimedia router item — image, topics, Audio/Video identity, title,
+  podcast-aware excerpt, and publishing date/duration.
+{% endcomment %}
+<article class="ds-card ds-card--resource-visual">
+  {% firstof item.image_poster item.image_hero as card_image %}
+  {% if card_image %}<div class="ds-card__media">{% image card_image fill-740x416 %}</div>{% endif %}
+  <div class="ds-card__body">
+    {% include "includes/card/_pills.html" with pills=item.topics.all|topic_pills:item %}
+    {% type_of_content item %}
+    <a class="ds-card__title" href="{% pageurl item %}">{{ item|display_title }}</a>
+    {% if item.podcast_subtitle %}
+      <p class="ds-card__excerpt">{{ item.podcast_subtitle }}</p>
+    {% else %}
+      {% with excerpt=item|card_excerpt %}{% if excerpt %}<p class="ds-card__excerpt">{{ excerpt }}</p>{% endif %}{% endwith %}
+    {% endif %}
+    {% firstof item.podcast_audio_duration item.podcast_video_duration item.length as duration %}
+    {% if item.publishing_date or duration %}
+      <p class="ds-card__date">{% if item.publishing_date %}{{ item.publishing_date|date:"F j, Y" }}{% endif %}{% if item.publishing_date and duration %} · {% endif %}{{ duration }}</p>
+    {% endif %}
+  </div>
+</article>

@@ -1,4 +1,4 @@
-from core.models import Theme
+from core.models import Theme, ThemeablePageAbstract
 from django.template.loader import render_to_string
 from django.test import RequestFactory, TestCase, override_settings
 from home.models import HomePage
@@ -23,6 +23,16 @@ class MultimediaListPageTests(WagtailPageTestCase):
         self.assertAllowedSubpageTypes(
             MultimediaListPage,
             {MultimediaPage},
+        )
+
+    def test_multimedialistpage_exposes_surface_setting(self):
+        self.assertEqual(
+            list(MultimediaListPage._meta.get_field('surface').choices),
+            [('light', 'Light'), ('dark', 'Dark')],
+        )
+        self.assertIn(
+            ThemeablePageAbstract.surface_panel,
+            MultimediaListPage.settings_panels,
         )
 
 

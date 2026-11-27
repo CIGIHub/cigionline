@@ -49,6 +49,13 @@ def _use_policy_prompt_design_system(page):
 
 
 class MultimediaListPage(RouterServeMixin, BasicPageAbstract, SearchablePageAbstract, Page):
+    surface = models.CharField(
+        max_length=8,
+        choices=ThemeablePageAbstract.Surface.choices,
+        default=ThemeablePageAbstract.Surface.LIGHT,
+        help_text='Default light/dark surface for this page. Modules inherit it '
+                  'unless they set their own surface.',
+    )
     max_count = 1
     parent_page_types = ['home.HomePage']
     subpage_types = ['multimedia.MultimediaPage']
@@ -86,6 +93,7 @@ class MultimediaListPage(RouterServeMixin, BasicPageAbstract, SearchablePageAbst
     ]
     settings_panels = Page.settings_panels + [
         BasicPageAbstract.submenu_panel,
+        ThemeablePageAbstract.surface_panel,
     ]
 
     search_fields = Page.search_fields + BasicPageAbstract.search_fields + SearchablePageAbstract.search_fields

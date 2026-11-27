@@ -78,6 +78,7 @@ RESOURCE_TYPE_MODELS = {value: model for value, _, model in RESOURCE_TYPES}
 ITEM_TEMPLATES = {
     'resource': 'includes/router_items/resource.html',
     'resource-visual': 'includes/router_items/resource_visual.html',
+    'multimedia': 'includes/router_items/multimedia.html',
     'publication': 'includes/router_items/publication.html',
     'episode_row': 'includes/router_items/episode_row.html',
     'event': 'includes/router_items/event.html',
@@ -962,6 +963,7 @@ def _report_handler(P, PL, scope, enabled):
 FACETS_BY_CARD_TYPE = {
     'resource': ('topic', 'type', 'year'),
     'resource-visual': ('topic', 'type', 'year'),
+    'multimedia': ('topic', 'type', 'year'),
     'publication': ('topic', 'type', 'year'),
     'person': ('type', 'topic'),
     'staff': ('topic',),  # no Role for the staff directory (BugHerd #360)
@@ -976,6 +978,7 @@ FACETS_BY_CARD_TYPE = {
 HANDLERS = {
     'resource': _resource_handler,
     'resource-visual': _resource_handler,
+    'multimedia': _resource_handler,
     'publication': _publication_handler,
     'person': _person_handler,
     'staff': _staff_handler,
@@ -1021,6 +1024,8 @@ def resolve_scope(value, page):
         # Per-instance content-type toggles (QA regroup 17:46).
         scope['content_types'] = [
             t for t in (value.get('content_types') or []) if t in RESOURCE_TYPE_MODELS]
+    elif card_type == 'multimedia':
+        scope['content_types'] = ['multimedia']
     if card_type == 'publication':
         from publications.models import PublicationTypePage
         mode = value.get('publication_scope') or 'single'
