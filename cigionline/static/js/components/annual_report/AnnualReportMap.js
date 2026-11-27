@@ -33,6 +33,15 @@ const themeClasses = {
   'Global Cooperation and Governance': 'theme-cooperation',
 };
 
+const themeNamesFr = {
+  'AI and Transformative Technology': 'IA et technologies transformatrices',
+  'Data, Economy, Society': 'Données, économie, société',
+  'Digitalization, Security and Democracy': 'Numérisation, sécurité et démocratie',
+  'Global Cooperation and Governance': 'Coopération et gouvernance mondiales',
+};
+
+const emptyStories = [];
+
 const countryAliases = {
   usa: 'United States of America',
   us: 'United States of America',
@@ -171,14 +180,20 @@ const translated = (item, field, lang) => (
   (lang === 'fr' && item[`${field}_fr`]) || item[field] || ''
 );
 
-const storyMatches = (story, query, selectedTheme, lang) => {
+const getThemeLabel = (theme, stories, lang) => {
+  if (lang !== 'fr') return theme;
+  const override = stories.find((story) => story.research_theme === theme && story.research_theme_fr);
+  return override?.research_theme_fr || themeNamesFr[theme] || theme;
+};
+
+const storyMatches = (story, query, selectedTheme, lang, stories) => {
   const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
 
   const matchesSearch = !words.length || [
     translated(story, 'title', lang),
     translated(story, 'location', lang),
     story.country,
-    translated(story, 'research_theme', lang),
+    getThemeLabel(story.research_theme, stories, lang),
   ].some((value) => {
     const text = String(value || '').toLowerCase();
     return words.every((word) => text.includes(word));
@@ -212,12 +227,9 @@ function AnnualReportMap({ slide, lang }) {
   const highlightMarkersRef = useRef([]);
   const cityHubMarkersRef = useRef([]);
 
-  const stories = slide.slide_content?.map_stories || [];
+  const stories = slide.slide_content?.map_stories || emptyStories;
   const copy = mapCopy[lang];
-  const themeLabel = (theme) => {
-    const story = stories.find((item) => item.research_theme === theme && item.research_theme_fr);
-    return lang === 'fr' && story ? story.research_theme_fr : theme;
-  };
+  const themeLabel = (theme) => getThemeLabel(theme, stories, lang);
 
   const researchThemes = [...new Set(
     stories
@@ -1119,7 +1131,7 @@ function AnnualReportMap({ slide, lang }) {
 
   useEffect(() => {
     highlightMarkersRef.current.forEach(({ story, element, tooltip, tooltipContent }) => {
-      const matches = storyMatches(story, searchQuery, selectedTheme, lang);
+      const matches = storyMatches(story, searchQuery, selectedTheme, lang, stories);
       tooltipContent.textContent = translated(story, 'title', lang);
       element.setAttribute('aria-label', translated(story, 'title', lang));
 
@@ -1132,7 +1144,7 @@ function AnnualReportMap({ slide, lang }) {
 
     cityHubMarkersRef.current.forEach(({ element, nodes, group }) => {
       const matchingNodes = nodes.filter(({ story }) => (
-        storyMatches(story, searchQuery, selectedTheme, lang)
+        storyMatches(story, searchQuery, selectedTheme, lang, stories)
       ));
 
       const matchingCount = matchingNodes.length;
@@ -1190,7 +1202,7 @@ function AnnualReportMap({ slide, lang }) {
         button.setAttribute('aria-label', label);
       }
     });
-  }, [searchQuery, selectedTheme, lang, markersReady, copy]);
+  }, [searchQuery, selectedTheme, lang, markersReady, copy, stories]);
 
   useEffect(() => {
     const mobileQuery = window.matchMedia('(max-width: 768px)');
