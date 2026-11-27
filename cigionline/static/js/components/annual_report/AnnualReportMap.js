@@ -132,14 +132,53 @@ const customIcons = {
   ),
 };
 
-const storyMatches = (story, query, selectedTheme) => {
+const mapCopy = {
+  en: {
+    search: 'Search stories',
+    all: 'All',
+    allThemes: 'All research themes',
+    clear: 'Clear',
+    close: 'Close story card',
+    description: 'Story description and related content',
+    story: 'story',
+    stories: 'stories',
+    zoomIn: 'Zoom in',
+    zoomOut: 'Zoom out',
+  },
+  fr: {
+    search: 'Rechercher des histoires',
+    all: 'Tous',
+    allThemes: 'Tous les thèmes de recherche',
+    clear: 'Effacer',
+    close: 'Fermer la fiche',
+    description: 'Description et contenu connexe',
+    story: 'histoire',
+    stories: 'histoires',
+    zoomIn: 'Zoom avant',
+    zoomOut: 'Zoom arrière',
+  },
+};
+
+const oceanNamesFr = {
+  'Pacific Ocean': 'Océan Pacifique',
+  'Atlantic Ocean': 'Océan Atlantique',
+  'Indian Ocean': 'Océan Indien',
+  'Southern Ocean': 'Océan Austral',
+  'Arctic Ocean': 'Océan Arctique',
+};
+
+const translated = (item, field, lang) => (
+  (lang === 'fr' && item[`${field}_fr`]) || item[field] || ''
+);
+
+const storyMatches = (story, query, selectedTheme, lang) => {
   const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
 
   const matchesSearch = !words.length || [
-    story.title,
-    story.location,
+    translated(story, 'title', lang),
+    translated(story, 'location', lang),
     story.country,
-    story.research_theme,
+    translated(story, 'research_theme', lang),
   ].some((value) => {
     const text = String(value || '').toLowerCase();
     return words.every((word) => text.includes(word));
@@ -150,7 +189,7 @@ const storyMatches = (story, query, selectedTheme) => {
   );
 };
 
-function AnnualReportMap({ slide }) {
+function AnnualReportMap({ slide, lang }) {
   const mapContainerRef = useRef(null);
   const cardRef = useRef(null);
   const descriptionRef = useRef(null);
@@ -161,6 +200,7 @@ function AnnualReportMap({ slide }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTheme, setSelectedTheme] = useState('');
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
+  const [markersReady, setMarkersReady] = useState(false);
   const [isMobile, setIsMobile] = useState(
     window.innerWidth <= 768
   );
@@ -173,6 +213,11 @@ function AnnualReportMap({ slide }) {
   const cityHubMarkersRef = useRef([]);
 
   const stories = slide.slide_content?.map_stories || [];
+  const copy = mapCopy[lang];
+  const themeLabel = (theme) => {
+    const story = stories.find((item) => item.research_theme === theme && item.research_theme_fr);
+    return lang === 'fr' && story ? story.research_theme_fr : theme;
+  };
 
   const researchThemes = [...new Set(
     stories
@@ -184,7 +229,7 @@ function AnnualReportMap({ slide }) {
     if (activeStory && cardRef.current) {
       cardRef.current.scrollTop = 0;
     }
-  }, [activeStory]);
+  }, [activeStory, lang]);
 
   useEffect(() => {
     cityHubMarkersRef.current.forEach(({ element, group }) => {
@@ -249,7 +294,7 @@ function AnnualReportMap({ slide }) {
       observer.disconnect();
       description.removeEventListener('scroll', updateScrollState);
     };
-  }, [activeStory]);
+  }, [activeStory, lang]);
 
   useEffect(() => {
     if (!activeStory) return undefined;
@@ -448,6 +493,7 @@ function AnnualReportMap({ slide }) {
       oceans.forEach(({ name, coordinates }) => {
         const element = document.createElement('div');
         element.className = 'map-ocean-label';
+        element.dataset.ocean = name;
         element.textContent = name;
 
         const marker = new maplibregl.Marker({
@@ -555,7 +601,7 @@ function AnnualReportMap({ slide }) {
             });
           });
 
-          markers.push({ marker, coordinates, index, story, element, tooltip });
+          markers.push({ marker, coordinates, index, story, element, tooltip, tooltipContent });
         });
       });
 
@@ -1044,6 +1090,7 @@ function AnnualReportMap({ slide }) {
             ?.classList.remove('map-initializing');
         });
       });
+      setMarkersReady(true);
     });
 
     return () => {
@@ -1064,14 +1111,17 @@ function AnnualReportMap({ slide }) {
       });
 
       oceanMarkersRef.current = [];
+      cityHubMarkersRef.current = [];
 
       map.remove();
     };
   }, []);
 
   useEffect(() => {
-    highlightMarkersRef.current.forEach(({ story, element, tooltip }) => {
-      const matches = storyMatches(story, searchQuery, selectedTheme);
+    highlightMarkersRef.current.forEach(({ story, element, tooltip, tooltipContent }) => {
+      const matches = storyMatches(story, searchQuery, selectedTheme, lang);
+      tooltipContent.textContent = translated(story, 'title', lang);
+      element.setAttribute('aria-label', translated(story, 'title', lang));
 
       element.style.display = matches ? '' : 'none';
 
@@ -1080,16 +1130,19 @@ function AnnualReportMap({ slide }) {
       }
     });
 
-    cityHubMarkersRef.current.forEach(({ element, nodes }) => {
+    cityHubMarkersRef.current.forEach(({ element, nodes, group }) => {
       const matchingNodes = nodes.filter(({ story }) => (
-        storyMatches(story, searchQuery, selectedTheme)
+        storyMatches(story, searchQuery, selectedTheme, lang)
       ));
 
       const matchingCount = matchingNodes.length;
       const radius = Math.max(70, matchingCount * 12);
 
-      nodes.forEach(({ node }) => {
+      nodes.forEach(({ node, story }) => {
         node.style.display = 'none';
+        const title = translated(story, 'title', lang);
+        node.setAttribute('aria-label', title);
+        node.querySelector('.map-city-hub-tooltip').textContent = title;
       });
 
       matchingNodes.forEach(({ node }, index) => {
@@ -1111,14 +1164,33 @@ function AnnualReportMap({ slide }) {
       element.style.setProperty('--hub-size', `${hubSize}px`);
 
       const tooltipCount = element.querySelector('.map-city-hub-info-count');
+      const city = translated(group[0], 'location', lang).split(',')[0].trim();
+      const countLabel = matchingCount === 1 ? copy.story : copy.stories;
+      element.setAttribute('aria-label', `${city}: ${matchingCount} ${countLabel}`);
+      element.querySelector('.map-city-hub-info-title').textContent = city;
 
       if (tooltipCount) {
-        tooltipCount.textContent = `${matchingCount} ${
-          matchingCount === 1 ? 'story' : 'stories'
-        }`;
+        tooltipCount.textContent = `${matchingCount} ${countLabel}`;
       }
     });
-  }, [searchQuery, selectedTheme]);
+
+    oceanMarkersRef.current.forEach((marker) => {
+      const element = marker.getElement();
+      if (element.dataset.ocean) {
+        element.textContent = lang === 'fr'
+          ? oceanNamesFr[element.dataset.ocean]
+          : element.dataset.ocean;
+      }
+    });
+
+    [['zoom-in', copy.zoomIn], ['zoom-out', copy.zoomOut]].forEach(([control, label]) => {
+      const button = mapContainerRef.current?.querySelector(`.maplibregl-ctrl-${control}`);
+      if (button) {
+        button.title = label;
+        button.setAttribute('aria-label', label);
+      }
+    });
+  }, [searchQuery, selectedTheme, lang, markersReady, copy]);
 
   useEffect(() => {
     const mobileQuery = window.matchMedia('(max-width: 768px)');
@@ -1179,7 +1251,11 @@ function AnnualReportMap({ slide }) {
             <div className="row">
               <div className="col">
                 <div className="slide-title">
-                  <h1>{slide.title}</h1>
+                  {translated(slide, 'slide_title', lang) ? (
+                    <h1 dangerouslySetInnerHTML={{
+                      __html: translated(slide, 'slide_title', lang),
+                    }} />
+                  ) : <h1>{slide.title}</h1>}
                 </div>
               </div>
             </div>
@@ -1190,10 +1266,10 @@ function AnnualReportMap({ slide }) {
         <div className="map-search-input">
           <input
             type="search"
-            placeholder="Search stories..."
+            placeholder={`${copy.search}...`}
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
-            aria-label="Search stories"
+            aria-label={copy.search}
           />
           <i className="fa-solid fa-magnifying-glass" aria-hidden="true" />
         </div>
@@ -1206,7 +1282,7 @@ function AnnualReportMap({ slide }) {
             onClick={() => setThemeDropdownOpen(!themeDropdownOpen)}
           >
             <span>
-              {selectedTheme || (isMobile ? 'All' : 'All research themes')}
+              {selectedTheme ? themeLabel(selectedTheme) : (isMobile ? copy.all : copy.allThemes)}
             </span>
             <i className="fa-solid fa-chevron-down" aria-hidden="true" />
           </button>
@@ -1221,7 +1297,7 @@ function AnnualReportMap({ slide }) {
                   setThemeDropdownOpen(false);
                 }}
               >
-                All research themes
+                {copy.allThemes}
               </button>
 
               {researchThemes.map((theme) => (
@@ -1234,7 +1310,7 @@ function AnnualReportMap({ slide }) {
                     setThemeDropdownOpen(false);
                   }}
                 >
-                  {theme}
+                  {themeLabel(theme)}
                 </button>
               ))}
             </div>
@@ -1251,7 +1327,7 @@ function AnnualReportMap({ slide }) {
               setThemeDropdownOpen(false);
             }}
           >
-            Clear
+            {copy.clear}
           </button>
         )}
       </div>
@@ -1266,7 +1342,7 @@ function AnnualReportMap({ slide }) {
             type="button"
             className="map-story-panel-close"
             onClick={() => setActiveStory(null)}
-            aria-label="Close story card"
+            aria-label={copy.close}
           >
             &times;
           </button>
@@ -1274,12 +1350,12 @@ function AnnualReportMap({ slide }) {
           <div className="map-card" ref={cardRef}>
             {activeStory.research_theme && (
               <div className={`map-card-theme ${themeClasses[activeStory.research_theme] || ''}`}>
-                {activeStory.research_theme}
+                {themeLabel(activeStory.research_theme)}
               </div>
             )}
 
             <div className="map-card-title">
-              {activeStory.title}
+              {translated(activeStory, 'title', lang)}
             </div>
 
             <div
@@ -1287,12 +1363,12 @@ function AnnualReportMap({ slide }) {
               className={`map-card-content${hasMoreDescription ? ' has-more-content' : ''}`}
               tabIndex={0}
               role="region"
-              aria-label="Story description and related content"
+              aria-label={copy.description}
             >
               <div
                 className="map-card-description"
                 dangerouslySetInnerHTML={{
-                  __html: activeStory.short_description || '',
+                  __html: translated(activeStory, 'short_description', lang),
                 }}
               />
 
@@ -1313,12 +1389,16 @@ function AnnualReportMap({ slide }) {
                       </div>
 
                       <div className="content-copy">
-                        <h4>{related.type_override || related.content_type}</h4>
+                        <h4>
+                          {lang === 'fr'
+                            ? related.type_override_fr || related.type_override || related.content_type_fr || related.content_type
+                            : related.type_override || related.content_type}
+                        </h4>
                         <p>
                           <span
                             className="underline"
                             dangerouslySetInnerHTML={{
-                              __html: related.title || '',
+                              __html: translated(related, 'title', lang),
                             }}
                           />
                         </p>
@@ -1331,9 +1411,15 @@ function AnnualReportMap({ slide }) {
 
             <div className="map-card-meta">
               {activeStory.publishing_date && (
-                <span>{activeStory.publishing_date}</span>
+                <span>
+                  {lang === 'fr' && activeStory.publishing_date_iso
+                    ? new Intl.DateTimeFormat('fr', {
+                      day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC',
+                    }).format(new Date(`${activeStory.publishing_date_iso}T00:00:00Z`))
+                    : activeStory.publishing_date}
+                </span>
               )}
-              <span>{activeStory.location}</span>
+              <span>{translated(activeStory, 'location', lang)}</span>
             </div>
           </div>
         </div>
@@ -1344,6 +1430,7 @@ function AnnualReportMap({ slide }) {
 
 AnnualReportMap.propTypes = {
   slide: PropTypes.object.isRequired,
+  lang: PropTypes.string.isRequired,
 };
 
 export default AnnualReportMap;
