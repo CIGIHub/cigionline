@@ -146,6 +146,7 @@ if 'PLATFORM_RELATIONSHIPS' in os.environ:
 
 # Use AWS S3 for file storage
 # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html
+AWS_S3_FILE_OVERWRITE = False
 STORAGES = {
     "default": {
         "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
@@ -155,6 +156,9 @@ STORAGES = {
     },
     "staticfiles": {
         "BACKEND": "storages.backends.s3boto3.S3ManifestStaticStorage",
+        "OPTIONS": {
+            "file_overwrite": True,
+        },
     },
 }
 if 'AWS_ACCESS_KEY_ID' in os.environ:
