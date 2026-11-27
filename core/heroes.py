@@ -99,7 +99,7 @@ def _ownership_crumbs(page):
 # them: IA decision 2026-09-04, CIGI aligned 2026-09-09 ("HOME -> Archive ->
 # content"); BugHerd #279. Series, program, listing and basic pages keep their
 # own trails.
-ARCHIVE_TRAIL_TYPES = ('ArticlePage', 'PublicationPage', 'MultimediaPage', 'EventPage')
+ARCHIVE_TRAIL_TYPES = ('ArticlePage', 'PublicationPage', 'MultimediaPage')
 
 
 def _series_episode(page):
@@ -125,7 +125,7 @@ def _archive_crumbs():
 def _content_crumbs(page):
     """The trail for every content-style hero (BugHerd #279):
     1. Home > theme > program when a current program owns the page;
-    2. Home > <archive> for an article / publication / multimedia / event no
+    2. Home > <archive> for an article / publication / multimedia page no
        current program owns (a series episode keeps Home > <series>);
     3. else the tree walk.
     Never a topic: topic pages retired (IA 2026-08-26), and the topic crumb

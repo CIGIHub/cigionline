@@ -1,10 +1,11 @@
 """Content-hero breadcrumbs (BugHerd #279).
 
-A content single (article, publication incl. books, multimedia, event) tagged
-to a current program trails Home > Theme > Program; every other one trails
-Home > <archive page title>. No crumb links a TopicPage. The archive page is
-Settings -> Archive, else the oldest live BasicPage carrying an archive-mode
-Faceted Listing, else the hero keeps its tree trail (core.archive).
+Content singles tagged to a current program trail Home > Theme > Program.
+Articles, publications (incl. books), and multimedia without one trail Home >
+<archive page title>; events retain their Events tree trail. No crumb links a
+TopicPage. The archive page is Settings -> Archive, else the oldest live
+BasicPage carrying an archive-mode Faceted Listing, else the hero keeps its
+tree trail (core.archive).
 
 Builds its own pages; core/tests.py is not touched.
 """
@@ -150,11 +151,18 @@ class ContentBreadcrumbTests(TestCase):
         for page in (self.publication('untagged-pub'),
                      self.publication('untagged-book', publication_type=self.books),
                      self.article('untagged-article'),
-                     self.event('untagged-event'),
                      self.multimedia_page('untagged-video', multimedia_type='video'),
                      self.multimedia_page('untagged-podcast', multimedia_type='audio')):
             with self.subTest(page=page.slug):
                 self.assertEqual(self.crumbs(page), self.archive_trail())
+
+    def test_events_without_current_program_keep_events_trail(self):
+        events_trail = [HOME, {'title': 'Events', 'url': '/events/'}]
+        for page in (self.event('untagged-event'),
+                     self.event('topic-event', topics=[self.topic]),
+                     self.event('legacy-program-event', projects=[self.legacy])):
+            with self.subTest(page=page.slug):
+                self.assertEqual(self.crumbs(page), events_trail)
 
     def test_book_uses_the_book_hero(self):
         page = self.publication('book', publication_type=self.books, topics=[self.topic])

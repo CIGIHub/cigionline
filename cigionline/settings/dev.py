@@ -86,5 +86,6 @@ if not os.environ.get('GITHUB_WORKFLOW') and not os.environ.get('TEST_MIGRATIONS
         'NAME': 'test_cigionline_fast',
         'MIGRATE': False,
     }
+    TEST_RUNNER = 'cigionline.test_runner.FastTestRunner'
 
 WAGTAIL_2FA_REQUIRED = False
