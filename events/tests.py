@@ -1914,6 +1914,18 @@ class RegistrationTypeCloseDateTests(TestCase):
             fetch_redirect_response=False,
         )
 
+    def test_private_event_revision_hides_types_without_invite(self):
+        from events.models import RegistrationType
+
+        event = self.make_event(is_private_registration=True)
+        RegistrationType.objects.create(
+            event=event, name="Invitee", slug="invitee", sort_order=0, is_public=False
+        )
+
+        preview_event = event.save_revision(user=test_owner()).as_object()
+
+        self.assertEqual(preview_event.open_registration_types(), [])
+
     @patch("events.utils.verify_turnstile_token", return_value=True)
     def test_deadline_is_rechecked_before_individual_creation(self, _turnstile_mock):
         from events.models import EventPage, Invite, RegistrationType, Registrant

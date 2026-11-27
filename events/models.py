@@ -574,7 +574,7 @@ class EventPage(
         valid_invite = invite and invite.is_valid()
         if self.is_private_registration:
             if not valid_invite:
-                return self.registration_types.none()
+                return self.registration_types.filter(id__in=[])
             types_qs = self.registration_types.all()
         elif valid_invite:
             types_qs = self.registration_types.all()
