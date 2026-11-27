@@ -2,6 +2,7 @@ import csv
 import io
 import math
 import uuid
+from datetime import timedelta
 
 from bs4 import BeautifulSoup
 from django import forms
@@ -1565,8 +1566,9 @@ class ResourceCarouselBlock(ConditionalFieldsMixin, SurfaceMixin, ThemeableBlock
     """Dynamic module: a swipeable rail of resources (any content type). The first
     cell is the section title (heading + intro + "View All"); then one feature card
     (image + pill + date + title + excerpt) followed by columns of two stacked
-    compact cards (same, no image). Resources: ``auto`` (most-recent live content)
-    or ``manual`` (hand-picked). Surface-aware (light default).
+    compact cards (same, no image). Resources: ``auto`` (most-recent live content),
+    ``theme_random`` (random recent content from sibling programs, then newest
+    older content), or ``manual`` (hand-picked). Surface-aware (light default).
     """
 
     heading = blocks.CharBlock(required=False, help_text='Section heading (e.g. "Explore Recommended").')
@@ -1586,13 +1588,16 @@ class ResourceCarouselBlock(ConditionalFieldsMixin, SurfaceMixin, ThemeableBlock
     mode = blocks.ChoiceBlock(
         choices=[
             ('auto', 'Auto — most recent content'),
+            ('theme_random', 'Other programs — random recent content, then backfill'),
             ('manual', 'Manual — hand-picked content'),
         ],
         default='auto',
         label='Resources',
-        help_text='How the rail is populated.',
+        help_text='Other programs uses content from this program\'s theme: it '
+                  'shuffles the past 30 days, then fills remaining slots with '
+                  'the newest older content.',
     )
-    # Auto-mode scope (BugHerd #437): the DPH "Featured Working Papers" rail
+    # Automatic-mode scope (BugHerd #437): the DPH "Featured Working Papers" rail
     # pulled whatever was recent site-wide — events and topic pages included.
     # Same content-type toggles as the bento (#120), plus a publication-type
     # narrowing for rails like "working papers only".
@@ -1622,8 +1627,8 @@ class ResourceCarouselBlock(ConditionalFieldsMixin, SurfaceMixin, ThemeableBlock
     )
     count = blocks.IntegerBlock(
         default=9, min_value=1, max_value=30,
-        label='Number of items (auto)',
-        help_text='Auto mode: how many of the most-recent items to show.',
+        label='Number of items (automatic)',
+        help_text='Automatic modes: how many items to show.',
     )
     items = blocks.ListBlock(
         blocks.PageChooserBlock(page_type='core.ContentPage'),
@@ -1643,10 +1648,31 @@ class ResourceCarouselBlock(ConditionalFieldsMixin, SurfaceMixin, ThemeableBlock
         from core.models import ContentPage
         from core.queries import live_dated
         context = super().get_context(value, parent_context)
-        # Auto content scopes to the program/theme page this module sits on
-        # (QA regroup decision 23:32).
-        auto_qs = scope_content_qs(
-            live_dated(ContentPage.objects), (parent_context or {}).get('page'))
+        mode = value.get('mode')
+        page = (parent_context or {}).get('page')
+        if mode == 'theme_random':
+            from research.models import ProjectPage
+            program = page.specific if page else None
+            if isinstance(program, ProjectPage):
+                membership = program.theme_memberships.select_related('theme').first()
+            else:
+                membership = None
+            if membership:
+                sibling_ids = membership.theme.theme_programs.exclude(
+                    program=program).values_list('program_id', flat=True)
+                auto_qs = (
+                    live_dated(ContentPage.objects)
+                    .filter(projects__in=ProjectPage.expand_program_ids(sibling_ids))
+                    .exclude(projects__in=program.program_scope_ids())
+                    .exclude(projectpage__isnull=False)
+                    .distinct()
+                )
+            else:
+                auto_qs = ContentPage.objects.none()
+        else:
+            # Auto content scopes to the program/theme page this module sits on
+            # (QA regroup decision 23:32).
+            auto_qs = scope_content_qs(live_dated(ContentPage.objects), page)
         # Author-set scope (BugHerd #437) — see the field comments above.
         allowed = [t for t in (value.get('content_types') or []) if t in RESOURCE_TYPE_MODELS]
         # A publication type with no content types means "publications of this
@@ -1662,7 +1688,18 @@ class ResourceCarouselBlock(ConditionalFieldsMixin, SurfaceMixin, ThemeableBlock
                 Q(publicationpage__isnull=True)
                 | Q(publicationpage__publication_type__slug=value['publication_type']))
         auto_qs = auto_qs.specific()
-        pages = populated_pages(value.get('mode'), auto_qs, value.get('items'), value.get('count') or 9)
+        count = value.get('count') or 9
+        if mode == 'theme_random':
+            now = timezone.now()
+            cutoff = now - timedelta(days=30)
+            pages = list(auto_qs.filter(
+                publishing_date__range=(cutoff, now)).order_by('?')[:count])
+            if len(pages) < count:
+                pages.extend(auto_qs.filter(
+                    publishing_date__lt=cutoff).order_by(
+                        '-publishing_date')[:count - len(pages)])
+        else:
+            pages = populated_pages(mode, auto_qs, value.get('items'), count)
         context['feature'] = pages[0] if pages else None
         # One compact card per slide — no stacked pairs (BugHerd #68, Juode).
         context['compact_cards'] = pages[1:]
@@ -5028,7 +5065,12 @@ class ComposableTabsBlock(blocks.StructBlock, ThemeableBlock):
 # count / manual → the picker list; program modules add program_source →
 # program; carousels reveal autoplay_speed only when autoplay is on.
 
-_POPULATE_ITEMS = {'mode': {'auto': ['count'], 'manual': ['items']}}
+_POPULATE_ITEMS = {'mode': {
+    'auto': ['count'], 'manual': ['items'],
+}}
+_POPULATE_RESOURCE_ITEMS = {'mode': {
+    'auto': ['count'], 'theme_random': ['count'], 'manual': ['items'],
+}}
 _POPULATE_EXPERTS = {'mode': {'auto': ['count'], 'manual': ['experts']}}
 _POPULATE_EXPERTS_CAROUSEL = {'mode': {
     'auto': ['count'], 'random': ['count'], 'theme': ['count'],
@@ -5040,7 +5082,7 @@ ProgramGridBlock.CONDITIONAL_FIELDS = {**_PROGRAM_SOURCE, **_POPULATE_ITEMS}
 ProgramsCarouselBlock.CONDITIONAL_FIELDS = {**_PROGRAM_SOURCE, **_POPULATE_ITEMS}
 ExpertsGridBlock.CONDITIONAL_FIELDS = _POPULATE_EXPERTS
 ExpertsCarouselBlock.CONDITIONAL_FIELDS = _POPULATE_EXPERTS_CAROUSEL
-ResourceCarouselBlock.CONDITIONAL_FIELDS = _POPULATE_ITEMS
+ResourceCarouselBlock.CONDITIONAL_FIELDS = _POPULATE_RESOURCE_ITEMS
 ResourceBentoBlock.CONDITIONAL_FIELDS = _POPULATE_ITEMS
 EventsCarouselBlock.CONDITIONAL_FIELDS = _POPULATE_ITEMS
 NewsCarouselBlock.CONDITIONAL_FIELDS = _POPULATE_ITEMS

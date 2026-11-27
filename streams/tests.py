@@ -1,3 +1,4 @@
+from datetime import timedelta
 from types import SimpleNamespace
 from unittest import mock
 
@@ -13,7 +14,7 @@ from home.models import HomePage
 from multimedia.models import MultimediaPage
 from people.models import PeoplePage, PersonPage, PersonType
 from publications.models import PublicationPage, PublicationTypePage
-from research.models import ProjectPage, ThemePage, TopicPage
+from research.models import ProjectPage, ThemePage, ThemeProgram, TopicPage
 from wagtail import blocks
 
 from .blocks import (
@@ -34,6 +35,7 @@ from .blocks import (
     InteractiveChartBlock,
     NewsletterSubscriptionBlock,
     ParagraphBlock,
+    ResourceCarouselBlock,
     TextBorderBlock,
     TooltipBlock,
     TweetBlock,
@@ -124,6 +126,66 @@ class ExpertsCarouselBlockTests(TestCase):
     def test_scoped_modes_return_nothing_on_the_wrong_page_type(self):
         self.assertEqual(self.experts('theme', self.program), [])
         self.assertEqual(self.experts('program', self.theme), [])
+
+
+class ResourceCarouselBlockTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        home = HomePage.objects.get()
+        now = timezone.now()
+        cls.theme = home.add_child(instance=ThemePage(
+            title='Shared Theme', slug='shared-theme'))
+        cls.current_program = home.add_child(instance=ProjectPage(
+            title='Current Program', slug='current-program', publishing_date=now))
+        cls.sibling_program = home.add_child(instance=ProjectPage(
+            title='Sibling Program', slug='sibling-program', publishing_date=now))
+        ThemeProgram.objects.create(theme=cls.theme, program=cls.current_program)
+        ThemeProgram.objects.create(theme=cls.theme, program=cls.sibling_program)
+        article_type = home.add_child(instance=ArticleTypePage(
+            title='Resource Opinion', slug='resource-opinion'))
+
+        def article(title, days_old, program):
+            page = home.add_child(instance=ArticlePage(
+                title=title,
+                slug=title.lower().replace(' ', '-'),
+                article_type=article_type,
+                publishing_date=now - timedelta(days=days_old),
+            ))
+            page.projects.set([program])
+            page.save()
+            return page
+
+        cls.recent_one = article('Recent One', 2, cls.sibling_program)
+        cls.recent_two = article('Recent Two', 20, cls.sibling_program)
+        cls.newest_backfill = article('Newest Backfill', 31, cls.sibling_program)
+        cls.older_backfill = article('Older Backfill', 60, cls.sibling_program)
+        cls.current_content = article('Current Content', 1, cls.current_program)
+
+    def pages(self, page=None, count=3):
+        block = ResourceCarouselBlock()
+        value = block.to_python({'mode': 'theme_random', 'count': count})
+        context = block.get_context(value, {'page': page or self.current_program})
+        return [p for p in [context['feature'], *context['compact_cards']] if p]
+
+    def test_random_theme_mode_prioritizes_recent_sibling_content_then_backfills(self):
+        pages = self.pages()
+
+        self.assertEqual(set(pages[:2]), {self.recent_one, self.recent_two})
+        self.assertEqual(pages[2], self.newest_backfill)
+        self.assertNotIn(self.older_backfill, pages)
+        self.assertNotIn(self.current_content, pages)
+
+    def test_offers_random_theme_population_mode(self):
+        choices = dict(ResourceCarouselBlock().child_blocks['mode'].field.choices)
+
+        self.assertIn('theme_random', choices)
+
+    def test_random_theme_mode_returns_nothing_without_a_program_theme(self):
+        unthemed = HomePage.objects.get().add_child(instance=ProjectPage(
+            title='Unthemed Program', slug='unthemed-program',
+            publishing_date=timezone.now()))
+
+        self.assertEqual(self.pages(unthemed), [])
 
 
 class LegacyBlockTemplateTests(TestCase):
