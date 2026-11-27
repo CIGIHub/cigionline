@@ -1,3 +1,10 @@
+import importlib
+import json
+from copy import deepcopy
+from types import SimpleNamespace
+
+from django.db import connection
+from django.db.migrations.loader import MigrationLoader
 from django.test import RequestFactory, TestCase
 from home.models import HomePage
 from people.models import PeoplePage, PersonListPage, PersonPage, PersonType
@@ -18,7 +25,7 @@ class ExpertsThemeTopicFacetTests(TestCase):
 
     # Staging's block on /experts/ (page 19).
     STAGING_LISTING = {
-        'card_type': 'expert', 'prefix': 'experts', 'facets': ['topic', 'type'],
+        'card_type': 'expert', 'prefix': 'experts', 'facets': ['topic', 'theme', 'type'],
         'show_filters': True, 'show_search': True, 'heading': 'Browse All Experts',
         'person_type': 'dph_fellow'}
 
@@ -276,9 +283,54 @@ class ExpertsThemeTopicFacetTests(TestCase):
         self.assertEqual([o['label'] for o in self.facet(context, 'topic')['options']],
                          ['AI', 'Quantum'])
 
-    def test_topic_facet_unauthored_builds_neither(self):
+    def test_theme_and_topic_facets_unauthored_build_neither(self):
         context = self.ctx(self.listing(**dict(self.STAGING_LISTING, facets=['type'])))
         self.assertEqual([f['key'] for f in context['router_facets']], ['type'])
+
+    def test_theme_can_be_hidden_while_topic_remains(self):
+        value = self.listing(**dict(self.STAGING_LISTING, facets=['topic']))
+        context = self.ctx(value)
+        self.assertEqual([f['key'] for f in context['router_facets']], ['topic'])
+        self.assertEqual(self.slugs(self.ctx(value, topic=self.quantum.pk)),
+                         self.expert_slugs(4, 5))
+
+        # Hidden controls still honor current and legacy links.
+        for params in (
+            {'theme': self.data.pk, 'type': self.senior.pk},
+            {'topic': self.data.pk, 'type': self.senior.pk},
+        ):
+            context = self.ctx(value, **params)
+            self.assertEqual(self.slugs(context), self.expert_slugs(6))
+            self.assertCountEqual(
+                context['router_hidden_filters'],
+                [{'key': 'type', 'value': str(self.senior.pk)},
+                 {'key': 'theme', 'value': str(self.data.pk)}])
+
+    def test_theme_can_be_shown_without_topic(self):
+        value = self.listing(**dict(self.STAGING_LISTING, facets=['theme']))
+        context = self.ctx(value)
+        self.assertEqual([f['key'] for f in context['router_facets']], ['theme'])
+        self.assertEqual(self.slugs(self.ctx(value, theme=self.data.pk)),
+                         self.expert_slugs(6, 7, 8))
+        context = self.ctx(value, topic=self.quantum.pk)
+        self.assertEqual(self.slugs(context), self.expert_slugs(4, 5))
+        self.assertEqual(context['router_hidden_filters'],
+                         [{'key': 'topic', 'value': str(self.quantum.pk)}])
+
+    def test_hidden_link_filters_are_preserved_in_form(self):
+        self.page.body = [('faceted_listing', self.listing(**dict(
+            self.STAGING_LISTING, facets=['topic'])))]
+        self.page.save()
+        response = self.client.get('/experts/', {
+            'experts-topic': self.data.pk, 'experts-type': self.senior.pk})
+        self.assertContains(response, 'name="experts-theme" value="%s" data-router-persistent-filter'
+                            % self.data.pk)
+        self.assertContains(response, 'name="experts-type" value="%s" data-router-persistent-filter'
+                            % self.senior.pk)
+        self.assertContains(response, 'Filters from your link are applied.')
+        self.assertNotContains(response, '<summary class="ds-router__facet-label">Theme</summary>')
+        self.assertNotContains(response, '<summary class="ds-router__facet-label">Type</summary>')
+        self.assertContains(response, '<summary class="ds-router__facet-label">Topic</summary>')
 
     # --- links into the listing ---------------------------------------------------
 
@@ -343,4 +395,51 @@ class OtherPeopleListingsUnchangedTests(TestCase):
         self.assertEqual([(f['key'], f['label']) for f in context['router_facets']],
                          [('topic', 'Topic'), ('letter', 'Last Name')])
         self.assertEqual(self.ctx(value, topic=self.data.pk)['router_total'], 6)
+
+
+class ExpertFacetMigrationTests(TestCase):
+    def test_existing_pages_and_revisions_keep_their_visible_facets(self):
+        home = HomePage.objects.get()
+        page = home.add_child(instance=PersonListPage(
+            title='Migration experts', slug='migration-experts'))
+        revision = page.save_revision()
+        latest_revision = page.save_revision()
+        old = [
+            {'type': 'faceted_listing', 'id': 'one',
+             'value': {'card_type': 'expert', 'facets': ['type', 'topic']}},
+            {'type': 'composable_tabs', 'id': 'two', 'value': {'tabs': [
+                {'type': 'item', 'id': 'three', 'value': {'content': [
+                    {'type': 'faceted_listing', 'id': 'four',
+                     'value': {'card_type': 'expert', 'facets': ['topic']}},
+                    {'type': 'faceted_listing', 'id': 'five',
+                     'value': {'card_type': 'expert', 'facets': ['type']}},
+                    {'type': 'faceted_listing', 'id': 'six',
+                     'value': {'card_type': 'person', 'facets': ['topic']}},
+                ]}},
+            ]}},
+        ]
+        expected = deepcopy(old)
+        expected[0]['value']['facets'].append('theme')
+        expected[1]['value']['tabs'][0]['value']['content'][0]['value']['facets'].append('theme')
+        PersonListPage.objects.filter(pk=page.pk).update(body=old)
+        revision.content['body'] = json.dumps(old)
+        type(revision).objects.filter(pk=revision.pk).update(content=revision.content)
+        latest_revision.content['body'] = deepcopy(old)
+        type(latest_revision).objects.filter(pk=latest_revision.pk).update(
+            content=latest_revision.content)
+
+        migration = importlib.import_module('core.migrations.0128_migrate_expert_theme_facet')
+        editor = SimpleNamespace(connection=connection)
+        historical_apps = MigrationLoader(connection).project_state(
+            [('core', '0128_migrate_expert_theme_facet')]).apps
+        migration.migrate_expert_theme_facets(historical_apps, editor)
+        migration.migrate_expert_theme_facets(historical_apps, editor)
+
+        page.refresh_from_db()
+        revision.refresh_from_db()
+        latest_revision.refresh_from_db()
+        self.assertEqual(list(page.body.raw_data), expected)
+        self.assertEqual(json.loads(revision.content['body']), expected)
+        self.assertEqual(latest_revision.content['body'], expected)
+        self.assertEqual(revision.content['title'], 'Migration experts')
 

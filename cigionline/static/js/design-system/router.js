@@ -305,6 +305,8 @@ export default function initRouters(root = document) {
 
     const resetForm = () => {
       form.reset();
+      form.querySelectorAll('[data-router-persistent-filter], [data-router-hidden-filter-notice]')
+        .forEach((el) => el.remove());
       form.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach((c) => {
         c.checked = false;
       });

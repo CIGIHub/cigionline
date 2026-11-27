@@ -568,8 +568,7 @@ def _expert_handler(P, PL, scope, enabled):
     The facet labelled Topic used to list the four research themes (John,
     BugHerd #521). Theme now lists them on ``<prefix>-theme``, and Topic lists
     the topics experts actually carry (derived_topics) on ``<prefix>-topic``,
-    as every other listing does. Both ride on the authored ``topic`` choice,
-    so the block needs no new choice (a new choice would migrate every DS body).
+    as every other listing does. Theme and Topic are independently authorable.
     """
     from people.models import PersonPage, PersonType
     from research.models import ThemePage
@@ -616,9 +615,8 @@ def _expert_handler(P, PL, scope, enabled):
             'options': [{'value': t.id, 'label': EXPERT_ROLE_LABELS.get(t.pk, t.name),
                          'checked': str(t.id) in sel_types} for t in types],
         })
-    if 'topic' in enabled:
-        # Only themes and topics experts actually carry, and a one-option
-        # facet is noise — the person facets' rules (BugHerd #521).
+    if 'theme' in enabled:
+        # Only themes experts actually carry; a one-option facet is noise.
         theme_ids = {
             i for i in base.values_list('derived_topics__program_theme__id', flat=True)
             if i
@@ -630,13 +628,23 @@ def _expert_handler(P, PL, scope, enabled):
         if len(options) > 1:
             facets.append({'key': 'theme', 'label': 'Theme', 'open': True,
                            'options': options})
+    if 'topic' in enabled:
         options = [{'value': t.id, 'label': t.title,
                     'checked': str(t.id) in sel_topics}
                    for t in _topics_in(base, 'derived_topics')]
         if len(options) > 1:
             facets.append({'key': 'topic', 'label': 'Topic', 'open': True,
                            'options': options})
-    return experts, facets, {'q': q}, bool(q or sel_types or sel_themes or sel_topics)
+    visible = {facet['key'] for facet in facets}
+    hidden_filters = [
+        {'key': key, 'value': value}
+        for key, values in (('type', sel_types), ('theme', sel_themes),
+                            ('topic', sel_topics))
+        if key not in visible
+        for value in values
+    ]
+    return experts, facets, {'q': q, 'hidden_filters': hidden_filters}, bool(
+        q or sel_types or sel_themes or sel_topics)
 
 
 def _news_handler(P, PL, scope, enabled):
@@ -958,8 +966,7 @@ def _report_handler(P, PL, scope, enabled):
 # Topic + Type on a publication listing and the page rendered a bare search box.
 # 'letter' is absent by design: the staff directory appends it unconditionally,
 # so it is not an authored choice. So is 'term': the DPH fellow listing appends
-# it the same way (BugHerd #365/#440). So is 'theme': the expert listing builds
-# it beside Topic from the authored 'topic' choice (BugHerd #521).
+# it the same way (BugHerd #365/#440).
 FACETS_BY_CARD_TYPE = {
     'resource': ('topic', 'type', 'year'),
     'resource-visual': ('topic', 'type', 'year'),
@@ -967,7 +974,7 @@ FACETS_BY_CARD_TYPE = {
     'publication': ('topic', 'type', 'year'),
     'person': ('type', 'topic'),
     'staff': ('topic',),  # no Role for the staff directory (BugHerd #360)
-    'expert': ('type', 'topic'),
+    'expert': ('type', 'theme', 'topic'),
     'news': ('topic', 'type', 'experts', 'year'),
     'opinion': ('topic', 'type', 'author', 'experts', 'year'),
     'episode_row': ('season', 'year'),
@@ -1206,6 +1213,7 @@ def build_listing_context(request, value, page=None, lazy=False, tab_slug=None):
         'router_querystring': listing_querystring(request, prefix),
         'router_facets': facets if show_filters else [],
         'router_search_value': selected.get('q', ''),
+        'router_hidden_filters': selected.get('hidden_filters', []),
         'router_has_filters': has_filters,
         'router_lazy': bool(lazy),
         # The owning tab's slug (no-JS hidden field). Prefer the slug threaded by

@@ -46,6 +46,11 @@ bundle, loaded site-wide by `base.html`); behaviour is in
   The Leadership page's Senior Management and Board of Directors listing shows
   separate, unpaginated tabs ordered by person weight (highest first), then name.
   Other person listings keep their usual cards and filters.
+  Expert listings can independently select Theme, Topic and Type in the facet
+  picker. Existing Theme, Topic and Type links continue to filter even when
+  their controls are hidden. The irreversible expert-facet data migration adds
+  Theme to existing expert listings with Topic selected, including revisions;
+  back up the database and rehearse it on a production clone before applying it.
   Card pills are always the page's topics, never its program (Evan,
   2026-09-22; `core/cards.py:page_pills`). Each is a link into its theme
   page's resource listing with the topic pre-selected (`core/router_links.py`;

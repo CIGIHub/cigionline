@@ -30,7 +30,7 @@
         whose authored picks don't apply to it) drew a bare "Filters | Clear All"
         with nothing under it — BugHerd #231. Search alone keeps the bar.
       {% endcomment %}
-      {% if router_facets %}
+      {% if router_facets or router_hidden_filters %}
       <p class="ds-router__bar-filters">
         <span class="ds-router__bar-label">Filters</span>
         <span class="ds-router__bar-sep" aria-hidden="true">|</span>
@@ -43,6 +43,12 @@
     <div class="ds-router__body">
       <form class="ds-router__sidebar" method="get" action="{{ request.path }}" data-ds-router-form>
         {% if router_tab %}<input type="hidden" name="tab" value="{{ router_tab }}">{% endif %}
+        {% for filter in router_hidden_filters %}
+          <input type="hidden" name="{{ router_prefix }}-{{ filter.key }}" value="{{ filter.value }}" data-router-persistent-filter>
+        {% endfor %}
+        {% if router_hidden_filters %}
+          <p data-router-hidden-filter-notice>Filters from your link are applied. Use Clear All to remove them.</p>
+        {% endif %}
         {% if router_show_search %}
           {# Single-row search: uppercase placeholder + magnifier over the accent rule. #}
           <label class="ds-router__search">

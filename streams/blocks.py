@@ -4832,6 +4832,7 @@ class FacetedListingBlock(ConditionalFieldsMixin, blocks.StructBlock):
     # alphabet in the filter drawer earned nothing (Evan, BugHerd #231).
     FACETS = [
         ('topic', 'Topic'),
+        ('theme', 'Theme (experts)'),
         ('type', 'Type / Role'),
         ('experts', 'Experts (news)'),
         ('author', 'Author: CIGI Experts / Contributors (opinion)'),

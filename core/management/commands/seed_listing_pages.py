@@ -93,7 +93,7 @@ class Command(BaseCommand):
         for page in PersonListPage.objects.filter(
                 person_list_page_type=PersonListPage.PersonListPageType.EXPERTS):
             targets.append((page, [
-                _listing('experts', 'expert', ['type', 'topic'],
+                _listing('experts', 'expert', ['type', 'theme', 'topic'],
                          empty_text='No experts match your filters.'),
             ]))
 
