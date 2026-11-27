@@ -1,7 +1,8 @@
 import json
+from datetime import datetime
 from io import StringIO
 from types import SimpleNamespace
-from unittest.mock import patch
+from unittest.mock import PropertyMock, patch
 
 from core.models import BasicPage
 from django.core.cache import cache
@@ -59,6 +60,64 @@ class AnnualReportContentTypeTests(SimpleTestCase):
 
 
 class AnnualReportSlidesAPITests(SimpleTestCase):
+    def test_map_stories_include_french_content_and_preserve_map_keys(self):
+        story = MapStory(
+            title="English title",
+            title_fr="Titre français",
+            short_description="<p>English description</p>",
+            short_description_fr="<p>Description française</p>",
+            location="Ottawa, Canada",
+            location_fr="Ottawa, Canada français",
+            research_theme_fr="Thème français",
+            publishing_date=datetime(2026, 1, 15),
+            latitude=45.4,
+            longitude=-75.7,
+            related_content=[("content", {
+                "type": "video",
+                "type_override": "English type",
+                "type_override_fr": "Type français",
+                "title_en": "<p>English link</p>",
+                "title_fr": "<p>Lien français</p>",
+                "link_override": "https://example.com/",
+            })],
+        )
+        without_coordinates = MapStory(title="Missing", location="Unknown")
+        slide = AnnualReportSlidePage(id=1, slide_type="map")
+        items = [SimpleNamespace(story=story), SimpleNamespace(story=without_coordinates)]
+
+        with patch.object(AnnualReportSlidePage, "map_stories", new_callable=PropertyMock) as manager:
+            manager.return_value.all.return_value = items
+            stories = slide.get_annual_report_slide_content()["map_stories"]
+
+        self.assertEqual(len(stories), 1)
+        result = stories[0]
+        self.assertEqual(result["title"], "English title")
+        self.assertEqual(result["title_fr"], "Titre français")
+        self.assertEqual(result["short_description_fr"], "<p>Description française</p>")
+        self.assertEqual(result["location"], "Ottawa, Canada")
+        self.assertEqual(result["location_fr"], "Ottawa, Canada français")
+        self.assertEqual(result["country"], "Canada")
+        self.assertEqual(result["research_theme_fr"], "Thème français")
+        self.assertEqual(result["publishing_date_iso"], "2026-01-15")
+        related = result["related_pages"][0]
+        self.assertEqual(related["title"], "English link")
+        self.assertEqual(related["title_fr"], "Lien français")
+        self.assertEqual(related["content_type_fr"], "Vidéo")
+        self.assertEqual(related["type_override_fr"], "Type français")
+
+    def test_map_story_french_fields_are_optional(self):
+        story = MapStory(title="English", location="Paris, France", latitude=48.8, longitude=2.3)
+        slide = AnnualReportSlidePage(id=1, slide_type="map")
+        with patch.object(AnnualReportSlidePage, "map_stories", new_callable=PropertyMock) as manager:
+            manager.return_value.all.return_value = [SimpleNamespace(story=story)]
+            result = slide.get_annual_report_slide_content()["map_stories"][0]
+
+        self.assertEqual(result["title_fr"], "")
+        self.assertEqual(result["short_description_fr"], "")
+        self.assertEqual(result["location_fr"], "")
+        self.assertEqual(result["research_theme_fr"], "")
+        self.assertEqual(result["publishing_date_iso"], "")
+
     def test_background_quote_gradient_can_be_disabled(self):
         slide = AnnualReportSlidePage(
             id=2,
