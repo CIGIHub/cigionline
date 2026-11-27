@@ -60,7 +60,7 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
       currentAssets: lang === 'fr' ? 'Actifs à court terme' : 'Current Assets',
       cashAndCashEquivalents:
         lang === 'fr'
-          ? 'Espèces et quasi-espèces'
+          ? 'Trésorerie et équivalents de trésorerie'
           : 'Cash and cash equivalents',
       portfolioInvestments:
         lang === 'fr' ? 'Placements de portefeuille' : 'Portfolio investments',
@@ -70,7 +70,7 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
       otherAssets: lang === 'fr' ? 'Autres actifs' : 'Other Assets',
       propertyAndEquipment:
         lang === 'fr'
-          ? 'Biens immobiliers et équipement'
+          ? 'Immobilisations corporelles'
           : 'Property and equipment',
       leaseInducement:
         lang === 'fr' ? 'Incitatif relatif à un bail' : 'Lease inducement',
@@ -82,7 +82,7 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
           ? 'Comptes créditeurs et charges à payer'
           : 'Accounts payable and accrued liabilities',
       deferredRevenue: lang === 'fr' ? 'Revenus reportés' : 'Deferred revenue',
-      totalLiabilities: lang === 'fr' ? 'Passif total' : 'Total Liabilities',
+      totalLiabilities: lang === 'fr' ? 'Total du passif' : 'Total Liabilities',
       fundBalances: lang === 'fr' ? 'Soldes de fonds' : 'Fund Balances',
       capitalAssets:
         lang === 'fr'
@@ -98,7 +98,7 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
           : 'Internally restricted',
       unrestricted: lang === 'fr' ? 'Non affecté' : 'Unrestricted',
       totalFundBalances:
-        lang === 'fr' ? 'Solde de fonds' : 'Total Fund Balances',
+        lang === 'fr' ? 'Total des soldes de fonds' : 'Total Fund Balances',
       totalLiabilitiesAndFundBalances:
         lang === 'fr'
           ? 'Total du passif et des soldes des fonds'
@@ -132,11 +132,11 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
           : 'Excess of Expenses Over Revenues',
       fundBalancesBeginningOfYear:
         lang === 'fr'
-          ? 'Solde des fonds au début de l’exercice'
+          ? 'Soldes des fonds au début de l’exercice'
           : 'Fund Balances, Beginning of Year',
       fundBalancesEndOfYear:
         lang === 'fr'
-          ? 'Solde des fonds à la fin de l’exercice'
+          ? 'Soldes des fonds à la fin de l’exercice'
           : 'Fund Balances, End of Year',
     };
     return translations[key] || key;
