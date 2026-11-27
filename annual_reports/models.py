@@ -852,12 +852,17 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
 
                 map_stories.append({
                     'title': story.title,
+                    'title_fr': story.title_fr,
                     'short_description': str(story.short_description),
+                    'short_description_fr': str(story.short_description_fr),
                     'publishing_date': story.publishing_date.strftime('%B %-d, %Y') if story.publishing_date else '',
+                    'publishing_date_iso': story.publishing_date.date().isoformat() if story.publishing_date else '',
                     'location': story.location,
+                    'location_fr': story.location_fr,
                     'country': story.location.rsplit(',', 1)[-1].strip(),
                     'coordinates': coordinates,
                     'research_theme': story.research_theme.title if story.research_theme else None,
+                    'research_theme_fr': story.research_theme_fr,
                     'related_pages': [
                         {
                             'title': (
@@ -867,12 +872,15 @@ class AnnualReportSlidePage(RoutablePageMixin, SlidePageAbstract, Page):
                                 if block.value.get('page')
                                 else ''
                             ),
+                            'title_fr': richtext_to_inline_html(block.value.get('title_fr')) if block.value.get('title_fr') else '',
                             'url': (
                                 block.value.get('link_override')
                                 or (block.value['page'].url if block.value.get('page') else '')
                             ),
                             'content_type': block.value.get('type'),
+                            'content_type_fr': dict(CONTENT_TYPES_FR).get(block.value.get('type'), ''),
                             'type_override': block.value.get('type_override') or '',
+                            'type_override_fr': block.value.get('type_override_fr') or '',
                         }
                         for block in story.related_content
                         if block.block_type == 'content'
@@ -1176,10 +1184,16 @@ class AnnualReportSlideMapStory(Orderable):
 @register_snippet
 class MapStory(ClusterableModel):
     title = models.CharField(max_length=255)
+    title_fr = models.CharField(max_length=255, blank=True, verbose_name='Title (French)')
     short_description = RichTextField(
         blank=True,
         null=False,
         features=['bold', 'italic', 'link'],
+    )
+    short_description_fr = RichTextField(
+        blank=True,
+        features=['bold', 'italic', 'link'],
+        verbose_name='Short description (French)',
     )
     publishing_date = models.DateTimeField(
         blank=True,
@@ -1187,6 +1201,7 @@ class MapStory(ClusterableModel):
         verbose_name='Story Date',
     )
     location = models.CharField(max_length=255)
+    location_fr = models.CharField(max_length=255, blank=True, verbose_name='Location (French)')
     latitude = models.FloatField(null=True, blank=True, editable=False)
     longitude = models.FloatField(null=True, blank=True, editable=False)
     research_theme = models.ForeignKey(
@@ -1195,6 +1210,12 @@ class MapStory(ClusterableModel):
         blank=True,
         on_delete=models.SET_NULL,
         related_name='map_stories',
+    )
+    research_theme_fr = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name='Research theme (French)',
+        help_text='French display name for the selected research theme.',
     )
     related_content = StreamField(
         [
@@ -1258,10 +1279,14 @@ class MapStory(ClusterableModel):
 
     panels = [
         FieldPanel('title'),
+        FieldPanel('title_fr'),
         FieldPanel('short_description'),
+        FieldPanel('short_description_fr'),
         FieldPanel('publishing_date'),
         FieldPanel('location'),
+        FieldPanel('location_fr'),
         PageChooserPanel('research_theme', ['research.ThemePage']),
+        FieldPanel('research_theme_fr'),
         FieldPanel('related_content'),
     ]
 

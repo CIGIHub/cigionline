@@ -57,13 +57,13 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
     const translations = {
       currentAssets: lang === 'fr' ? 'Actifs à court terme' : 'Current Assets',
       cashAndCashEquivalents:
-        lang === 'fr' ? 'Espèces et quasi-espèces' : 'Cash and cash equivalents',
+        lang === 'fr' ? 'Trésorerie et équivalents de trésorerie' : 'Cash and cash equivalents',
       portfolioInvestments: lang === 'fr' ? 'Placements de portefeuille' : 'Portfolio investments',
       amountsReceivable: lang === 'fr' ? 'Débiteurs' : 'Amounts receivable',
       prepaidExpenses: lang === 'fr' ? "Frais payés d'avance" : 'Prepaid expenses',
       otherAssets: lang === 'fr' ? 'Autres actifs' : 'Other Assets',
       propertyAndEquipment:
-        lang === 'fr' ? 'Biens immobiliers et équipement' : 'Property and equipment',
+        lang === 'fr' ? 'Immobilisations corporelles' : 'Property and equipment',
       leaseInducement: lang === 'fr' ? 'Incitatif relatif à un bail' : 'Lease inducement',
       totalAssets: lang === 'fr' ? 'Total des actifs' : 'Total Assets',
       currentLiabilities: lang === 'fr' ? 'Passifs à court terme' : 'Current Liabilities',
@@ -72,7 +72,7 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
           ? 'Comptes créditeurs et charges à payer'
           : 'Accounts payable and accrued liabilities',
       deferredRevenue: lang === 'fr' ? 'Revenus reportés' : 'Deferred revenue',
-      totalLiabilities: lang === 'fr' ? 'Passif total' : 'Total Liabilities',
+      totalLiabilities: lang === 'fr' ? 'Total du passif' : 'Total Liabilities',
       fundBalances: lang === 'fr' ? 'Soldes de fonds' : 'Fund Balances',
       capitalAssets: lang === 'fr' ? 'Investis en immobilisations' : 'Invested in capital assets',
       externallyRestricted:
@@ -80,7 +80,7 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
       internallyRestricted:
         lang === 'fr' ? 'Affectations d’origine interne' : 'Internally restricted',
       unrestricted: lang === 'fr' ? 'Non affecté' : 'Unrestricted',
-      totalFundBalances: lang === 'fr' ? 'Solde de fonds' : 'Total Fund Balances',
+      totalFundBalances: lang === 'fr' ? 'Total des soldes de fonds' : 'Total Fund Balances',
       totalLiabilitiesAndFundBalances:
         lang === 'fr'
           ? 'Total du passif et des soldes des fonds'
@@ -107,10 +107,10 @@ function AnnualReportsFinancialsSlide({ slide, lang }) {
           : 'Excess of Expenses Over Revenues',
       fundBalancesBeginningOfYear:
         lang === 'fr'
-          ? 'Solde des fonds au début de l’exercice'
+          ? 'Soldes des fonds au début de l’exercice'
           : 'Fund Balances, Beginning of Year',
       fundBalancesEndOfYear:
-        lang === 'fr' ? 'Solde des fonds à la fin de l’exercice' : 'Fund Balances, End of Year',
+        lang === 'fr' ? 'Soldes des fonds à la fin de l’exercice' : 'Fund Balances, End of Year',
     };
     return translations[key] || key;
   };
