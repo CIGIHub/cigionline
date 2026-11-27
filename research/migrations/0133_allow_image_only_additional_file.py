@@ -7,7 +7,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('research', '0132_alter_countrypage_body_alter_projectpage_body_and_more'),
+        ('research', '0133_merge_production_0069_and_takt'),
     ]
 
     operations = [
