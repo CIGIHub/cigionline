@@ -17,8 +17,7 @@
 
   &--green { --cta-panel-fill: var(--color-surface-green); }
 
-  // No top padding; full 80px below (BugHerd #221 — supersedes #113's halving).
-  padding-block: 0 var(--space-section-y);
+  padding: 0;
 
   &__panel {
     position: relative;
