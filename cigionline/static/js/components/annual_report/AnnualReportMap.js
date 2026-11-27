@@ -28,14 +28,14 @@ import {
 
 const themeClasses = {
   'AI and Transformative Technology': 'theme-ai',
-  'Data, Economy, Society': 'theme-data',
+  'Data, Economy and Society': 'theme-data',
   'Digitalization, Security and Democracy': 'theme-security',
   'Global Cooperation and Governance': 'theme-cooperation',
 };
 
 const themeNamesFr = {
   'AI and Transformative Technology': 'IA et technologies transformatrices',
-  'Data, Economy, Society': 'Données, économie, société',
+  'Data, Economy and Society': 'Données, économie et société',
   'Digitalization, Security and Democracy': 'Numérisation, sécurité et démocratie',
   'Global Cooperation and Governance': 'Coopération et gouvernance mondiales',
 };
