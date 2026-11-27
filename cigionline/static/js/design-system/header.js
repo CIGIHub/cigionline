@@ -4,7 +4,8 @@
 // panel opens on hover and on keyboard focus; click navigates. A trigger with
 // no authored destination (href "#") keeps click-to-toggle. One panel open at
 // a time. Escape / click-outside / focus-leaving the header all close it.
-// Compact panels are anchored under their trigger via a --panel-left var.
+// Panels sit below the header and use an invisible hover bridge across any
+// wrapped rows; compact panels also use a --panel-left var.
 // The header pins at top 0 and holds the brand/nav row; the utility band above
 // it scrolls away in normal flow. Once the band is gone the header gains
 // `ds-header--scrolled`. The pinned height is published as
@@ -35,8 +36,21 @@ export default function initHeader() {
   let open = null;
   let hoverTimer = null;
 
-  const positionCompact = (entry) => {
-    if (!entry.panel.classList.contains('ds-header__panel--compact')) return;
+  const positionPanel = (entry) => {
+    const headerRect = header.getBoundingClientRect();
+    const itemRect = entry.li.getBoundingClientRect();
+    const bridgeHeight = headerRect.bottom - itemRect.bottom;
+    entry.panel.style.setProperty('--panel-bridge-height', `${bridgeHeight}px`);
+
+    if (entry.panel.classList.contains('ds-header__panel--full')) {
+      entry.panel.style.setProperty(
+        '--panel-bridge-left',
+        `${itemRect.left - headerRect.left}px`,
+      );
+      entry.panel.style.setProperty('--panel-bridge-width', `${itemRect.width}px`);
+      return;
+    }
+
     // Left-align under the trigger, but clamp so the fixed-width panel never
     // overflows the container's right gutter — a right-most panel shifts left
     // (BugHerd #46). Panel must be visible (unhidden) to measure its width.
@@ -51,7 +65,7 @@ export default function initHeader() {
     if (open && open !== entry) closePanel(open);
     entry.trigger.setAttribute('aria-expanded', 'true');
     entry.panel.hidden = false;
-    positionCompact(entry);
+    positionPanel(entry);
     open = entry;
   };
 
@@ -110,7 +124,7 @@ export default function initHeader() {
   });
 
   window.addEventListener('resize', () => {
-    if (open) positionCompact(open);
+    if (open) positionPanel(open);
   });
 
 }
