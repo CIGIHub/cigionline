@@ -35,6 +35,7 @@ from .heroes import _topic_eyebrow, hero_data, person_hero_data
 from .wagtail_hooks import get_filter_purge_cache_urls, get_purge_cache_url
 from .models import (
     BasicPage,
+    ContentPageAuthor,
     FacilityRentalsPage,
     FundingPage,
     PrivacyNoticePage,
@@ -672,10 +673,8 @@ class LeadershipListingPresentationTests(TestCase):
 
 class DPHCohortListingTests(TestCase):
     """The DPH "Current Cohort and Alumni" listing filters by Type (Current
-    Cohort / Alumni) and Term, from each fellow's DPH Status and DPH Term(s);
-    the theme facet reads Topic again (BugHerd #365/#440). Until CIGI fills
-    the fields the listing is unchanged. Builds its own pages — no
-    people.json fixture."""
+    Cohort / Alumni), Cohort, and Working Paper theme. Builds its own pages —
+    no people.json fixture."""
 
     # Staging's block on the DPH hub (page 21321): blank person type and prefix.
     STAGING_LISTING = {
@@ -710,6 +709,18 @@ class DPHCohortListingTests(TestCase):
             cls.make_person('fellow-%02d' % i, ['Digital Policy Hub Fellow'],
                             topic=cls.ai_topic if i % 2 else cls.data_topic)
             for i in range(12)]
+        working_papers = cls.home.add_child(instance=PublicationTypePage(
+            title='Working Paper', slug='working-paper'))
+        for topic, fellows in ((cls.ai_topic, cls.fellows[1::2]),
+                               (cls.data_topic, cls.fellows[::2])):
+            paper = cls.home.add_child(instance=PublicationPage(
+                title='%s Working Paper' % topic.title,
+                slug='%s-working-paper' % topic.slug,
+                publishing_date=timezone.now(), publication_type=working_papers))
+            paper.topics.set([topic])
+            paper.save()
+            for fellow in fellows:
+                ContentPageAuthor.objects.create(content_page=paper, author=fellow)
 
     @classmethod
     def make_person(cls, slug, types, topic=None, last_name=''):
@@ -758,11 +769,23 @@ class DPHCohortListingTests(TestCase):
         self.assertEqual(list(DPHTerm.objects.all()),
                          [self.s26, self.f25, self.f24, self.w24])
 
-    def test_no_data_shows_every_fellow_and_only_topic(self):
+    def test_no_cohort_data_shows_every_fellow_and_theme(self):
         context = self.ctx()
         self.assertEqual(context['router_total'], 12)
         self.assertEqual([f['key'] for f in context['router_facets']], ['topic'])
-        self.assertEqual(self.facet(context, 'topic')['label'], 'Topic')
+        self.assertEqual(self.facet(context, 'topic')['label'], 'Theme')
+
+    def test_theme_comes_from_working_papers_and_filters_with_cohort(self):
+        # The person's materialized topics are deliberately wrong: the DPH
+        # cohort page follows Working Paper topics, as production did.
+        self.fellows[0].derived_topics.set([self.ai_topic])
+        self.set_dph(self.fellows[:6], terms=[self.f25])
+        facet = self.facet(self.ctx(), 'topic')
+        self.assertEqual([option['label'] for option in facet['options']],
+                         ['AI and Transformative Technology', 'Data, Economy and Society'])
+        context = self.ctx(topic=self.data.pk, term=self.f25.pk)
+        self.assertEqual(self.slugs(context),
+                         sorted(fellow.slug for fellow in self.fellows[0:6:2]))
 
     def test_one_status_value_hides_type(self):
         self.set_dph(self.fellows[:5], PersonPage.DPHStatus.CURRENT)
@@ -808,7 +831,7 @@ class DPHCohortListingTests(TestCase):
         self.set_dph(self.fellows[6:9], terms=[self.f25])
         context = self.ctx()
         facet = self.facet(context, 'term')
-        self.assertEqual(facet['label'], 'Term')
+        self.assertEqual(facet['label'], 'Cohort')
         self.assertFalse(facet['open'])
         self.assertEqual([o['label'] for o in facet['options']],
                          ['Fall 2025', 'Fall 2024', 'Winter 2024'])  # no Summer 2026
@@ -919,11 +942,10 @@ class DPHCohortListingTests(TestCase):
         hub = self.make_hub()
         url = hub.url + '?tab=current-cohort-and-alumni'
         type_radio = 'name="%s-type" value="current"' % self.prefix
-        term_label = '<summary class="ds-router__facet-label">Term</summary>'
+        term_label = '<summary class="ds-router__facet-label">Cohort</summary>'
         response = self.client.get(url)
         self.assertContains(response, 'id="router-%s"' % self.prefix)
-        self.assertContains(response, '<summary class="ds-router__facet-label">Topic</summary>')
-        self.assertNotContains(response, '<summary class="ds-router__facet-label">Cohort</summary>')
+        self.assertContains(response, '<summary class="ds-router__facet-label">Theme</summary>')
         self.assertNotContains(response, type_radio)
         self.assertNotContains(response, term_label)
         self.set_dph(self.fellows[:4], PersonPage.DPHStatus.CURRENT, [self.f25])

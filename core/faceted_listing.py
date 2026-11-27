@@ -435,17 +435,18 @@ def _person_facets(qs, scope_ids, enabled, sel_types, sel_themes,
 
 
 def _dph_fellow_facets(qs, enabled, sel_status, sel_themes, sel_terms):
-    """TYPE · TOPIC · TERM for the DPH "Current Cohort and Alumni" listing, in
+    """TYPE · THEME · COHORT for the DPH "Current Cohort and Alumni" listing, in
     the wireframe's order (BugHerd #365/#440).
 
     TYPE is Current Cohort / Alumni, read from each fellow's own status. It
     reuses the authored ``type`` key, so the block needs no new choice (a new
     choice would migrate every DS body); Role never built here anyway — fellows
-    hold one other type. TERM is appended unconditionally, like the staff Last
-    Name facet. Both list only values fellows actually carry, so until CIGI
-    fills the data neither appears and the listing is unchanged.
+    hold one other type. COHORT is appended unconditionally, like the staff Last
+    Name facet. Theme and Cohort list only values fellows actually carry.
     """
     from people.models import DPHTerm, PersonPage
+    from publications.models import PublicationPage
+    from research.models import ThemePage
 
     facets = []
     if 'type' in enabled:
@@ -458,15 +459,29 @@ def _dph_fellow_facets(qs, enabled, sel_status, sel_themes, sel_terms):
                          'checked': sel_status == s.value} for s in statuses]
             facets.append({'key': 'type', 'label': 'Type', 'open': True,
                            'single': True, 'options': options})
-    facets += _person_facets(qs, PERSON_TYPE_IDS['dph_fellow'],
-                             [f for f in enabled if f == 'topic'], [], sel_themes)
+    if 'topic' in enabled:
+        # Match the production cohort page: a fellow's themes come from their
+        # public Working Papers, through each paper topic's program theme.
+        theme_ids = {
+            theme_id for theme_id in PublicationPage.objects.live().public().filter(
+                publication_type__title='Working Paper', authors__author__in=qs,
+            ).values_list('topics__program_theme_id', flat=True)
+            if theme_id
+        }
+        themes = ThemePage.objects.live().filter(
+            archive=0, id__in=theme_ids).order_by('path')
+        options = [{'value': theme.id, 'label': theme.title,
+                    'checked': str(theme.id) in sel_themes} for theme in themes]
+        if len(options) > 1:
+            facets.append({'key': 'topic', 'label': 'Theme', 'open': True,
+                           'options': options})
     # Newest first (model ordering); a term nobody carries is not offered.
     terms = DPHTerm.objects.filter(fellows__in=qs).distinct()
     options = [{'value': t.id, 'label': t.name,
                 'checked': str(t.id) in sel_terms} for t in terms]
     if len(options) > 1:
         # Collapsed, as the wireframe draws it.
-        facets.append({'key': 'term', 'label': 'Term', 'open': False,
+        facets.append({'key': 'term', 'label': 'Cohort', 'open': False,
                        'options': options})
     return facets
 
@@ -475,9 +490,9 @@ def _person_handler(P, PL, scope, enabled):
     """Person listing (DPH Cohort = DPH Fellow; DPH Speakers = Speaker).
 
     Facets: Role (the other person types these people hold) and Topic (themes,
-    via derived_topics — 85% of DPH people carry them). Topic is the default when
-    the author enabled nothing this card type can build (BugHerd #231). DPH
-    fellows get Type (Current Cohort / Alumni), Topic and Term instead
+    via derived_topics). Topic is the default when the author enabled nothing
+    this card type can build (BugHerd #231). DPH fellows instead get Type
+    (Current Cohort / Alumni), Theme from Working Papers, and Cohort
     (BugHerd #365/#440, ``_dph_fellow_facets``).
     """
     person_type_id = scope.get('person_type_id')
@@ -498,7 +513,15 @@ def _person_handler(P, PL, scope, enabled):
         qs = qs.filter(dph_status=sel_status)
     if sel_terms:
         qs = qs.filter(dph_terms__id__in=sel_terms)
-    if sel_themes:
+    if dph and sel_themes:
+        from publications.models import PublicationPage
+        themed_fellow_ids = PublicationPage.objects.live().public().filter(
+            publication_type__title='Working Paper',
+            topics__program_theme_id__in=sel_themes,
+            authors__author__in=_people_queryset(person_type_id),
+        ).values_list('authors__author_id', flat=True)
+        qs = qs.filter(pk__in=themed_fellow_ids)
+    elif sel_themes:
         qs = qs.filter(derived_topics__program_theme__id__in=sel_themes)
     qs = qs.distinct().prefetch_related('person_types', 'derived_topics__program_theme')
 

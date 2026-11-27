@@ -1,0 +1,538 @@
+{
+  "schema": "cigionline.dph-cohorts.v1",
+  "source": {
+    "id": 23111,
+    "title": "Current Cohort & Alumni",
+    "slug": "current-cohort-alumni",
+    "url_path": "/home/digital-policy-hub/current-cohort-alumni/"
+  },
+  "cohorts": [
+    {
+      "name": "Fall 2026",
+      "start_date": "2026-09-01",
+      "status": "current",
+      "people": [
+        {
+          "id": 21038,
+          "title": "'Damola Adediji",
+          "slug": "damola-adediji",
+          "url_path": "/home/people/damola-adediji/"
+        },
+        {
+          "id": 23863,
+          "title": "Ephraim Ajijola",
+          "slug": "ephraim-ajijola",
+          "url_path": "/home/people/ephraim-ajijola/"
+        },
+        {
+          "id": 23852,
+          "title": "Lauren Margaret Avis",
+          "slug": "lauren-margaret-avis",
+          "url_path": "/home/people/lauren-margaret-avis/"
+        },
+        {
+          "id": 23858,
+          "title": "Natalie Chu",
+          "slug": "natalie-chu",
+          "url_path": "/home/people/natalie-chu/"
+        },
+        {
+          "id": 23850,
+          "title": "Ashiya Dewan",
+          "slug": "ashiya-dewan",
+          "url_path": "/home/people/ashiya-dewan/"
+        },
+        {
+          "id": 23854,
+          "title": "Morgan Oliver Flom",
+          "slug": "morgan-oliver-flom",
+          "url_path": "/home/people/morgan-oliver-flom/"
+        },
+        {
+          "id": 23855,
+          "title": "Gagneet Kaur",
+          "slug": "gagneet-kaur",
+          "url_path": "/home/people/gagneet-kaur/"
+        },
+        {
+          "id": 23859,
+          "title": "Kirthana Singh Khurana",
+          "slug": "kirthana-singh-khurana",
+          "url_path": "/home/people/kirthana-singh-khurana/"
+        },
+        {
+          "id": 23865,
+          "title": "Kem-Laurin Lubin",
+          "slug": "kem-laurin-lubin",
+          "url_path": "/home/people/kem-laurin-lubin/"
+        },
+        {
+          "id": 23862,
+          "title": "Mostafa Majidi",
+          "slug": "mostafa-majidi",
+          "url_path": "/home/people/mostafa-majidi/"
+        },
+        {
+          "id": 23857,
+          "title": "Alina Mambo",
+          "slug": "alina-mambo",
+          "url_path": "/home/people/alina-mambo/"
+        },
+        {
+          "id": 23856,
+          "title": "Aiden McIlvaney",
+          "slug": "aiden-mcilvaney",
+          "url_path": "/home/people/aiden-mcilvaney/"
+        },
+        {
+          "id": 23870,
+          "title": "Bruna Shinohara de Mendon\u00e7a",
+          "slug": "bruna-shinohara-de-mendon\u00e7a",
+          "url_path": "/home/people/bruna-shinohara-de-mendon\u00e7a/"
+        },
+        {
+          "id": 23868,
+          "title": "Panagiotis Michalopoulos",
+          "slug": "panagiotis-michalopoulos",
+          "url_path": "/home/people/panagiotis-michalopoulos/"
+        },
+        {
+          "id": 23869,
+          "title": "Linxi Mytkolli",
+          "slug": "linxi-mytkolli",
+          "url_path": "/home/people/linxi-mytkolli/"
+        },
+        {
+          "id": 23860,
+          "title": "Eliz Shimshek",
+          "slug": "eliz-shimshek",
+          "url_path": "/home/people/eliz-shimshek/"
+        },
+        {
+          "id": 23864,
+          "title": "Patrick Marc Spencer",
+          "slug": "patrick-marc-spencer",
+          "url_path": "/home/people/patrick-marc-spencer/"
+        },
+        {
+          "id": 23867,
+          "title": "Jillian Stringer",
+          "slug": "jillian-stringer",
+          "url_path": "/home/people/jillian-stringer/"
+        },
+        {
+          "id": 23851,
+          "title": "Daria Synelnykova",
+          "slug": "daria-synelnykova",
+          "url_path": "/home/people/daria-synelnykova/"
+        },
+        {
+          "id": 23861,
+          "title": "Alexandra Volokhova",
+          "slug": "alexandra-volokhova",
+          "url_path": "/home/people/alexandra-volokhova/"
+        }
+      ]
+    },
+    {
+      "name": "Fall 2025",
+      "start_date": "2025-09-01",
+      "status": "alumni",
+      "people": [
+        {
+          "id": 23019,
+          "title": "Fabrice Blais-Savoie",
+          "slug": "fabrice-blais-savoie",
+          "url_path": "/home/people/fabrice-blais-savoie/"
+        },
+        {
+          "id": 23025,
+          "title": "Daniel Dela Cruz",
+          "slug": "daniel-dela-cruz",
+          "url_path": "/home/people/daniel-dela-cruz/"
+        },
+        {
+          "id": 23026,
+          "title": "Mehrsa Ehsani",
+          "slug": "mehrsa-ehsani",
+          "url_path": "/home/people/mehrsa-ehsani/"
+        },
+        {
+          "id": 20083,
+          "title": "Kyle Volpi Hiebert",
+          "slug": "kyle-volpi-hiebert",
+          "url_path": "/home/people/kyle-volpi-hiebert/"
+        },
+        {
+          "id": 23047,
+          "title": "Amal Hussein",
+          "slug": "amal-hussein",
+          "url_path": "/home/people/amal-hussein/"
+        },
+        {
+          "id": 23035,
+          "title": "Jeffrey Klinck",
+          "slug": "jeffrey-klink",
+          "url_path": "/home/people/jeffrey-klink/"
+        },
+        {
+          "id": 23036,
+          "title": "Julianna L. Kowlessar",
+          "slug": "julianna-lily-kowlessar",
+          "url_path": "/home/people/julianna-lily-kowlessar/"
+        },
+        {
+          "id": 23037,
+          "title": "Clarence Sokolambe Lakpini",
+          "slug": "clarence-sokolambe-lakpini",
+          "url_path": "/home/people/clarence-sokolambe-lakpini/"
+        },
+        {
+          "id": 23038,
+          "title": "Julian Lam",
+          "slug": "julian-lam",
+          "url_path": "/home/people/julian-lam/"
+        },
+        {
+          "id": 23039,
+          "title": "Anna Legault",
+          "slug": "anna-legault",
+          "url_path": "/home/people/anna-legault/"
+        },
+        {
+          "id": 17177,
+          "title": "Gabrielle Lim",
+          "slug": "gabrielle-lim",
+          "url_path": "/home/people/gabrielle-lim/"
+        },
+        {
+          "id": 23024,
+          "title": "Alexander Martin",
+          "slug": "alexander-martin",
+          "url_path": "/home/people/alexander-martin/"
+        },
+        {
+          "id": 23042,
+          "title": "Karmvir K. Padda",
+          "slug": "karmvir-k-padda",
+          "url_path": "/home/people/karmvir-k-padda/"
+        },
+        {
+          "id": 23043,
+          "title": "Mark Robbins",
+          "slug": "mark-robbins",
+          "url_path": "/home/people/mark-robbins/"
+        },
+        {
+          "id": 22528,
+          "title": "Anna Romandash",
+          "slug": "anna-romandash",
+          "url_path": "/home/people/anna-romandash/"
+        },
+        {
+          "id": 23041,
+          "title": "Alonso Mu\u00f1oz Sanchez",
+          "slug": "alonso-mu\u00f1oz-sanchez",
+          "url_path": "/home/people/alonso-mu\u00f1oz-sanchez/"
+        },
+        {
+          "id": 23044,
+          "title": "Nathaniel Sukhdeo",
+          "slug": "nathaniel-sukhdeo",
+          "url_path": "/home/people/nathaniel-sukhdeo/"
+        },
+        {
+          "id": 23045,
+          "title": "Dylan J. White",
+          "slug": "dylan-white",
+          "url_path": "/home/people/dylan-white/"
+        }
+      ]
+    },
+    {
+      "name": "Fall 2024",
+      "start_date": "2024-09-01",
+      "status": "alumni",
+      "people": [
+        {
+          "id": 22261,
+          "title": "Wim Howson Creutzberg",
+          "slug": "wim-howson-creutzberg",
+          "url_path": "/home/people/wim-howson-creutzberg/"
+        },
+        {
+          "id": 22254,
+          "title": "Kristen Csenkey",
+          "slug": "kristen-csenkey",
+          "url_path": "/home/people/kristen-csenkey/"
+        },
+        {
+          "id": 22256,
+          "title": "Nathalie DiBerardino",
+          "slug": "nathalie-diberardino",
+          "url_path": "/home/people/nathalie-diberardino/"
+        },
+        {
+          "id": 22258,
+          "title": "Jamie Duncan",
+          "slug": "jamie-duncan",
+          "url_path": "/home/people/jamie-duncan/"
+        },
+        {
+          "id": 22259,
+          "title": "Ashley Ferreira",
+          "slug": "ashley-ferreira",
+          "url_path": "/home/people/ashley-ferreira/"
+        },
+        {
+          "id": 22260,
+          "title": "Xiao Han",
+          "slug": "xiao-han",
+          "url_path": "/home/people/xiao-han/"
+        },
+        {
+          "id": 22262,
+          "title": "Amelia Hui",
+          "slug": "amelia-hui",
+          "url_path": "/home/people/amelia-hui/"
+        },
+        {
+          "id": 22263,
+          "title": "Clare Kim",
+          "slug": "clare-kim",
+          "url_path": "/home/people/clare-kim/"
+        },
+        {
+          "id": 22264,
+          "title": "Sophie  Xiaoyi Liu",
+          "slug": "sophie-xiaoyi-liu",
+          "url_path": "/home/people/sophie-xiaoyi-liu/"
+        },
+        {
+          "id": 22265,
+          "title": "Melissa MacKay",
+          "slug": "melissa-mackay",
+          "url_path": "/home/people/melissa-mackay/"
+        },
+        {
+          "id": 22266,
+          "title": "Laine McCrory",
+          "slug": "laine-mccrory",
+          "url_path": "/home/people/laine-mccrory/"
+        },
+        {
+          "id": 22267,
+          "title": "Ola Mirzoeva",
+          "slug": "ola-mirzoeva",
+          "url_path": "/home/people/ola-mirzoeva/"
+        },
+        {
+          "id": 22268,
+          "title": "Rafael Morales-Guzman",
+          "slug": "rafael-morales-guzman",
+          "url_path": "/home/people/rafael-morales-guzman/"
+        },
+        {
+          "id": 22269,
+          "title": "Halyna Padalko",
+          "slug": "halyna-padalko",
+          "url_path": "/home/people/halyna-padalko/"
+        },
+        {
+          "id": 22270,
+          "title": "Maya Povhe",
+          "slug": "maya-povhe",
+          "url_path": "/home/people/maya-povhe/"
+        },
+        {
+          "id": 22271,
+          "title": "Joseph Scarfone",
+          "slug": "joseph-scarfone",
+          "url_path": "/home/people/joseph-scarfone/"
+        },
+        {
+          "id": 22272,
+          "title": "Caleigh Wong",
+          "slug": "caleigh-wong",
+          "url_path": "/home/people/caleigh-wong/"
+        }
+      ]
+    },
+    {
+      "name": "Winter 2024",
+      "start_date": "2024-01-01",
+      "status": "alumni",
+      "people": [
+        {
+          "id": 23025,
+          "title": "Daniel Dela Cruz",
+          "slug": "daniel-dela-cruz",
+          "url_path": "/home/people/daniel-dela-cruz/"
+        },
+        {
+          "id": 21522,
+          "title": "Ozan Ayata",
+          "slug": "ozan-ayata",
+          "url_path": "/home/people/ozan-ayata/"
+        },
+        {
+          "id": 21524,
+          "title": "Dana Cramer",
+          "slug": "dana-cramer",
+          "url_path": "/home/people/dana-cramer/"
+        },
+        {
+          "id": 21525,
+          "title": "Ivan Nu\u00f1ez Gamez",
+          "slug": "ivan-nunez-gamez",
+          "url_path": "/home/people/ivan-nunez-gamez/"
+        },
+        {
+          "id": 21526,
+          "title": "Shuna Ho",
+          "slug": "shuna-ho",
+          "url_path": "/home/people/shuna-ho/"
+        },
+        {
+          "id": 21527,
+          "title": "Madison Lee",
+          "slug": "madison-lee",
+          "url_path": "/home/people/madison-lee/"
+        },
+        {
+          "id": 21529,
+          "title": "Emanuel Lukawiecki",
+          "slug": "emanuel-lukawiecki",
+          "url_path": "/home/people/emanuel-lukawiecki/"
+        },
+        {
+          "id": 21530,
+          "title": "Michael P. A. Murphy",
+          "slug": "michael-p-a-murphy",
+          "url_path": "/home/people/michael-p-a-murphy/"
+        },
+        {
+          "id": 21531,
+          "title": "Elia Rasky",
+          "slug": "elia-rasky",
+          "url_path": "/home/people/elia-rasky/"
+        },
+        {
+          "id": 21534,
+          "title": "Javier Ruiz-Soler",
+          "slug": "javier-ruiz-soler",
+          "url_path": "/home/people/javier-ruiz-soler/"
+        },
+        {
+          "id": 21533,
+          "title": "Shirley Anne Scharf",
+          "slug": "shirley-anne-scharf",
+          "url_path": "/home/people/shirley-anne-scharf/"
+        },
+        {
+          "id": 21535,
+          "title": "Tyler Stevenson",
+          "slug": "tyler-stevenson",
+          "url_path": "/home/people/tyler-stevenson/"
+        },
+        {
+          "id": 21536,
+          "title": "Christelle Tessono",
+          "slug": "christelle-tessono",
+          "url_path": "/home/people/christelle-tessono/"
+        },
+        {
+          "id": 21066,
+          "title": "Ryan Westman",
+          "slug": "ryan-westman",
+          "url_path": "/home/people/ryan-westman/"
+        },
+        {
+          "id": 21537,
+          "title": "Badriyya Yusuf",
+          "slug": "badriyya-yusuf",
+          "url_path": "/home/people/badriyya-yusuf/"
+        }
+      ]
+    },
+    {
+      "name": "Fall 2023",
+      "start_date": "2023-09-01",
+      "status": "alumni",
+      "people": [
+        {
+          "id": 21324,
+          "title": "Naod Abraham",
+          "slug": "naod-abraham",
+          "url_path": "/home/people/naod-abraham/"
+        },
+        {
+          "id": 21323,
+          "title": "Daria Bielik",
+          "slug": "daria-bielik",
+          "url_path": "/home/people/daria-bielik/"
+        },
+        {
+          "id": 21309,
+          "title": "Matthew da Mota",
+          "slug": "matthew-da-mota",
+          "url_path": "/home/people/matthew-da-mota/"
+        },
+        {
+          "id": 21308,
+          "title": "Ori Freiman",
+          "slug": "ori-freiman",
+          "url_path": "/home/people/ori-freiman/"
+        },
+        {
+          "id": 21307,
+          "title": "Andrew Heffernan",
+          "slug": "andrew-heffernan",
+          "url_path": "/home/people/andrew-heffernan/"
+        },
+        {
+          "id": 21326,
+          "title": "Harnoorvir (Harnoor) Singh Josan",
+          "slug": "harnoorvir-harnoor-singh-josan",
+          "url_path": "/home/people/harnoorvir-harnoor-singh-josan/"
+        },
+        {
+          "id": 21325,
+          "title": "Paula Martins",
+          "slug": "paula-martins",
+          "url_path": "/home/people/paula-martins/"
+        },
+        {
+          "id": 21310,
+          "title": "Laila Mourad",
+          "slug": "laila-mourad",
+          "url_path": "/home/people/laila-mourad/"
+        },
+        {
+          "id": 21311,
+          "title": "Maral Niazi",
+          "slug": "maral-niazi",
+          "url_path": "/home/people/maral-niazi/"
+        },
+        {
+          "id": 21313,
+          "title": "Frederick (Fred) Okello",
+          "slug": "frederick-fred-okello",
+          "url_path": "/home/people/frederick-fred-okello/"
+        },
+        {
+          "id": 21312,
+          "title": "Ambika Opal",
+          "slug": "ambika-opal",
+          "url_path": "/home/people/ambika-opal/"
+        },
+        {
+          "id": 21322,
+          "title": "Mahatab Uddin",
+          "slug": "mahatab-uddin",
+          "url_path": "/home/people/mahatab-uddin/"
+        }
+      ]
+    }
+  ]
+}
