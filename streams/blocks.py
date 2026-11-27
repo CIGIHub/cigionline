@@ -229,7 +229,7 @@ class AccordionBlock(blocks.StructBlock, ThemeableBlock):
             'ul',
         ],
         help_text='Accordion content; images are supported for long visual sections.',
-        required=True,
+        required=False,
     )
     # Per-item button row, below the item's body (BugHerd #186).
     buttons = blocks.ListBlock(ButtonBlock(), required=False, default=[])

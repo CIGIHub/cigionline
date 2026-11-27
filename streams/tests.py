@@ -73,6 +73,9 @@ class AutoPlayVideoBlockTests(SimpleTestCase):
 
 
 class AccordionBlockTests(SimpleTestCase):
+    def test_text_is_optional(self):
+        self.assertFalse(AccordionBlock().child_blocks['text'].required)
+
     def test_rich_text_supports_images(self):
         self.assertIn('image', AccordionBlock().child_blocks['text'].features)
 
